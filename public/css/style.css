@@ -9,6 +9,11 @@ body  {
     color-stop(.15, #222),
     to(#000)
   );
+  font-family: "CabinSketch";
+}
+p, input  {
+  font-family: "CabinSketch";
+  font-size: 1.1em;
 }
 nav#topnav  {
   background: #191919;
