@@ -14,24 +14,24 @@ nav#topnav  {
   background: #191919;
   border-bottom: 5px solid #333;
   min-height: 40px;
-  padding: 5px 3.8em 0;
+  padding: 0 3.8em;
 }
 nav#topnav a  {
-  color: #EEEEAA;
+  color: #FFFFAA;
 }
 h1  {
-  font-size: 1.5em;
+  font-size: 2.5em;
+  font-family: "CabinSketch";
   line-height: 1.8em;
 }
 h1 span.beer-color  {
   color: #F7B400;
 }
 h2  {
-  font-size: 1.3em;
-  line-height: 1.3em;
-  font-family: "Eraser";
-  color: #EEEEAA;
-  text-shadow: rgba(255, 255, 255, .2) 2px 0 2px;
+  font-size: 2em;
+  line-height: 1em;
+  font-family: "CabinSketch";
+  color: #FFFFAA;
 }
 h2.inline  {
   display: inline;
@@ -76,6 +76,7 @@ div#content:before  {
 div#content-inner  {
   color: #FFF;
   padding: 20px;
+  padding-top: 5px;
   background: -webkit-gradient(
     linear,
     left top,
@@ -106,6 +107,16 @@ div#content-inner:before  {
   border-radius: 2px;
   -moz-border-radius: 2px;
   opacity: .35;
+}
+
+/* Canvas and SRM */
+div#srm-canvas  {
+  float: right;
+  font-size: 6em;
+  font-weight: bold;
+  font-family: "CabinSketch";
+  padding-top: 45px;
+  padding-right: 15px;
 }
 
 /* Chalkboard Ledge */
@@ -139,8 +150,8 @@ div#content-inner:before  {
 
 /* Chalkboard Layout */
 div#content-inner div.step  {
-  width: 45%;
-  margin-right: 5%;
+  width: 48%;
+  margin-right: 2%;
   float: left;
 }
 div#content-inner .step .number  {
@@ -151,13 +162,27 @@ div#content-inner div.divider  {
   padding: 20px 0;
 }
 
-div#content-inner div.opaque  {
+div#content-inner div.opaque, div#content-inner #notes  {
   padding: 15px;
   position: relative;
   z-index: 1;
   margin: 15px 0;
 }
-div#content-inner div.opaque:before  {
+div#content-inner #notes  {
+  padding: 0;
+}
+div#content-inner #notes textarea  {
+  border: 0;
+  background: transparent;
+  padding: 15px;
+  color: #FFF;
+  width: 100%;
+  height: 150px;
+}
+div#content-inner #notes textarea:focus  {
+  outline-width: 0;
+}
+div#content-inner div.opaque:before, div#content-inner #notes:before  {
   content: "";
   z-index: -1;
   position: absolute;
@@ -176,8 +201,8 @@ div#content-inner label  {
   cursor: default;
 }
 div#content-inner .control  {
-  font-family: "Eraser";
-  font-size: 1em;
+  font-family: "CabinSketch";
+  font-size: 1.3em;
   vertical-align: middle;
 }
 div#content-inner .control.blue  {
@@ -187,7 +212,7 @@ div#content-inner .control.orange  {
   color: #BCA281;
 }
 div#content-inner .control.yellow  {
-  color: #EEEEAA;
+  color: #FFFFAA;
 }
 div#content-inner .control.purple  {
   color: #A98BAA;
@@ -197,10 +222,11 @@ div#content-inner .control.red  {
 }
 div#content-inner .control.plus  {
   font-size: 2em;
+  line-height: .6em;
   cursor: pointer;
 }
 div#content-inner .control.plus:hover  {
-  color: #EEEEAA;
+  color: #FFFFAA;
 }
 div#content-inner table tr.addition td  {
   padding: 2px 5px;
@@ -218,3 +244,35 @@ input.unit  {
   width: 30px;
   text-align: center;
 }
+
+/* SRM Colors */
+#srm-canvas.srm-1  { color: #F3F993; }
+#srm-canvas.srm-2  { color: #F5F75C; }
+#srm-canvas.srm-3  { color: #F6F513; }
+#srm-canvas.srm-4  { color: #EAE615; }
+#srm-canvas.srm-5  { color: #E0D01B; }
+#srm-canvas.srm-6  { color: #D5BC26; }
+#srm-canvas.srm-7  { color: #CDAA37; }
+#srm-canvas.srm-8  { color: #C1963C; }
+#srm-canvas.srm-9  { color: #BE8C3A; }
+#srm-canvas.srm-10 { color: #BE823A; }
+#srm-canvas.srm-11 { color: #C17A37; }
+#srm-canvas.srm-12 { color: #BF7138; }
+#srm-canvas.srm-13 { color: #BC6733; }
+#srm-canvas.srm-14 { color: #B26033; }
+#srm-canvas.srm-15 { color: #A85839; }
+#srm-canvas.srm-16 { color: #985336; }
+#srm-canvas.srm-17 { color: #8D4C32; }
+#srm-canvas.srm-18 { color: #7C452D; }
+#srm-canvas.srm-19 { color: #6B3A1E; }
+#srm-canvas.srm-20 { color: #5D341A; }
+#srm-canvas.srm-21 { color: #4E2A0C; }
+#srm-canvas.srm-22 { color: #4A2727; }
+#srm-canvas.srm-23 { color: #361F1B; }
+#srm-canvas.srm-24 { color: #261716; }
+#srm-canvas.srm-25 { color: #231716; }
+#srm-canvas.srm-26 { color: #19100F; }
+#srm-canvas.srm-27 { color: #16100F; }
+#srm-canvas.srm-28 { color: #120D0C; }
+#srm-canvas.srm-29 { color: #100B0A; }
+#srm-canvas.srm-30 { color: #050B0A; }

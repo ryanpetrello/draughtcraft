@@ -3,7 +3,7 @@
  */
 WebFont.load({
     custom: {
-        families: ['Eraser'],
+        families: ['CabinSketch'],
         urls: ['/css/type/chalk.css']
     }
 });

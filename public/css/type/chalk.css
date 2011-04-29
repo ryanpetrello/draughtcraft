@@ -1,6 +1,6 @@
 @font-face {
-  font-family: 'Eraser';
+  font-family: 'CabinSketch';
   src: url(//:) format('no404'), 
-       url('chalk.ttf') format('truetype');
+       url('cabinsketch.ttf') format('truetype');
   font-style: normal;
 }
