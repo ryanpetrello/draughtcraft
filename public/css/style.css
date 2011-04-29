@@ -31,6 +31,7 @@ h2  {
   line-height: 1.3em;
   font-family: "Eraser";
   color: #EEEEAA;
+  text-shadow: rgba(255, 255, 255, .2) 2px 0 2px;
 }
 h2.inline  {
   display: inline;
@@ -57,6 +58,7 @@ div#content  {
   max-width: 1200px;
   position: relative;
   z-index: 1;
+  overflow: hidden
 }
 div#content:before  {
   content:"";
@@ -78,11 +80,11 @@ div#content-inner  {
     linear,
     left top,
     left bottom,
-    from(#1A6F61),
-    to(#002517)
+    from(#666),
+    to(#222)
   );
-  border-radius: 5px;
-  -moz-border-radius: 5px;
+  border-radius: 2px;
+  -moz-border-radius: 2px;
   -moz-box-shadow: 0 0 1px 1px #333;
   -webkit-box-shadow: inset 0 0 4px 4px rgba(30, 30, 30, .7);
   border: 1px solid rgba(0, 0, 0, .7);
@@ -90,6 +92,7 @@ div#content-inner  {
   min-height: 400px;
   position: relative;
   z-index: 1;
+  overflow: hidden;
 }
 div#content-inner:before  {
   content:"";
@@ -100,16 +103,47 @@ div#content-inner:before  {
   left: 0;
   right: 0;
   background: url('/images/chalk-overlay.png') bottom left;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  opacity: .25;
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  opacity: .35;
 }
+
+/* Chalkboard Ledge */
+#ledge {
+  position: absolute;
+  background: url(/images/chalk-sprites.png) no-repeat 0 0;
+  width: 266px;
+  height: 107px;
+  margin: 0;
+  padding: 0;
+  bottom: 0;
+  right: 0;
+}
+#ledge div.chalk {
+  position: absolute;
+  bottom: 30px;
+  background-image: url(/images/chalk-sprites.png);
+  background-repeat: no-repeat;
+  background-position-x: 1px;
+  width: 110px;
+  height: 32px;
+  background-position-y: -113px;
+  z-index: 1;
+}
+#ledge div.chalk.white  {
+  background-position-y: -151px;
+  left: 45;
+  z-index: 2;
+}
+  
 
 /* Chalkboard Layout */
 div#content-inner div.step  {
-  width: 32%;
-  margin-right: 1%;
+  width: 50%;
   float: left;
+}
+div#content-inner .step .number  {
+  color: #FFF;
 }
 div#content-inner div.divider  {
   clear: both;
@@ -135,15 +169,15 @@ div#content-inner div.opaque:before  {
 }
 
 /* Ingredient UI Styles */
-.control  {
+div#content-inner .control  {
   font-family: "Eraser";
   font-size: 1em;
   vertical-align: middle;
 }
-.control.plus  {
+div#content-inner .control.plus  {
   font-size: 2em;
 }
-table tr.addition td  {
+div#content-inner table tr.addition td  {
   padding: 2px 5px;
 }
 div#content-inner div.opaque input  {
