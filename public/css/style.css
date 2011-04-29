@@ -139,14 +139,15 @@ div#content-inner:before  {
 
 /* Chalkboard Layout */
 div#content-inner div.step  {
-  width: 50%;
+  width: 45%;
+  margin-right: 5%;
   float: left;
 }
 div#content-inner .step .number  {
   color: #FFF;
 }
 div#content-inner div.divider  {
-  clear: both;
+  clear: left;
   padding: 20px 0;
 }
 
@@ -166,16 +167,40 @@ div#content-inner div.opaque:before  {
   right: 0;
   background: #000;
   opacity: .15;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
 }
 
 /* Ingredient UI Styles */
+div#content-inner label  {
+  cursor: default;
+}
 div#content-inner .control  {
   font-family: "Eraser";
   font-size: 1em;
   vertical-align: middle;
 }
+div#content-inner .control.blue  {
+  color: #96A0C3;
+}
+div#content-inner .control.orange  {
+  color: #BCA281;
+}
+div#content-inner .control.yellow  {
+  color: #EEEEAA;
+}
+div#content-inner .control.purple  {
+  color: #A98BAA;
+}
+div#content-inner .control.red  {
+  color: #BF7E8B;
+}
 div#content-inner .control.plus  {
   font-size: 2em;
+  cursor: pointer;
+}
+div#content-inner .control.plus:hover  {
+  color: #EEEEAA;
 }
 div#content-inner table tr.addition td  {
   padding: 2px 5px;
