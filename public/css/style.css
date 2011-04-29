@@ -178,6 +178,8 @@ div#content-inner #notes textarea  {
   color: #FFF;
   width: 100%;
   height: 150px;
+  font-family: "CabinSketch";
+  font-size: 1.2em;
 }
 div#content-inner #notes textarea:focus  {
   outline-width: 0;
