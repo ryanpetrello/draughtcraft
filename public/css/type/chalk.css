@@ -1,0 +1,6 @@
+@font-face {
+  font-family: 'Eraser';
+  src: url(//:) format('no404'), 
+       url('chalk.ttf') format('truetype');
+  font-style: normal;
+}
