@@ -5,7 +5,12 @@
 </%def>
 
   <nav id="topnav">
-  <h1>Beer<span class="beer-color">Parts</span></h1>
+    <h1>Beer<span class="beer-color">Parts</span></h1>
+    <ul>
+      <li>
+        <a href="#">Sign In</a>
+      </li>
+    </ul>
   </nav>
 
   <header>
@@ -17,6 +22,7 @@
       <div id="ledge">
         <div class="chalk"></div>
         <div class="chalk white"></div>
+        <div class="chalk eraser"></div>
       </div>
 
       <h1>Simcoe IPA</h1>
@@ -43,14 +49,6 @@
               <select>
                 <option value="5">5 Gallons</option>
               </select>
-            </td>
-          </tr>
-          <tr class="addition">
-            <td>
-              <label class="control">Boil Duration</label>
-            </td>
-            <td>
-              <input type="text" name="boil" class="unit" value="60" /> <label>minutes</label>
             </td>
           </tr>
         </table>
@@ -178,6 +176,16 @@
               <span class="control plus"> + </span>
             </td>
           </tr>
+
+          <tr class="addition">
+            <td>
+              <label class="control">Duration:</label>
+            </td>
+            <td>
+              <input type="text" name="boil" class="unit" value="60" /> <label>minutes</label>
+            </td>
+          </tr>
+
         </table>
 
       </div>
