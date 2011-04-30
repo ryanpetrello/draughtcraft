@@ -1,6 +1,12 @@
 body  {
   line-height: 1.75em;
   color: #FFF;
+  background: -moz-linear-gradient(
+    top,
+    #333,
+    #222 15%,
+    #000
+  );
   background: -webkit-gradient(
     linear,
     left top,
@@ -9,10 +15,8 @@ body  {
     color-stop(.15, #222),
     to(#000)
   );
-  font-family: "CabinSketch";
 }
 p, input  {
-  font-family: "CabinSketch";
   font-size: 1.1em;
 }
 nav#topnav  {
@@ -25,9 +29,9 @@ nav#topnav a  {
   color: #FFFFAA;
 }
 h1  {
-  font-size: 2.5em;
-  font-family: "CabinSketch";
+  font-size: 2.75em;
   line-height: 1.8em;
+  padding: 15px 0;
 }
 h1 span.beer-color  {
   color: #F7B400;
@@ -35,7 +39,6 @@ h1 span.beer-color  {
 h2  {
   font-size: 2em;
   line-height: 1em;
-  font-family: "CabinSketch";
   color: #FFFFAA;
 }
 h2.inline  {
@@ -48,6 +51,11 @@ h2.inline  {
 div#content  {
   margin: 1em 1.7em; 
   padding: 22px;
+  background: -moz-linear-gradient(
+    top,
+    #613B27,
+    #331F17
+  );
   background: -webkit-gradient(
     linear,
     left top,
@@ -82,19 +90,23 @@ div#content-inner  {
   color: #FFF;
   padding: 20px;
   padding-top: 5px;
+  background: -moz-linear-gradient(
+    top,
+    #666,
+    #000
+  );
   background: -webkit-gradient(
     linear,
     left top,
     left bottom,
     from(#666),
-    to(#222)
+    to(#1A1A1A)
   );
   border-radius: 2px;
   -moz-border-radius: 2px;
-  -moz-box-shadow: 0 0 1px 1px #333;
+  -moz-box-shadow: inset 0 0 4px 4px rgba(30, 30, 30, .7);
   -webkit-box-shadow: inset 0 0 4px 4px rgba(30, 30, 30, .7);
   border: 1px solid rgba(0, 0, 0, .7);
-  box-shadow: 0 0 1px 1px #333;
   min-height: 400px;
   position: relative;
   z-index: 1;
@@ -118,9 +130,7 @@ div#content-inner:before  {
 div#srm-canvas  {
   float: right;
   font-size: 6em;
-  font-weight: bold;
-  font-family: "CabinSketch";
-  padding-top: 45px;
+  padding-top: 4px;
   padding-right: 15px;
 }
 
@@ -143,11 +153,11 @@ div#srm-canvas  {
   background-position-x: 1px;
   width: 110px;
   height: 32px;
-  background-position-y: -113px;
+  background-position: 0 -113px;
   z-index: 1;
 }
 #ledge div.chalk.white  {
-  background-position-y: -151px;
+  background-position: 0 -151px;
   left: 45;
   z-index: 2;
 }
@@ -168,10 +178,12 @@ div#content-inner div.divider  {
 }
 
 div#content-inner div.opaque, div#content-inner #notes  {
-  padding: 15px;
   position: relative;
   z-index: 1;
   margin: 15px 0;
+}
+div#content-inner div.opaque p  {
+  padding: 15px;
 }
 div#content-inner #notes  {
   padding: 0;
@@ -184,6 +196,7 @@ div#content-inner #notes textarea  {
   width: 100%;
   height: 150px;
   font-family: "CabinSketch";
+  font-weight: 100;
   font-size: 1.2em;
 }
 div#content-inner #notes textarea:focus  {
@@ -241,7 +254,7 @@ div#content-inner table tr.addition td  {
 div#content-inner div.opaque input  {
   border: 0;
   background: transparent;
-  border-bottom: 1px solid #FFF;
+  border-bottom: 1px solid #999;
   color: #FFF;
 }
 div#content-inner div.opaque input:focus  {
