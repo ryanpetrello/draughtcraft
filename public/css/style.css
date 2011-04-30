@@ -194,7 +194,7 @@ div#content-inner #notes textarea  {
   padding: 15px;
   color: #FFF;
   width: 100%;
-  height: 150px;
+  height: 132px;
   font-family: "CabinSketch";
   font-weight: 100;
   font-size: 1.2em;
@@ -251,13 +251,14 @@ div#content-inner .control.plus:hover  {
 div#content-inner table tr.addition td  {
   padding: 2px 5px;
 }
-div#content-inner div.opaque input  {
+div#content-inner input  {
   border: 0;
   background: transparent;
-  border-bottom: 1px solid #999;
+  border-bottom: 1px solid #CCC;
   color: #FFF;
+  font-family: "CabinSketch";
 }
-div#content-inner div.opaque input:focus  {
+div#content-inner input:focus  {
   outline-width: 0;
 }
 input.unit  {
