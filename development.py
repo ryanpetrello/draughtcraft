@@ -23,6 +23,23 @@ app = {
     }
 }
 
+sqlalchemy = {
+    'writes' : {
+        'url'           : 'sqlite:///beerparts.db',
+        'echo'          : False,
+        'echo_pool'     : False,
+        'pool_recycle'  : 3600,
+        'encoding'      : 'utf-8'
+    },
+    'reads' : {
+        'url'           : 'sqlite:///beerparts.db',
+        'echo'          : False,
+        'echo_pool'     : False,
+        'pool_recycle'  : 3600,
+        'encoding'      : 'utf-8'
+    },
+}
+
 # Custom Configurations must be in Python dictionary format::
 #
 # foo = {'bar':'baz'}

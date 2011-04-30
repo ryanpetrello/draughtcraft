@@ -1,5 +1,5 @@
-from pecan import make_app
-from beerparts import model
+from pecan              import make_app
+from beerparts          import model
 
 def setup_app(config):
     
@@ -11,5 +11,8 @@ def setup_app(config):
         debug           = config.app.debug,
         logging         = config.app.logging,
         template_path   = config.app.template_path,
-        force_canonical = config.app.force_canonical
+        force_canonical = config.app.force_canonical,
+        extra_template_vars = dict(
+            h   = {}
+        )
     )
