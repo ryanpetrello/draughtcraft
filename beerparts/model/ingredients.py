@@ -12,8 +12,8 @@ ORIGINS = [
     'POLISH',
     'SLOVENIAN',
     'GERMAN',
-    'UNITED KINGDOM',
-    'UNITED STATES'
+    'UK',
+    'US'
 ]
 
 
@@ -21,8 +21,12 @@ class Ingredient(Entity):
 
     using_options(inheritance='multi', polymorphic=True)
     
-    name                = Field(Unicode(256), unique=True)
+    name                = Field(Unicode(256))
     description         = Field(UnicodeText)
+
+    @property
+    def printed_name(self):
+        return self.name
 
 
 class Fermentable(Ingredient):
@@ -40,6 +44,13 @@ class Fermentable(Ingredient):
     ppg                 = Field(Integer)
     lovibond            = Field(Integer)
     origin              = Field(Enum(*ORIGINS))
+
+    @property
+    def printed_name(self):
+        origin = self.origin
+        if len(origin) > 2:
+            origin = origin.title()
+        return '(%s) %s' % (origin, self.name)
 
 
 class Hop(Ingredient):
@@ -77,4 +88,3 @@ class Yeast(Ingredient):
     form                = Field(Enum(*FORMS))
     attenuation         = Field(Float())
     flocculation        = Field(Enum(*FLOCCULATION_VALUES))
-    tolerance           = Field(Integer)

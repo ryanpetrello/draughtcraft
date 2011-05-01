@@ -13,9 +13,11 @@
         <label class="control">Hops:</label>
       </td>
       <td>
-        <select>
-          <option>(US) Cascade</option>
-        </select>
+        ${h.select(
+          'add-hop', 
+          None, 
+          sorted([(hop.id, hop.printed_name) for hop in h.model.Hop.query.all()], key = lambda hop: hop[1])
+        )}
       </td>
       <td>
         <span class="control plus"> + </span>

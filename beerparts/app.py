@@ -1,5 +1,7 @@
-from pecan              import make_app
-from beerparts          import model
+from pecan                  import make_app, request
+from pecan.hooks            import TransactionHook
+from beerparts              import model
+from beerparts.templates    import helpers
 
 def setup_app(config):
     
@@ -12,7 +14,17 @@ def setup_app(config):
         logging         = config.app.logging,
         template_path   = config.app.template_path,
         force_canonical = config.app.force_canonical,
+        hooks           = [
+             TransactionHook(
+                 model.start,
+                 model.start,
+                 model.commit,
+                 model.rollback,
+                 model.clear
+             )
+        ],   
         extra_template_vars = dict(
-            h   = {}
+            h           = helpers,
+            request     = request 
         )
     )

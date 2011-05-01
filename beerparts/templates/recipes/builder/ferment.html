@@ -13,9 +13,11 @@
         <label class="control">Yeast:</label>
       </td>
       <td>
-        <select>
-          <option>Wyeast 1056 - American Ale</option>
-        </select>
+        ${h.select(
+          'add-yeast', 
+          None, 
+          sorted([(yeast.id, yeast.printed_name) for yeast in h.model.Yeast.query.all()], key = lambda yeast: yeast[1])
+        )}
       </td>
       <td>
         <span class="control plus"> + </span>

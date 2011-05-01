@@ -9,6 +9,7 @@ elixir.options_defaults.update({
 })
 
 Session = scoped_session(sessionmaker())
+elixir.session = Session
 metadata = elixir.metadata
 
 def _engine_from_config(configuration):
@@ -17,8 +18,7 @@ def _engine_from_config(configuration):
     return create_engine(url, **configuration)
 
 def init_model():
-    conf.sqlalchemy.sa_engine = _engine_from_config(conf.sqlalchemy.writes)
-    conf.sqlalchemy.ro_sa_engine = _engine_from_config(conf.sqlalchemy.reads)
+    conf.sqlalchemy.sa_engine = _engine_from_config(conf.sqlalchemy)
 
 def bind(target):
     Session.bind = target
@@ -36,9 +36,6 @@ def rollback():
 def clear():
     Session.remove()
 
-def start_read_only():
-    bind(conf.sqlalchemy.ro_sa_engine)
-    
 from ingredients import *
 
 elixir.setup_all()

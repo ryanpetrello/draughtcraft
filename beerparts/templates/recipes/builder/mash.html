@@ -13,9 +13,11 @@
         <label class="control">Malt:</label>
       </td>
       <td>
-        <select>
-          <option>(US) 2-Row Barley</option>
-        </select>
+        ${h.select(
+          'add-fermentable', 
+          None, 
+          sorted([(f.id, f.printed_name) for f in h.model.Fermentable.query.all()], key = lambda f: f[1])
+        )}
       </td>
       <td>
         <span class="control plus"> + </span>
