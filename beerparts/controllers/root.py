@@ -1,8 +1,5 @@
-from pecan import expose
-
+from recipes    import RecipesController
 
 class RootController(object):
 
-    @expose('index.html')
-    def index(self):
-        return dict()
+    recipes = RecipesController()

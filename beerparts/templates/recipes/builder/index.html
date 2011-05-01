@@ -1,9 +1,32 @@
-<h1>Simcoe IPA</h1>
+<%inherit file="../../layout.html" />
 
-<%include file="results.html" />
+<%def name="title()">
+    Beer Parts
+</%def>
 
-<%include file="mash.html" />
-<div class="divider" />
-<%include file="boil.html" />
-<div class="divider" />
-<%include file="ferment.html" />
+<%def name="javascript()">
+    <script type="text/javascript" src="/javascript/recipes/builder.js"></script>
+</%def>
+
+  <nav id="topnav">
+    <h1>Beer<span class="beer-color">Parts</span></h1>
+    <ul>
+      <li>
+        <a href="#">Sign In</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div id="content">
+    <div id="content-inner">
+
+      <div id="ledge">
+        <div class="chalk"></div>
+        <div class="chalk white"></div>
+        <div class="chalk eraser"></div>
+      </div>
+
+      <div id="builder" />
+
+    </div>
+  </div>
