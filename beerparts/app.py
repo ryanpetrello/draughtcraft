@@ -1,4 +1,4 @@
-from pecan                  import make_app, request
+from pecan                  import make_app
 from pecan.hooks            import TransactionHook
 from beerparts              import model
 from beerparts.templates    import helpers
@@ -24,7 +24,6 @@ def setup_app(config):
              )
         ],   
         extra_template_vars = dict(
-            h           = helpers,
-            request     = request 
+            h           = helpers
         )
     )

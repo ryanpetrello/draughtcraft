@@ -1,0 +1,30 @@
+<%!
+  from beerparts.lib.units import UNITS
+
+  hidden_fields = {
+    'type'    : 'RecipeAddition',
+    'amount'  : 0,
+    'unit'    : 'POUND',
+    'use'     : 'BOIL'
+  }
+%>
+
+${h.form(h.request.path, hidden_fields = hidden_fields)}
+  <tr class="addition">
+    <td>
+      <label class="control">Malt:</label>
+    </td>
+    <td>
+
+        ${h.select(
+          'ingredient', 
+          None, 
+          sorted([(f.id, f.printed_name) for f in h.model.Fermentable.query.all()], key = lambda f: f[1])
+        )}
+
+    </td>
+    <td>
+      <button class="control plus"> + </button>
+    </td>
+  </tr>
+${h.end_form()}

@@ -67,16 +67,6 @@ Fermentable = [
 
         """,
         "type"              : "MALT",
-        "ppg"               : 37,
-        "lovibond"          : 2,
-        "origin"            : "GERMAN"
-    },
-    {
-        "name"              : "Pilsner Malt",
-        "description"       : """
-
-        """,
-        "type"              : "MALT",
         "ppg"               : 36,
         "lovibond"          : 1,
         "origin"            : "UK"

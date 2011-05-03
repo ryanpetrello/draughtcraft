@@ -1,6 +1,7 @@
 from elixir import (
     Entity, Field, Integer, Float, Unicode,
-    UnicodeText, Enum, using_options
+    UnicodeText, Enum, using_options,
+    OneToMany
 )
 
 ORIGINS = [
@@ -45,6 +46,8 @@ class Fermentable(Ingredient):
     lovibond            = Field(Integer)
     origin              = Field(Enum(*ORIGINS))
 
+    additions           = OneToMany('RecipeAddition', inverse='fermentable')
+
     @property
     def printed_name(self):
         origin = self.origin
@@ -59,6 +62,8 @@ class Hop(Ingredient):
 
     alpha_acid          = Field(Float())
     origin              = Field(Enum(*ORIGINS))
+
+    additions           = OneToMany('RecipeAddition', inverse='hop')
 
 
 class Yeast(Ingredient):
@@ -88,3 +93,5 @@ class Yeast(Ingredient):
     form                = Field(Enum(*FORMS))
     attenuation         = Field(Float())
     flocculation        = Field(Enum(*FLOCCULATION_VALUES))
+
+    additions           = OneToMany('RecipeAddition', inverse='yeast')

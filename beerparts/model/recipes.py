@@ -23,29 +23,36 @@ class RecipeAddition(Entity):
         'SECONDARY'
     ]
 
+    using_options(inheritance='multi', polymorphic=True)
+
     amount              = Field(Float)
     unit                = Field(Enum(*UNITS))
     use                 = Field(Enum(*USES))
-
-    using_options(inheritance='multi', polymorphic=True)
-
-    recipe              = ManyToOne('Recipe', inverse='additions')
-
-
-class TimedAddition(RecipeAddition):
-
     duration            = Field(Interval)
 
-class HopAddition(TimedAddition):
+    recipe              = ManyToOne('Recipe', inverse='additions')
+    fermentable         = ManyToOne('Fermentable', inverse='additions')
+    hop                 = ManyToOne('Hop', inverse='additions')
+    yeast               = ManyToOne('Yeast', inverse='additions')
+
+    @property
+    def ingredient(self):
+        for ingredient in ('fermentable', 'hop', 'yeast'):
+            match = getattr(self, ingredient, None)
+            if match is not None:
+                return match
 
 
-    TYPES = [
+class HopAddition(RecipeAddition):
+
+
+    FORMS = [
         'LEAF',
         'PELLET',
         'PLUG'
     ]
 
-    form                = Field(Enum(*TYPES))
+    form                = Field(Enum(*FORMS))
     alpha_acid          = Field(Float())
 
     using_options(inheritance='multi', polymorphic=True)

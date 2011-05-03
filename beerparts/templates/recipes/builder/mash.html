@@ -1,28 +1,32 @@
 <div class="step"> 
   <h2>1. Mash</h2>
-
+  
   <div class="opaque">
-    <p>
-      Choose one or more fermentables below.
-    </p>
+    % if recipe.additions:
+      <table>
+        % for a in recipe.additions:
+          <tr class="addition">
+            <td>
+              ${a.ingredient.printed_name}
+            </td>
+            <td>
+              ${a.ingredient.ppg} PPG
+            </td>
+            <td>
+              ${a.ingredient.lovibond}  &#186;L
+            </td>
+          </tr>
+        % endfor
+      </table>
+    % else:
+      <p>
+        Choose one or more fermentables below.
+      </p>
+    % endif
   </div>
 
   <table>
-    <tr class="addition">
-      <td>
-        <label class="control">Malt:</label>
-      </td>
-      <td>
-        ${h.select(
-          'add-fermentable', 
-          None, 
-          sorted([(f.id, f.printed_name) for f in h.model.Fermentable.query.all()], key = lambda f: f[1])
-        )}
-      </td>
-      <td>
-        <span class="control plus"> + </span>
-      </td>
-    </tr>
+    <%include file="additions/mash-template.html" />
   </table>
 
 </div>
