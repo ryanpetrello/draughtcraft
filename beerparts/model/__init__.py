@@ -36,6 +36,7 @@ def rollback():
 def clear():
     Session.remove()
 
-from ingredients import *
+from ingredients    import *
+from recipes        import *
 
 elixir.setup_all()

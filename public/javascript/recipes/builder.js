@@ -1,6 +1,6 @@
 $.beerparts.recipes.builder.renderRecipe = function(){
     $.ajax({
-        url: '/recipes/builder/async',
+        url: window.location.pathname+'/async',
         cache: false,
         success: function(html){
             $("#builder").html(html)
