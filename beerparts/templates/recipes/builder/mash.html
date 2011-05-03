@@ -4,18 +4,8 @@
   <div class="opaque">
     % if recipe.mash:
       <table>
-        % for a in recipe.mash:
-          <tr class="addition">
-            <td>
-              ${a.ingredient.printed_name}
-            </td>
-            <td>
-              ${a.ingredient.ppg} PPG
-            </td>
-            <td>
-              ${a.ingredient.lovibond}  &#186;L
-            </td>
-          </tr>
+        % for addition in recipe.mash:
+          <%include file="additions/mash-additions.html" args="addition=addition" />
         % endfor
       </table>
     % else:
