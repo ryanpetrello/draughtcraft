@@ -2,9 +2,9 @@
   <h2>1. Mash</h2>
   
   <div class="opaque">
-    % if recipe.additions:
+    % if recipe.mash:
       <table>
-        % for a in recipe.additions:
+        % for a in recipe.mash:
           <tr class="addition">
             <td>
               ${a.ingredient.printed_name}
