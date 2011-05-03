@@ -1,6 +1,6 @@
-<%page args="addition" />
+<%page args="i, addition" />
 
-<tr class="addition">
+<tr class="addition ${'even' if i % 2 == 0 else 'odd'}">
   <td>
     ${addition.ingredient.printed_name}
   </td>

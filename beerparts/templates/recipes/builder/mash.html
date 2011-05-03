@@ -1,11 +1,11 @@
 <div class="step"> 
   <h2>1. Mash</h2>
   
-  <div class="opaque">
+  <div class="opaque ingredient-list">
     % if recipe.mash:
       <table>
-        % for addition in recipe.mash:
-          <%include file="additions/mash-additions.html" args="addition=addition" />
+        % for i, addition in enumerate(recipe.mash):
+          <%include file="additions/mash-additions.html" args="i=i, addition=addition" />
         % endfor
       </table>
     % else:
