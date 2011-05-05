@@ -4,6 +4,9 @@ $.beerparts.recipes.builder.renderRecipe = function(){
         cache: false,
         success: function(html){
             $("#builder").html(html)
+            $('select').selectBox({
+                'menuTransition': 'fade'
+            }).change($.Cufon);
             $.Cufon();
         }
     });

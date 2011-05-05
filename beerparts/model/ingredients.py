@@ -53,7 +53,7 @@ class Fermentable(Ingredient):
         origin = self.origin
         if len(origin) > 2:
             origin = origin.title()
-        return '(%s) %s' % (origin, self.name)
+        return '%s (%s)' % (self.name, origin)
 
 
 class Hop(Ingredient):

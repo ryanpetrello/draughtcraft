@@ -4,9 +4,35 @@
   <div class="opaque ingredient-list">
     % if recipe.mash:
       <table>
-        % for i, addition in enumerate(recipe.mash):
-          <%include file="additions/mash-additions.html" args="i=i, addition=addition" />
-        % endfor
+
+        <!-- Malt Additions -->
+        % if recipe.mash.get(h.model.Fermentable):
+          <tr>
+            <th class="amount">Amount</th>
+            <th>Fermentable</th>
+            <th>PPG</th>
+            <th class="unit">L</th>
+          </tr>
+
+          % for addition in recipe.mash.get(h.model.Fermentable):
+            <%include file="additions/mash/fermentable.html" args="i=recipe.additions.index(addition), addition=addition" />
+          % endfor
+        %endif
+
+        <!-- Hop Additions -->
+        % if recipe.mash.get(h.model.Hop):
+          <tr>
+            <th class="amount">Amount</th>
+            <th>Variety</th>
+            <th>Form</th>
+            <th class="unit">AA</th>
+          </tr>
+
+          % for i, addition in enumerate(recipe.mash.get(h.model.Hop)):
+            <%include file="additions/mash/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
+          % endfor
+        %endif
+
       </table>
     % else:
       <p>

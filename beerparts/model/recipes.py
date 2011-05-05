@@ -10,25 +10,31 @@ class Recipe(Entity):
 
     additions           = OneToMany('RecipeAddition', inverse='recipe')
 
+    def _partition(self, additions):
+        p = {}
+        for a in additions:
+            p.setdefault(a.ingredient.__class__, []).append(a)
+        return p
+
     @property
     def mash(self):
-        return [a for a in self.additions if a.use == 'MASH']
+        return self._partition([a for a in self.additions if a.use == 'MASH'])
 
     @property
     def boil(self):
-        return [a for a in self.additions if a.use in (
+        return self._partition([a for a in self.additions if a.use in (
             'FIRST WORT',
             'BOIL',
             'POST-BOIL',
             'FLAME OUT'
-        )]
+        )])
 
     @property
     def fermentation(self):
-        return [a for a in self.additions if a.use in (
+        return self._partition([a for a in self.additions if a.use in (
             'PRIMARY',
             'SECONDARY'
-        )]
+        )])
 
 
 class RecipeAddition(Entity):

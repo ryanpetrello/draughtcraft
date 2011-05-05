@@ -1,0 +1,32 @@
+<%page args="i, addition" />
+
+${h.hidden(
+  'addition-%d.id' % i,
+  addition.id
+)}
+
+<tr class="addition ${'even' if i % 2 == 0 else 'odd'}">
+  <td class="amount">
+    ${h.text(
+      'addition-%d.amount' % i,
+      '%d oz' % addition.amount
+    )}
+  </td>
+  <td>
+    ${addition.ingredient.printed_name}
+  </td>
+  <td>
+    ${h.select(
+      'addition-%d.form' % i, 
+      addition.form.title(), 
+      sorted([f.title() for f in h.model.HopAddition.FORMS])
+    )}
+  </td>
+  <td class="unit">
+    ${h.text(
+      'addition-%d.alpha_acid' % i,
+      addition.alpha_acid,
+      class_='unit'
+    )}
+  </td>
+</tr>
