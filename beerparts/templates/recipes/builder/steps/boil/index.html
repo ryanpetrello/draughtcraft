@@ -1,13 +1,13 @@
 <div class="step"> 
 
-  <%include file="../tabs.html" args="active='mash'" />
+  <%include file="../../tabs.html" args="active='boil'" />
   
   <div class="ingredient-list">
-    % if recipe.mash:
+    % if recipe.boil:
       <table>
 
         <!-- Malt Additions -->
-        % if recipe.mash.get(h.model.Fermentable):
+        % if recipe.boil.get(h.model.Fermentable):
           <tr>
             <th />
             <th class="amount">Amount</th>
@@ -16,13 +16,13 @@
             <th class="unit">L</th>
           </tr>
 
-          % for addition in recipe.mash.get(h.model.Fermentable):
-            <%include file="additions/fermentable.html" args="i=recipe.additions.index(addition), addition=addition" />
+          % for addition in recipe.boil.get(h.model.Fermentable):
+            <%include file="../additions/fermentable.html" args="i=recipe.additions.index(addition), addition=addition" />
           % endfor
         %endif
 
         <!-- Hop Additions -->
-        % if recipe.mash.get(h.model.Hop):
+        % if recipe.boil.get(h.model.Hop):
           <tr>
             <th />
             <th class="amount">Amount</th>
@@ -31,8 +31,8 @@
             <th class="unit">AA</th>
           </tr>
 
-          % for i, addition in enumerate(recipe.mash.get(h.model.Hop)):
-            <%include file="additions/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
+          % for i, addition in enumerate(recipe.boil.get(h.model.Hop)):
+            <%include file="../additions/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
           % endfor
         %endif
 
@@ -49,7 +49,7 @@
   </div>
 
   <div class="inventory">
-    <%include file="../add.html" />
+    <%include file="add.html" />
   </div>
 
 </div>

@@ -1,0 +1,22 @@
+<%!
+  from beerparts.lib.units import UNITS
+
+  hidden_fields = {
+    'type'    : 'RecipeAddition',
+    'amount'  : 0,
+    'unit'    : 'POUND',
+    'use'     : 'MASH'
+  }
+%>
+
+<h3>Add Yeast</h3>
+
+<fieldset>
+  ${h.form(h.request.path, hidden_fields = hidden_fields)}
+    ${h.select(
+      'ingredient', 
+      None, 
+      sorted([(yeast.id, yeast.printed_name) for yeast in h.model.Yeast.query.all()], key = lambda yeast: yeast[1])
+    )}
+  ${h.end_form()}
+</fieldset>

@@ -18,7 +18,6 @@
       None, 
       sorted([(f.id, f.printed_name) for f in h.model.Fermentable.query.all()], key = lambda f: f[1])
     )}
-    <label><a href="#">Add</a></label>
   ${h.end_form()}
 </fieldset>
 
@@ -29,6 +28,5 @@
       None, 
       sorted([(hop.id, hop.printed_name) for hop in h.model.Hop.query.all()], key = lambda hop: hop[1])
     )}
-    <label><a href="#">Add</a></label>
   ${h.end_form()}
 </fieldset>
