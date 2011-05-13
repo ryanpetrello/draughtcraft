@@ -12,10 +12,20 @@ class RecipeBuilderAsyncController(RestController):
             recipe = request.context['recipe']
         )
 
+    @expose()
+    def put(self, **kw):
+        from pprint import pprint
+        pprint(kw)
+        return ''
+
     @expose(
-        schema = RecipeAdditionSchema()
+        #schema = RecipeAdditionSchema()
     )
     def post(self, **kw):
+        from pprint import pprint
+        pprint(kw)
+        return ''
+
         if request.pecan.get('validation_errors'):
             abort(400)
 
