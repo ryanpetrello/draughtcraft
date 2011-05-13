@@ -6,14 +6,17 @@ except ImportError:
     use_setuptools()
     from setuptools import setup, find_packages
 
+from beerparts import __version__
+
 setup(
     name = 'beerparts',
-    version = '0.1',
+    version = __version__,
     description = '',
     author = '',
     author_email = '',
     install_requires = [
         "pecan",
+        #TODO
     ],
     zip_safe = False,
     paster_plugins = ['Pecan'],
