@@ -3,9 +3,8 @@
 
   hidden_fields = {
     'type'    : 'RecipeAddition',
-    'amount'  : 0,
-    'unit'    : 'POUND',
-    'use'     : 'MASH'
+    'amount'  : 1,
+    'use'     : 'FERMENTATION'
   }
 %>
 
@@ -16,7 +15,7 @@
     ${h.select(
       'ingredient', 
       None, 
-      sorted([(yeast.id, yeast.printed_name) for yeast in h.model.Yeast.query.all()], key = lambda yeast: yeast[1])
+      [('', 'Add Yeast...')] + sorted([(yeast.id, yeast.printed_name) for yeast in h.model.Yeast.query.all()], key = lambda yeast: yeast[1])
     )}
   ${h.end_form()}
 </fieldset>

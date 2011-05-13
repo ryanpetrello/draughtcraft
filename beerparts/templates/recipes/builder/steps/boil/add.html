@@ -17,7 +17,7 @@
     ${h.select(
       'ingredient', 
       None, 
-      [('', 'Fermentables...')] + sorted([(f.id, f.printed_name) for f in h.model.Fermentable.query.all()], key = lambda f: f[1])
+      [('', 'Add Fermentables...')] + sorted([(f.id, f.printed_name) for f in h.model.Fermentable.query.all()], key = lambda f: f[1])
     )}
   ${h.end_form()}
 </fieldset>
@@ -27,7 +27,7 @@
     ${h.select(
       'ingredient', 
       None, 
-      [('', 'Hops...')] + sorted([(hop.id, hop.printed_name) for hop in h.model.Hop.query.all()], key = lambda hop: hop[1])
+      [('', 'Add Hops...')] + sorted([(hop.id, hop.printed_name) for hop in h.model.Hop.query.all()], key = lambda hop: hop[1])
     )}
   ${h.end_form()}
 </fieldset>
