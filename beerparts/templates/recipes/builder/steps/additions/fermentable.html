@@ -1,0 +1,27 @@
+<%page args="i, addition" />
+
+${h.hidden(
+  'addition-%d.id' % i,
+  addition.id
+)}
+
+<tr class="addition ${'even' if i % 2 == 0 else 'odd'}">
+  <td class="grain">
+    <span>Grain</span>
+  </td>
+  <td class="amount">
+    ${h.text(
+      'addition-%d.amount' % i,
+      '%d lb' % addition.amount
+    )}
+  </td>
+  <td>
+    <a href="#">${addition.ingredient.printed_name}</a>
+  </td>
+  <td>
+    ${addition.ingredient.ppg}
+  </td>
+  <td class="unit">
+    ${addition.ingredient.lovibond}
+  </td>
+</tr>
