@@ -12,11 +12,13 @@ class RecipeBuilderAsyncController(RestController):
             recipe = request.context['recipe']
         )
 
-    @expose()
+    @expose('recipes/builder/async.html')
     def put(self, **kw):
         from pprint import pprint
         pprint(kw)
-        return ''
+        return dict(
+            recipe = request.context['recipe']
+        )
 
     @expose(
         #schema = RecipeAdditionSchema()

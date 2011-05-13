@@ -6,20 +6,27 @@ $.beerparts.recipes.builder.fetchRecipe = function(){
         url: window.location.pathname+'/async',
         cache: false,
         success: function(html){
-            // Inject the response from the async call
-            $("#builder").html(html);
-
-            $.beerparts.recipes.builder.__afterRecipeFetch__();
+            $.beerparts.recipes.builder.__injectRecipeContent__(html);
         }
     })
 };
 
 /*
- * After a recipe is fetched and the builder container is replaced
- * with new content, there are a variety of listeners and state
- * settings (e.g., current tab, last focused field) we need to persist.
+ * After builder content is fetched, inject it into the appropriate
+ * container.
+ * @param {String} html - The HTML content to inject
  */
-$.beerparts.recipes.builder.__afterRecipeFetch__ = function(){
+$.beerparts.recipes.builder.__injectRecipeContent__ = function(html){
+    $("#builder").html(html);
+    $.beerparts.recipes.builder.__afterRecipeInject();
+};
+
+/*
+ * After recipe content is injected into the builder container, there are a
+ * variety of listeners and state settings (e.g., current tab, last 
+ * focused field) we need to persist.
+ */
+$.beerparts.recipes.builder.__afterRecipeInject = function(){
 
     // Re-initialize all event listeners
     $.beerparts.recipes.builder.initListeners();
@@ -31,10 +38,15 @@ $.beerparts.recipes.builder.__afterRecipeFetch__ = function(){
     
     //
     // Initialize forms in the newly replaced DOM with Ajax versions
-    // On successful Ajax submissions, we should fetch and re-draw
-    // the recipe.
+    // On successful Ajax submission, we inject the response body into
+    // the DOM.
     //
-    $('#builder form').ajaxForm($.beerparts.recipes.builder.fetchRecipe);
+    //$('#builder form').ajaxForm($.beerparts.recipes.builder.fetchRecipe);
+    $('#builder form').ajaxForm({
+        'success': function(responseText){
+            $.beerparts.recipes.builder.__injectRecipeContent__(responseText);
+        }
+    });
 
     //
     // As the user is changing values, we're instantly pushing data to a
@@ -102,12 +114,10 @@ $.beerparts.recipes.builder.initUpdateListeners = function(){
         // 1. Find any adjacent input fields (for the row) and temporarily
         //    disable them (disallow edits while saving).
 
-        var row = $(this).closest('tr');
-        $(row).find('input, select').attr('disabled', 'disabled');
-
-        // 2. Find the containing <form> and submit it asynchronously.
-
         var form = $(this).closest('form');
+        $(form).find('input, select').attr('disabled', 'disabled');
+
+        // 2. Submit the containing form asynchronously.
         form.submit();
 
     });
