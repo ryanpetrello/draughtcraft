@@ -95,7 +95,7 @@ h3  {
   display: none;
   background: #FFF;
 }
-#content .step.first, #content .step.results  {
+#content .step.active, #content .step.results  {
   display: block;
 }
 #content table  {
