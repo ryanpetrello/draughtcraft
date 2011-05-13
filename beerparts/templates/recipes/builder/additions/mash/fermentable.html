@@ -6,6 +6,9 @@ ${h.hidden(
 )}
 
 <tr class="addition ${'even' if i % 2 == 0 else 'odd'}">
+  <td class="grain">
+    <span>Grain</span>
+  </td>
   <td class="amount">
     ${h.text(
       'addition-%d.amount' % i,
@@ -13,7 +16,7 @@ ${h.hidden(
     )}
   </td>
   <td>
-    ${addition.ingredient.printed_name}
+    <a href="#">${addition.ingredient.printed_name}</a>
   </td>
   <td>
     ${addition.ingredient.ppg}

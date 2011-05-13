@@ -1,0 +1,183 @@
+/*
+ * General page styles
+ */
+body  {
+  background: #55AEC7;
+  border-top: 8px solid #358EA7;
+}
+a  {
+  color: #607890;
+}
+nav  {
+  color: #FFF;
+  width: 1000px;
+  margin: 0 auto;
+}
+nav ul  {
+  padding: 15px;
+  overflow: hidden;
+}
+nav ul li  {
+  float: left;
+  padding-right: 10px;
+}
+nav ul a, nav ul a:visited  {
+  color: #CFF09E;
+}
+nav ul a:hover  {
+  color: #EFFFAE;
+}
+h1  {
+  font-size: 2em;
+  line-height: 2.5em;
+}
+h2  {
+  font-size: 1.25em;
+  line-height: 2.5em;
+}
+h3  {
+  font-size: 1.15em;
+  line-height: 2.5em;
+}
+
+/*
+ * Main page layout
+ */
+#content  {
+  width: 1000px;
+  margin: 0 auto;
+  background: #F0F0F0;
+}
+#content h1  {
+  padding: 0 15px;
+  display: inline-block;
+  vertical-align: middle;
+}  
+#content a.style  {
+  font-size: 1.1em;
+  vertical-align: middle;
+  text-decoration: underline;
+}
+#content h2  {
+  background: #F7F7F7;
+  border-top: 1px solid #E8E8E8;
+  border-bottom: 1px solid #EEE;
+  overflow: hidden;
+}
+#content h2 ul, #content h2 li {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+#content h2 li  {
+  float: left;
+  line-height: 2.3em;
+  color: #777;
+}  
+#content h2 li.active a  {
+  color: #80B8D3;
+  text-decoration: none;
+}
+#content h2 li.last a  {
+  background: url(/images/crumb-cap.png) repeat-y left center;
+}
+#content h2 li a  {
+  display: block;
+  padding: 0 25px 0 18px;
+  background: url(/images/crumbs.gif) #FFF no-repeat right center;
+}
+
+/*
+ * Builder UI
+ */
+#content .step  {
+  overflow: hidden;
+  background: #FFF;
+}
+#content table  {
+  margin: 15px 20px;
+  width: 100%;
+}
+#content table th  {
+  text-align: left;
+}
+#content table th, #content table td  {
+  padding: 5px 8px;
+}
+#content table tr.addition td.grain span,
+#content table tr.addition td.hop span  {
+  color: #FFF;
+  background: #6E985E;
+  padding: 3px 5px;
+  font-size: 10px;
+  text-transform: uppercase;
+  font-weight: bold;
+  width: 35px;
+  text-align: center;
+  display: inline-block;
+  -webkit-border-radius: 8px;
+}
+#content table tr.addition:nth-child(odd) td  {
+  background: #F5F5F5;
+}
+#content table tr.addition td.grain span  {
+  background: #EDC124;
+}
+#content table tr.addition td input  {
+  width: 75px;
+}
+#content h2  {
+  clear: both;
+}
+div.ingredient-list  {
+  width: 73%;
+  margin-right: 2%;
+  float: left;
+  overflow: hidden;
+}
+div.inventory  {
+  width: 25%;
+  float: right;
+  background: #D4DF86;
+  color: #FFF;
+  min-height: 250px;
+}
+div.inventory fieldset  {
+  padding: 0 25px 25px;
+}
+div.inventory fieldset a  {
+  padding: 0 5px;
+  color: #333;
+}
+div.inventory h3  {
+  background: #B1BD5C;
+  padding: 0 15px;
+  margin-bottom: 25px;
+}
+
+/*
+ * Results
+ */
+#content div.step.results  {
+  background: #358EA7;
+}
+#content div.step.results table  {
+  width: 50%;
+}
+#content div.step.results table td  {
+  background: transparent !important;
+  color: #FFF;
+}
+
+/*
+ * Footer
+ */
+footer  {
+  text-align: center;
+  background: #55AEC7;
+  color: #FFF;
+  padding: 15px 0;
+}
+footer a  {
+  color: #FFF !important;
+}

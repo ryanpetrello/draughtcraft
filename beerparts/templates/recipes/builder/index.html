@@ -1,7 +1,7 @@
 <%inherit file="../../layout.html" />
 
 <%def name="title()">
-    Beer Parts
+    BrewPlot
 </%def>
 
 <%def name="javascript()">
@@ -9,8 +9,19 @@
 </%def>
 
   <nav id="topnav">
-    <h1>Beer<span class="beer-color">Parts</span></h1>
     <ul>
+      <li>
+        BrewPlot
+      </li>
+      <li>
+        <a href="#">Recipes</a>
+      </li>
+      <li>
+        <a href="#">Styles</a>
+      </li>
+      <li>
+        <a href="#">Ingredients</a>
+      </li>
       <li>
         <a href="#">Sign In</a>
       </li>
@@ -20,12 +31,6 @@
   <div id="content">
     <div id="content-inner">
 
-      <div id="ledge">
-        <div class="chalk"></div>
-        <div class="chalk white"></div>
-        <div class="chalk eraser"></div>
-      </div>
-  
       <form method="POST">
         <div id="builder" />
       </form>

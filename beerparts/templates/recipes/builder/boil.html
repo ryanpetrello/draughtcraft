@@ -1,52 +1,55 @@
-<div class="step">
-  <h2>2. Boil</h2>
+<div class="step"> 
 
-  <div class="opaque">
-    <p>
-      Choose one or more boil additions below.
-    </p>
+  <%include file="additions/tabs.html" args="" />
+  
+  <div class="ingredient-list">
+    % if recipe.boil:
+      <table>
+
+        <!-- Malt Additions -->
+        % if recipe.boil.get(h.model.Fermentable):
+          <tr>
+            <th />
+            <th class="amount">Amount</th>
+            <th>Fermentable</th>
+            <th>PPG</th>
+            <th class="unit">L</th>
+          </tr>
+
+          % for addition in recipe.boil.get(h.model.Fermentable):
+            <%include file="additions/boil/fermentable.html" args="i=recipe.additions.index(addition), addition=addition" />
+          % endfor
+        %endif
+
+        <!-- Hop Additions -->
+        % if recipe.boil.get(h.model.Hop):
+          <tr>
+            <th />
+            <th class="amount">Amount</th>
+            <th>Variety</th>
+            <th>Form</th>
+            <th class="unit">AA</th>
+          </tr>
+
+          % for i, addition in enumerate(recipe.boil.get(h.model.Hop)):
+            <%include file="additions/boil/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
+          % endfor
+        %endif
+
+      </table>
+    % else:
+      <table>
+        <tr>
+          <th>
+            Choose one or more fermentables below.
+          </th>
+        </tr>
+      </table>
+    % endif
   </div>
 
-  <table>
-    <tr class="addition">
-      <td>
-        <label class="control">Hops:</label>
-      </td>
-      <td>
-        ${h.select(
-          'add-hop', 
-          None, 
-          sorted([(hop.id, hop.printed_name) for hop in h.model.Hop.query.all()], key = lambda hop: hop[1])
-        )}
-      </td>
-      <td>
-        <span class="control plus"> + </span>
-      </td>
-    </tr>
-    
-    <tr class="addition">
-      <td>
-        <label class="control">Misc:</label>
-      </td>
-      <td>
-        <select>
-          <option>Whirlfloc Tablet</option>
-        </select>
-      </td>
-      <td>
-        <span class="control plus"> + </span>
-      </td>
-    </tr>
-
-    <tr class="addition">
-      <td>
-        <label class="control">Duration:</label>
-      </td>
-      <td>
-        <input type="text" name="boil" class="unit" value="60" /> <label>minutes</label>
-      </td>
-    </tr>
-
-  </table>
+  <div class="inventory">
+    <%include file="additions/add.html" />
+  </div>
 
 </div>

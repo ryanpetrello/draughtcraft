@@ -1,13 +1,15 @@
 <div class="step"> 
-  <h2>1. Mash</h2>
+
+  <%include file="additions/tabs.html" args="" />
   
-  <div class="opaque ingredient-list">
+  <div class="ingredient-list">
     % if recipe.mash:
       <table>
 
         <!-- Malt Additions -->
         % if recipe.mash.get(h.model.Fermentable):
           <tr>
+            <th />
             <th class="amount">Amount</th>
             <th>Fermentable</th>
             <th>PPG</th>
@@ -22,6 +24,7 @@
         <!-- Hop Additions -->
         % if recipe.mash.get(h.model.Hop):
           <tr>
+            <th />
             <th class="amount">Amount</th>
             <th>Variety</th>
             <th>Form</th>
@@ -35,14 +38,18 @@
 
       </table>
     % else:
-      <p>
-        Choose one or more fermentables below.
-      </p>
+      <table>
+        <tr>
+          <th>
+            Choose one or more fermentables below.
+          </th>
+        </tr>
+      </table>
     % endif
   </div>
 
-  <table>
-    <%include file="additions/mash-template.html" />
-  </table>
+  <div class="inventory">
+    <%include file="additions/add.html" />
+  </div>
 
 </div>
