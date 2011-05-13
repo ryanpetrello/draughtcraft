@@ -14,8 +14,33 @@
       ${self.javascript()}
   </head>
   <body>
-    ${self.body()}
+
+    <nav id="topnav">
+      <ul>
+        <li>
+          BrewPlot
+        </li>
+        <li>
+          <a href="#">Recipes</a>
+        </li>
+        <li>
+          <a href="#">Styles</a>
+        </li>
+        <li>
+          <a href="#">Ingredients</a>
+        </li>
+        <li>
+          <a href="#">Sign In</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div id="content">
+      ${self.body()}
+    </div>
+
     ${self.footer()}
+
   </body>
 </html>
 
