@@ -108,7 +108,7 @@ $.beerparts.recipes.builder.initFocusListeners = function(){
  */
 $.beerparts.recipes.builder.initUpdateListeners = function(){
     // For each input field, monitor changes...
-    $('.step tr.addition input, .step tr.addition select').change(function(){
+    $('.step input, .step select').change(function(){
         // When a change occurs: 
         // 1. Submit the containing form asynchronously.
 

@@ -6,27 +6,27 @@ from beerparts.lib.schemas.recipes.builder  import RecipeAdditionSchema
 
 class RecipeBuilderAsyncController(RestController):
 
-    @expose('recipes/builder/async.html')
-    def get_all(self):
+    def __rendered__(self):
         return dict(
             recipe = request.context['recipe']
         )
+
+    @expose('recipes/builder/async.html')
+    def get_all(self):
+        return self.__rendered__()
 
     @expose('recipes/builder/async.html')
     def put(self, **kw):
         from pprint import pprint
         pprint(kw)
-        return dict(
-            recipe = request.context['recipe']
-        )
+        return self.__rendered__()
 
-    @expose(
+    @expose('recipes/builder/async.html')
         #schema = RecipeAdditionSchema()
-    )
     def post(self, **kw):
         from pprint import pprint
         pprint(kw)
-        return ''
+        return self.__rendered__()
 
         if request.pecan.get('validation_errors'):
             abort(400)
