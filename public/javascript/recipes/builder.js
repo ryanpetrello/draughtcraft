@@ -41,7 +41,6 @@ $.beerparts.recipes.builder.__afterRecipeInject = function(){
     // On successful Ajax submission, we inject the response body into
     // the DOM.
     //
-    //$('#builder form').ajaxForm($.beerparts.recipes.builder.fetchRecipe);
     $('#builder form').ajaxForm({
         'success': function(responseText){
             $.beerparts.recipes.builder.__injectRecipeContent__(responseText);
@@ -111,15 +110,16 @@ $.beerparts.recipes.builder.initUpdateListeners = function(){
     // For each input field, monitor changes...
     $('.step tr.addition input, .step tr.addition select').change(function(){
         // When a change occurs: 
-        // 1. Find any adjacent input fields (for the row) and temporarily
-        //    disable them (disallow edits while saving).
+        // 1. Submit the containing form asynchronously.
 
         var form = $(this).closest('form');
-        $(form).find('input, select').attr('disabled', 'disabled');
-
-        // 2. Submit the containing form asynchronously.
         form.submit();
 
+        // 2. Find any adjacent input fields (for the row) and temporarily
+        //    disable them (disallow edits while saving) for the duration
+        //    of the Ajax save.
+
+        $(form).find('input, select').attr('disabled', 'disabled');
     });
 };
 
