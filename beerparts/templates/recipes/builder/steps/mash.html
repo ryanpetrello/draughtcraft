@@ -1,6 +1,6 @@
 <div class="step"> 
 
-  <%include file="additions/tabs.html" args="" />
+  <%include file="../tabs.html" args="" />
   
   <div class="ingredient-list">
     % if recipe.mash:
@@ -17,7 +17,7 @@
           </tr>
 
           % for addition in recipe.mash.get(h.model.Fermentable):
-            <%include file="additions/mash/fermentable.html" args="i=recipe.additions.index(addition), addition=addition" />
+            <%include file="additions/fermentable.html" args="i=recipe.additions.index(addition), addition=addition" />
           % endfor
         %endif
 
@@ -32,7 +32,7 @@
           </tr>
 
           % for i, addition in enumerate(recipe.mash.get(h.model.Hop)):
-            <%include file="additions/mash/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
+            <%include file="additions/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
           % endfor
         %endif
 
