@@ -1,24 +1,29 @@
+<%page args="active" />
+
+<%
+
+  def cls(step, last=False):
+    cls = []
+    if step == active:
+      cls.append('active')
+    if last is True:
+      cls.append('last')
+    return ' '.join(cls)
+
+%>
+
+<%def name="tab(step, cls)">
+  <li class="${cls}">
+    <a href="#">
+      ${step}
+    </a>
+  </li>
+</%def>
+
 <h2>
   <ul>
-    <li class="active">
-      <a href="#">
-        Mash
-      </a>
-    </li>
-    <li>
-      <a href="#">
-        Boil
-      </a>
-    </li>
-    <li>
-      <a href="#">
-        Ferment
-      </a>
-    </li>
-    <li class="last">
-      <a href="#">
-        Notes
-      </a>
-    </li>
+    ${tab('Mash', cls('mash'))}
+    ${tab('Boil', cls('boil'))}
+    ${tab('Ferment', cls('ferment', last=True))}
   </ul>
 </h2>
