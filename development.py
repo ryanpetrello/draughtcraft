@@ -1,6 +1,6 @@
-from beerparts.controllers.root import RootController
+from draughtcraft.controllers.root import RootController
 
-import beerparts
+import draughtcraft
 
 # Server Specific Configurations
 server = {
@@ -11,9 +11,9 @@ server = {
 # Pecan Application Configurations
 app = {
     'root'          : RootController(),
-    'modules'       : [beerparts],
+    'modules'       : [draughtcraft],
     'static_root'   : '%(confdir)s/public', 
-    'template_path' : '%(confdir)s/beerparts/templates',
+    'template_path' : '%(confdir)s/draughtcraft/templates',
     'reload'        : True,
     'debug'         : True,
     'logging'       : False,
@@ -24,7 +24,7 @@ app = {
 }
 
 sqlalchemy = {
-    'url'           : 'sqlite:///beerparts.db',
+    'url'           : 'sqlite:///draughtcraft.db',
     'echo'          : False,
     'echo_pool'     : False,
     'pool_recycle'  : 3600,

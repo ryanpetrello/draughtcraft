@@ -1,7 +1,7 @@
-from pecan                                  import expose, request, redirect, abort
-from pecan.rest                             import RestController
-from beerparts.lib.schemas.recipes.builder  import RecipeChange
-from elixir                                 import entities
+from pecan                                      import expose, request, redirect, abort
+from pecan.rest                                 import RestController
+from draughtcraft.lib.schemas.recipes.builder   import RecipeChange
+from elixir                                     import entities
 
 
 class RecipeBuilderAsyncController(RestController):

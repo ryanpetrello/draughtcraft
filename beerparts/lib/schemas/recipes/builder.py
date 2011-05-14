@@ -1,8 +1,8 @@
-from formencode                 import ForEach, Invalid, validators
-from beerparts                  import model
-from beerparts.lib.units        import UnitConvert
-from beerparts.lib.schemas.base import FilteredSchema, ModelObject
-from datetime                   import timedelta
+from formencode                     import ForEach, Invalid, validators
+from draughtcraft                   import model
+from draughtcraft.lib.units         import UnitConvert
+from draughtcraft.lib.schemas.base  import FilteredSchema, ModelObject
+from datetime                       import timedelta
 
 
 class TimeDeltaValidator(validators.FancyValidator):

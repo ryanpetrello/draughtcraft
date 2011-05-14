@@ -6,10 +6,10 @@ except ImportError:
     use_setuptools()
     from setuptools import setup, find_packages
 
-from beerparts import __version__
+from draughtcraft import __version__
 
 setup(
-    name = 'beerparts',
+    name = 'draughtcraft',
     version = __version__,
     description = '',
     author = '',

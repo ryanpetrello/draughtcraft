@@ -1,6 +1,6 @@
 from pecan              import expose, redirect, request, abort
 from pecan.decorators   import transactional
-from beerparts          import model
+from draughtcraft       import model
 from builder            import RecipeBuilderController
 
 

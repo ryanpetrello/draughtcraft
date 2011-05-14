@@ -1,8 +1,8 @@
 /*
  * Define a few namespaces
  */
-if($.beerparts == undefined){
-    $.beerparts = {};
-    $.beerparts.recipes = {};
-    $.beerparts.recipes.builder = {};
+if($.draughtcraft == undefined){
+    $.draughtcraft = {};
+    $.draughtcraft.recipes = {};
+    $.draughtcraft.recipes.builder = {};
 }

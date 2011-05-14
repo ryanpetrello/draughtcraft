@@ -1,12 +1,12 @@
 /*
  * Used to fetch and redraw the current recipe via AJAX.
  */
-$.beerparts.recipes.builder.fetchRecipe = function(){
+$.draughtcraft.recipes.builder.fetchRecipe = function(){
     $.ajax({
         url: window.location.pathname+'/async',
         cache: false,
         success: function(html){
-            $.beerparts.recipes.builder.__injectRecipeContent__(html);
+            $.draughtcraft.recipes.builder.__injectRecipeContent__(html);
         }
     })
 };
@@ -16,9 +16,9 @@ $.beerparts.recipes.builder.fetchRecipe = function(){
  * container.
  * @param {String} html - The HTML content to inject
  */
-$.beerparts.recipes.builder.__injectRecipeContent__ = function(html){
+$.draughtcraft.recipes.builder.__injectRecipeContent__ = function(html){
     $("#builder").html(html);
-    $.beerparts.recipes.builder.__afterRecipeInject();
+    $.draughtcraft.recipes.builder.__afterRecipeInject();
 };
 
 /*
@@ -26,14 +26,14 @@ $.beerparts.recipes.builder.__injectRecipeContent__ = function(html){
  * variety of listeners and state settings (e.g., current tab, last 
  * focused field) we need to persist.
  */
-$.beerparts.recipes.builder.__afterRecipeInject = function(){
+$.draughtcraft.recipes.builder.__afterRecipeInject = function(){
 
     // Re-initialize all event listeners
-    $.beerparts.recipes.builder.initListeners();
+    $.draughtcraft.recipes.builder.initListeners();
 
     // Re-choose the "last chosen" tab
-    $.beerparts.recipes.builder.selectTab(
-        $.beerparts.recipes.builder.currentTab 
+    $.draughtcraft.recipes.builder.selectTab(
+        $.draughtcraft.recipes.builder.currentTab 
     );
     
     //
@@ -43,7 +43,7 @@ $.beerparts.recipes.builder.__afterRecipeInject = function(){
     //
     $('#builder form').ajaxForm({
         'success': function(responseText){
-            $.beerparts.recipes.builder.__injectRecipeContent__(responseText);
+            $.draughtcraft.recipes.builder.__injectRecipeContent__(responseText);
         }
     });
 
@@ -56,26 +56,26 @@ $.beerparts.recipes.builder.__afterRecipeInject = function(){
     // focused on, so we need to do our best to maintain the currently
     // focused field.
     //
-    if($.beerparts.recipes.builder.lastFocus){
-        var n = $.beerparts.recipes.builder.lastFocus;
+    if($.draughtcraft.recipes.builder.lastFocus){
+        var n = $.draughtcraft.recipes.builder.lastFocus;
         $('input[name="'+n+'"], select[name="'+n+'"]').focus();
     }
     
 };
 
-$.beerparts.recipes.builder.currentTab = 0;
+$.draughtcraft.recipes.builder.currentTab = 0;
 /*
  * Initializes listeners for the "tabs" (e.g.,
  * Mash, Boil, Ferment...)
  */
-$.beerparts.recipes.builder.initTabs = function(){
+$.draughtcraft.recipes.builder.initTabs = function(){
     $('.step h2 li a').click(function(e){
 
         // Determine the index of the chosen tab
         var index = $('.step.active h2 li a').index(this);
 
         // Actually choose the tab
-        $.beerparts.recipes.builder.selectTab(index);
+        $.draughtcraft.recipes.builder.selectTab(index);
 
         // Prevent the default <a href> behavior
         e.preventDefault();
@@ -83,22 +83,22 @@ $.beerparts.recipes.builder.initTabs = function(){
 };
 
 // The DOM name of the last focused form field
-$.beerparts.recipes.builder.lastFocus;
+$.draughtcraft.recipes.builder.lastFocus;
 
 /*
  * Initialize event listeners for input field focus/blur
  * so that we can keep track of the "last focused field".
  */
-$.beerparts.recipes.builder.initFocusListeners = function(){
+$.draughtcraft.recipes.builder.initFocusListeners = function(){
     // When a field gains focus, store its name.
     var fields = $('.step tr.addition input, .step tr.addition select'); 
     fields.focus(function(){
-        $.beerparts.recipes.builder.lastFocus = $(this).attr('name');
+        $.draughtcraft.recipes.builder.lastFocus = $(this).attr('name');
     });
     // When a field loses focus, unset its name.
     fields.blur(function(){
-        if($(this).attr('name') && $.beerparts.recipes.builder.lastFocus == $(this).attr('name'))
-            $.beerparts.recipes.builder.lastFocus = null;
+        if($(this).attr('name') && $.draughtcraft.recipes.builder.lastFocus == $(this).attr('name'))
+            $.draughtcraft.recipes.builder.lastFocus = null;
     });
 };
 
@@ -106,7 +106,7 @@ $.beerparts.recipes.builder.initFocusListeners = function(){
  * Initializes event listeners for input field changes
  * for recipe components.
  */
-$.beerparts.recipes.builder.initUpdateListeners = function(){
+$.draughtcraft.recipes.builder.initUpdateListeners = function(){
     // For each input field, monitor changes...
     $('.step input, .step select').change(function(){
         // When a change occurs: 
@@ -129,7 +129,7 @@ $.beerparts.recipes.builder.initUpdateListeners = function(){
  * editing fields.  This will make it so that users can
  * easily tab through form fields as they're live-editing.
  */
-$.beerparts.recipes.builder.initTabIndexes = function(){
+$.draughtcraft.recipes.builder.initTabIndexes = function(){
 
     $('.step input, .step select').each(function(index){
         $(this).attr('tabindex', index);
@@ -147,18 +147,18 @@ $.beerparts.recipes.builder.initTabIndexes = function(){
 /*
  * Initializes all event listeners
  */
-$.beerparts.recipes.builder.initListeners = function(){
-    $.beerparts.recipes.builder.initTabs();
-    $.beerparts.recipes.builder.initTabIndexes();
-    $.beerparts.recipes.builder.initUpdateListeners();
-    $.beerparts.recipes.builder.initFocusListeners();
+$.draughtcraft.recipes.builder.initListeners = function(){
+    $.draughtcraft.recipes.builder.initTabs();
+    $.draughtcraft.recipes.builder.initTabIndexes();
+    $.draughtcraft.recipes.builder.initUpdateListeners();
+    $.draughtcraft.recipes.builder.initFocusListeners();
 };
 
 /*
  * Chooses and displays a specific tab/section.
  * @param {Integer} index
  */
-$.beerparts.recipes.builder.selectTab = function(index){
+$.draughtcraft.recipes.builder.selectTab = function(index){
     // Hide all steps
     $('.step').removeClass('active');
 
@@ -166,9 +166,9 @@ $.beerparts.recipes.builder.selectTab = function(index){
     $('.step').eq(index).addClass('active');
 
     // Store the "current" step index for reference
-    $.beerparts.recipes.builder.currentTab = index;
+    $.draughtcraft.recipes.builder.currentTab = index;
 }; 
 
 $(document).ready(function(){
-    $.beerparts.recipes.builder.fetchRecipe();
+    $.draughtcraft.recipes.builder.fetchRecipe();
 });

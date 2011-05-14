@@ -2,7 +2,7 @@ from elixir import (
     Entity, Field, Unicode, Interval, Float, Enum, using_options,
     OneToMany, ManyToOne
 )
-from beerparts.lib.units import UnitConvert, UNITS
+from draughtcraft.lib.units import UnitConvert, UNITS
 
 class Recipe(Entity):
 

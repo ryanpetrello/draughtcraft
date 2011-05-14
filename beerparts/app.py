@@ -1,7 +1,7 @@
 from pecan                  import make_app
 from pecan.hooks            import TransactionHook
-from beerparts              import model
-from beerparts.templates    import helpers
+from draughtcraft           import model
+from draughtcraft.templates import helpers
 
 def setup_app(config):
     

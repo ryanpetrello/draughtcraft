@@ -1,6 +1,6 @@
-from beerparts.lib.units        import (UnitConvert, InvalidUnitException, PoundOunceMerge, 
-                                        OunceMerge, PoundExpansion, UNIT_MAP)
-from pytest                     import raises
+from draughtcraft.lib.units         import (UnitConvert, InvalidUnitException, PoundOunceMerge, 
+                                            OunceMerge, PoundExpansion, UNIT_MAP)
+from pytest                         import raises
 
 
 class TestMergeImplementations(object):

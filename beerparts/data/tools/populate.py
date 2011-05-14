@@ -1,6 +1,6 @@
 from elixir                         import entities
-from beerparts                      import model
-from beerparts.data                 import ingredients
+from draughtcraft                   import model
+from draughtcraft.data              import ingredients
 
 for type in ('Fermentable', 'Hop', 'Yeast'):
     for ingredient in getattr(ingredients, type, []):
