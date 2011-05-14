@@ -1,3 +1,11 @@
+<%
+  def sort(additions):
+    return sorted(
+      additions,
+      lambda a,b: cmp(b.percentage_for('mash'), a.percentage_for('mash'))
+    )
+%>
+
 <div class="step active"> 
 
   <%include file="../../tabs.html" args="active='mash'" />
@@ -11,13 +19,14 @@
           % if recipe.mash.get(h.model.Fermentable):
             <tr>
               <th />
+              <th class="percent">%</th>
               <th class="amount">Amount</th>
               <th>Fermentable</th>
               <th>PPG</th>
               <th class="unit">L</th>
             </tr>
 
-            % for addition in recipe.mash.get(h.model.Fermentable):
+            % for addition in sort(recipe.mash.get(h.model.Fermentable)):
               <%include file="../additions/fermentable.html" args="i=recipe.additions.index(addition), addition=addition" />
             % endfor
           %endif
@@ -26,13 +35,14 @@
           % if recipe.mash.get(h.model.Hop):
             <tr>
               <th />
+              <th class="percent"></th>
               <th class="amount">Amount</th>
               <th>Variety</th>
               <th>Form</th>
               <th class="unit">AA</th>
             </tr>
 
-            % for i, addition in enumerate(recipe.mash.get(h.model.Hop)):
+            % for addition in sort(recipe.mash.get(h.model.Hop)):
               <%include file="../additions/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
             % endfor
           %endif

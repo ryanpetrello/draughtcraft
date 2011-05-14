@@ -61,6 +61,9 @@
 #content table th, #content table td  {
   padding: 5px 8px;
 }
+#content table td.percent, #content table th.percent  {
+  text-align: right;
+}
 #content table tr.addition td.grain span,
 #content table tr.addition td.hop span  {
   color: #FFF;

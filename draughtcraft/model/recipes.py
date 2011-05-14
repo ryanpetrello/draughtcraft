@@ -11,10 +11,35 @@ class Recipe(Entity):
     additions           = OneToMany('RecipeAddition', inverse='recipe')
 
     def _partition(self, additions):
+        """
+        Partition a set of recipe additions
+        by ingredient type, e.g.,:
+
+        _partition([grain, grain2, hop])
+        {'Fermentable': [grain, grain2], 'Hop': [hop]}
+        """
         p = {}
         for a in additions:
             p.setdefault(a.ingredient.__class__, []).append(a)
         return p
+
+    def _percent(self, partitions):
+        """
+        Calculate percentage of additions by amount
+        within a set of recipe partitions.
+        e.g.,
+
+        _percent({'Fermentable': [grain, grain2], 'Hop': [hop]})
+        {grain : .75, grain2 : .25, hop : 1}
+        """
+
+        percentages = {}
+        for type, additions in partitions.items():
+            total = sum([addition.amount for addition in additions])
+            for addition in additions:
+                percentages[addition] = addition.amount / total
+
+        return percentages
 
     @property
     def mash(self):
@@ -71,6 +96,13 @@ class RecipeAddition(Entity):
             match = getattr(self, ingredient, None)
             if match is not None:
                 return match
+
+    def percentage_for(self, step):
+        if step not in ('mash', 'boil', 'fermentation'):
+            return 0
+
+        additions = getattr(self.recipe, step)
+        return self.recipe._percent(additions)[self]
 
 
 class HopAddition(RecipeAddition):
