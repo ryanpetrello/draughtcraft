@@ -75,7 +75,6 @@ class RecipeAddition(Entity):
 
 class HopAddition(RecipeAddition):
 
-
     FORMS = [
         'LEAF',
         'PELLET',

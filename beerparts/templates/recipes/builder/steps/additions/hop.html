@@ -29,7 +29,7 @@ ${h.hidden(
   <td>
     ${h.select(
       'additions-%d.form' % i, 
-      addition.form.title(), 
+      addition.form.upper(), 
       sorted([(f.upper(), f.title()) for f in h.model.HopAddition.FORMS])
     )}
   </td>
