@@ -1,8 +1,16 @@
 <%page args="i, addition" />
 
 ${h.hidden(
-  'addition-%d.id' % i,
+  'additions-%d.addition' % i,
   addition.id
+)}
+${h.hidden(
+  'additions-%d.use' % i,
+  addition.use
+)}
+${h.hidden(
+  'additions-%d.type' % i,
+  addition.__class__.__name__
 )}
 
 <tr class="addition ${'even' if i % 2 == 0 else 'odd'}">
@@ -11,7 +19,7 @@ ${h.hidden(
   </td>
   <td class="amount">
     ${h.text(
-      'addition-%d.amount' % i,
+      'additions-%d.amount' % i,
       '%d oz' % addition.amount
     )}
   </td>
@@ -20,14 +28,14 @@ ${h.hidden(
   </td>
   <td>
     ${h.select(
-      'addition-%d.form' % i, 
+      'additions-%d.form' % i, 
       addition.form.title(), 
-      sorted([f.title() for f in h.model.HopAddition.FORMS])
+      sorted([(f.upper(), f.title()) for f in h.model.HopAddition.FORMS])
     )}
   </td>
   <td class="unit">
     ${h.text(
-      'addition-%d.alpha_acid' % i,
+      'additions-%d.alpha_acid' % i,
       addition.alpha_acid,
       class_='unit'
     )}

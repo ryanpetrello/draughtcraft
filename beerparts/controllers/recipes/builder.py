@@ -1,7 +1,7 @@
 from pecan                                  import expose, request, redirect, abort
 from pecan.rest                             import RestController
+from beerparts.lib.schemas.recipes.builder  import RecipeChange
 from elixir                                 import entities
-from beerparts.lib.schemas.recipes.builder  import RecipeAdditionSchema
 
 
 class RecipeBuilderAsyncController(RestController):
@@ -15,10 +15,22 @@ class RecipeBuilderAsyncController(RestController):
     def get_all(self):
         return self.__rendered__()
 
-    @expose('recipes/builder/async.html')
+    @expose(
+        'recipes/builder/async.html',
+        schema              = RecipeChange(),
+        variable_decode     = True
+    )
     def put(self, **kw):
-        from pprint import pprint
-        pprint(kw)
+        for row in kw.get('additions'):
+            # Clean up the hash a bit
+            row.pop('type')
+            addition = row.pop('addition')
+
+            import pdb; pdb.set_trace()
+
+            for k,v in row.items():
+                setattr(addition, k, v)
+
         return self.__rendered__()
 
     @expose('recipes/builder/async.html')
