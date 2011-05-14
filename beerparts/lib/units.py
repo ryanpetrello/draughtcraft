@@ -67,6 +67,47 @@ class OunceMerge(object):
         return (ounces[0] / 16, 'POUND')
 
 
+class PoundExpansion(object):
+
+    signature = "POUND"
+
+    @classmethod
+    def expand(cls, pounds):
+        """
+        Attempt to expand POUND units into whole POUND, OUNCE units, e.g.,
+
+        5.5 lb == 5 lb, 8 oz
+
+        """
+
+        #
+        # If we already have an integer, just return it
+        #
+        if int(pounds) == pounds:
+            return [(pounds, "POUND")]
+
+        #
+        # There's 16 oz in a lb.
+        # Multiply the weight in pounds by individual
+        # ounce increments (e.g., 1, 2, 3...).
+        #
+        # If the result is roughly an integer,
+        # we can split into lbs, oz.
+        #
+        for i in range(16):
+
+            # We're only interested in the fractional part.
+            decimal = pounds - int(pounds)
+            if (decimal * 16) == i+1:
+                return [(int(pounds), "POUND"), (i+1, "OUNCE")]
+
+        #
+        # If we find no round fractions,
+        # just return a pounds in decimal format.
+        #
+        return [(pounds, "POUND")]
+
+
 class UnitConvert(object):
     """
     Used to convert from strings to units, e.g.,
@@ -179,7 +220,43 @@ class UnitConvert(object):
         return pairs[0]
 
     @classmethod
+    def __abbr__(cls, unit):
+        """
+        Abbreviate standard units, e.g.,
+        "POUND" -> "lb"
+        """
+
+        unit = str(unit)
+        _map = {
+            'GRAM'          : 'g',
+            'OUNCE'         : 'oz',
+            'POUND'         : 'lb',
+            'TEASPOON'      : 't',
+            'TABLESPOON'    : 'T',
+            'GALLON'        : 'Gal',
+            'LITER'         : 'L'
+        }
+        return _map[unit]
+
+    @classmethod
+    def __str_amount__(cls, amount):
+        """
+        Format amounts for readability, e.g.,
+        5.0 -> 5
+        """
+        if amount == int(amount):
+            amount = int(amount)
+        return str(amount)
+
+    @classmethod
     def to_str(cls, amount, unit):
-        return (amount, unit)
 
+        pairs = [(amount, unit)]
 
+        for expandcls in [
+            PoundExpansion
+        ]:
+            if expandcls.signature == unit:
+                pairs = expandcls.expand(amount)
+
+        return ' '.join(['%s %s' % (cls.__str_amount__(amount), cls.__abbr__(unit)) for amount, unit in pairs if amount])
