@@ -220,7 +220,7 @@ class UnitConvert(object):
         return pairs[0]
 
     @classmethod
-    def __abbr__(cls, unit):
+    def __str_abbr__(cls, unit):
         """
         Abbreviate standard units, e.g.,
         "POUND" -> "lb"
@@ -259,4 +259,4 @@ class UnitConvert(object):
             if expandcls.signature == unit:
                 pairs = expandcls.expand(amount)
 
-        return ' '.join(['%s %s' % (cls.__str_amount__(amount), cls.__abbr__(unit)) for amount, unit in pairs if amount])
+        return ' '.join(['%s %s' % (cls.__str_amount__(amount), cls.__str_abbr__(unit)) for amount, unit in pairs if amount])
