@@ -259,4 +259,18 @@ class UnitConvert(object):
             if expandcls.signature == unit:
                 pairs = expandcls.expand(amount)
 
-        return ' '.join(['%s %s' % (cls.__str_amount__(amount), cls.__str_abbr__(unit)) for amount, unit in pairs if amount])
+        result = ' '.join(['%s %s' % (cls.__str_amount__(amount), cls.__str_abbr__(unit)) for amount, unit in pairs if amount])
+
+        #
+        # If result is an empty string,
+        # we filtered out all of the "zero"
+        # ingredients, leaving nothing.
+        #
+        # This can happen in circumstances like
+        # (0, 'POUND').  This scenario is
+        # special cased.
+        #
+        if result == '':
+            return '0 %s' % cls.__str_abbr__(unit)
+
+        return result

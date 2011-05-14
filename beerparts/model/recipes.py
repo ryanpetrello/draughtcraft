@@ -2,7 +2,7 @@ from elixir import (
     Entity, Field, Unicode, Interval, Float, Enum, using_options,
     OneToMany, ManyToOne
 )
-from beerparts.lib.units import UNITS
+from beerparts.lib.units import UnitConvert, UNITS
 
 class Recipe(Entity):
 
@@ -60,6 +60,10 @@ class RecipeAddition(Entity):
     fermentable         = ManyToOne('Fermentable', inverse='additions')
     hop                 = ManyToOne('Hop', inverse='additions')
     yeast               = ManyToOne('Yeast', inverse='additions')
+
+    @property
+    def printable_amount(self):
+        return UnitConvert.to_str(self.amount, self.unit)
 
     @property
     def ingredient(self):

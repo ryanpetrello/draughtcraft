@@ -24,9 +24,21 @@ class RecipeBuilderAsyncController(RestController):
         for row in kw.get('additions'):
             # Clean up the hash a bit
             row.pop('type')
+
+            # Grab the addition record
             addition = row.pop('addition')
 
-            import pdb; pdb.set_trace()
+            #
+            # Apply the amount and unit
+            # (if a valid amount/unit combination
+            # can be parsed from the user's entry)
+            #
+            if 'amount' in row:
+                pair = row.pop('amount')
+                if pair:
+                    amount, unit = pair
+                    addition.amount = amount
+                    addition.unit = unit
 
             for k,v in row.items():
                 setattr(addition, k, v)

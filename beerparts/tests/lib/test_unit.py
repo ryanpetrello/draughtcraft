@@ -248,3 +248,18 @@ class TestUnitConversionToString(object):
     def test_pound_ounce_expansion(self):
         assert UnitConvert.to_str(5.25, 'POUND') == '5 lb 4 oz'
         assert UnitConvert.to_str(.25, 'POUND') == '4 oz'
+
+    def test_zero_amount(self):
+        assert UnitConvert.to_str(0, 'POUND') == '0 lb'
+
+
+class TestConversionInteroperability(object):
+
+    def test_opposites(self):
+        original = '5 lb 4 oz'
+        units = UnitConvert.from_str(original)
+        assert original == UnitConvert.to_str(*units)
+
+        original = (5.25, 'POUND')
+        string = UnitConvert.to_str(*original)
+        assert original == UnitConvert.from_str(string)
