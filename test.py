@@ -24,7 +24,7 @@ app = {
 }
 
 sqlalchemy = {
-    'url'           : 'sqlite:///draughtcraft.db',
+    'url'           : 'sqlite:///memory',
     'echo'          : False,
     'echo_pool'     : False,
     'pool_recycle'  : 3600,

@@ -37,7 +37,7 @@ class Recipe(Entity):
         for type, additions in partitions.items():
             total = sum([addition.amount for addition in additions])
             for addition in additions:
-                percentages[addition] = addition.amount / total
+                percentages[addition] = float(addition.amount) / float(total)
 
         return percentages
 
@@ -102,7 +102,7 @@ class RecipeAddition(Entity):
             return 0
 
         additions = getattr(self.recipe, step)
-        return self.recipe._percent(additions)[self]
+        return self.recipe._percent(additions).get(self, 0)
 
 
 class HopAddition(RecipeAddition):
