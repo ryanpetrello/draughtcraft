@@ -56,6 +56,9 @@ class TestUnitConversionFromString(object):
         pairs = UnitConvert.__pairs__('2.5lb.5.5oz.')
         assert pairs == [(2.5, 'POUND'), (5.5, 'OUNCE')]
 
+    def test_coerce_amounts(self):
+        assert UnitConvert.__coerce_amounts__(['525.75']) == [525.75]
+
     def test_coerce_units(self):
         assert UnitConvert.__coerce_units__(['lb']) == ['POUND']
         assert UnitConvert.__coerce_units__(['lbs']) == ['POUND']
