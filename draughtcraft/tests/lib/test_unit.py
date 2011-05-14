@@ -11,26 +11,26 @@ class TestMergeImplementations(object):
     def test_ounce_merge(self):
         assert OunceMerge.merge((8.0, 'OUNCE')) == (.5, 'POUND')
 
-class TestExpansionImplemenations(object):
+class TestExpansionImplementations(object):
 
     def test_pound_expansion(self):
         assert PoundExpansion.expand(5.0) == [(5.0, 'POUND')]
 
-        assert PoundExpansion.expand(.0625) == [(0.0, 'POUND'), (1.0, 'OUNCE')]
-        assert PoundExpansion.expand(.125) == [(0.0, 'POUND'), (2.0, 'OUNCE')]
-        assert PoundExpansion.expand(.1875) == [(0.0, 'POUND'), (3.0, 'OUNCE')]
-        assert PoundExpansion.expand(.25) == [(0.0, 'POUND'), (4.0, 'OUNCE')]
-        assert PoundExpansion.expand(.3125) == [(0.0, 'POUND'), (5.0, 'OUNCE')]
-        assert PoundExpansion.expand(.375) == [(0.0, 'POUND'), (6.0, 'OUNCE')]
-        assert PoundExpansion.expand(.4375) == [(0.0, 'POUND'), (7.0, 'OUNCE')]
-        assert PoundExpansion.expand(.5) == [(0.0, 'POUND'), (8.0, 'OUNCE')]
-        assert PoundExpansion.expand(.5625) == [(0.0, 'POUND'), (9.0, 'OUNCE')]
-        assert PoundExpansion.expand(.625) == [(0.0, 'POUND'), (10.0, 'OUNCE')]
-        assert PoundExpansion.expand(.6875) == [(0.0, 'POUND'), (11.0, 'OUNCE')]
-        assert PoundExpansion.expand(.75) == [(0.0, 'POUND'), (12.0, 'OUNCE')]
-        assert PoundExpansion.expand(.8125) == [(0.0, 'POUND'), (13.0, 'OUNCE')]
-        assert PoundExpansion.expand(.875) == [(0.0, 'POUND'), (14.0, 'OUNCE')]
-        assert PoundExpansion.expand(.9375) == [(0.0, 'POUND'), (15.0, 'OUNCE')]
+        assert PoundExpansion.expand(.0625) == [(1.0, 'OUNCE')]
+        assert PoundExpansion.expand(.125) == [(2.0, 'OUNCE')]
+        assert PoundExpansion.expand(.1875) == [(3.0, 'OUNCE')]
+        assert PoundExpansion.expand(.25) == [(4.0, 'OUNCE')]
+        assert PoundExpansion.expand(.3125) == [(5.0, 'OUNCE')]
+        assert PoundExpansion.expand(.375) == [(6.0, 'OUNCE')]
+        assert PoundExpansion.expand(.4375) == [(7.0, 'OUNCE')]
+        assert PoundExpansion.expand(.5) == [(8.0, 'OUNCE')]
+        assert PoundExpansion.expand(.5625) == [(9.0, 'OUNCE')]
+        assert PoundExpansion.expand(.625) == [(10.0, 'OUNCE')]
+        assert PoundExpansion.expand(.6875) == [(11.0, 'OUNCE')]
+        assert PoundExpansion.expand(.75) == [(12.0, 'OUNCE')]
+        assert PoundExpansion.expand(.8125) == [(13.0, 'OUNCE')]
+        assert PoundExpansion.expand(.875) == [(14.0, 'OUNCE')]
+        assert PoundExpansion.expand(.9375) == [(15.0, 'OUNCE')]
 
         assert PoundExpansion.expand(5.0625) == [(5.0, 'POUND'), (1.0, 'OUNCE')]
         assert PoundExpansion.expand(5.125) == [(5.0, 'POUND'), (2.0, 'OUNCE')]

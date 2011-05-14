@@ -78,6 +78,7 @@ class PoundExpansion(object):
 
         5.5 lb == 5 lb, 8 oz
 
+        If the unit is less than a pound, just use ounce increments.
         """
 
         #
@@ -85,6 +86,13 @@ class PoundExpansion(object):
         #
         if int(pounds) == pounds:
             return [(pounds, "POUND")]
+
+        #
+        # If we have less than a pound,
+        # just use ounces.
+        #
+        if pounds < 1:
+            return [(pounds * 16, "OUNCE")]
 
         #
         # There's 16 oz in a lb.
