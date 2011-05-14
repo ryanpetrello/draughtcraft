@@ -23,7 +23,8 @@ ${h.hidden(
   <td class="amount">
     ${h.text(
       'additions-%d.amount' % i,
-      addition.printable_amount
+      addition.printable_amount,
+      id = 'additions-%d' % addition.id
     )}
   </td>
   <td>

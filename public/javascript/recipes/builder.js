@@ -58,7 +58,7 @@ $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
     //
     if($.draughtcraft.recipes.builder.lastFocus){
         var n = $.draughtcraft.recipes.builder.lastFocus;
-        $('input[name="'+n+'"], select[name="'+n+'"]').focus();
+        $('input#'+n+', select#'+n+'').focus();
     }
     
 };
@@ -82,7 +82,7 @@ $.draughtcraft.recipes.builder.initTabs = function(){
     });
 };
 
-// The DOM name of the last focused form field
+// The DOM ID of the last focused form field
 $.draughtcraft.recipes.builder.lastFocus;
 
 /*
@@ -90,14 +90,14 @@ $.draughtcraft.recipes.builder.lastFocus;
  * so that we can keep track of the "last focused field".
  */
 $.draughtcraft.recipes.builder.initFocusListeners = function(){
-    // When a field gains focus, store its name.
+    // When a field gains focus, store its id.
     var fields = $('.step tr.addition input, .step tr.addition select'); 
     fields.focus(function(){
-        $.draughtcraft.recipes.builder.lastFocus = $(this).attr('name');
+        $.draughtcraft.recipes.builder.lastFocus = $(this).attr('id');
     });
-    // When a field loses focus, unset its name.
+    // When a field loses focus, unset its id.
     fields.blur(function(){
-        if($(this).attr('name') && $.draughtcraft.recipes.builder.lastFocus == $(this).attr('name'))
+        if($(this).attr('id') && $.draughtcraft.recipes.builder.lastFocus == $(this).attr('id'))
             $.draughtcraft.recipes.builder.lastFocus = null;
     });
 };
