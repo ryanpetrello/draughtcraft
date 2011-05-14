@@ -45,6 +45,28 @@ class InvalidUnitException(UnitException):
     pass
 
 
+class InvalidUnitParseException(UnitException):
+    pass
+
+
+class PoundOunceMerge(object):
+
+    signature = ["POUND", "OUNCE"]
+
+    @classmethod
+    def merge(cls, pounds, ounces):
+        return (pounds[0] + (ounces[0] / 16), 'POUND')
+
+
+class OunceMerge(object):
+
+    signature = ["OUNCE"]
+
+    @classmethod
+    def merge(cls, ounces):
+        return (ounces[0] / 16, 'POUND')
+
+
 class UnitConvert(object):
     """
     Used to convert from strings to units, e.g.,
@@ -56,7 +78,7 @@ class UnitConvert(object):
     """
 
     punctuationRe = re.compile('[^0-9a-zA-z.]')
-    unitRe = re.compile('[a-z]+\.?')
+    unitRe = re.compile('[a-zA-Z]+\.?')
     amountRe = re.compile('[0-9]+')
 
     @classmethod
@@ -132,10 +154,32 @@ class UnitConvert(object):
     def from_str(cls, val):
         stripped = cls.punctuationRe.sub('', val)
 
+        #
+        # Split into pairs of (amount, unit), e.g.,
+        # [(5.0, 'POUND'), (8.0, 'OUNCE')]
+        #
         pairs = cls.__pairs__(stripped)
+
+        #
+        # Now that we have a list of potential
+        # unit/amonut pairs, attempt to combine
+        # them into a single unit that makes sense, e.g.,
+        #
+        # [(5.0, 'POUND'), (8.0, 'OUNCE')] == (5.5, 'POUND')
+        #
+        units = [p[1] for p in pairs]
         
-        return pairs
+        for mergecls in [
+            PoundOunceMerge,
+            OunceMerge
+        ]:
+            if mergecls.signature == units:
+                return mergecls.merge(*pairs)
+
+        return pairs[0]
 
     @classmethod
     def to_str(cls, amount, unit):
         return (amount, unit)
+
+

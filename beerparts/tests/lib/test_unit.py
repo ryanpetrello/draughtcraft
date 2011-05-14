@@ -1,4 +1,4 @@
-from beerparts.lib.units        import UnitConvert, InvalidUnitException
+from beerparts.lib.units        import UnitConvert, InvalidUnitException, UNIT_MAP
 from pytest                     import raises
 
 class TestUnitConversionFromString(object):
@@ -10,6 +10,9 @@ class TestUnitConversionFromString(object):
 
         # Simple
         pairs = UnitConvert.__pairs__('2lb')
+        assert pairs == [(2.0, 'POUND')]
+
+        pairs = UnitConvert.__pairs__('2Lb')
         assert pairs == [(2.0, 'POUND')]
 
         pairs = UnitConvert.__pairs__('2lb 5oz')
@@ -130,21 +133,31 @@ class TestUnitConversionFromString(object):
         amount, unit = UnitConvert.from_str('2 LB')
         assert (amount, unit) == (2, 'POUND')
 
-    def test_pound(self):
+    def test_pound_conversion(self):
         amount, unit = UnitConvert.from_str('2lb')
         assert (amount, unit) == (2, 'POUND')
 
-        amount, unit = UnitConvert.from_str('2Lb')
-        assert (amount, unit) == (2, 'POUND')
+        amount, unit = UnitConvert.from_str('2.5lb')
+        assert (amount, unit) == (2.5, 'POUND')
 
-        amount, unit = UnitConvert.from_str('2LB')
-        assert (amount, unit) == (2, 'POUND')
+    def test_ounce_conversion(self):
+        amount, unit = UnitConvert.from_str('8oz')
+        assert (amount, unit) == (.5, 'POUND')
 
-        amount, unit = UnitConvert.from_str('2 lb')
-        assert (amount, unit) == (2, 'POUND')
+        amount, unit = UnitConvert.from_str('8.5oz')
+        assert (amount, unit) == (.53125, 'POUND')
 
-        amount, unit = UnitConvert.from_str('2 Lb')
-        assert (amount, unit) == (2, 'POUND')
+    def test_pound_ounce_conversion(self):
+        amount, unit = UnitConvert.from_str('2lb 8oz')
+        assert (amount, unit) == (2.5, 'POUND')
 
-        amount, unit = UnitConvert.from_str('2 LB')
-        assert (amount, unit) == (2, 'POUND')
+        amount, unit = UnitConvert.from_str('2.5lb 8oz')
+        assert (amount, unit) == (3, 'POUND')
+
+        amount, unit = UnitConvert.from_str('2.5lb 8.5oz')
+        assert (amount, unit) == (3.03125, 'POUND')
+
+    def test_basic_conversion(self):
+        for abbr, value in UNIT_MAP.items():
+            if value != 'OUNCE':
+                assert UnitConvert.from_str('5%s' % abbr) == (5, UNIT_MAP[abbr])
