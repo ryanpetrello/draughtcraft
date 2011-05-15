@@ -6,6 +6,8 @@ import py.test
 
 class TestApp(TestCase):
 
+    __headers__ = {}
+
     def setUp(self):
         # Set up a fake app
         self.app = WebTestApp(py.test.wsgi_app)
