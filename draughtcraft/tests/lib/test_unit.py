@@ -88,23 +88,26 @@ class TestUnitConversionFromString(object):
         assert pairs == [(2.5, 'POUND'), (5.5, 'OUNCE')]
 
         # Missing spacing
-        pairs = UnitConvert.__pairs__('2lb5oz.')
+        pairs = UnitConvert.__pairs__('2lb5oz')
         assert pairs == [(2.0, 'POUND'), (5.0, 'OUNCE')]
 
-        pairs = UnitConvert.__pairs__('2.5lb5oz.')
+        pairs = UnitConvert.__pairs__('2.5lb5oz')
         assert pairs == [(2.5, 'POUND'), (5.0, 'OUNCE')]
 
-        pairs = UnitConvert.__pairs__('2.5lb5.5oz.')
+        pairs = UnitConvert.__pairs__('2.5lb5.5oz')
+        assert pairs == [(2.5, 'POUND'), (5.5, 'OUNCE')]
+
+        pairs = UnitConvert.__pairs__('2lb.5oz')
+        assert pairs == [(2.0, 'POUND'), (.5, 'OUNCE')]
+
+        pairs = UnitConvert.__pairs__('2.5lb.5oz')
+        assert pairs == [(2.5, 'POUND'), (.5, 'OUNCE')]
+
+        pairs = UnitConvert.__pairs__('2.5lb5.5oz')
         assert pairs == [(2.5, 'POUND'), (5.5, 'OUNCE')]
 
         pairs = UnitConvert.__pairs__('2lb.5oz.')
-        assert pairs == [(2.0, 'POUND'), (5.0, 'OUNCE')]
-
-        pairs = UnitConvert.__pairs__('2.5lb.5oz.')
-        assert pairs == [(2.5, 'POUND'), (5.0, 'OUNCE')]
-
-        pairs = UnitConvert.__pairs__('2.5lb.5.5oz.')
-        assert pairs == [(2.5, 'POUND'), (5.5, 'OUNCE')]
+        assert pairs == [(2.0, 'POUND'), (.5, 'OUNCE')]
 
     def test_coerce_amounts(self):
         assert UnitConvert.__coerce_amounts__(['525.75']) == [525.75]

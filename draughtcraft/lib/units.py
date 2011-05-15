@@ -126,8 +126,8 @@ class UnitConvert(object):
     to_str((5.5, 'POUND')) --> "5lb 8oz"
     """
 
-    punctuationRe = re.compile('[^0-9a-zA-z.]')
-    unitRe = re.compile('[a-zA-Z]+\.?')
+    punctuationRe = re.compile('[^0-9a-zA-z.\s]')
+    unitRe = re.compile('[a-zA-Z]+( \.)?')
     amountRe = re.compile('[0-9]+')
 
     @classmethod
@@ -141,6 +141,7 @@ class UnitConvert(object):
 
         # Find all unit amounts
         amounts = filter(None, cls.unitRe.split(val))
+        amounts = filter(lambda x: x != '.', amounts)
 
         # Build a regex that matches the amounts
         partsRe = '(%s)' % '|'.join(amounts).replace('.', '\.') 
@@ -163,7 +164,7 @@ class UnitConvert(object):
     @classmethod
     def __coerce_amounts__(cls, amounts):
         # Cast the amounts to float
-        return [float(a) for a in amounts]
+        return [float(a.replace('. ', '')) for a in amounts]
 
     @classmethod
     def __coerce_units__(cls, units):
