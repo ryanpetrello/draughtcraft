@@ -81,6 +81,12 @@ class RecipeBuilderAsyncController(RestController):
                 kw['unit'] = unit
 
         #
+        # If it's a hop addition, copy defaults for AA
+        #
+        if getattr(ingredient, 'alpha_acid', None):
+            kw['alpha_acid'] = ingredient.alpha_acid
+
+        #
         # Create the entity and assign the ingredient
         # to the correct attribute (e.g., `fermentable`,
         # `hop`, `yeast`)
