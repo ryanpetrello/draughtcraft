@@ -1,4 +1,4 @@
-from pecan                                      import expose, request, redirect, abort
+from pecan                                      import expose, request, abort
 from pecan.rest                                 import RestController
 from draughtcraft                               import model
 from draughtcraft.lib.schemas.recipes.builder   import RecipeChange, RecipeAddition

@@ -113,7 +113,7 @@ class HopAddition(RecipeAddition):
         'PLUG'
     ]
 
-    form                = Field(Enum(*FORMS))
+    form                = Field(Enum(*FORMS), default='LEAF')
     alpha_acid          = Field(Float())
 
     using_options(inheritance='multi', polymorphic=True)
