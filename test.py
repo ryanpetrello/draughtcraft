@@ -24,7 +24,7 @@ app = {
 }
 
 sqlalchemy = {
-    'url'           : 'sqlite:///memory',
+    'url'           : 'sqlite://',
     'echo'          : False,
     'echo_pool'     : False,
     'pool_recycle'  : 3600,
