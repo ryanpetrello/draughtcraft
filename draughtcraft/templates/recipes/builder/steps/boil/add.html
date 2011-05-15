@@ -2,18 +2,21 @@
   from draughtcraft.lib.units import UNITS
 
   hidden_fields = {
-    'type'    : 'RecipeAddition',
-    'amount'  : 0,
-    'unit'    : 'POUND',
+    'amount'  : '0 lb',
     'use'     : 'BOIL'
   }
+
+  def hidden(type='RecipeAddition'):
+    copy = hidden_fields.copy()
+    copy.update({'type': type})
+    return copy
+
 %>
 
-<h3>Add to Boil</h3>
-
+<h3>Add to Mash</h3>
 
 <fieldset>
-  ${h.form(h.request.path, hidden_fields = hidden_fields)}
+  ${h.form(h.request.path, hidden_fields = hidden())}
     ${h.select(
       'ingredient', 
       None, 
@@ -23,7 +26,7 @@
 </fieldset>
 
 <fieldset>
-  ${h.form(h.request.path, hidden_fields = hidden_fields)}
+  ${h.form(h.request.path, hidden_fields = hidden('HopAddition'))}
     ${h.select(
       'ingredient', 
       None, 

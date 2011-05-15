@@ -1,52 +1,66 @@
-<div class="step"> 
+<%
+  def sort(additions):
+    return sorted(
+      additions,
+      lambda a,b: cmp(b.percentage_for('boil'), a.percentage_for('boil'))
+    )
+%>
+
+<div class="step active"> 
 
   <%include file="../../tabs.html" args="active='boil'" />
   
-  <div class="ingredient-list">
-    % if recipe.boil:
-      <table>
+  ${h.form('%s?_method=put' % h.request.path)}
+    <div class="ingredient-list">
+      % if recipe.boil:
+        <table>
 
-        <!-- Malt Additions -->
-        % if recipe.boil.get(h.model.Fermentable):
+          <!-- Malt Additions -->
+          % if recipe.boil.get(h.model.Fermentable):
+            <tr>
+              <th class="type" />
+              <th class="percent">%</th>
+              <th class="amount">Amount</th>
+              <th>Fermentable</th>
+              <th>PPG</th>
+              <th class="unit">L</th>
+              <th />
+            </tr>
+
+            % for addition in sort(recipe.boil.get(h.model.Fermentable)):
+              <%include file="../additions/fermentable.html" args="i=recipe.additions.index(addition), addition=addition" />
+            % endfor
+          %endif
+
+          <!-- Hop Additions -->
+          % if recipe.boil.get(h.model.Hop):
+            <tr>
+              <th class="type" />
+              <th class="percent">%</th>
+              <th class="amount">Amount</th>
+              <th>Variety</th>
+              <th>Form</th>
+              <th class="unit">AA</th>
+              <th />
+            </tr>
+
+            % for addition in sort(recipe.boil.get(h.model.Hop)):
+              <%include file="../additions/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
+            % endfor
+          %endif
+
+        </table>
+      % else:
+        <table>
           <tr>
-            <th />
-            <th class="amount">Amount</th>
-            <th>Fermentable</th>
-            <th>PPG</th>
-            <th class="unit">L</th>
+            <th>
+              Choose one or more fermentables for this recipe.
+            </th>
           </tr>
-
-          % for addition in recipe.boil.get(h.model.Fermentable):
-            <%include file="../additions/fermentable.html" args="i=recipe.additions.index(addition), addition=addition" />
-          % endfor
-        %endif
-
-        <!-- Hop Additions -->
-        % if recipe.boil.get(h.model.Hop):
-          <tr>
-            <th />
-            <th class="amount">Amount</th>
-            <th>Variety</th>
-            <th>Form</th>
-            <th class="unit">AA</th>
-          </tr>
-
-          % for i, addition in enumerate(recipe.boil.get(h.model.Hop)):
-            <%include file="../additions/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
-          % endfor
-        %endif
-
-      </table>
-    % else:
-      <table>
-        <tr>
-          <th>
-            Choose one or more boil additions for this recipe.
-          </th>
-        </tr>
-      </table>
-    % endif
-  </div>
+        </table>
+      % endif
+    </div>
+  ${h.end_form()}
 
   <div class="inventory">
     <%include file="add.html" />
