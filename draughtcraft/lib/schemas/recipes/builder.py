@@ -51,11 +51,14 @@ class BaseRecipeAddition(FilteredSchema):
     form        = validators.OneOf(model.HopAddition.FORMS, if_missing=None)
     alpha_acid  = validators.Number(if_missing=None)
 
+
 class RecipeAddition(BaseRecipeAddition):
     ingredient  = ModelObject(model.Ingredient)
 
+
 class RecipeAdditionChange(BaseRecipeAddition):
     addition    = ModelObject(model.RecipeAddition)
+
 
 class RecipeChange(FilteredSchema):
     additions   = ForEach(RecipeAdditionChange)

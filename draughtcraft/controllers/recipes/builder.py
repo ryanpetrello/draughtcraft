@@ -1,6 +1,7 @@
 from pecan                                      import expose, request, redirect, abort
 from pecan.rest                                 import RestController
-from draughtcraft.lib.schemas.recipes.builder   import RecipeChange
+from draughtcraft                               import model
+from draughtcraft.lib.schemas.recipes.builder   import RecipeChange, RecipeAddition
 from elixir                                     import entities
 
 
@@ -13,6 +14,13 @@ class RecipeBuilderAsyncController(RestController):
 
     @expose('recipes/builder/async.html')
     def get_all(self):
+        return self.__rendered__()
+
+    @expose('recipes/builder/async.html')
+    def delete(self, id):
+        addition = model.RecipeAddition.get(int(id))
+        if addition:
+            addition.delete()
         return self.__rendered__()
 
     @expose(
@@ -45,13 +53,11 @@ class RecipeBuilderAsyncController(RestController):
 
         return self.__rendered__()
 
-    @expose('recipes/builder/async.html')
-        #schema = RecipeAdditionSchema()
+    @expose(
+        'recipes/builder/async.html',
+        schema = RecipeAddition()
+    )
     def post(self, **kw):
-        from pprint import pprint
-        pprint(kw)
-        return self.__rendered__()
-
         if request.pecan.get('validation_errors'):
             abort(400)
 
@@ -63,6 +69,18 @@ class RecipeBuilderAsyncController(RestController):
         ingredient = kw.pop('ingredient')
 
         #
+        # Apply the amount and unit
+        # (if a valid amount/unit combination
+        # can be parsed from the user's entry)
+        #
+        if 'amount' in kw:
+            pair = kw.pop('amount')
+            if pair:
+                amount, unit = pair
+                kw['amount'] = amount
+                kw['unit'] = unit
+
+        #
         # Create the entity and assign the ingredient
         # to the correct attribute (e.g., `fermentable`,
         # `hop`, `yeast`)
@@ -71,7 +89,7 @@ class RecipeBuilderAsyncController(RestController):
         setattr(entity, ingredient.row_type, ingredient)
         entity.recipe = request.context['recipe']
 
-        redirect('/recipes/%d/builder' % request.context['recipe'].id)
+        return self.__rendered__()
 
 
 class RecipeBuilderController(object):

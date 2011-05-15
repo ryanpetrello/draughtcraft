@@ -8,7 +8,7 @@ $.draughtcraft.recipes.builder.fetchRecipe = function(){
         success: function(html){
             $.draughtcraft.recipes.builder.__injectRecipeContent__(html);
         }
-    })
+    });
 };
 
 /*
@@ -152,6 +152,17 @@ $.draughtcraft.recipes.builder.initListeners = function(){
     $.draughtcraft.recipes.builder.initTabIndexes();
     $.draughtcraft.recipes.builder.initUpdateListeners();
     $.draughtcraft.recipes.builder.initFocusListeners();
+};
+
+$.draughtcraft.recipes.builder.removeAddition = function(addition){
+    $.ajax({
+        url: window.location.pathname+'/async/'+addition,
+        type: 'DELETE',
+        cache: false,
+        success: function(html){
+            $.draughtcraft.recipes.builder.__injectRecipeContent__(html);
+        }
+    });
 };
 
 /*
