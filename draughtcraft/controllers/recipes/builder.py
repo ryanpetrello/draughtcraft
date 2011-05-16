@@ -49,7 +49,8 @@ class RecipeBuilderAsyncController(RestController):
                     addition.unit = unit
 
             for k,v in row.items():
-                setattr(addition, k, v)
+                if v:
+                    setattr(addition, k, v)
 
         return self.__rendered__()
 
