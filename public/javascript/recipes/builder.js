@@ -70,15 +70,11 @@ $.draughtcraft.recipes.builder.currentTab = 0;
  */
 $.draughtcraft.recipes.builder.initTabs = function(){
     $('.step h2 li a').click(function(e){
-
         // Determine the index of the chosen tab
         var index = $('.step.active h2 li a').index(this);
 
         // Actually choose the tab
         $.draughtcraft.recipes.builder.selectTab(index);
-
-        // Prevent the default <a href> behavior
-        e.preventDefault();
     });
 };
 
@@ -180,6 +176,26 @@ $.draughtcraft.recipes.builder.selectTab = function(index){
     $.draughtcraft.recipes.builder.currentTab = index;
 }; 
 
+/*
+ * If a specific step is specified in the page anchor
+ * (e.g., #mash, #boil), select the appropriate tab.
+ */
+$.draughtcraft.recipes.builder.handleAnchor = function(){
+    var anchor = window.location.hash;
+    switch(anchor){
+        case '#mash':
+            $.draughtcraft.recipes.builder.selectTab(0);
+        break;
+        case '#boil':
+            $.draughtcraft.recipes.builder.selectTab(1);
+        break;
+        case '#ferment':
+            $.draughtcraft.recipes.builder.selectTab(2);
+        break;
+    }
+};
+
 $(document).ready(function(){
     $.draughtcraft.recipes.builder.fetchRecipe();
+    $.draughtcraft.recipes.builder.handleAnchor();
 });
