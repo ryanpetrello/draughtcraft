@@ -13,6 +13,10 @@ class TestRecipeBuilder(TestApp):
         assert model.Recipe.query.count() == 1
         assert response.headers['Location'].endswith('/recipes/1/builder')
 
+    def test_recipe_missing(self):
+        response = self.get('/recipes/1', status=404)
+        assert response.status_int == 404
+
 
 class TestMashAdditions(TestApp):
 
@@ -324,3 +328,48 @@ class TestRecipeChange(TestApp):
 
         a = model.RecipeAddition.get(1)
         assert a.use == 'SECONDARY'
+
+    def test_schema_failure(self):
+        model.RecipeAddition(
+            recipe      = model.Recipe(),
+            fermentable = model.Fermentable(name = '2-Row', origin='US'),
+            amount      = 12,
+            unit        = 'POUND',
+            use         = 'MASH'
+        )
+        model.commit()
+       
+        params = {
+            'additions-0.type'          : 'RecipeAddition',
+            'additions-0.amount'        : '10 lb',
+            'additions-0.use'           : 'MASH',
+            'additions-0.addition'      : 1
+        }            
+
+        for k in params:
+            copy = params.copy()
+            del copy[k]
+
+            response = self.put('/recipes/1/builder/async', params=copy, status=400)
+            assert response.status_int == 400
+
+        a = model.RecipeAddition.get(1)
+        assert a.amount == 12
+        assert a.unit == 'POUND'
+
+
+class TestRecipeRemoval(TestApp):
+
+    def test_addition_removal(self):
+        model.RecipeAddition(
+            recipe      = model.Recipe(),
+            fermentable = model.Fermentable(name = '2-Row', origin='US'),
+            amount      = 12,
+            unit        = 'POUND',
+            use         = 'MASH'
+        )
+        model.commit()
+
+        self.delete('/recipes/1/builder/async/1')
+
+        assert model.RecipeAddition.query.count() == 0
