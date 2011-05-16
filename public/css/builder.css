@@ -53,7 +53,7 @@
 }
 #content table  {
   margin: 15px 20px;
-  width: 100%;
+  width: 720px;
 }
 #content table th  {
   text-align: left;
@@ -71,8 +71,9 @@
   text-align: right;
   width: 35px;
 }
-#content table td.time, #content table th.time  {
+#content table td.time, #content table th.time, #content table td.close  {
   text-align: right;
+  width: 25px;
 }
 #content table tr.addition td.grain span,
 #content table tr.addition td.hop span,
@@ -97,6 +98,9 @@
 #content table tr.addition td input  {
   width: 75px;
 }
+#content table tr.addition td.amount input  {
+  width: 65px;
+}
 #content h2  {
   clear: both;
 }
@@ -104,7 +108,6 @@ div.ingredient-list  {
   width: 73%;
   margin-right: 2%;
   float: left;
-  overflow: hidden;
 }
 div.inventory  {
   width: 25%;

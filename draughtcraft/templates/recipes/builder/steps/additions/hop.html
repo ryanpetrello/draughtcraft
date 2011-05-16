@@ -31,6 +31,15 @@ ${h.hidden(
       )}
     </td>
   % endif
+  % if addition.step == 'fermentation':
+    <td>
+      ${h.select(
+        'additions-%d.use' % i,
+        addition.use,
+        [('PRIMARY', 'Primary'), ('SECONDARY', 'Secondary')]
+      )}
+    </td>
+  % endif
   <td class="amount">
     ${h.text(
       'additions-%d.amount' % i,
