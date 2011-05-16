@@ -92,6 +92,9 @@
 #content table tr.addition td.grain span, #content table tr.addition td.yeast span {
   background: #EDC124;
 }
+#content table tr.addition td.grain span  {
+  background: #C78F43;
+}
 #content table tr.addition:nth-child(odd) td  {
   background: #F5F5F5;
 }
