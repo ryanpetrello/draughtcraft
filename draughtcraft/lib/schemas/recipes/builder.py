@@ -71,6 +71,7 @@ class HopValidator(validators.FormValidator):
             error_message = '\n'.join(['%s: %s' % (key, error) for key, error in errors.iteritems()])
             raise Invalid(error_message, field_dict, state, error_dict=errors)
 
+
 class BaseRecipeAddition(FilteredSchema):
     """
     All recipe changes and additions must specify, at minimum:
