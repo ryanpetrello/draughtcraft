@@ -357,6 +357,40 @@ class TestRecipeChange(TestApp):
         assert a.amount == 12
         assert a.unit == 'POUND'
 
+    def test_hop_schema_failure(self):
+        model.HopAddition(
+            recipe      = model.Recipe(),
+            hop         = model.Hop(name = 'Cascade', alpha_acid=5.5),
+            amount      = 0.0625,
+            unit        = 'POUND',
+            use         = 'BOIL',
+            form        = 'PELLET',
+            alpha_acid  = 5.5
+        )
+        model.commit()
+       
+        params = {
+            'additions-0.type'          : 'HopAddition',
+            'additions-0.amount'        : '2 oz',
+            'additions-0.use'           : 'BOIL',
+            'additions-0.addition'      : 1,
+            'additions-0.form'          : 'LEAF',
+            'additions-0.alpha_acid'    : 7
+        }            
+
+        for k in params:
+            copy = params.copy()
+            del copy[k]
+
+            response = self.put('/recipes/1/builder/async', params=copy, status=400)
+            assert response.status_int == 400
+
+        a = model.HopAddition.get(1)
+        assert a.amount == 0.0625
+        assert a.unit == 'POUND'
+        assert a.form == 'PELLET'
+        assert a.alpha_acid == 5.5
+
 
 class TestRecipeRemoval(TestApp):
 
