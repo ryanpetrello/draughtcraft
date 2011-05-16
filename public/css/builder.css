@@ -69,7 +69,7 @@
 }
 #content table td.percent, #content table th.percent  {
   text-align: right;
-  max-width: 15px;
+  width: 35px;
 }
 #content table td.time, #content table th.time  {
   text-align: right;

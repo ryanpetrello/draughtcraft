@@ -15,10 +15,27 @@
               <th>Strain</th>
               <th>Form</th>
               <th />
+              <th />
             </tr>
 
             % for addition in recipe.fermentation.get(h.model.Yeast):
               <%include file="../additions/yeast.html" args="i=recipe.additions.index(addition), addition=addition" />
+            % endfor
+          %endif
+
+          <!-- Hop Additions -->
+          % if recipe.fermentation.get(h.model.Hop):
+            <tr>
+              <th class="type" />
+              <th class="amount">Amount</th>
+              <th>Variety</th>
+              <th>Form</th>
+              <th class="unit">AA</th>
+              <th />
+            </tr>
+
+            % for addition in recipe.fermentation.get(h.model.Hop):
+              <%include file="../additions/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
             % endfor
           %endif
 

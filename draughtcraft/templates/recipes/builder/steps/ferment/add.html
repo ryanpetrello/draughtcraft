@@ -4,12 +4,18 @@
     'type'    : 'RecipeAddition',
     'amount'  : 1
   }
+
+  def hidden(type='RecipeAddition'):
+    copy = hidden_fields.copy()
+    copy.update({'type': type, 'amount': '0 lb'})
+    return copy
+
 %>
 
 <h3>Add Yeast</h3>
 
 <fieldset>
-  ${h.form('async', hidden_fields = hidden_fields)}
+  ${h.form('async', hidden_fields = hidden())}
     ${h.select(
       'ingredient', 
       None, 
@@ -21,6 +27,23 @@
           )
         ]
       )
+    )}
+  ${h.end_form()}
+</fieldset>
+
+<fieldset>
+  ${h.form('async', hidden_fields = hidden('HopAddition'))}
+    ${h.select(
+      'ingredient', 
+      None, 
+      [
+        ('', 'Add Hops...')] + sorted(
+          [
+            (hop.id, hop.printed_name) for hop in h.model.Hop.excluding(
+              *[a.ingredient for a in h.request.context['recipe'].fermentation.get(h.model.Hop, [])]
+            )
+          ], key = lambda f: f[1]
+        )
     )}
   ${h.end_form()}
 </fieldset>
