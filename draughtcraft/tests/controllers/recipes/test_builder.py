@@ -158,14 +158,14 @@ class TestFermentationAdditions(TestApp):
         self.post('/recipes/1/builder/async', params={
             'type'          : 'HopAddition',
             'ingredient'    : 1,
-            'use'           : 'PRIMARY',
+            'use'           : 'SECONDARY',
             'amount'        : '0 lb'
         })
 
         assert model.HopAddition.query.count() == 1
         a = model.HopAddition.get(1)
         assert a.recipe == model.Recipe.get(1)
-        assert a.use == 'PRIMARY'
+        assert a.use == 'SECONDARY'
         assert a.amount == 0
         assert a.unit == 'POUND'
         assert a.hop == model.Hop.get(1)
