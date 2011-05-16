@@ -33,7 +33,12 @@ class Ingredient(Entity):
     @classmethod
     def excluding(cls, *ingredients):
         identifiers = [i.id for i in ingredients]
-        return cls.query.filter(not_(cls.id.in_(identifiers))).all()
+
+        query = cls.query
+        if identifiers:
+            query = query.filter(not_(cls.id.in_(identifiers)))
+
+        return query.all()
 
 
 class Fermentable(Ingredient):
