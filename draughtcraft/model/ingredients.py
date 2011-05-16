@@ -3,6 +3,7 @@ from elixir import (
     UnicodeText, Enum, using_options,
     OneToMany
 )
+from sqlalchemy import not_
 
 ORIGINS = [
     'AUSTRALIAN',
@@ -28,6 +29,11 @@ class Ingredient(Entity):
     @property
     def printed_name(self):
         return self.name
+
+    @classmethod
+    def excluding(cls, *ingredients):
+        identifiers = [i.id for i in ingredients]
+        return cls.query.filter(not_(cls.id.in_(identifiers))).all()
 
 
 class Fermentable(Ingredient):

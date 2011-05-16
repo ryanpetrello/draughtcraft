@@ -23,7 +23,14 @@
     ${h.select(
       'ingredient', 
       None, 
-      [('', 'Add Fermentables...')] + sorted([(f.id, f.printed_name) for f in h.model.Fermentable.query.all()], key = lambda f: f[1])
+      [
+        ('', 'Add Fermentables...')] + sorted(
+          [
+            (f.id, f.printed_name) for f in h.model.Fermentable.excluding(
+              *[a.ingredient for a in h.request.context['recipe'].boil.get(h.model.Fermentable, [])]
+            )
+          ], key = lambda f: f[1]
+        )
     )}
   ${h.end_form()}
 </fieldset>
@@ -33,7 +40,14 @@
     ${h.select(
       'ingredient', 
       None, 
-      [('', 'Add Hops...')] + sorted([(hop.id, hop.printed_name) for hop in h.model.Hop.query.all()], key = lambda hop: hop[1])
+      [
+        ('', 'Add Hops...')] + sorted(
+          [
+            (hop.id, hop.printed_name) for hop in h.model.Hop.excluding(
+              *[a.ingredient for a in h.request.context['recipe'].boil.get(h.model.Hop, [])]
+            )
+          ], key = lambda f: f[1]
+        )
     )}
   ${h.end_form()}
 </fieldset>

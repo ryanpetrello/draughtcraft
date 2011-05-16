@@ -1,6 +1,6 @@
 from elixir import (
     Entity, Field, Unicode, Interval, Float, Enum, using_options,
-    OneToMany, ManyToOne
+    OneToMany, ManyToOne, entities
 )
 from draughtcraft.lib.units import UnitConvert, UNITS
 
@@ -63,6 +63,17 @@ class Recipe(Entity):
             'PRIMARY',
             'SECONDARY'
         )])
+
+    def contains(self, ingredient, step):
+        if step not in ('mash', 'boil', 'fermentation'):
+            return False
+
+        additions = getattr(self, step)
+        for a in sum(additions.values(), []):
+            if a.ingredient == ingredient:
+                return True
+
+        return False
 
 
 class RecipeAddition(Entity):

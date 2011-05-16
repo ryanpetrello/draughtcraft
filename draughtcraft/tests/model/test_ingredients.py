@@ -1,7 +1,8 @@
 from draughtcraft       import model
+from draughtcraft.tests import TestApp
 
 
-class TestIngredients(object):
+class TestIngredients(TestApp):
 
     def test_printed_name(self): 
         assert model.Fermentable(
@@ -21,3 +22,24 @@ class TestIngredients(object):
         assert model.Yeast(
             name    = 'Wyeast 1056 - American Ale'
         ).printed_name == u'Wyeast 1056 - American Ale'
+
+    def test_excluding(self):
+        model.Fermentable()
+        model.Fermentable()
+        model.Hop()
+        model.Hop()
+        model.Yeast()
+        model.Yeast()
+        model.commit()
+
+        assert model.Fermentable.excluding(model.Fermentable.get(1)) == [model.Fermentable.get(2)]
+        assert model.Fermentable.excluding(model.Fermentable.get(1), model.Fermentable.get(2)) == []
+        assert model.Fermentable.excluding() == [model.Fermentable.get(1), model.Fermentable.get(2)]
+
+        assert model.Hop.excluding(model.Hop.get(3)) == [model.Hop.get(4)]
+        assert model.Hop.excluding(model.Hop.get(3), model.Hop.get(4)) == []
+        assert model.Hop.excluding() == [model.Hop.get(3), model.Hop.get(4)]
+
+        assert model.Yeast.excluding(model.Yeast.get(5)) == [model.Yeast.get(6)]
+        assert model.Yeast.excluding(model.Yeast.get(5), model.Yeast.get(6)) == []
+        assert model.Yeast.excluding() == [model.Yeast.get(5), model.Yeast.get(6)]

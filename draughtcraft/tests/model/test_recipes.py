@@ -69,7 +69,7 @@ class TestRecipeAddition(object):
         assert a3.percentage == .75
         assert a4.percentage == .25
 
-    def test_zero_percentage_(self):
+    def test_zero_percentage(self):
         recipe = model.Recipe()
         
         a1 = model.RecipeAddition(
@@ -222,3 +222,82 @@ class TestRecipe(object):
         assert percent[a2] == .25
         assert percent[a3] == .75
         assert percent[a4] == .25
+
+    def test_recipe_contains(self):
+        recipe = model.Recipe()
+
+        f1 = model.Fermentable()
+        h1 = model.Hop()
+        h2 = model.Hop()
+        h3 = model.Hop()
+        h4 = model.Hop()
+        h5 = model.Hop()
+        y1 = model.Yeast()
+        y2 = model.Yeast()
+
+        recipe.additions = [
+            model.RecipeAddition(
+                use         = 'MASH',
+                fermentable = f1
+            ),
+            model.RecipeAddition(
+                use         = 'MASH',
+                hop         = h1
+            ),
+            model.RecipeAddition(
+                use         = 'FIRST WORT',
+                hop         = h2
+            ),
+            model.RecipeAddition(
+                use         = 'BOIL',
+                hop         = h3
+            ),
+            model.RecipeAddition(
+                use         = 'POST-BOIL',
+                hop         = h4
+            ),
+            model.RecipeAddition(
+                use         = 'FLAME OUT',
+                hop         = h5
+            ),
+            model.RecipeAddition(
+                use         = 'PRIMARY',
+                yeast       = y1
+            ),
+            model.RecipeAddition(
+                use         = 'SECONDARY',
+                yeast       = y2
+            )
+        ]
+
+        assert recipe.contains(f1, 'mash')
+        assert recipe.contains(f1, 'boil') is False
+        assert recipe.contains(f1, 'fermentation') is False
+
+        assert recipe.contains(h1, 'mash')
+        assert recipe.contains(h1, 'boil') is False
+        assert recipe.contains(h1, 'fermentation') is False
+
+        assert recipe.contains(h2, 'mash') is False
+        assert recipe.contains(h2, 'boil')
+        assert recipe.contains(h2, 'fermentation') is False
+
+        assert recipe.contains(h3, 'mash') is False
+        assert recipe.contains(h3, 'boil')
+        assert recipe.contains(h3, 'fermentation') is False
+
+        assert recipe.contains(h4, 'mash') is False
+        assert recipe.contains(h4, 'boil')
+        assert recipe.contains(h4, 'fermentation') is False
+
+        assert recipe.contains(h5, 'mash') is False
+        assert recipe.contains(h5, 'boil')
+        assert recipe.contains(h5, 'fermentation') is False
+
+        assert recipe.contains(y1, 'mash') is False
+        assert recipe.contains(y1, 'boil') is False
+        assert recipe.contains(y1, 'fermentation')
+
+        assert recipe.contains(y2, 'mash') is False
+        assert recipe.contains(y2, 'boil') is False
+        assert recipe.contains(y2, 'fermentation')
