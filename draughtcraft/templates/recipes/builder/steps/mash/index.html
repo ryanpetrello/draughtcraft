@@ -10,7 +10,7 @@
 
   <%include file="../../tabs.html" args="active='mash'" />
   
-  ${h.form('%s?_method=put' % h.request.path)}
+  ${h.form('async?_method=put')}
     <div class="ingredient-list">
       % if recipe.mash:
         <table>
