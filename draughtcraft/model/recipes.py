@@ -37,7 +37,10 @@ class Recipe(Entity):
         for type, additions in partitions.items():
             total = sum([addition.amount for addition in additions])
             for addition in additions:
-                percentages[addition] = float(addition.amount) / float(total)
+                if total:
+                    percentages[addition] = float(addition.amount) / float(total)
+                else:
+                    percentages[addition] = 0
 
         return percentages
 

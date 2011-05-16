@@ -69,6 +69,26 @@ class TestRecipeAddition(object):
         assert a3.percentage == .75
         assert a4.percentage == .25
 
+    def test_zero_percentage_(self):
+        recipe = model.Recipe()
+        
+        a1 = model.RecipeAddition(
+            use         = 'MASH',
+            amount      = 0,
+            unit        = 'POUND',
+            fermentable = model.Fermentable()
+        )
+        a2 = model.RecipeAddition(
+            use         = 'MASH',
+            amount      = 0,
+            unit        = 'POUND',
+            fermentable = model.Fermentable()
+        )
+        recipe.additions = [a1, a2]
+
+        assert a1.percentage == 0
+        assert a2.percentage == 0
+
 
 class TestRecipe(object):
 
