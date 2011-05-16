@@ -12,13 +12,27 @@ ${h.hidden(
   'additions-%d.type' % i,
   addition.__class__.__name__
 )}
+${h.hidden(
+  'additions-%d.amount' % i,
+  1
+)}
 
 <tr class="addition ${'even' if i % 2 == 0 else 'odd'}">
   <td class="type yeast">
     <span>Yeast</span>
   </td>
   <td>
+    ${h.select(
+      'additions-%d.use' % i,
+      addition.use,
+      [('PRIMARY', 'Primary'), ('SECONDARY', 'Secondary')]
+    )}
+  </td>
+  <td>
     <a href="#">${addition.ingredient.printed_name}</a>
+  </td>
+  <td>
+    ${addition.ingredient.form.title()}
   </td>
   <td class="close">
     <a href="#" onclick="$.draughtcraft.recipes.builder.removeAddition(${addition.id});return false;">

@@ -29,6 +29,9 @@ class RecipeBuilderAsyncController(RestController):
         variable_decode     = True
     )
     def put(self, **kw):
+        if request.pecan.get('validation_errors'):
+            abort(400)
+
         for row in kw.get('additions'):
             # Clean up the hash a bit
             row.pop('type')

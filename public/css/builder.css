@@ -72,7 +72,8 @@
   max-width: 15px;
 }
 #content table tr.addition td.grain span,
-#content table tr.addition td.hop span  {
+#content table tr.addition td.hop span,
+#content table tr.addition td.yeast span  {
   color: #FFF;
   background: #6E985E;
   padding: 3px 5px;
@@ -84,11 +85,11 @@
   display: inline-block;
   -webkit-border-radius: 8px;
 }
+#content table tr.addition td.grain span, #content table tr.addition td.yeast span {
+  background: #EDC124;
+}
 #content table tr.addition:nth-child(odd) td  {
   background: #F5F5F5;
-}
-#content table tr.addition td.grain span  {
-  background: #EDC124;
 }
 #content table tr.addition td input  {
   width: 75px;
