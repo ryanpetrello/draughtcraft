@@ -97,11 +97,17 @@ class RecipeAddition(Entity):
             if match is not None:
                 return match
 
-    def percentage_for(self, step):
-        if step not in ('mash', 'boil', 'fermentation'):
-            return 0
-
-        additions = getattr(self.recipe, step)
+    @property
+    def percentage(self):
+        additions = ({
+            'MASH'          : self.recipe.mash,
+            'FIRST WORT'    : self.recipe.boil,
+            'BOIL'          : self.recipe.boil,
+            'POST-BOIL'     : self.recipe.boil,
+            'FLAME OUT'     : self.recipe.boil,  
+            'PRIMARY'       : self.recipe.fermentation,
+            'SECONDARY'     : self.recipe.fermentation
+        })[self.use]
         return self.recipe._percent(additions).get(self, 0)
 
 

@@ -35,7 +35,7 @@ class TestRecipeAddition(object):
 
         assert addition.printable_amount == '5 lb'
 
-    def test_percentage_for(self):
+    def test_percentage(self):
         recipe = model.Recipe()
         
         a1 = model.RecipeAddition(
@@ -64,19 +64,10 @@ class TestRecipeAddition(object):
         )
         recipe.additions = [a1, a2, a3, a4]
 
-        assert a1.percentage_for('mash') == .75
-        assert a2.percentage_for('mash') == .25
-        assert a1.percentage_for('boil') == 0
-        assert a2.percentage_for('boil') == 0
-        assert a3.percentage_for('boil') == .75
-        assert a4.percentage_for('boil') == .25
-        assert a3.percentage_for('mash') == 0
-        assert a4.percentage_for('mash') == 0
-
-        assert a1.percentage_for('invalid') == 0
-        assert a2.percentage_for('invalid') == 0
-        assert a3.percentage_for('invalid') == 0
-        assert a4.percentage_for('invalid') == 0
+        assert a1.percentage == .75
+        assert a2.percentage == .25
+        assert a3.percentage == .75
+        assert a4.percentage == .25
 
 
 class TestRecipe(object):

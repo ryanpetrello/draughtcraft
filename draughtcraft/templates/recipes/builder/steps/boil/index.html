@@ -2,7 +2,7 @@
   def sort(additions):
     return sorted(
       additions,
-      lambda a,b: cmp(b.percentage_for('boil'), a.percentage_for('boil'))
+      lambda a,b: cmp(b.percentage, a.percentage)
     )
 %>
 
