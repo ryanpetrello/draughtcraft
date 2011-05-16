@@ -1,21 +1,26 @@
 <%!
-  from draughtcraft.lib.units import UNITS
-
   hidden_fields = {
+    'use'     : 'PRIMARY',
     'type'    : 'RecipeAddition',
-    'amount'  : 1,
-    'use'     : 'FERMENTATION'
+    'amount'  : 1
   }
 %>
 
 <h3>Add Yeast</h3>
 
 <fieldset>
-  ${h.form(h.request.path, hidden_fields = hidden_fields)}
+  ${h.form('async', hidden_fields = hidden_fields)}
     ${h.select(
       'ingredient', 
       None, 
-      [('', 'Add Yeast...')] + sorted([(yeast.id, yeast.printed_name) for yeast in h.model.Yeast.query.all()], key = lambda yeast: yeast[1])
+      (
+        [('', 'Add Yeast...')] + 
+        [
+          (yeast.id, yeast.printed_name) for yeast in h.model.Yeast.excluding(
+            *[a.ingredient for a in h.request.context['recipe'].fermentation.get(h.model.Yeast, [])]
+          )
+        ]
+      )
     )}
   ${h.end_form()}
 </fieldset>

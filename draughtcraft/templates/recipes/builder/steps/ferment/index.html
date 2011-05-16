@@ -1,24 +1,37 @@
-<div class="step"> 
+<div class="step active"> 
 
   <%include file="../../tabs.html" args="active='ferment'" />
   
-  <div class="ingredient-list">
-    % if recipe.fermentation:
-      <table>
+  ${h.form('%s?_method=put' % h.request.path)}
+    <div class="ingredient-list">
+      % if recipe.fermentation:
+        <table>
 
-        IMPLEMENT THIS
+          <!-- Yeast Additions -->
+          % if recipe.fermentation.get(h.model.Yeast):
+            <tr>
+              <th class="type" />
+              <th>Strain</th>
+              <th />
+            </tr>
 
-      </table>
-    % else:
-      <table>
-        <tr>
-          <th>
-            Choose yeast(s) for fermentation.
-          </th>
-        </tr>
-      </table>
-    % endif
-  </div>
+            % for addition in recipe.fermentation.get(h.model.Yeast):
+              <%include file="../additions/yeast.html" args="i=recipe.additions.index(addition), addition=addition" />
+            % endfor
+          %endif
+
+        </table>
+      % else:
+        <table>
+          <tr>
+            <th>
+              Choose yeast(s) for fermentation
+            </th>
+          </tr>
+        </table>
+      % endif
+    </div>
+  ${h.end_form()}
 
   <div class="inventory">
     <%include file="add.html" />
