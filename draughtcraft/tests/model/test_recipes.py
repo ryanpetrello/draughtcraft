@@ -1,4 +1,5 @@
 from draughtcraft       import model
+from datetime           import timedelta
 
 
 class TestRecipeAddition(object):
@@ -88,6 +89,13 @@ class TestRecipeAddition(object):
 
         assert a1.percentage == 0
         assert a2.percentage == 0
+
+    def test_minutes(self):
+        a = model.RecipeAddition()
+        assert a.minutes == 0
+
+        a.duration = timedelta(seconds=120)
+        assert a.minutes == 2
 
 
 class TestRecipe(object):
@@ -301,3 +309,12 @@ class TestRecipe(object):
         assert recipe.contains(y2, 'mash') is False
         assert recipe.contains(y2, 'boil') is False
         assert recipe.contains(y2, 'fermentation')
+
+        assert recipe.contains(f1, 'invalid') is False
+        assert recipe.contains(h1, 'invalid') is False
+        assert recipe.contains(h2, 'invalid') is False
+        assert recipe.contains(h3, 'invalid') is False
+        assert recipe.contains(h4, 'invalid') is False
+        assert recipe.contains(h5, 'invalid') is False
+        assert recipe.contains(y1, 'invalid') is False
+        assert recipe.contains(y2, 'invalid') is False
