@@ -20,6 +20,16 @@ ${h.hidden(
   <td class="percent">
     ${h.format_percentage(addition.percentage, digits=1)}
   </td>
+  % if addition.step == 'boil':
+    <td class="time">
+      ${h.select(
+        'additions-%d.duration' % i,
+        addition.minutes,
+        range(60, -5, -5)
+      )}
+      min
+    </td>
+  % endif
   <td class="amount">
     ${h.text(
       'additions-%d.amount' % i,

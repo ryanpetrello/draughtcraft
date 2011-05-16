@@ -9,7 +9,9 @@
 
   def hidden(type='RecipeAddition'):
     copy = hidden_fields.copy()
-    copy.update({'type': type})
+    copy.update({'type': type, 'duration': 15})
+    if type == 'HopAddition':
+      copy['duration'] = 60
     return copy
 
 %>

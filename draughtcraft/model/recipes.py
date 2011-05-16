@@ -101,16 +101,26 @@ class RecipeAddition(Entity):
                 return match
 
     @property
-    def percentage(self):
-        additions = ({
-            'MASH'          : self.recipe.mash,
-            'FIRST WORT'    : self.recipe.boil,
-            'BOIL'          : self.recipe.boil,
-            'POST-BOIL'     : self.recipe.boil,
-            'FLAME OUT'     : self.recipe.boil,  
-            'PRIMARY'       : self.recipe.fermentation,
-            'SECONDARY'     : self.recipe.fermentation
+    def minutes(self):
+        if self.duration is None:
+            return 0
+        return self.duration.seconds / 60
+
+    @property
+    def step(self):
+        return ({
+            'MASH'          : 'mash',
+            'FIRST WORT'    : 'boil',
+            'BOIL'          : 'boil',
+            'POST-BOIL'     : 'boil',
+            'FLAME OUT'     : 'boil',
+            'PRIMARY'       : 'fermentation',
+            'SECONDARY'     : 'fermentation'
         })[self.use]
+
+    @property
+    def percentage(self):
+        additions = getattr(self.recipe, self.step)
         return self.recipe._percent(additions).get(self, 0)
 
 

@@ -13,7 +13,7 @@ class TimeDeltaValidator(validators.FancyValidator):
     def _to_python(self, value, state):
         if not value: return None
         try:
-            return timedelta(minutes=value)
+            return timedelta(minutes=int(value))
         except Exception, e:
             raise Invalid(e, value, state)
 
