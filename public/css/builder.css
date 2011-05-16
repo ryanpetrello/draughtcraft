@@ -71,6 +71,9 @@
   text-align: right;
   max-width: 15px;
 }
+#content table td.time, #content table th.time  {
+  text-align: right;
+}
 #content table tr.addition td.grain span,
 #content table tr.addition td.hop span,
 #content table tr.addition td.yeast span  {

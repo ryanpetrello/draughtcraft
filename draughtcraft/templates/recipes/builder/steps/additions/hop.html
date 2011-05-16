@@ -25,9 +25,8 @@ ${h.hidden(
       ${h.select(
         'additions-%d.duration' % i,
         addition.minutes,
-        range(60, -5, -5)
+        [(i, '%d min' % i) for i in range(60, -5, -5)]
       )}
-      min
     </td>
   % endif
   <td class="amount">
