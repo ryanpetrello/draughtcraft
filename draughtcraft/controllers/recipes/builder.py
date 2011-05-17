@@ -26,11 +26,11 @@ class RecipeBuilderAsyncController(RestController):
     @expose(
         'recipes/builder/async.html',
         schema              = RecipeChange(),
+        error_handler       = lambda: request.path,
+        htmlfill            = dict(auto_insert_errors = False, prefix_error = True),
         variable_decode     = True
     )
     def put(self, **kw):
-        if request.pecan.get('validation_errors'):
-            abort(400)
 
         for row in kw.get('additions'):
             # Clean up the hash a bit

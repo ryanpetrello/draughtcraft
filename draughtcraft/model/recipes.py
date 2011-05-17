@@ -1,6 +1,6 @@
 from elixir import (
     Entity, Field, Unicode, Interval, Float, Enum, using_options,
-    OneToMany, ManyToOne, entities
+    OneToMany, ManyToOne
 )
 from draughtcraft.lib.units import UnitConvert, UNITS
 

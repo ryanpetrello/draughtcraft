@@ -2,57 +2,55 @@
 
   <%include file="../../tabs.html" args="active='ferment'" />
   
-  ${h.form('async?_method=put')}
-    <div class="ingredient-list">
-      % if recipe.fermentation:
-        <table>
+  <div class="ingredient-list">
+    % if recipe.fermentation:
+      <table>
 
-          <!-- Yeast Additions -->
-          % if recipe.fermentation.get(h.model.Yeast):
-            <tr>
-              <th class="type" />
-              <th class="use">Use</th>
-              <th />
-              <th>Strain</th>
-              <th>Form</th>
-              <th />
-              <th />
-            </tr>
-
-            % for addition in recipe.fermentation.get(h.model.Yeast):
-              <%include file="../additions/yeast.html" args="i=recipe.additions.index(addition), addition=addition" />
-            % endfor
-          %endif
-
-          <!-- Hop Additions -->
-          % if recipe.fermentation.get(h.model.Hop):
-            <tr>
-              <th class="type" />
-              <th class="use">Use</th>
-              <th class="amount">Amount</th>
-              <th>Variety</th>
-              <th>Form</th>
-              <th class="unit">AA</th>
-              <th />
-            </tr>
-
-            % for addition in recipe.fermentation.get(h.model.Hop):
-              <%include file="../additions/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
-            % endfor
-          %endif
-
-        </table>
-      % else:
-        <table>
+        <!-- Yeast Additions -->
+        % if recipe.fermentation.get(h.model.Yeast):
           <tr>
-            <th>
-              Choose yeast(s) for fermentation.
-            </th>
+            <th class="type" />
+            <th class="use">Use</th>
+            <th />
+            <th>Strain</th>
+            <th>Form</th>
+            <th />
+            <th />
           </tr>
-        </table>
-      % endif
-    </div>
-  ${h.end_form()}
+
+          % for addition in recipe.fermentation.get(h.model.Yeast):
+            <%include file="../additions/yeast.html" args="i=recipe.additions.index(addition), addition=addition" />
+          % endfor
+        %endif
+
+        <!-- Hop Additions -->
+        % if recipe.fermentation.get(h.model.Hop):
+          <tr>
+            <th class="type" />
+            <th class="use">Use</th>
+            <th class="amount">Amount</th>
+            <th>Variety</th>
+            <th>Form</th>
+            <th class="unit">AA</th>
+            <th />
+          </tr>
+
+          % for addition in recipe.fermentation.get(h.model.Hop):
+            <%include file="../additions/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
+          % endfor
+        %endif
+
+      </table>
+    % else:
+      <table>
+        <tr>
+          <th>
+            Choose yeast(s) for fermentation.
+          </th>
+        </tr>
+      </table>
+    % endif
+  </div>
 
   <div class="inventory">
     <%include file="add.html" />

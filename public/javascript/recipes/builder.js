@@ -42,8 +42,11 @@ $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
     // the DOM.
     //
     $('#builder form').ajaxForm({
-        'success': function(responseText){
+        'success' : function(responseText){
             $.draughtcraft.recipes.builder.__injectRecipeContent__(responseText);
+        },
+        'error' : function(jqXHR, textStatus, errorThrown){
+            $.draughtcraft.recipes.builder.__injectRecipeContent__(jqXHR.responseText);
         }
     });
 

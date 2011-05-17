@@ -10,57 +10,55 @@
 
   <%include file="../../tabs.html" args="active='mash'" />
   
-  ${h.form('async?_method=put')}
-    <div class="ingredient-list">
-      % if recipe.mash:
-        <table>
+  <div class="ingredient-list">
+    % if recipe.mash:
+      <table>
 
-          <!-- Malt Additions -->
-          % if recipe.mash.get(h.model.Fermentable):
-            <tr>
-              <th class="type" />
-              <th class="percent">%</th>
-              <th class="amount">Amount</th>
-              <th>Fermentable</th>
-              <th>PPG</th>
-              <th class="unit">L</th>
-              <th />
-            </tr>
-
-            % for addition in sort(recipe.mash.get(h.model.Fermentable)):
-              <%include file="../additions/fermentable.html" args="i=recipe.additions.index(addition), addition=addition" />
-            % endfor
-          %endif
-
-          <!-- Hop Additions -->
-          % if recipe.mash.get(h.model.Hop):
-            <tr>
-              <th class="type" />
-              <th class="percent">%</th>
-              <th class="amount">Amount</th>
-              <th>Variety</th>
-              <th>Form</th>
-              <th class="unit">AA</th>
-              <th />
-            </tr>
-
-            % for addition in sort(recipe.mash.get(h.model.Hop)):
-              <%include file="../additions/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
-            % endfor
-          %endif
-
-        </table>
-      % else:
-        <table>
+        <!-- Malt Additions -->
+        % if recipe.mash.get(h.model.Fermentable):
           <tr>
-            <th>
-              Choose one or more fermentables for this recipe.
-            </th>
+            <th class="type" />
+            <th class="percent">%</th>
+            <th class="amount">Amount</th>
+            <th>Fermentable</th>
+            <th>PPG</th>
+            <th class="unit">L</th>
+            <th />
           </tr>
-        </table>
-      % endif
-    </div>
-  ${h.end_form()}
+
+          % for addition in sort(recipe.mash.get(h.model.Fermentable)):
+            <%include file="../additions/fermentable.html" args="i=recipe.additions.index(addition), addition=addition" />
+          % endfor
+        %endif
+
+        <!-- Hop Additions -->
+        % if recipe.mash.get(h.model.Hop):
+          <tr>
+            <th class="type" />
+            <th class="percent">%</th>
+            <th class="amount">Amount</th>
+            <th>Variety</th>
+            <th>Form</th>
+            <th class="unit">AA</th>
+            <th />
+          </tr>
+
+          % for addition in sort(recipe.mash.get(h.model.Hop)):
+            <%include file="../additions/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
+          % endfor
+        %endif
+
+      </table>
+    % else:
+      <table>
+        <tr>
+          <th>
+            Choose one or more fermentables for this recipe.
+          </th>
+        </tr>
+      </table>
+    % endif
+  </div>
 
   <div class="inventory">
     <%include file="add.html" />

@@ -86,7 +86,7 @@ class BaseRecipeAddition(FilteredSchema):
 
     # Hop-specific
     form        = validators.OneOf(model.HopAddition.FORMS, if_missing=None)
-    alpha_acid  = validators.Number(if_missing=None)
+    alpha_acid  = validators.Number(min=0, if_missing=None)
 
 
 class RecipeAddition(BaseRecipeAddition):

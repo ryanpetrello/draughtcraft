@@ -1,6 +1,8 @@
 <h1>Simcoe IPA</h1><a href="#" class="style">American Amber Ale</a>
 
-<%include file="steps/mash/index.html" />
-<%include file="steps/boil/index.html" />
-<%include file="steps/ferment/index.html" />
+${h.form('async?_method=put')}
+  <%include file="steps/mash/index.html" />
+  <%include file="steps/boil/index.html" />
+  <%include file="steps/ferment/index.html" />
+${h.end_form()}
 <%include file="results.html" />

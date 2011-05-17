@@ -350,8 +350,8 @@ class TestRecipeChange(TestApp):
             copy = params.copy()
             del copy[k]
 
-            response = self.put('/recipes/1/builder/async', params=copy, status=400)
-            assert response.status_int == 400
+            response = self.put('/recipes/1/builder/async', params=copy, status=200)
+            assert response.status_int == 200
 
         a = model.RecipeAddition.get(1)
         assert a.amount == 12
@@ -382,8 +382,8 @@ class TestRecipeChange(TestApp):
             copy = params.copy()
             del copy[k]
 
-            response = self.put('/recipes/1/builder/async', params=copy, status=400)
-            assert response.status_int == 400
+            response = self.put('/recipes/1/builder/async', params=copy, status=200)
+            assert response.status_int == 200
 
         a = model.HopAddition.get(1)
         assert a.amount == 0.0625
