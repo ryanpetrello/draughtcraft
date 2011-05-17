@@ -27,7 +27,7 @@ class RecipeBuilderAsyncController(RestController):
         'recipes/builder/async.html',
         schema              = RecipeChange(),
         error_handler       = lambda: request.path,
-        htmlfill            = dict(auto_insert_errors = False, prefix_error = True),
+        htmlfill            = dict(auto_insert_errors = True, prefix_error = False),
         variable_decode     = True
     )
     def put(self, **kw):

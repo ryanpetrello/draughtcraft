@@ -63,6 +63,18 @@ $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
         var n = $.draughtcraft.recipes.builder.lastFocus;
         $('input#'+n+', select#'+n+'').focus();
     }
+
+    //
+    // If error messages are embedded on the page,
+    // pull them from the DOM and apply the error messages as "title"
+    // attributes on the appropriate elements.
+    //
+    $('span.error-message').each(function(){
+        $(this).prev('input, select, textarea').attr('title', $(this).html()+'.').tipTip({'delay': 200});
+        $(this).remove();
+    });
+
+    $("#tiptip_holder").fadeOut();
     
 };
 

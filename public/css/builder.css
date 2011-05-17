@@ -103,11 +103,11 @@
 }
 #content table tr.addition td input.error  {
   border-color: #FFAAAA;
-  background: #FFEEEE;
+  background: #FFE8E8;
+  color: #CC0000;
   -moz-box-shadow: 0 0 0.40em #FF6666; 
   -webkit-box-shadow: 0 0 .40em #FF6666; 
   box-shadow: 0 0 0.40em #FF6666;
-  color: #CC0000;
 }
 #content table tr.addition td input.error:focus  {
   outline: 0px;
