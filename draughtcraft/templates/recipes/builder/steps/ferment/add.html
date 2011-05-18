@@ -37,7 +37,7 @@
       'ingredient', 
       None, 
       [
-        ('', 'Add Hops...')] + sorted(
+        ('', 'Add Dry Hops...')] + sorted(
           [
             (hop.id, hop.printed_name) for hop in h.model.Hop.excluding(
               *[a.ingredient for a in h.request.context['recipe'].fermentation.get(h.model.Hop, [])]

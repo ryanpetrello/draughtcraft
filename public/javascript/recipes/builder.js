@@ -17,7 +17,33 @@ $.draughtcraft.recipes.builder.fetchRecipe = function(){
  * @param {String} html - The HTML content to inject
  */
 $.draughtcraft.recipes.builder.__injectRecipeContent__ = function(html){
+
+    //
+    // Look for tr.addition in the DOM
+    // and keep track of all unique DOM ID's.
+    //
+    var before = $.map($('tr.addition[id]'), function(x){
+        return $(x).attr('id');
+    });
+
     $("#builder").html(html);
+
+    //
+    // Look for tr.additions that didn't exist *before* content injection.
+    //
+    var after = $.map($('tr.addition[id]'), function(x){
+        return $(x).attr('id');
+    });
+    var difference = after.filter(function(i){
+        return before.indexOf(i) < 0;
+    });
+
+    //
+    // If a new row exists, focus on its first form element.
+    //
+    if(difference.length)
+        $('#'+difference[0]).find('input, select').eq(0).focus();
+
     $.draughtcraft.recipes.builder.__afterRecipeInject();
 };
 
