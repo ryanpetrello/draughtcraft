@@ -192,14 +192,15 @@ $.draughtcraft.recipes.builder.initListeners = function(){
 };
 
 $.draughtcraft.recipes.builder.removeAddition = function(addition){
-    $.ajax({
-        url: window.location.pathname+'/async/'+addition,
-        type: 'DELETE',
-        cache: false,
-        success: function(html){
-            $.draughtcraft.recipes.builder.__injectRecipeContent__(html);
-        }
-    });
+    if(confirm('Are you sure you want to remove this?'))
+        $.ajax({
+            url: window.location.pathname+'/async/'+addition,
+            type: 'DELETE',
+            cache: false,
+            success: function(html){
+                $.draughtcraft.recipes.builder.__injectRecipeContent__(html);
+            }
+        });
 };
 
 /*
