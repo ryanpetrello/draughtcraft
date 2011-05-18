@@ -88,6 +88,7 @@
   text-align: center;
   display: inline-block;
   -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
 }
 #content table tr.addition td.grain span, #content table tr.addition td.yeast span {
   background: #EDC124;
