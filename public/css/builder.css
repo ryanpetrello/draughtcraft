@@ -72,8 +72,8 @@
   width: 35px;
 }
 #content table td.time, #content table th.time, #content table td.close  {
-  text-align: right;
-  width: 25px;
+  text-align: left;
+  max-width: 175px;
 }
 #content table tr.addition td.grain span,
 #content table tr.addition td.hop span,

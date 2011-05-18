@@ -25,10 +25,21 @@ ${h.hidden(
   % if addition.step == 'boil':
     <td class="time">
       ${h.select(
-        'additions-%d.duration' % i,
-        addition.minutes,
-        [(value, '%d min' % value) for value in range(60, -5, -5)]
+        'additions-%d.use' % i,
+        addition.use,
+        [
+          ('FIRST WORT', 'First Wort'),
+          ('BOIL', 'Boil'),
+          ('FLAME OUT', 'Flame Out')
+        ]
       )}
+      % if addition.use == 'BOIL':
+        ${h.select(
+          'additions-%d.duration' % i,
+          addition.minutes,
+          [(value, '%d min' % value) for value in range(60, -5, -5)]
+        )}
+      % endif
     </td>
   % endif
   % if addition.step == 'fermentation':
