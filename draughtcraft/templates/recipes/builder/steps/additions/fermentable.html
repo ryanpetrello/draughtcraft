@@ -17,9 +17,11 @@ ${h.hidden(
   <td class="type grain">
     <span>Grain</span>
   </td>
-  <td class="percent">
-    ${h.format_percentage(addition.percentage, digits=1)}
-  </td>
+  % if addition.step == 'mash':
+    <td class="percent">
+      ${h.format_percentage(addition.percentage, digits=1)}
+    </td>
+  % endif
   % if addition.step == 'boil':
     <td class="time">
       ${h.select(
@@ -35,7 +37,7 @@ ${h.hidden(
         ${h.select(
           'additions-%d.duration' % i,
           addition.minutes,
-          [(value, '%d min' % value) for value in range(60, -5, -5)]
+          [(value, '%d min' % value) for value in range(60, 0, -5)]
         )}
       % endif
     </td>
