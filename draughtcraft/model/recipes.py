@@ -147,3 +147,10 @@ class HopAddition(RecipeAddition):
     alpha_acid          = Field(Float())
 
     using_options(inheritance='multi', polymorphic=True)
+
+    @property
+    def printable_amount(self):
+        unit = self.unit
+        if self.amount == 0:
+            unit = 'OUNCE'
+        return UnitConvert.to_str(self.amount, unit)

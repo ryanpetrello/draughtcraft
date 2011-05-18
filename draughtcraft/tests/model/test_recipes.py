@@ -36,6 +36,21 @@ class TestRecipeAddition(object):
 
         assert addition.printable_amount == '5 lb'
 
+    def test_printable_hop_amount(self):
+        addition = model.HopAddition(
+            amount  = 0.0625, # 1 oz
+            unit    = 'POUND'
+        )
+
+        assert addition.printable_amount == '1 oz'
+
+        addition = model.HopAddition(
+            amount  = 0,
+            unit    = 'POUND'
+        )
+
+        assert addition.printable_amount == '0 oz'
+
     def test_percentage(self):
         recipe = model.Recipe()
         
