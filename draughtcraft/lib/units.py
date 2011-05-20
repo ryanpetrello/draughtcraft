@@ -1,3 +1,4 @@
+from formencode import validators, Invalid
 import re
 
 UNITS = [
@@ -205,6 +206,15 @@ class UnitConvert(object):
         stripped = cls.punctuationRe.sub('', val)
 
         #
+        # First attempt to interpret a simple int/float
+        # value and return it.  If this fails, continue on
+        # to normal "<amount> <unit>" parsing.
+        #
+        try:
+            return validators.Number.to_python(stripped), None
+        except Invalid: pass
+
+        #
         # Split into pairs of (amount, unit), e.g.,
         # [(5.0, 'POUND'), (8.0, 'OUNCE')]
         #
@@ -259,6 +269,15 @@ class UnitConvert(object):
 
     @classmethod
     def to_str(cls, amount, unit):
+
+        #
+        # If there's no unit, just
+        # return the amount
+        #
+        if unit is None:
+            if type(amount) is float and int(amount) == amount:
+                amount = int(amount)
+            return str(amount)
 
         pairs = [(amount, unit)]
 

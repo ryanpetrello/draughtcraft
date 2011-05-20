@@ -218,6 +218,13 @@ class TestUnitConversionFromString(object):
             if value != 'OUNCE':
                 assert UnitConvert.from_str('5%s' % abbr) == (5, UNIT_MAP[abbr])
 
+    def test_unitless_conversion(self):
+        amount, unit = UnitConvert.from_str('5')
+        assert (amount, unit) == (5, None)
+
+        amount, unit = UnitConvert.from_str('5.25')
+        assert (amount, unit) == (5.25, None)
+
 
 class TestUnitConversionToString(object):
 
@@ -254,6 +261,11 @@ class TestUnitConversionToString(object):
 
     def test_zero_amount(self):
         assert UnitConvert.to_str(0, 'POUND') == '0 lb'
+
+    def test_unitless_amount(self):
+        assert UnitConvert.to_str(5, None) == '5'
+        assert UnitConvert.to_str(5.0, None) == '5'
+        assert UnitConvert.to_str(5.25, None) == '5.25'
 
 
 class TestConversionInteroperability(object):
