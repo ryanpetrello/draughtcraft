@@ -106,3 +106,10 @@ class Yeast(Ingredient):
     flocculation        = Field(Enum(*FLOCCULATION_VALUES))
 
     additions           = OneToMany('RecipeAddition', inverse='yeast')
+
+
+class Extra(Ingredient):
+
+    using_options(inheritance='multi', polymorphic=True)
+
+    additions           = OneToMany('RecipeAddition', inverse='extra')

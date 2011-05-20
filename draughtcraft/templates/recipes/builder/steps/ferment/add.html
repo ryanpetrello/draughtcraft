@@ -47,3 +47,20 @@
     )}
   ${h.end_form()}
 </fieldset>
+
+<fieldset>
+  ${h.form('async', hidden_fields = hidden())}
+    ${h.select(
+      'ingredient', 
+      None, 
+      [
+        ('', 'Add Misc...')] + sorted(
+          [
+            (extra.id, extra.printed_name) for extra in h.model.Extra.excluding(
+              *[a.ingredient for a in h.request.context['recipe'].fermentation.get(h.model.Extra, [])]
+            )
+          ], key = lambda f: f[1]
+        )
+    )}
+  ${h.end_form()}
+</fieldset>

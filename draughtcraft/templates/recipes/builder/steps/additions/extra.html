@@ -1,0 +1,69 @@
+<%page args="i, addition" />
+
+${h.hidden(
+  'additions-%d.addition' % i,
+  addition.id
+)}
+${h.hidden(
+  'additions-%d.use' % i,
+  addition.use
+)}
+${h.hidden(
+  'additions-%d.type' % i,
+  addition.__class__.__name__
+)}
+
+<tr id="addition-${i}" class="addition ${'even' if i % 2 == 0 else 'odd'}">
+  <td class="type extra">
+    <span>Extra</span>
+  </td>
+  % if addition.step == 'mash':
+    <td class="percent" />
+  % endif
+  % if addition.step == 'boil':
+    <td class="time">
+      ${h.select(
+        'additions-%d.use' % i,
+        addition.use,
+        [
+          ('FIRST WORT', 'First Wort'),
+          ('BOIL', 'Boil'),
+          ('FLAME OUT', 'Flame Out')
+        ]
+      )}
+      % if addition.use == 'BOIL':
+        ${h.select(
+          'additions-%d.duration' % i,
+          addition.minutes,
+          [(value, '%d min' % value) for value in range(60, 0, -5)]
+        )}
+      % endif
+    </td>
+  % endif
+  % if addition.step == 'fermentation':
+    <td>
+      ${h.select(
+        'additions-%d.use' % i,
+        addition.use,
+        [('PRIMARY', 'Primary'), ('SECONDARY', 'Secondary')]
+      )}
+    </td>
+  % endif
+  <td class="amount">
+    ${h.text(
+      'additions-%d.amount' % i,
+      addition.printable_amount,
+      id = 'additions-%d' % addition.id
+    )}
+  </td>
+  <td>
+    <a href="#">${addition.ingredient.printed_name}</a>
+  </td>
+  <td />
+  <td class="unit" />
+  <td class="close">
+    <a href="#" onclick="$.draughtcraft.recipes.builder.removeAddition(${addition.id});return false;">
+      <img src="/images/close.png" />
+    </a>
+  </td>
+</tr>

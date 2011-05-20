@@ -40,6 +40,23 @@
           % endfor
         %endif
 
+        <!-- Extra Additions -->
+        % if recipe.fermentation.get(h.model.Extra):
+          <tr>
+            <th class="type" />
+            <th class="use">Use</th>
+            <th class="amount">Amount</th>
+            <th>Name</th>
+            <th></th>
+            <th class="unit"></th>
+            <th />
+          </tr>
+
+          % for addition in recipe.fermentation.get(h.model.Extra):
+            <%include file="../additions/extra.html" args="i=recipe.additions.index(addition), addition=addition" />
+          % endfor
+        %endif
+
       </table>
     % else:
       <table>

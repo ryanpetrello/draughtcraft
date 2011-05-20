@@ -112,3 +112,30 @@ Yeast = [
         "flocculation"      : "LOW"
     }
 ]
+
+Extra = [
+    {
+        "name"              : "Irish Moss",
+        "description"       : """
+
+        """
+    },
+    {
+        "name"              : "Orange Peel, Bitter",
+        "description"       : """
+
+        """
+    },
+    {
+        "name"              : "Orange Peel, Sweet",
+        "description"       : """
+
+        """
+    },
+    {
+        "name"              : "Whirlfloc Tablet",
+        "description"       : """
+
+        """
+    }
+]

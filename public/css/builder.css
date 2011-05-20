@@ -80,7 +80,8 @@
 }
 #content table tr.addition td.grain span,
 #content table tr.addition td.hop span,
-#content table tr.addition td.yeast span  {
+#content table tr.addition td.yeast span,
+#content table tr.addition td.extra span  {
   color: #FFF;
   background: #6E985E;
   padding: 3px 5px;
@@ -93,11 +94,14 @@
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
 }
-#content table tr.addition td.grain span, #content table tr.addition td.yeast span {
+#content table tr.addition td.yeast span {
   background: #EDC124;
 }
 #content table tr.addition td.grain span  {
   background: #C78F43;
+}
+#content table tr.addition td.extra span  {
+  background: #67C2B3;
 }
 #content table tr.addition:nth-child(odd) td  {
   background: #F5F5F5;

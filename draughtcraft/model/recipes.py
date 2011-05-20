@@ -99,6 +99,7 @@ class RecipeAddition(Entity):
     fermentable         = ManyToOne('Fermentable', inverse='additions')
     hop                 = ManyToOne('Hop', inverse='additions')
     yeast               = ManyToOne('Yeast', inverse='additions')
+    extra               = ManyToOne('Extra', inverse='extra')
 
     @property
     def printable_amount(self):
@@ -106,7 +107,7 @@ class RecipeAddition(Entity):
 
     @property
     def ingredient(self):
-        for ingredient in ('fermentable', 'hop', 'yeast'):
+        for ingredient in ('fermentable', 'hop', 'yeast', 'extra'):
             match = getattr(self, ingredient, None)
             if match is not None:
                 return match

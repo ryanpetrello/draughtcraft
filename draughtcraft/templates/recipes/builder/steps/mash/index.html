@@ -48,6 +48,23 @@
           % endfor
         %endif
 
+        <!-- Extra Additions -->
+        % if recipe.mash.get(h.model.Extra):
+          <tr>
+            <th class="type" />
+            <th class="percent"></th>
+            <th class="amount">Amount</th>
+            <th>Name</th>
+            <th></th>
+            <th class="unit"></th>
+            <th />
+          </tr>
+
+          % for addition in sort(recipe.mash.get(h.model.Extra)):
+            <%include file="../additions/extra.html" args="i=recipe.additions.index(addition), addition=addition" />
+          % endfor
+        %endif
+
       </table>
     % else:
       <table>
