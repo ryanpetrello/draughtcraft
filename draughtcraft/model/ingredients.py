@@ -3,7 +3,8 @@ from elixir import (
     UnicodeText, Enum, using_options,
     OneToMany
 )
-from sqlalchemy import not_
+from draughtcraft.lib.units     import UNITS
+from sqlalchemy                 import not_
 
 ORIGINS = [
     'AUSTRALIAN',
@@ -25,6 +26,7 @@ class Ingredient(Entity):
     
     name                = Field(Unicode(256))
     description         = Field(UnicodeText)
+    default_unit        = Field(Enum(*UNITS), default='POUND', nullable=True)
 
     @property
     def printed_name(self):

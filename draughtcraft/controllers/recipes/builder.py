@@ -72,17 +72,9 @@ class RecipeBuilderAsyncController(RestController):
         kw.pop('type')
         ingredient = kw.pop('ingredient')
 
-        #
-        # Apply the amount and unit
-        # (if a valid amount/unit combination
-        # can be parsed from the user's entry)
-        #
-        if 'amount' in kw:
-            pair = kw.pop('amount')
-            if pair:
-                amount, unit = pair
-                kw['amount'] = amount
-                kw['unit'] = unit
+        unit = ingredient.default_unit
+        kw['amount'] = 0
+        kw['unit'] = unit
 
         #
         # If it's a hop addition, copy defaults for AA

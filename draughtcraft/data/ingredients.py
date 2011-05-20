@@ -118,24 +118,28 @@ Extra = [
         "name"              : "Irish Moss",
         "description"       : """
 
-        """
+        """,
+        "default_unit"      : None
     },
     {
         "name"              : "Orange Peel, Bitter",
         "description"       : """
 
-        """
+        """,
+        "default_unit"      : None
     },
     {
         "name"              : "Orange Peel, Sweet",
         "description"       : """
 
-        """
+        """,
+        "default_unit"      : None
     },
     {
         "name"              : "Whirlfloc Tablet",
         "description"       : """
 
-        """
+        """,
+        "default_unit"      : None
     }
 ]

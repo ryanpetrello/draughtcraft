@@ -91,7 +91,7 @@ class RecipeAddition(Entity):
     using_options(inheritance='multi', polymorphic=True)
 
     amount              = Field(Float)
-    unit                = Field(Enum(*UNITS))
+    unit                = Field(Enum(*UNITS), nullable=True)
     use                 = Field(Enum(*USES))
     duration            = Field(Interval)
 
