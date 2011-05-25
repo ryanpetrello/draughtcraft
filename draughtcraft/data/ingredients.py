@@ -99,7 +99,7 @@ Yeast = [
 
         """,
         "form"              : "LIQUID",
-        "attenuation"       : 75,
+        "attenuation"       : .75,
         "flocculation"      : "LOW/MEDIUM"
     },
     {
@@ -108,9 +108,18 @@ Yeast = [
 
         """,
         "form"              : "LIQUID",
-        "attenuation"       : 75,
+        "attenuation"       : .75,
         "flocculation"      : "LOW"
-    }
+    },
+    {
+        "name"              : "Wyeast 1084 - Irish Ale",
+        "description"       : """
+
+        """,
+        "form"              : "LIQUID",
+        "attenuation"       : .73,
+        "flocculation"      : "MEDIUM"
+    },
 ]
 
 Extra = [

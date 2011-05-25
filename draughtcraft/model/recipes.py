@@ -2,13 +2,22 @@ from elixir import (
     Entity, Field, Unicode, Interval, Float, Enum, using_options,
     OneToMany, ManyToOne
 )
-from draughtcraft.lib.units import UnitConvert, UNITS
+from draughtcraft.lib.calculations  import Calculations
+from draughtcraft.lib.units         import UnitConvert, UNITS
 
 class Recipe(Entity):
 
     name                = Field(Unicode(256))
 
     additions           = OneToMany('RecipeAddition', inverse='recipe')
+
+    @property
+    def calculations(self):
+        return Calculations(self)
+
+    @property
+    def efficiency(self):
+        return .75
 
     def _partition(self, additions):
         """

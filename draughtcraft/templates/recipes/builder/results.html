@@ -16,7 +16,9 @@
         <label class="control blue">Original Gravity:</label>
       </td>
       <td>
-        <label class="control">1.046</label>
+        <label class="control">
+          ${'%.3f' % recipe.calculations.original_gravity}
+        </label>
       </td>
     </tr>
     <tr>
@@ -24,7 +26,9 @@
         <label class="control orange">Final Gravity:</label>
       </td>
       <td>
-        <label class="control">1.011</label>
+        <label class="control">
+          ${'%.3f' % recipe.calculations.final_gravity}
+        </label>
       </td>
     </tr>
     <tr>
