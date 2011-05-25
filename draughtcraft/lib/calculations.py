@@ -55,3 +55,8 @@ class Calculations(object):
         final = points - (points * attenuation)
         
         return round(final / 1000 + 1, 3)
+
+    @property
+    def abv(self):
+        abv = (self.original_gravity - self.final_gravity) * 131
+        return round(abv, 1) / 100

@@ -36,7 +36,9 @@
         <label class="control yellow">ABV:</label>
       </td>
       <td>
-        <label class="control">4.7%</label>
+        <label class="control">
+          ${h.format_percentage(recipe.calculations.abv, 1)}
+        </label>
       </td>
     </tr>
     <tr>
