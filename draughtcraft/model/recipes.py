@@ -5,6 +5,8 @@ from elixir import (
 from draughtcraft.lib.calculations  import Calculations
 from draughtcraft.lib.units         import UnitConvert, UNITS
 
+import math
+
 class Recipe(Entity):
 
     name                = Field(Unicode(256))
@@ -18,6 +20,10 @@ class Recipe(Entity):
     @property
     def efficiency(self):
         return .75
+
+    @property
+    def gallons(self):
+        return 5
 
     def _partition(self, additions):
         """
