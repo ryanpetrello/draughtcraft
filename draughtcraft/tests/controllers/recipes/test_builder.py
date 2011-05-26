@@ -22,7 +22,12 @@ class TestMashAdditions(TestApp):
 
     def test_fermentable(self):
         model.Recipe()
-        model.Fermentable(name = '2-Row', origin='US', ppg=36)
+        model.Fermentable(
+            name        = '2-Row',
+            origin      = 'US',
+            ppg         = 36,
+            lovibond    = 2
+        )
         model.commit()
 
         self.post('/recipes/1/builder/async', params={
@@ -86,7 +91,12 @@ class TestBoilAdditions(TestApp):
 
     def test_fermentable(self):
         model.Recipe()
-        model.Fermentable(name = '2-Row', origin='US', ppg=36)
+        model.Fermentable(
+            name        = '2-Row',
+            origin      = 'US',
+            ppg         = 36,
+            lovibond    = 2
+        )
         model.commit()
 
         self.post('/recipes/1/builder/async', params={
@@ -230,7 +240,12 @@ class TestRecipeChange(TestApp):
     def test_mash_change(self):
         model.RecipeAddition(
             recipe      = model.Recipe(),
-            fermentable = model.Fermentable(name = '2-Row', origin='US', ppg=36),
+            fermentable = model.Fermentable(
+                name        = '2-Row',
+                origin      = 'US',
+                ppg         = 36,
+                lovibond    = 2
+            ),
             amount      = 12,
             unit        = 'POUND',
             use         = 'MASH'
@@ -334,7 +349,12 @@ class TestRecipeChange(TestApp):
     def test_schema_failure(self):
         model.RecipeAddition(
             recipe      = model.Recipe(),
-            fermentable = model.Fermentable(name = '2-Row', origin='US', ppg=36),
+            fermentable = model.Fermentable(
+                name        = '2-Row',
+                origin      = 'US',
+                ppg         = 36,
+                lovibond    = 2
+            ),
             amount      = 12,
             unit        = 'POUND',
             use         = 'MASH'
