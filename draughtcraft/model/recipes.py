@@ -65,23 +65,15 @@ class Recipe(Entity):
 
     @property
     def mash(self):
-        return self._partition([a for a in self.additions if a.use == 'MASH'])
+        return self._partition([a for a in self.additions if a.step == 'mash'])
 
     @property
     def boil(self):
-        return self._partition([a for a in self.additions if a.use in (
-            'FIRST WORT',
-            'BOIL',
-            'POST-BOIL',
-            'FLAME OUT'
-        )])
+        return self._partition([a for a in self.additions if a.step == 'boil'])
 
     @property
     def fermentation(self):
-        return self._partition([a for a in self.additions if a.use in (
-            'PRIMARY',
-            'SECONDARY'
-        )])
+        return self._partition([a for a in self.additions if a.step == 'fermentation'])
 
     def contains(self, ingredient, step):
         if step not in ('mash', 'boil', 'fermentation'):

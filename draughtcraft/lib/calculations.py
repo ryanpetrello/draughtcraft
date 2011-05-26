@@ -79,7 +79,7 @@ class Calculations(object):
         total = 0
 
         gallons = float(self.recipe.gallons)
-        hops = [a for a in self.recipe.additions if a.hop]
+        hops = [a for a in self.recipe.additions if a.hop and a.step == 'boil']
         for h in hops:
             #
             # Start by calculating utilization
@@ -122,7 +122,7 @@ class Calculations(object):
         total = 0
 
         gallons = float(self.recipe.gallons)
-        hops = [a for a in self.recipe.additions if a.hop]
+        hops = [a for a in self.recipe.additions if a.hop and a.step == 'boil']
         for h in hops:
             # Calculate duration in minutes
             minutes = h.duration.seconds / 60 
@@ -163,7 +163,7 @@ class Calculations(object):
         total = 0
 
         gallons = float(self.recipe.gallons)
-        hops = [a for a in self.recipe.additions if a.hop]
+        hops = [a for a in self.recipe.additions if a.hop and a.step == 'boil']
         for h in hops:
             # Calculate duration in minutes
             minutes = h.duration.seconds / 60 
