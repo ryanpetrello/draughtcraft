@@ -265,6 +265,40 @@ class TestRecipeChange(TestApp):
         assert a.unit == 'POUND'
         assert a.ingredient == model.Fermentable.get(1)
 
+    def test_unitless_mash_change(self):
+        model.RecipeAddition(
+            recipe      = model.Recipe(),
+            fermentable = model.Fermentable(
+                name            = '2-Row',
+                origin          = 'US',
+                ppg             = 36,
+                lovibond        = 2,
+                default_unit    = 'GRAM'
+            ),
+            amount      = 12,
+            unit        = 'POUND',
+            use         = 'MASH'
+        )
+        model.commit()
+
+        #
+        # If an amount is specified without a unit,
+        # the unit should fall back to the ingredient's
+        # default unit.
+        #
+        self.put('/recipes/1/builder/async', params={
+            'additions-0.type'          : 'RecipeAddition',
+            'additions-0.amount'        : '5',
+            'additions-0.use'           : 'MASH',
+            'additions-0.addition'      : 1
+        })
+
+        a = model.RecipeAddition.get(1)
+        assert a.use == 'MASH'
+        assert a.amount == 5
+        assert a.unit == 'GRAM'
+        assert a.ingredient == model.Fermentable.get(1)
+
     def test_boil_hop_change(self):
         model.HopAddition(
             recipe      = model.Recipe(),
