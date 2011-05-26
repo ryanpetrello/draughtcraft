@@ -22,7 +22,7 @@ class TestMashAdditions(TestApp):
 
     def test_fermentable(self):
         model.Recipe()
-        model.Fermentable(name = '2-Row', origin='US')
+        model.Fermentable(name = '2-Row', origin='US', ppg=36)
         model.commit()
 
         self.post('/recipes/1/builder/async', params={
@@ -86,7 +86,7 @@ class TestBoilAdditions(TestApp):
 
     def test_fermentable(self):
         model.Recipe()
-        model.Fermentable(name = '2-Row', origin='US')
+        model.Fermentable(name = '2-Row', origin='US', ppg=36)
         model.commit()
 
         self.post('/recipes/1/builder/async', params={
@@ -182,7 +182,8 @@ class TestFermentationAdditions(TestApp):
         model.Recipe()
         model.Yeast(
             name = 'Wyeast 1056 - American Ale',
-            form = 'LIQUID'
+            form = 'LIQUID',
+            attenuation = .75
         )
         model.commit()
 
@@ -229,7 +230,7 @@ class TestRecipeChange(TestApp):
     def test_mash_change(self):
         model.RecipeAddition(
             recipe      = model.Recipe(),
-            fermentable = model.Fermentable(name = '2-Row', origin='US'),
+            fermentable = model.Fermentable(name = '2-Row', origin='US', ppg=36),
             amount      = 12,
             unit        = 'POUND',
             use         = 'MASH'
@@ -312,7 +313,8 @@ class TestRecipeChange(TestApp):
             recipe      = model.Recipe(),
             yeast       = model.Yeast(
                 name = 'Wyeast 1056 - American Ale',
-                form = 'LIQUID'
+                form = 'LIQUID',
+                attenuation = .75
             ),
             amount      = 1,
             use         = 'PRIMARY'
@@ -332,7 +334,7 @@ class TestRecipeChange(TestApp):
     def test_schema_failure(self):
         model.RecipeAddition(
             recipe      = model.Recipe(),
-            fermentable = model.Fermentable(name = '2-Row', origin='US'),
+            fermentable = model.Fermentable(name = '2-Row', origin='US', ppg=36),
             amount      = 12,
             unit        = 'POUND',
             use         = 'MASH'
@@ -364,6 +366,7 @@ class TestRecipeChange(TestApp):
             amount      = 0.0625,
             unit        = 'POUND',
             use         = 'BOIL',
+            duration    = timedelta(minutes=60),
             form        = 'PELLET',
             alpha_acid  = 5.5
         )
