@@ -13,7 +13,7 @@
 
     <tr>
       <td>
-        <label class="control blue">Original Gravity:</label>
+        <label class="control">Original Gravity:</label>
       </td>
       <td>
         <label class="control">
@@ -23,7 +23,7 @@
     </tr>
     <tr>
       <td>
-        <label class="control orange">Final Gravity:</label>
+        <label class="control">Final Gravity:</label>
       </td>
       <td>
         <label class="control">
@@ -33,7 +33,7 @@
     </tr>
     <tr>
       <td>
-        <label class="control yellow">ABV:</label>
+        <label class="control">ABV:</label>
       </td>
       <td>
         <label class="control">
@@ -43,7 +43,7 @@
     </tr>
     <tr>
       <td>
-        <label class="control purple">Bitterness:</label>
+        <label class="control">Bitterness:</label>
       </td>
       <td>
         <label class="control">
@@ -53,10 +53,18 @@
     </tr>
     <tr>
       <td>
-        <label class="control red">Calories:</label>
+        <label class="control">Color:</label>
       </td>
       <td>
-        <label class="control">115 <span>per 12 oz.</span></label>
+        % if recipe.calculations.srm:
+          <label class="control srm srm-${min(recipe.calculations.srm, 30)}">
+            <span>
+              ${recipe.calculations.srm} SRM
+            </span>
+          </label>
+        % else:
+          -
+        % endif
       </td>
     </tr>
   </table>

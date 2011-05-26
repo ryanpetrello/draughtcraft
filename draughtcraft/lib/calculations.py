@@ -5,6 +5,9 @@ class Calculations(object):
     def __init__(self, recipe):
         self.recipe = recipe
 
+    #
+    # Gravity and alcohol content calculations
+    #
     @property
     def original_gravity(self):
         """
@@ -62,7 +65,25 @@ class Calculations(object):
     def abv(self):
         abv = (self.original_gravity - self.final_gravity) * 131
         return round(abv, 1) / 100
+    
+    #
+    # Color Calculations
+    #
+    @property
+    def srm(self):
+        total = 0
+        fermentables = [a for a in self.recipe.additions if a.fermentable]
+        for f in fermentables:
+            total += (f.amount * f.ingredient.lovibond)
 
+        gallons = float(self.recipe.gallons)
+        srm = total / gallons
+
+        return int(round(srm))
+
+    #
+    # International Bittering Units Calculations
+    # 
     @property
     def ibu(self):
         """
