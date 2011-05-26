@@ -153,3 +153,73 @@ class Calculations(object):
             total += (ounces * utilization * alpha_acid * 7462) / (gallons * gravity_adjustment)
 
         return round(total, 1)
+
+    @property
+    def daniels(self):
+        """
+        IBU as calculated with Ray Daniels' formula in
+        "Designing Great Beers".
+        """
+        total = 0
+
+        gallons = float(self.recipe.gallons)
+        hops = [a for a in self.recipe.additions if a.hop]
+        for h in hops:
+            # Calculate duration in minutes
+            minutes = h.duration.seconds / 60 
+
+            #
+            # Calculate utilization based on the table provided in chapter 9 of
+            # Ray Daniels' book, "Designing Great Beers".
+            #
+            utilization = .05
+            if h.form == 'PELLET':
+                # Generic utilization values for pellet-form hops
+                utilization_table = [
+                    (75, .34),
+                    (60, .30),
+                    (45, .27),
+                    (30, .24),
+                    (20, .19),
+                    (10, .15),
+                    (0, .06)
+                ]
+            else:
+                # Generic utilization values for whole leaf and plug-form hops
+                utilization_table = [
+                    (75, .27),
+                    (60, .24),
+                    (45, .22),
+                    (30, .19),
+                    (20, .15),
+                    (10, .12),
+                    (0, .05)
+                ]
+
+            #
+            # From the highest time range in the list working down,
+            # loop through until we find a range the recipe's boil duration
+            # fits into.  Once we've found the highest matched range,
+            # we know the utilization value.
+            #
+            for time, ratio in utilization_table:
+                if minutes > time:
+                    utilization = ratio
+                    break
+
+            # Convert pounds to ounces
+            ounces = h.amount * 16.0
+
+            # Convert AA rating to a decimal
+            alpha_acid = h.alpha_acid / 100
+
+            #
+            # If the estimated OG exceeds 1.050, make an adjustment:
+            #
+            gravity_adjustment = 1
+            if self.original_gravity > 1.050:
+                gravity_adjustment += ((self.original_gravity - 1.050) / 0.2)
+
+            total += (ounces * utilization * alpha_acid * 7462) / (gallons * gravity_adjustment)
+
+        return round(total, 1)
