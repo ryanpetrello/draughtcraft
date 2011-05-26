@@ -3,6 +3,7 @@ from pecan.rest                                 import RestController
 from draughtcraft                               import model
 from draughtcraft.lib.schemas.recipes.builder   import RecipeChange, RecipeAddition
 from elixir                                     import entities
+from datetime                                   import timedelta
 
 
 class RecipeBuilderAsyncController(RestController):
@@ -50,9 +51,24 @@ class RecipeBuilderAsyncController(RestController):
                     amount, unit = pair
                     addition.amount = amount
                     addition.unit = unit
+            
+            #
+            # For "First Wort" additions,
+            # change the duration to the full length of the boil
+            #
+            # For "Flame Out" additions,
+            # change the duration to 0 minutes.
+            #
+            if 'use' in row:
+                if row['use'] == 'FIRST WORT':
+                    row['duration'] = timedelta(minutes=addition.recipe.boil_minutes)
+                elif row['use'] == 'FLAME OUT':
+                    row['duration'] = timedelta(minutes=0)
+                elif not row['duration']:
+                    row['duration'] = timedelta(minutes=addition.recipe.boil_minutes)
 
             for k,v in row.items():
-                if v:
+                if v is not None:
                     setattr(addition, k, v)
 
         return self.__rendered__()

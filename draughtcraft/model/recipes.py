@@ -22,6 +22,10 @@ class Recipe(Entity):
         return .75
 
     @property
+    def boil_minutes(self):
+        return 60
+
+    @property
     def gallons(self):
         return 5
 

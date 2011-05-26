@@ -64,18 +64,21 @@ class Calculations(object):
         return round(abv, 1) / 100
 
     @property
-    def tinseth(self):
+    def ibu(self):
         """
         (Estimated) IBU of the recipe based on available hops and utilization.
         """
+        return self.tinseth
+
+    @property
+    def tinseth(self):
+        """
+        IBU as calculated with Glenn Tinseth's formula:
+        http://www.realbeer.com/hops/FAQ.html
+        """
         total = 0
 
-        #
-        # Calculated with Glenn Tinseth's formula:
-        # http://realbeer.com/hops/research.html
-        #
-
-        volume = float(self.recipe.gallons)
+        gallons = float(self.recipe.gallons)
         hops = [a for a in self.recipe.additions if a.hop]
         for h in hops:
             #
@@ -84,26 +87,69 @@ class Calculations(object):
             #
             
             # Calculate duration in minutes
-            duration = h.duration.seconds / 60 
+            minutes = h.duration.seconds / 60 
 
             # Calculate the bigness factor
             bigness = 1.65 * (math.pow(0.000125, (self.original_gravity - 1)))
 
             # Calculate the boil time factor
-            boiltime = (1 - math.exp(-0.04 * duration)) / 4.15
+            boiltime = (1 - math.exp(-0.04 * minutes)) / 4.15
 
             # Calculate utilization
             utilization = bigness * boiltime
+            #
+            # If the hops are in pellet form,
+            # increase utilization by 15%
+            #
+            if h.form == 'PELLET':
+                utilization *= 1.15
 
             # Convert pounds to ounces
             ounces = h.amount * 16.0
 
             # IBU = Utilization * ((Ounces * AAU * 7490) / Gallons)
             alpha_acid = h.alpha_acid / 100
-            total += utilization * ((ounces * alpha_acid * 7490) / volume)
+            total += utilization * ((ounces * alpha_acid * 7490) / gallons)
 
         return round(total, 1)
 
     @property
-    def ibu(self):
-        return self.tinseth
+    def rager(self):
+        """
+        IBU as calculated with Jakie Rager's formula:
+        http://www.realbeer.com/hops/FAQ.html
+        """
+        total = 0
+
+        gallons = float(self.recipe.gallons)
+        hops = [a for a in self.recipe.additions if a.hop]
+        for h in hops:
+            # Calculate duration in minutes
+            minutes = h.duration.seconds / 60 
+
+            # Calculate utilization as a decimal
+            utilization = 18.11 + 13.86 * math.tanh((minutes - 31.32) / 18.27)
+            utilization /= 100
+            #
+            # If the hops are in pellet form,
+            # increase utilization by 15%
+            #
+            if h.form == 'PELLET':
+                utilization *= 1.15
+
+            #
+            # If the estimated OG exceeds 1.050, make an adjustment:
+            #
+            gravity_adjustment = 1
+            if self.original_gravity > 1.050:
+                gravity_adjustment += ((self.original_gravity - 1.050) / 0.2)
+
+            # Convert pounds to ounces
+            ounces = h.amount * 16.0
+
+            # Convert AA rating to a decimal
+            alpha_acid = h.alpha_acid / 100
+
+            total += (ounces * utilization * alpha_acid * 7462) / (gallons * gravity_adjustment)
+
+        return round(total, 1)
