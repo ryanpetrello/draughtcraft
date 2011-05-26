@@ -70,7 +70,28 @@ Fermentable = [
         "ppg"               : 36,
         "lovibond"          : 1,
         "origin"            : "UK"
+    },
+    {
+        "name"              : "Vienna Malt",
+        "description"       : """
+
+        """,
+        "type"              : "MALT",
+        "ppg"               : 36,
+        "lovibond"          : 4,
+        "origin"            : "GERMAN"
+    },
+    {
+        "name"              : "Crystal 10L",
+        "description"       : """
+
+        """,
+        "type"              : "MALT",
+        "ppg"               : 34,
+        "lovibond"          : 10,
+        "origin"            : "US"
     }
+    
 ]
 
 Hop = [

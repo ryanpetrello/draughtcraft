@@ -50,7 +50,7 @@ class RecipeBuilderAsyncController(RestController):
                 if pair:
                     amount, unit = pair
                     addition.amount = amount
-                    addition.unit = unit
+                    addition.unit = unit or addition.ingredient.default_unit
             
             #
             # For "First Wort" additions,
