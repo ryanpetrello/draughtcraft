@@ -126,6 +126,7 @@ class Calculations(object):
                 utilization *= 1.15
 
             # Convert pounds to ounces
+            assert h.unit == 'POUND'
             ounces = h.amount * 16.0
 
             # IBU = Utilization * ((Ounces * AAU * 7490) / Gallons)
@@ -166,6 +167,7 @@ class Calculations(object):
                 gravity_adjustment += ((self.original_gravity - 1.050) / 0.2)
 
             # Convert pounds to ounces
+            assert h.unit == 'POUND'
             ounces = h.amount * 16.0
 
             # Convert AA rating to a decimal
@@ -229,6 +231,7 @@ class Calculations(object):
                     break
 
             # Convert pounds to ounces
+            assert h.unit == 'POUND'
             ounces = h.amount * 16.0
 
             # Convert AA rating to a decimal

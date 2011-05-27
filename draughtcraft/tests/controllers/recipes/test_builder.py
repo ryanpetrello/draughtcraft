@@ -273,10 +273,11 @@ class TestRecipeChange(TestApp):
                 origin          = 'US',
                 ppg             = 36,
                 lovibond        = 2,
-                default_unit    = 'GRAM'
+                default_unit    = 'POUND'
             ),
             amount      = 12,
-            unit        = 'POUND',
+            unit        = 'GALLON', # This doesn't make sense, but it's just 
+                                    # for illustration
             use         = 'MASH'
         )
         model.commit()
@@ -296,7 +297,7 @@ class TestRecipeChange(TestApp):
         a = model.RecipeAddition.get(1)
         assert a.use == 'MASH'
         assert a.amount == 5
-        assert a.unit == 'GRAM'
+        assert a.unit == 'POUND'
         assert a.ingredient == model.Fermentable.get(1)
 
     def test_boil_hop_change(self):

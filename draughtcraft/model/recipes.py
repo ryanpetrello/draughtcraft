@@ -102,7 +102,18 @@ class RecipeAddition(Entity):
     using_options(inheritance='multi', polymorphic=True)
 
     amount              = Field(Float)
-    unit                = Field(Enum(*UNITS), nullable=True)
+
+    #
+    # At the database level, only certain units are actually stored.
+    # We do this for the sake of uniformity (to make calculations easier).
+    #
+    unit                = Field(Enum(*[
+                                'POUND',
+                                'TEASPOON',
+                                'TABLESPOON',
+                                'GALLON'
+                            ]), nullable=True)
+
     use                 = Field(Enum(*USES))
     duration            = Field(Interval)
 
