@@ -22,7 +22,23 @@ nav ul  {
 }
 nav ul li  {
   float: left;
+  line-height: 35px;
   padding-right: 10px;
+}
+nav ul li.logo  {
+  padding-right: 45px;
+}
+nav ul li.logo strong  {
+  font-weight: normal;
+  color: #EFFFAE;
+}
+nav ul li.logo img  {
+  height: 35px;
+  line-height: 35px;
+  padding-right: 2px;
+  vertical-align: middle;
+  position: relative;
+  bottom: 2px;
 }
 nav ul a, nav ul a:visited  {
   color: #CFF09E;
