@@ -1,0 +1,235 @@
+/* Mixins */
+.border-radius (@radius) {
+  border-radius: @radius;
+  -moz-border-radius: @radius;
+  -webkit-border-radius: @radius;
+}
+.box-shadow () {
+  box-shadow: @arguments;
+  -moz-box-shadow: @arguments;
+  -webkit-box-shadow: @arguments;
+}
+
+#content-inner  {
+  padding: 0;
+}
+#content  {
+
+  /* Content-level selectors */
+
+  h1  {
+    padding: 0 15px;
+    display: inline-block;
+    vertical-align: middle;
+  }  
+  a.style  {
+    font-size: 1.1em;
+    vertical-align: middle;
+    text-decoration: underline;
+  }
+  h2  {
+    background: #F7F7F7;
+    border-top: 1px solid #E8E8E8;
+    border-bottom: 1px solid #EEE;
+    overflow: hidden;
+    clear: both;
+
+    /* Step selection sub-navigation */
+
+    ul, li {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    li  {
+      float: left;
+      line-height: 2.3em;
+      color: #777;
+    }  
+    li a  {
+      display: block;
+      padding: 0 25px 0 18px;
+      background: url(/images/crumbs.gif) #FFF no-repeat right center;
+    }
+    li.active a  {
+      color: #80B8D3;
+      text-decoration: none;
+    }
+    li.last a  {
+      background: url(/images/crumb-cap.png) repeat-y left center;
+    }
+
+  }
+
+  /* Builder UI */
+  .step  {
+    overflow: hidden;
+    display: none;
+    background: #FFF;
+  }
+  .step.active, #content .step.results  {
+    display: block;
+  }
+
+  /* Recipe Components <table> */
+  table  {
+    margin: 15px 20px;
+    width: 720px;
+
+    th  {
+      text-align: left;
+    }
+    th, td  {
+      padding: 5px 8px;
+    }
+    td.type, th.type  {
+      text-align: center;
+      width: 35px;
+      padding-right: 0;
+      padding-left: 4px;
+    }
+    td.percent, th.percent  {
+      text-align: right;
+      width: 35px;
+    }
+    td.time, th.time  {
+      text-align: left;
+      max-width: 175px;
+    }
+    td.close  {
+      text-align: right;
+    }
+    tr.addition  {
+      &:nth-child(odd) td  {
+        background: #F5F5F5;
+      }
+      td.grain,
+      td.hop,
+      td.yeast,
+      td.extra  {
+        span  {
+          color: #FFF;
+          background: #6E985E;
+          padding: 3px 5px;
+          font-size: 10px;
+          text-transform: uppercase;
+          font-weight: bold;
+          width: 35px;
+          text-align: center;
+          display: inline-block;
+          .border-radius(8px);
+        }
+      }
+      td.yeast span {
+        background: #EDC124;
+      }
+      td.grain span  {
+        background: #C78F43;
+      }
+      td.extra span  {
+        background: #67C2B3;
+      }
+      td input  {
+        width: 75px;
+      }
+      td input.error  {
+        border-color: #FFAAAA;
+        background: #FFE8E8;
+        color: #CC0000;
+        .box-shadow(0, 0, 0.40em, #FF6666);
+      }
+      td input.error:focus  {
+        outline: 0px;
+      }
+      td.amount input  {
+        width: 65px;
+      }
+    }
+
+  }
+
+  div.ingredient-list  {
+    width: 73%;
+    margin-right: 2%;
+    float: left;
+  }
+  div.inventory  {
+    width: 25%;
+    float: right;
+    background: #D4DF86;
+    color: #FFF;
+    min-height: 250px;
+  }
+  div.inventory fieldset  {
+    padding: 0 15px 15px;
+  }
+  div.inventory fieldset a  {
+    padding: 0 5px;
+    color: #333;
+  }
+  div.inventory h3  {
+    background: #B1BD5C;
+    padding: 0 15px;
+    margin-bottom: 25px;
+  }
+
+  /*
+   * Results
+   */
+  div.step.results  {
+    background: #358EA7;
+    display: block;
+    table  {
+      width: 50%;
+      td  {
+        background: transparent !important;
+        color: #FFF;
+      }
+    }
+  }
+
+}
+
+/* SRM Colors */
+.srm  {
+  width: 16px;
+  height: 16px;
+  position: relative;
+  display: block;
+  .border-radius(8px);
+}  
+.srm span  {
+  position: absolute;
+  left: 22px;
+  width: 100px;
+}
+.srm.srm-1  { background-color: #F3F993 !important; }
+.srm.srm-2  { background-color: #F5F75C !important; }
+.srm.srm-3  { background-color: #F6F513 !important; }
+.srm.srm-4  { background-color: #EAE615 !important; }
+.srm.srm-5  { background-color: #E0D01B !important; }
+.srm.srm-6  { background-color: #D5BC26 !important; }
+.srm.srm-7  { background-color: #CDAA37 !important; }
+.srm.srm-8  { background-color: #C1963C !important; }
+.srm.srm-9  { background-color: #BE8C3A !important; }
+.srm.srm-10 { background-color: #BE823A !important; }
+.srm.srm-11 { background-color: #C17A37 !important; }
+.srm.srm-12 { background-color: #BF7138 !important; }
+.srm.srm-13 { background-color: #BC6733 !important; }
+.srm.srm-14 { background-color: #B26033 !important; }
+.srm.srm-15 { background-color: #A85839 !important; }
+.srm.srm-16 { background-color: #985336 !important; }
+.srm.srm-17 { background-color: #8D4C32 !important; }
+.srm.srm-18 { background-color: #7C452D !important; }
+.srm.srm-19 { background-color: #6B3A1E !important; }
+.srm.srm-20 { background-color: #5D341A !important; }
+.srm.srm-21 { background-color: #4E2A0C !important; }
+.srm.srm-22 { background-color: #4A2727 !important; }
+.srm.srm-23 { background-color: #361F1B !important; }
+.srm.srm-24 { background-color: #261716 !important; }
+.srm.srm-25 { background-color: #231716 !important; }
+.srm.srm-26 { background-color: #19100F !important; }
+.srm.srm-27 { background-color: #16100F !important; }
+.srm.srm-28 { background-color: #120D0C !important; }
+.srm.srm-29 { background-color: #100B0A !important; }
+.srm.srm-30 { background-color: #050B0A !important; }
