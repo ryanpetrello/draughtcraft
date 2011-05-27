@@ -13,8 +13,8 @@
   -webkit-box-shadow: @arguments;
 }
 .vertical-gradient(@start: #000, @stop: #FFF) {
-  background: -webkit-gradient(linear, left top, left bottom, from(@start), color-stop(.50, @start), to(@stop));
-  background: -moz-linear-gradient(center top, @start 0%, @start 75%, @stop 100%);
+  background: -webkit-gradient(linear, left top, left bottom, from(@start), color-stop(.65, @start), color-stop(.90, @stop), to(darken(@stop, 50%)));
+  background: -moz-linear-gradient(center top, @start 0%, @start 65%, @stop 90%, darken(@stop, 25%) 90%, transparent);
 }
 
 #content-inner  {
@@ -214,6 +214,12 @@
   }
   position: relative;
   display: block;
+}
+/* Mozilla-targeted */
+@-moz-document url-prefix() {
+    .srm img.glass {
+      top: -11px !important;
+    }
 }
 .srm span  {
   position: absolute;
