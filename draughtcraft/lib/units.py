@@ -3,6 +3,7 @@ import re
 
 UNITS = [
     'GRAM',
+    'KILOGRAM',
     'OUNCE',
     'POUND',
     'TEASPOON',
@@ -19,6 +20,7 @@ UNIT_MAP = {
     'Oz'            : 'OUNCE',
     'OZ'            : 'OUNCE',
     'g'             : 'GRAM',
+    'kg'            : 'KILOGRAM',
     't'             : 'TEASPOON',
     'ts'            : 'TEASPOON',
     'tsp'           : 'TEASPOON',
@@ -66,6 +68,24 @@ class OunceMerge(object):
     @classmethod
     def merge(cls, ounces):
         return (ounces[0] / 16, 'POUND')
+
+
+class GramMerge(object):
+
+    signature = ["GRAM"]
+
+    @classmethod
+    def merge(cls, grams):
+        return (grams[0] / 453.59237, "POUND")
+
+
+class KilogramMerge(object):
+
+    signature = ["KILOGRAM"]
+
+    @classmethod
+    def merge(cls, kilograms):
+        return (kilograms[0] / .45359237, "POUND")
 
 
 class PoundExpansion(object):
@@ -231,7 +251,9 @@ class UnitConvert(object):
         
         for mergecls in [
             PoundOunceMerge,
-            OunceMerge
+            OunceMerge,
+            GramMerge,
+            KilogramMerge
         ]:
             if mergecls.signature == units:
                 return mergecls.merge(*pairs)

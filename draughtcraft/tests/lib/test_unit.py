@@ -1,5 +1,6 @@
 from draughtcraft.lib.units         import (UnitConvert, InvalidUnitException, PoundOunceMerge, 
-                                            OunceMerge, PoundExpansion, UNIT_MAP)
+                                            OunceMerge, GramMerge, KilogramMerge, PoundExpansion,
+                                            UNIT_MAP)
 from pytest                         import raises
 
 
@@ -10,6 +11,12 @@ class TestMergeImplementations(object):
 
     def test_ounce_merge(self):
         assert OunceMerge.merge((8.0, 'OUNCE')) == (.5, 'POUND')
+
+    def test_gram_merge(self):
+        assert GramMerge.merge((453.59237, 'GRAM')) == (1, 'POUND')
+
+    def test_kilogram_merge(self):
+        assert KilogramMerge.merge((0.45359237, 'KILOGRAM')) == (1, 'POUND')
 
 class TestExpansionImplementations(object):
 
@@ -132,6 +139,12 @@ class TestUnitConversionFromString(object):
         assert UnitConvert.__coerce_units__(['grams']) == ['GRAM']
         assert UnitConvert.__coerce_units__(['Grams']) == ['GRAM']
 
+        assert UnitConvert.__coerce_units__(['kg']) == ['KILOGRAM']
+        assert UnitConvert.__coerce_units__(['kilogram']) == ['KILOGRAM']
+        assert UnitConvert.__coerce_units__(['Kilogram']) == ['KILOGRAM']
+        assert UnitConvert.__coerce_units__(['kilograms']) == ['KILOGRAM']
+        assert UnitConvert.__coerce_units__(['Kilograms']) == ['KILOGRAM']
+
         assert UnitConvert.__coerce_units__(['t']) == ['TEASPOON']
         assert UnitConvert.__coerce_units__(['ts']) == ['TEASPOON']
         assert UnitConvert.__coerce_units__(['tsp']) == ['TEASPOON']
@@ -215,8 +228,17 @@ class TestUnitConversionFromString(object):
 
     def test_basic_conversion(self):
         for abbr, value in UNIT_MAP.items():
-            if value != 'OUNCE':
+            if value not in ('OUNCE', 'GRAM', 'KILOGRAM'):
                 assert UnitConvert.from_str('5%s' % abbr) == (5, UNIT_MAP[abbr])
+
+    def test_ounce_conversion(self):
+        assert UnitConvert.from_str('8oz') == (.5, 'POUND')
+
+    def test_gram_conversion(self):
+        assert UnitConvert.from_str('453.59237g') == (1, 'POUND')
+
+    def test_kilogram_conversion(self):
+        assert UnitConvert.from_str('.45359237kg') == (1, 'POUND')
 
     def test_unitless_conversion(self):
         amount, unit = UnitConvert.from_str('5')
