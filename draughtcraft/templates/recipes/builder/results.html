@@ -57,9 +57,10 @@
       </td>
       <td>
         % if recipe.calculations.srm:
-          <label class="control srm srm-${min(recipe.calculations.srm, 30)}">
+          <label class="control srm srm-${min(int(recipe.calculations.srm), 30)}">
+            <img class="glass" src="/images/glass.png" />
             <span>
-              ${recipe.calculations.srm} SRM
+              ${recipe.calculations.srm} &#186;SRM
             </span>
           </label>
         % else:

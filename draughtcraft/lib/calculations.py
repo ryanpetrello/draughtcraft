@@ -79,7 +79,7 @@ class Calculations(object):
         gallons = float(self.recipe.gallons)
         srm = total / gallons
 
-        return int(round(srm))
+        return round(srm, 1)
 
     #
     # International Bittering Units Calculations
