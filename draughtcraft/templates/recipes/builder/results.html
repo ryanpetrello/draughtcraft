@@ -1,14 +1,14 @@
 <div class="step results">
 
   <table>
+
     <tr>
-      <td>
-        <label>Volume:</label>
-      </td>
-      <td>
-        <select>
-          <option value="5">5 Gallons</option>
-        </select>
+      <th>
+        <label>Estimated Statistics</label>
+      </th>
+      <th />
+      <th>
+        <label>Targets for Style</label>
       </td>
     </tr>
 
@@ -21,7 +21,17 @@
           ${'%.3f' % recipe.calculations.original_gravity}
         </label>
       </td>
+      <td>
+        <label>
+          ${'%.3f' % recipe.calculations.original_gravity} -
+          ${'%.3f' % recipe.calculations.original_gravity} 
+        </label>
+      </td>
+      <td>
+        <img src="/images/yes.png" />
+      </td>
     </tr>
+
     <tr>
       <td>
         <label>Final Gravity:</label>
@@ -31,7 +41,17 @@
           ${'%.3f' % recipe.calculations.final_gravity}
         </label>
       </td>
+      <td>
+        <label>
+          ${'%.3f' % recipe.calculations.final_gravity} -
+          ${'%.3f' % recipe.calculations.final_gravity}
+        </label>
+      </td>
+      <td>
+        <img src="/images/yes.png" />
+      </td>
     </tr>
+
     <tr>
       <td>
         <label>ABV:</label>
@@ -41,7 +61,17 @@
           ${h.format_percentage(recipe.calculations.abv, 1)}
         </label>
       </td>
+      <td>
+        <label>
+          ${h.format_percentage(recipe.calculations.abv, 1)} - 
+          ${h.format_percentage(recipe.calculations.abv, 1)}
+        </label>
+      </td>
+      <td>
+        <img src="/images/yes.png" />
+      </td>
     </tr>
+
     <tr>
       <td>
         <label>Bitterness:</label>
@@ -51,14 +81,24 @@
           ${recipe.calculations.ibu} IBU
         </label>
       </td>
+      <td>
+        <label>
+          ${recipe.calculations.ibu} - 
+          ${recipe.calculations.ibu} IBU
+        </label>
+      </td>
+      <td>
+        <img src="/images/no.png" />
+      </td>
     </tr>
+
     <tr>
       <td>
         <label>Color:</label>
       </td>
       <td>
         % if recipe.calculations.srm:
-          <label class="control srm srm-${min(int(recipe.calculations.srm), 30)}">
+          <label class="control srm srm-${min(int(round(recipe.calculations.srm)), 30)}">
             <img class="glass" src="/images/glass.png" />
             <span>
               ${recipe.calculations.srm} &#186;SRM
@@ -68,7 +108,15 @@
           -
         % endif
       </td>
+      <td>
+        ${recipe.calculations.srm} - 
+        ${recipe.calculations.srm} &#186;SRM
+      </td>
+      <td>
+        <img src="/images/yes.png" />
+      </td>
     </tr>
+
   </table>
 
 </div>

@@ -189,13 +189,18 @@
     overflow: visible;
     table  {
       margin: 0;
+      width: 55%;
       border: 15px solid transparent;
       td  {
         &:nth-child(1)  {
-          width: 100px;
+          width: 125px !important;
         }
+        width: 100px !important;
         background: transparent !important;
         color: #FFF;
+      }
+      th  {
+        color: #A6EC82;
       }
     }
   }
@@ -206,7 +211,7 @@
 .srm-mixin (@color) {
   img.glass  {
     top: -10px;
-    left: -65px;
+    left: -70px;
     width: 50px;
     position: absolute;
     .vertical-gradient(@color, darken(@color, 15%));
@@ -219,10 +224,6 @@
     .srm img.glass {
       top: -11px !important;
     }
-}
-.srm span  {
-  position: absolute;
-  width: 100px;
 }
 .srm.srm-0  { .srm-mixin(#F3F993) }
 .srm.srm-1  { .srm-mixin(#F3F993) }
