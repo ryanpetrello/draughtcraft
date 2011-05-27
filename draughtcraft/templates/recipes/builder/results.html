@@ -1,8 +1,9 @@
 <div class="step results">
+
   <table>
     <tr>
       <td>
-        <label class="control">Volume:</label>
+        <label>Volume:</label>
       </td>
       <td>
         <select>
@@ -13,47 +14,47 @@
 
     <tr>
       <td>
-        <label class="control">Original Gravity:</label>
+        <label>Original Gravity:</label>
       </td>
       <td>
-        <label class="control">
+        <label>
           ${'%.3f' % recipe.calculations.original_gravity}
         </label>
       </td>
     </tr>
     <tr>
       <td>
-        <label class="control">Final Gravity:</label>
+        <label>Final Gravity:</label>
       </td>
       <td>
-        <label class="control">
+        <label>
           ${'%.3f' % recipe.calculations.final_gravity}
         </label>
       </td>
     </tr>
     <tr>
       <td>
-        <label class="control">ABV:</label>
+        <label>ABV:</label>
       </td>
       <td>
-        <label class="control">
+        <label>
           ${h.format_percentage(recipe.calculations.abv, 1)}
         </label>
       </td>
     </tr>
     <tr>
       <td>
-        <label class="control">Bitterness:</label>
+        <label>Bitterness:</label>
       </td>
       <td>
-        <label class="control">
+        <label>
           ${recipe.calculations.ibu} IBU
         </label>
       </td>
     </tr>
     <tr>
       <td>
-        <label class="control">Color:</label>
+        <label>Color:</label>
       </td>
       <td>
         % if recipe.calculations.srm:
