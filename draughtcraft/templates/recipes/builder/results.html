@@ -7,9 +7,12 @@
         <label>Estimated Statistics</label>
       </th>
       <th />
-      <th>
+      <th colspan="2">
         <label>Targets for Style</label>
-      </td>
+      </th>
+      <th class="notes">
+        <label>Recipe Notes</label>
+      </th>
     </tr>
 
     <tr>
@@ -29,6 +32,9 @@
       </td>
       <td>
         <img src="/images/yes.png" />
+      </td>
+      <td rowspan="5" class="notes">
+        <textarea></textarea>
       </td>
     </tr>
 
@@ -78,13 +84,13 @@
       </td>
       <td>
         <label>
-          ${recipe.calculations.ibu} IBU
+          ${recipe.calculations.ibu} <span class="unit">IBU</span>
         </label>
       </td>
       <td>
         <label>
           ${recipe.calculations.ibu} - 
-          ${recipe.calculations.ibu} IBU
+          ${recipe.calculations.ibu} <span class="unit">IBU</span>
         </label>
       </td>
       <td>
@@ -101,7 +107,7 @@
           <label class="control srm srm-${min(int(round(recipe.calculations.srm)), 30)}">
             <img class="glass" src="/images/glass.png" />
             <span>
-              ${recipe.calculations.srm} &#186;SRM
+              ${recipe.calculations.srm} <span class="unit">&#186; SRM</span>
             </span>
           </label>
         % else:
@@ -110,7 +116,7 @@
       </td>
       <td>
         ${recipe.calculations.srm} - 
-        ${recipe.calculations.srm} &#186;SRM
+        ${recipe.calculations.srm} <span class="unit">&#186; SRM</span>
       </td>
       <td>
         <img src="/images/yes.png" />

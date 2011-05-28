@@ -133,7 +133,7 @@ class Calculations(object):
             alpha_acid = h.alpha_acid / 100
             total += utilization * ((ounces * alpha_acid * 7490) / gallons)
 
-        return round(total, 1)
+        return int(round(total))
 
     @property
     def rager(self):
@@ -175,7 +175,7 @@ class Calculations(object):
 
             total += (ounces * utilization * alpha_acid * 7462) / (gallons * gravity_adjustment)
 
-        return round(total, 1)
+        return int(round(total))
 
     @property
     def daniels(self):
@@ -246,4 +246,4 @@ class Calculations(object):
 
             total += (ounces * utilization * alpha_acid * 7462) / (gallons * gravity_adjustment)
 
-        return round(total, 1)
+        return int(round(total))
