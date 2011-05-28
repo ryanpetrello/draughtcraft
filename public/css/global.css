@@ -3,7 +3,7 @@
  */
 body  {
   background: #55AEC7;
-  border-top: 8px solid #358EA7;
+  border-top: 10px solid #358EA7;
 }
 p  {
   padding-bottom: 1em;
@@ -15,30 +15,31 @@ nav  {
   color: #FFF;
   width: 1000px;
   margin: 0 auto;
+  position: relative;
 }
 nav ul  {
-  padding: 15px;
+  padding: 10px 15px;
   overflow: hidden;
+  float: right;
 }
 nav ul li  {
   float: left;
-  line-height: 35px;
+  line-height: 50px;
   padding-right: 10px;
 }
-nav ul li.logo  {
-  padding-right: 45px;
+nav div.logo  {
+  position: absolute;
+  top: 10px;
+  left: 5px;
 }
-nav ul li.logo strong  {
+nav div.logo strong  {
   font-weight: normal;
   color: #EFFFAE;
 }
-nav ul li.logo img  {
-  height: 35px;
-  line-height: 35px;
+nav div.logo img  {
+  height: 50px;
   padding-right: 2px;
   vertical-align: middle;
-  position: relative;
-  bottom: 2px;
 }
 nav ul a, nav ul a:visited  {
   color: #CFF09E;
@@ -47,8 +48,8 @@ nav ul a:hover  {
   color: #EFFFAE;
 }
 h1  {
-  font-size: 2em;
-  line-height: 2.5em;
+  font-size: 1.85em;
+  line-height: 2.8em;
 }
 h2  {
   font-size: 1.25em;
@@ -63,9 +64,12 @@ h3  {
  * Main page layout
  */
 #content  {
+  clear: both;
   width: 1000px;
   margin: 0 auto;
   background: #F0F0F0;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
 }
 #content-inner  {
   padding: 0 25px;
