@@ -358,6 +358,81 @@ class TestRecipeChange(TestApp):
         assert a.duration == timedelta(minutes=45)
         assert a.form == 'PLUG'
 
+    def test_boil_hop_change_first_wort(self):
+        """
+        If hops are added a "FIRST WORT",
+        then the duration (for calculation purposes)
+        should forcibly be set to the recipe-specified
+        boil duration (by default, this is 60 minutes).
+        """
+        model.HopAddition(
+            recipe      = model.Recipe(),
+            hop         = model.Hop(name = 'Cascade'),
+            amount      = .0625, # 1 oz
+            unit        = 'POUND',
+            duration    = timedelta(minutes=30),
+            alpha_acid  = 5.5,
+            form        = 'LEAF',
+            use         = 'BOIL'
+        )
+        model.commit()
+
+        self.put('/recipes/1/builder/async', params={
+            'additions-0.type'          : 'HopAddition',
+            'additions-0.amount'        : '2 oz',
+            'additions-0.use'           : 'FIRST WORT',
+            'additions-0.alpha_acid'    : 7,
+            'additions-0.duration'      : 30,
+            'additions-0.addition'      : 1,
+            'additions-0.form'          : 'PELLET'
+        })
+
+        a = model.RecipeAddition.get(1)
+        assert a.use == 'FIRST WORT'
+        assert a.amount == .125
+        assert a.unit == 'POUND'
+        assert a.ingredient == model.Hop.get(1)
+        assert a.alpha_acid == 7
+        assert a.duration == timedelta(minutes=60)
+        assert a.form == 'PELLET'
+
+    def test_boil_hop_change_flame_out(self):
+        """
+        If hops are added a "FLAME OUT",
+        then the duration (for calculation purposes)
+        should forcibly be set zero minutes. 
+        """
+        model.HopAddition(
+            recipe      = model.Recipe(),
+            hop         = model.Hop(name = 'Cascade'),
+            amount      = .0625, # 1 oz
+            unit        = 'POUND',
+            duration    = timedelta(minutes=30),
+            alpha_acid  = 5.5,
+            form        = 'LEAF',
+            use         = 'BOIL'
+        )
+        model.commit()
+
+        self.put('/recipes/1/builder/async', params={
+            'additions-0.type'          : 'HopAddition',
+            'additions-0.amount'        : '2 oz',
+            'additions-0.use'           : 'FLAME OUT',
+            'additions-0.alpha_acid'    : 7,
+            'additions-0.duration'      : 30,
+            'additions-0.addition'      : 1,
+            'additions-0.form'          : 'PELLET'
+        })
+
+        a = model.RecipeAddition.get(1)
+        assert a.use == 'FLAME OUT'
+        assert a.amount == .125
+        assert a.unit == 'POUND'
+        assert a.ingredient == model.Hop.get(1)
+        assert a.alpha_acid == 7
+        assert a.duration == timedelta(minutes=0)
+        assert a.form == 'PELLET'
+
     def test_yeast_change(self):
         model.RecipeAddition(
             recipe      = model.Recipe(),
