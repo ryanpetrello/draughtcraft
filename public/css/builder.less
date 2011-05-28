@@ -112,9 +112,22 @@
     }
     td.close  {
       text-align: right;
+
+      img  {
+        visibility: hidden;
+      }
+
+    }
+    tr:hover  {
+      td  {
+        background: #E8F5FF !important;
+      }
+      td.close img  {
+        visibility: visible;
+      }
     }
     tr.addition  {
-      &:nth-child(odd) td  {
+      &:nth-child(odd) {
         background: #F5F5F5;
       }
       td.grain,
@@ -257,17 +270,12 @@
     top: -5px;
     left: -75px;
     width: 50px;
+    height: 72px;
     position: absolute;
     .vertical-gradient(@color, darken(@color, 15%));
   }
   position: relative;
   display: block;
-}
-/* Mozilla-targeted */
-@-moz-document url-prefix() {
-    .srm img.glass {
-      top: -11px !important;
-    }
 }
 .srm.srm-0  { .srm-mixin(#F3F993) }
 .srm.srm-1  { .srm-mixin(#F3F993) }
