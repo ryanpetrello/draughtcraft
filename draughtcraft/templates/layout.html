@@ -1,6 +1,11 @@
 <html>
   <head>
-      <title>${self.title()}</title>
+    <title>
+      DraughtCraft - Social Brewing
+      % if self.title():
+        - ${self.title()}
+      % endif
+    </title>
 
       <!-- page layout and style -->
       <link rel="stylesheet" type="text/css" media="screen" href="/css/base.css" />
@@ -23,6 +28,9 @@
         <img src="/images/logo.png" />
       </div>
       <ul>
+        <li>
+          <a href="#">People</a>
+        </li>
         <li>
           <a href="#">Recipes</a>
         </li>
@@ -47,7 +55,7 @@
 </html>
 
 <%def name="title()">
-    Default Title
+    
 </%def>
 
 <%def name="style()">

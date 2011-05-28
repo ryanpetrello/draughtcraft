@@ -3,7 +3,7 @@
  */
 body  {
   background: #55AEC7;
-  border-top: 10px solid #358EA7;
+  border-top: 12px solid #358EA7;
 }
 p  {
   padding-bottom: 1em;
@@ -86,7 +86,7 @@ footer  {
   text-align: center;
   background: #55AEC7;
   color: #FFF;
-  padding: 15px 0;
+  padding: 15px 0 2px;
 }
 footer a  {
   color: #FFF !important;
