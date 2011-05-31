@@ -12,6 +12,7 @@
 </%def>
 
 <div id="builder">
+
   <h1>Simcoe IPA</h1> 
   <fieldset>
     ${h.form('async/settings/style')}
@@ -22,6 +23,17 @@
       )}
     ${h.end_form()}
   </fieldset>
-  <a href="#" class="volume">5 Gallon</a>
+  <fieldset>
+    ${h.form('async/settings/gallons')}
+      ${h.select(
+        'gallons', 
+        recipe.gallons,
+        [(v, '%d Gallon(s)' % v) for v in [1, 2, 3, 4, 5, 8, 10, 15, 20, 25]],
+        class_ = 'gallons'
+      )}
+    ${h.end_form()}
+  </fieldset>
+
   <div id="builder-ajax" />
+
 </div>
