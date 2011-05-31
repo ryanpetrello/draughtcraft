@@ -1,4 +1,5 @@
-from elixir import Entity, OneToMany, Field, Unicode, Integer, Float
+from elixir import (Entity, OneToMany, Field, Unicode, Integer, Float, 
+                    UnicodeText)
 
 
 class InvalidStatistic(Exception):
@@ -8,6 +9,7 @@ class InvalidStatistic(Exception):
 class Style(Entity):
 
     name            = Field(Unicode(256))
+    description     = Field(UnicodeText)
 
     # Gravities
     min_og          = Field(Float)
@@ -61,8 +63,8 @@ class Style(Entity):
             return False
 
         actual = getattr(recipe.calculations, statistic)
-
-        if maximum >= actual and actual >= minimum:
+        
+        if actual <= maximum and actual >= minimum:
             return True
 
         return False
