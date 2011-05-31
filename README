@@ -1,6 +1,6 @@
 Recipe builder and community app for homebrewing enthusiasts.
 
-$ pecan shell ./development.ini
+$ pecan shell ./development.py
 >>> from draughtcraft.data.tools import populate
 
-$ pecan serve ./development.ini
+$ pecan serve ./development.py
