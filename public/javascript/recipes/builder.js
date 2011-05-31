@@ -161,6 +161,18 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
 };
 
 /*
+ * Listen for clicks on inline editors.  When this happens, the
+ * previously hidden input field should be displayed, and the original
+ * button/link should be hidden.
+ */
+$.draughtcraft.recipes.builder.handleInlineEditors = function(){
+    $('.inline a').click(function(e){
+        $(this).parent('.inline').toggleClass('visible');
+        e.preventDefault();
+    });
+};
+
+/*
  * To enhance user experience, we should automatically
  * add sequentual `tabindex` attributes to the ingredient
  * editing fields.  This will make it so that users can
@@ -187,10 +199,15 @@ $.draughtcraft.recipes.builder.initTabIndexes = function(){
 $.draughtcraft.recipes.builder.initListeners = function(){
     $.draughtcraft.recipes.builder.initTabs();
     $.draughtcraft.recipes.builder.initTabIndexes();
+    $.draughtcraft.recipes.builder.handleInlineEditors();
     $.draughtcraft.recipes.builder.initUpdateListeners();
     $.draughtcraft.recipes.builder.initFocusListeners();
 };
 
+/*
+ * Used to remove an addition/ingredient from a recipe.
+ * @param {Integer} model.RecipeAddition.id
+ */
 $.draughtcraft.recipes.builder.removeAddition = function(addition){
     if(confirm('Are you sure you want to remove this?'))
         $.ajax({

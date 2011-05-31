@@ -37,6 +37,9 @@
     background: url(/images/down.png) right no-repeat;
     margin-right: 10px;
   }
+  select.style  {
+    margin-right: 10px;
+  }
   a.volume  {
     background: url(/images/edit.gif) right no-repeat;
     padding-right: 15px;
@@ -73,6 +76,21 @@
       background: url(/images/crumb-cap.png) repeat-y left center;
     }
 
+  }
+
+  /* Inline editables */
+  .inline  {
+    input, select  {
+      display: none;
+    }
+    &.visible  {
+      input, select  {
+        display: inline;
+      }
+      a  {
+        display: none;
+      }
+    }
   }
 
   /* Builder UI */
