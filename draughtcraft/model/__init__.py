@@ -38,5 +38,6 @@ def clear():
 
 from ingredients    import *
 from recipes        import *
+from styles         import *
 
 elixir.setup_all()

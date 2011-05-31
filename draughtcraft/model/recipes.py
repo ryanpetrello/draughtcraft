@@ -3,15 +3,14 @@ from elixir import (
     OneToMany, ManyToOne
 )
 from draughtcraft.lib.calculations  import Calculations
-from draughtcraft.lib.units         import UnitConvert, UNITS
-
-import math
+from draughtcraft.lib.units         import UnitConvert
 
 class Recipe(Entity):
 
     name                = Field(Unicode(256))
 
     additions           = OneToMany('RecipeAddition', inverse='recipe')
+    style               = ManyToOne('Style', inverse='recipes')
 
     @property
     def calculations(self):
