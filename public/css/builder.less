@@ -78,19 +78,8 @@
 
   }
 
-  /* Inline editables */
-  .inline  {
-    input, select  {
-      display: none;
-    }
-    &.visible  {
-      input, select  {
-        display: inline;
-      }
-      a  {
-        display: none;
-      }
-    }
+  fieldset, fieldset form  {
+    display: inline;
   }
 
   /* Builder UI */
@@ -137,9 +126,6 @@
 
     }
     tr:hover  {
-      td  {
-        background: #E8F5FF !important;
-      }
       td.close img  {
         visibility: visible;
       }

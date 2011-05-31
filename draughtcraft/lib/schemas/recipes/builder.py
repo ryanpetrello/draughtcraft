@@ -108,3 +108,7 @@ class RecipeAdditionChange(BaseRecipeAddition):
 
 class RecipeChange(FilteredSchema):
     additions   = ForEach(RecipeAdditionChange)
+
+
+class RecipeStyle(FilteredSchema):
+    target = ModelObject(model.Style)

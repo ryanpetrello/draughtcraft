@@ -2,11 +2,26 @@
 
 <%def name="style()">
     <link rel="stylesheet/less" type="text/css" media="screen" href="/css/builder.less" />
+    <link rel="stylesheet" type="text/css" href="/css/jquery.selectbox.css" />
 </%def>
 
 <%def name="javascript()">
     <script type="text/javascript" src="/javascript/jquery.form.min.js"></script>
     <script type="text/javascript" src="/javascript/recipes/builder.js"></script>
+    <script type="text/javascript" src="/javascript/jquery.selectbox.min.js"></script>
 </%def>
 
-<div id="builder" />
+<div id="builder">
+  <h1>Simcoe IPA</h1> 
+  <fieldset>
+    ${h.form('async/settings/style')}
+      ${h.select(
+        'target', 
+        recipe.style.id if recipe.style else None, 
+        [(None, 'No Style Chosen')] + [(s.id, s.name) for s in h.model.Style.query.order_by(h.model.Style.name).all()],
+      )}
+    ${h.end_form()}
+  </fieldset>
+  <a href="#" class="volume">5 Gallon</a>
+  <div id="builder-ajax" />
+</div>

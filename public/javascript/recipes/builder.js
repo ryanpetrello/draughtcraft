@@ -17,7 +17,6 @@ $.draughtcraft.recipes.builder.fetchRecipe = function(){
  * @param {String} html - The HTML content to inject
  */
 $.draughtcraft.recipes.builder.__injectRecipeContent__ = function(html){
-
     //
     // Look for tr.addition in the DOM
     // and keep track of all unique DOM ID's.
@@ -26,7 +25,7 @@ $.draughtcraft.recipes.builder.__injectRecipeContent__ = function(html){
         return $(x).attr('id');
     });
 
-    $("#builder").html(html);
+    $("#builder-ajax").html(html);
 
     //
     // Look for tr.additions that didn't exist *before* content injection.
@@ -54,6 +53,12 @@ $.draughtcraft.recipes.builder.__injectRecipeContent__ = function(html){
  */
 $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
 
+    // Draw jQuery-powered replacements for native <select>'s.
+    $(".step fieldset select").selectBox({
+        'menuTransition'    : 'fade',
+        'menuSpeed'         : 'fast'
+    });
+
     // Re-initialize all event listeners
     $.draughtcraft.recipes.builder.initListeners();
 
@@ -61,7 +66,7 @@ $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
     $.draughtcraft.recipes.builder.selectTab(
         $.draughtcraft.recipes.builder.currentTab 
     );
-    
+
     //
     // Initialize forms in the newly replaced DOM with Ajax versions
     // On successful Ajax submission, we inject the response body into
@@ -161,18 +166,6 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
 };
 
 /*
- * Listen for clicks on inline editors.  When this happens, the
- * previously hidden input field should be displayed, and the original
- * button/link should be hidden.
- */
-$.draughtcraft.recipes.builder.handleInlineEditors = function(){
-    $('.inline a').click(function(e){
-        $(this).parent('.inline').toggleClass('visible');
-        e.preventDefault();
-    });
-};
-
-/*
  * To enhance user experience, we should automatically
  * add sequentual `tabindex` attributes to the ingredient
  * editing fields.  This will make it so that users can
@@ -199,7 +192,6 @@ $.draughtcraft.recipes.builder.initTabIndexes = function(){
 $.draughtcraft.recipes.builder.initListeners = function(){
     $.draughtcraft.recipes.builder.initTabs();
     $.draughtcraft.recipes.builder.initTabIndexes();
-    $.draughtcraft.recipes.builder.handleInlineEditors();
     $.draughtcraft.recipes.builder.initUpdateListeners();
     $.draughtcraft.recipes.builder.initFocusListeners();
 };
@@ -236,6 +228,23 @@ $.draughtcraft.recipes.builder.selectTab = function(index){
 }; 
 
 /*
+ * Render jQuery replacements for recipe-level settings,
+ * and listen on form submissions.
+ */
+$.draughtcraft.recipes.builder.initRecipeSettings = function(){
+    // Draw jQuery-powered replacements for native <select>'s.
+    $("#builder fieldset select").selectBox({
+        'menuTransition'    : 'fade',
+        'menuSpeed'         : 'fast'
+    });
+    // For each setting, monitor changes and submit the containing form
+    $('#builder fieldset select').change(function(){
+        var form = $(this).closest('form');
+        form.submit();
+    });
+};
+
+/*
  * If a specific step is specified in the page anchor
  * (e.g., #mash, #boil), select the appropriate tab.
  */
@@ -257,4 +266,5 @@ $.draughtcraft.recipes.builder.handleAnchor = function(){
 $(document).ready(function(){
     $.draughtcraft.recipes.builder.fetchRecipe();
     $.draughtcraft.recipes.builder.handleAnchor();
+    $.draughtcraft.recipes.builder.initRecipeSettings();
 });

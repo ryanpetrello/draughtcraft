@@ -1,17 +1,3 @@
-<h1>Simcoe IPA</h1> 
-<span class="inline">
-  <a href="#" class="style">
-    ${recipe.style.name if recipe.style else 'No Style Chosen'}
-  </a>
-  ${h.select(
-    'style', 
-    recipe.style_id, 
-    [(None, 'No Style Chosen')] + [(s.id, s.name) for s in h.model.Style.query.order_by(h.model.Style.name).all()],
-    class_ = 'style'
-  )}
-</span>
-<a href="#" class="volume">5 Gallon</a>
-
 ${h.form('async?_method=put')}
   <%include file="steps/mash/index.html" />
   <%include file="steps/boil/index.html" />

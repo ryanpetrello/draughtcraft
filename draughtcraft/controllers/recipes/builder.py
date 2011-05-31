@@ -1,9 +1,36 @@
 from pecan                                      import expose, request, abort
 from pecan.rest                                 import RestController
 from draughtcraft                               import model
-from draughtcraft.lib.schemas.recipes.builder   import RecipeChange, RecipeAddition
+from draughtcraft.lib.schemas.recipes.builder   import (
+                                                        RecipeChange, 
+                                                        RecipeAddition,
+                                                        RecipeStyle
+                                                        )
 from elixir                                     import entities
 from datetime                                   import timedelta
+
+
+class RecipeSettingsController(object):
+    """
+    Used to change various settings for a recipe, such as batch size,
+    target BJCP style, etc...
+    """
+
+    @property
+    def recipe(self):
+        return request.context['recipe']
+
+    @expose(generic=True)
+    def style(self): pass
+
+    @style.when(
+        method      = 'POST',
+        template    = 'recipes/builder/async.html',
+        schema      = RecipeStyle()
+    )
+    def _style(self, target):
+        self.recipe.style = target
+        return dict(recipe = self.recipe)
 
 
 class RecipeBuilderAsyncController(RestController):
@@ -19,6 +46,9 @@ class RecipeBuilderAsyncController(RestController):
 
     @expose('recipes/builder/async.html')
     def delete(self, id):
+        """
+        Used to remove an ingredient from the recipe.
+        """
         addition = model.RecipeAddition.get(int(id))
         if addition:
             addition.delete()
@@ -32,6 +62,11 @@ class RecipeBuilderAsyncController(RestController):
         variable_decode     = True
     )
     def put(self, **kw):
+        """
+        Used to update the ingredients in the recipe.
+        Contains a list of `additions` for which updated information is
+        available.
+        """
 
         for row in kw.get('additions'):
             # Clean up the hash a bit
@@ -78,6 +113,9 @@ class RecipeBuilderAsyncController(RestController):
         schema = RecipeAddition()
     )
     def post(self, **kw):
+        """
+        Used to add a new ingredient into the recipe.
+        """
         if request.pecan.get('validation_errors'):
             abort(400)
 
@@ -109,12 +147,14 @@ class RecipeBuilderAsyncController(RestController):
 
         return self.__rendered__()
 
+    settings = RecipeSettingsController()
+
 
 class RecipeBuilderController(object):
 
     @expose('recipes/builder/index.html')
     def index(self):
-        return dict()
+        return dict(recipe = request.context['recipe'])
 
     async = RecipeBuilderAsyncController()
 
