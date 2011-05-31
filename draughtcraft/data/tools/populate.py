@@ -40,6 +40,12 @@ styles = json.loads(handle.read())
 for s in styles:
     s = dict([(str(k), v) for k,v in s.items()])
     style = entities.Style(**s)
+
+    # Normalize ABV as a percentage
+    if style.min_abv and style.max_abv:
+        style.min_abv /= 100
+        style.max_abv /= 100
+
     print style.name
 
 model.commit()

@@ -9,7 +9,7 @@ class Calculations(object):
     # Gravity and alcohol content calculations
     #
     @property
-    def original_gravity(self):
+    def og(self):
         """
         Original gravity of the recipe.
         """
@@ -38,7 +38,7 @@ class Calculations(object):
         return round(points / 1000 + 1, 3)
 
     @property
-    def final_gravity(self):
+    def fg(self):
         """
         (Estimated) final gravity of the recipe based on yeast attenuation.
         """
@@ -56,14 +56,14 @@ class Calculations(object):
         if yeast:
             attenuation = max(yeast)
 
-        points = (self.original_gravity - 1) * 1000
+        points = (self.og - 1) * 1000
         final = points - (points * attenuation)
         
         return round(final / 1000 + 1, 3)
 
     @property
     def abv(self):
-        abv = (self.original_gravity - self.final_gravity) * 131
+        abv = (self.og - self.fg) * 131
         return round(abv, 1) / 100
     
     #
@@ -111,7 +111,7 @@ class Calculations(object):
             minutes = h.duration.seconds / 60 
 
             # Calculate the bigness factor
-            bigness = 1.65 * (math.pow(0.000125, (self.original_gravity - 1)))
+            bigness = 1.65 * (math.pow(0.000125, (self.og - 1)))
 
             # Calculate the boil time factor
             boiltime = (1 - math.exp(-0.04 * minutes)) / 4.15
@@ -163,8 +163,8 @@ class Calculations(object):
             # If the estimated OG exceeds 1.050, make an adjustment:
             #
             gravity_adjustment = 1
-            if self.original_gravity > 1.050:
-                gravity_adjustment += ((self.original_gravity - 1.050) / 0.2)
+            if self.og > 1.050:
+                gravity_adjustment += ((self.og - 1.050) / 0.2)
 
             # Convert pounds to ounces
             assert h.unit == 'POUND'
@@ -241,8 +241,8 @@ class Calculations(object):
             # If the estimated OG exceeds 1.050, make an adjustment:
             #
             gravity_adjustment = 1
-            if self.original_gravity > 1.050:
-                gravity_adjustment += ((self.original_gravity - 1.050) / 0.2)
+            if self.og > 1.050:
+                gravity_adjustment += ((self.og - 1.050) / 0.2)
 
             total += (ounces * utilization * alpha_acid * 7462) / (gallons * gravity_adjustment)
 

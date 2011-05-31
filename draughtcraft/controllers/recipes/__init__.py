@@ -25,7 +25,7 @@ class RecipesController(object):
     @expose()
     @transactional()
     def create(self):
-        recipe = model.Recipe()
+        recipe = model.Recipe(style=model.Style.get(1))
         recipe.flush()
 
         redirect('/recipes/%d/builder' % recipe.id)

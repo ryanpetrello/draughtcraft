@@ -1,3 +1,13 @@
+<%def name="matches(recipe, statistic)">
+  % if recipe.style.defined(statistic) is False:
+    <span /> 
+  % elif recipe.style.matches(recipe, statistic):
+    <img src="/images/yes.png" />
+  % else:
+    <img src="/images/no.png" />
+  % endif
+</%def>
+
 <div class="step results">
 
   <table>
@@ -21,17 +31,21 @@
       </td>
       <td>
         <label>
-          ${'%.3f' % recipe.calculations.original_gravity}
+          ${'%.3f' % recipe.calculations.og}
         </label>
       </td>
       <td>
         <label>
-          ${'%.3f' % recipe.calculations.original_gravity} -
-          ${'%.3f' % recipe.calculations.original_gravity} 
+          % if recipe.style.defined('og'):
+            ${'%.3f' % recipe.style.min_og} -
+            ${'%.3f' % recipe.style.max_og} 
+          % else:
+            -
+          % endif
         </label>
       </td>
       <td>
-        <img src="/images/yes.png" />
+        ${matches(recipe, 'og')}
       </td>
       <td rowspan="5" class="notes">
         <textarea></textarea>
@@ -44,17 +58,21 @@
       </td>
       <td>
         <label>
-          ${'%.3f' % recipe.calculations.final_gravity}
+          ${'%.3f' % recipe.calculations.fg}
         </label>
       </td>
       <td>
         <label>
-          ${'%.3f' % recipe.calculations.final_gravity} -
-          ${'%.3f' % recipe.calculations.final_gravity}
+          % if recipe.style.defined('fg'):
+            ${'%.3f' % recipe.style.min_fg} -
+            ${'%.3f' % recipe.style.max_fg}
+          % else:
+            -
+          % endif
         </label>
       </td>
       <td>
-        <img src="/images/yes.png" />
+        ${matches(recipe, 'fg')}
       </td>
     </tr>
 
@@ -69,12 +87,16 @@
       </td>
       <td>
         <label>
-          ${h.format_percentage(recipe.calculations.abv, 1)} - 
-          ${h.format_percentage(recipe.calculations.abv, 1)}
+          % if recipe.style.defined('abv'):
+            ${h.format_percentage(recipe.style.min_abv, 1)} - 
+            ${h.format_percentage(recipe.style.max_abv, 1)}
+          % else:
+            -
+          % endif
         </label>
       </td>
       <td>
-        <img src="/images/yes.png" />
+        ${matches(recipe, 'abv')}
       </td>
     </tr>
 
@@ -89,12 +111,16 @@
       </td>
       <td>
         <label>
-          ${recipe.calculations.ibu} - 
-          ${recipe.calculations.ibu} <span class="unit">IBU</span>
+          % if recipe.style.defined('ibu'):
+            ${recipe.style.min_ibu} - 
+            ${recipe.style.max_ibu} <span class="unit">IBU</span>
+          % else:
+            -
+          % endif
         </label>
       </td>
       <td>
-        <img src="/images/no.png" />
+        ${matches(recipe, 'ibu')}
       </td>
     </tr>
 
@@ -115,11 +141,15 @@
         % endif
       </td>
       <td>
-        ${recipe.calculations.srm} - 
-        ${recipe.calculations.srm} <span class="unit">&#186; SRM</span>
+        % if recipe.style.defined('srm'):
+          ${recipe.style.min_srm} - 
+          ${recipe.style.max_srm} <span class="unit">&#186; SRM</span>
+        % else:
+          -
+        % endif
       </td>
       <td>
-        <img src="/images/yes.png" />
+        ${matches(recipe, 'srm')}
       </td>
     </tr>
 
