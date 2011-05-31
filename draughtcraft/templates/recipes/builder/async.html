@@ -1,5 +1,7 @@
 <h1>Simcoe IPA</h1> 
-<a href="#" class="style">${recipe.style.name}</a> 
+<a href="#" class="style">
+  ${recipe.style.name if recipe.style else 'No Style Chosen'}
+</a> 
 <a href="#" class="volume">5 Gallon</a>
 
 ${h.form('async?_method=put')}

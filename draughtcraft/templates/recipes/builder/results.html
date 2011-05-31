@@ -1,5 +1,5 @@
 <%def name="matches(recipe, statistic)">
-  % if recipe.style.defined(statistic) is False:
+  % if recipe.style is None or recipe.style.defined(statistic) is False:
     <span /> 
   % elif recipe.style.matches(recipe, statistic):
     <img src="/images/yes.png" />
@@ -36,7 +36,7 @@
       </td>
       <td>
         <label>
-          % if recipe.style.defined('og'):
+          % if recipe.style and recipe.style.defined('og'):
             ${'%.3f' % recipe.style.min_og} -
             ${'%.3f' % recipe.style.max_og} 
           % else:
@@ -63,7 +63,7 @@
       </td>
       <td>
         <label>
-          % if recipe.style.defined('fg'):
+          % if recipe.style and recipe.style.defined('fg'):
             ${'%.3f' % recipe.style.min_fg} -
             ${'%.3f' % recipe.style.max_fg}
           % else:
@@ -87,7 +87,7 @@
       </td>
       <td>
         <label>
-          % if recipe.style.defined('abv'):
+          % if recipe.style and recipe.style.defined('abv'):
             ${h.format_percentage(recipe.style.min_abv, 1)} - 
             ${h.format_percentage(recipe.style.max_abv, 1)}
           % else:
@@ -111,7 +111,7 @@
       </td>
       <td>
         <label>
-          % if recipe.style.defined('ibu'):
+          % if recipe.style and recipe.style.defined('ibu'):
             ${recipe.style.min_ibu} - 
             ${recipe.style.max_ibu} <span class="unit">IBU</span>
           % else:
@@ -141,7 +141,7 @@
         % endif
       </td>
       <td>
-        % if recipe.style.defined('srm'):
+        % if recipe.style and recipe.style.defined('srm'):
           ${recipe.style.min_srm} - 
           ${recipe.style.max_srm} <span class="unit">&#186; SRM</span>
         % else:
