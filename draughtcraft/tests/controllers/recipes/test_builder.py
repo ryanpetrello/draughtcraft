@@ -235,6 +235,33 @@ class TestFermentationAdditions(TestApp):
         assert model.RecipeAddition.query.count() == 0
 
 
+class TestRecipeSettings(TestApp):
+
+    def test_style_change(self):
+        model.Recipe()
+        model.Style(name = u'American Ale')
+        model.commit()
+
+        assert model.Recipe.get(1).style is None
+        self.post('/recipes/1/builder/async/settings/style', params={
+            'target': 1
+        })
+        
+        assert model.Recipe.get(1).style == model.Style.get(1)
+
+    def test_style_remove(self):
+        recipe = model.Recipe()
+        recipe.style = model.Style(name = u'American Ale')
+        model.commit()
+
+        assert model.Recipe.get(1).style == model.Style.get(1)
+        self.post('/recipes/1/builder/async/settings/style', params={
+            'target': '' 
+        })
+        
+        assert model.Recipe.get(1).style is None
+
+
 class TestRecipeChange(TestApp):
 
     def test_mash_change(self):
