@@ -111,4 +111,4 @@ class RecipeChange(FilteredSchema):
 
 
 class RecipeStyle(FilteredSchema):
-    target = ModelObject(model.Style)
+    target = ModelObject(model.Style, if_empty=None)

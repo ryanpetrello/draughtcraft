@@ -18,7 +18,7 @@
       ${h.select(
         'target', 
         recipe.style.id if recipe.style else None, 
-        [(None, 'No Style Chosen')] + [(s.id, s.name) for s in h.model.Style.query.order_by(h.model.Style.name).all()],
+        [('', 'No Style Chosen')] + [(s.id, s.name) for s in h.model.Style.query.order_by(h.model.Style.name).all()],
       )}
     ${h.end_form()}
   </fieldset>

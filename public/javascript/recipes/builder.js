@@ -17,6 +17,13 @@ $.draughtcraft.recipes.builder.fetchRecipe = function(){
  * @param {String} html - The HTML content to inject
  */
 $.draughtcraft.recipes.builder.__injectRecipeContent__ = function(html){
+
+    //
+    // For performance reasons, we should clean up all previously 
+    // rendered jQuery select widgets.
+    //
+    $(".step fieldset select").selectBox('destroy');
+
     //
     // Look for tr.addition in the DOM
     // and keep track of all unique DOM ID's.
@@ -52,12 +59,6 @@ $.draughtcraft.recipes.builder.__injectRecipeContent__ = function(html){
  * focused field) we need to persist.
  */
 $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
-
-    // Draw jQuery-powered replacements for native <select>'s.
-    $(".step fieldset select").selectBox({
-        'menuTransition'    : 'fade',
-        'menuSpeed'         : 'fast'
-    });
 
     // Re-initialize all event listeners
     $.draughtcraft.recipes.builder.initListeners();
@@ -106,6 +107,12 @@ $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
     });
 
     $("#tiptip_holder").fadeOut();
+
+    // Draw jQuery-powered replacements for native <select>'s.
+    $(".step fieldset select").selectBox({
+        'menuTransition'    : 'fade',
+        'menuSpeed'         : 'fast'
+    });
     
 };
 
@@ -264,7 +271,7 @@ $.draughtcraft.recipes.builder.handleAnchor = function(){
 };
 
 $(document).ready(function(){
+    $.draughtcraft.recipes.builder.initRecipeSettings();
     $.draughtcraft.recipes.builder.fetchRecipe();
     $.draughtcraft.recipes.builder.handleAnchor();
-    $.draughtcraft.recipes.builder.initRecipeSettings();
 });
