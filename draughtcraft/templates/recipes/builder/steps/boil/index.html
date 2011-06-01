@@ -11,6 +11,15 @@
   <%include file="../../tabs.html" args="active='boil'" />
 
   <div class="ingredient-list">
+
+    <h3>Boil Duration</h3>
+
+    <ol class='process'>
+      <li>Boil for <a href="#">60</a> minutes.</li>
+    </ol>
+
+    <h3>Ingredients</h3>
+
     % if recipe.boil:
       <table>
 
@@ -69,9 +78,9 @@
     % else:
       <table>
         <tr>
-          <th>
-            Choose one or more fermentables for this recipe.
-          </th>
+          <td>
+            Choose one or more boil additions for this recipe.
+          </td>
         </tr>
       </table>
     % endif

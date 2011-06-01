@@ -29,11 +29,16 @@
     display: inline-block;
     vertical-align: middle;
   }  
+  .selectBox.unit  {
+    width: 12px;
+  }
   .selectBox.gallons  {
     width: 60px;
   }
-  .selectBox.gallons .selectBox-arrow  {
-    background-image: url('/images/edit.gif');
+  .selectBox.gallons, .selectBox.unit  {
+    .selectBox-arrow  {
+      background-image: url('/images/edit.gif');
+    }
   }
   h2  {
     background: #F7F7F7;
@@ -77,7 +82,7 @@
   .step  {
     overflow: hidden;
     display: none;
-    background: #FFF;
+    background: url('/images/sidebar.png') top right repeat-y #FFF;
   }
   .step.active, #content .step.results  {
     display: block;
@@ -178,13 +183,40 @@
     margin-right: 2%;
     float: left;
     padding-bottom: 10px;
+
+      h3  {
+        font-size: 1.1em;
+        padding: 0 15px;
+        margin-left: 15px;
+        border-bottom: 1px dotted #DDD;
+        color: #555;
+
+        &:nth-child(1)  {
+          margin-top: 10px;
+        }
+
+      }
+
+      ol.process  {
+        padding: 0;
+        margin: 15px 30px;
+        display: inline-block;
+      }
+
+      ol.process li  {
+        padding: 5px 10px;
+        list-style-type: none;
+        padding-right: 20px;
+        cursor: pointer;
+      }
+
   }
   div.inventory  {
     width: 25%;
     float: right;
-    background: #D4DF86;
     color: #FFF;
-    min-height: 250px;
+    padding-bottom: 5px;
+    min-height: 200px;
   }
   div.inventory fieldset  {
     padding: 0 15px 15px;

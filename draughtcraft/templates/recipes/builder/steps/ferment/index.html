@@ -3,6 +3,51 @@
   <%include file="../../tabs.html" args="active='ferment'" />
   
   <div class="ingredient-list">
+
+    <h3>Fermentation Schedule</h3>
+
+    <fieldset>
+      <ol class='process'>
+
+        <li>
+        <span style="width:100px;display:inline-block;">Primary for </span>
+          ${h.select(
+            'days',
+            7,
+            range(91),
+            class_ = 'unit'
+          )}
+          days at 
+          ${h.select(
+            'temperature',
+            68,
+            range(101),
+            class_ = 'unit'
+          )} &#186;F
+        </li>
+
+        <li>
+        <span style="width:100px;display:inline-block;">Secondary for </span>
+          ${h.select(
+            'days',
+            7,
+            range(91),
+            class_ = 'unit'
+          )}
+          days at 
+          ${h.select(
+            'temperature',
+            68,
+            range(101),
+            class_ = 'unit'
+          )} &#186;F
+        </li>
+
+      </ol>
+    </fieldset>
+
+    <h3>Ingredients</h3>
+
     % if recipe.fermentation:
       <table>
 
@@ -61,9 +106,9 @@
     % else:
       <table>
         <tr>
-          <th>
+          <td>
             Choose yeast(s) for fermentation.
-          </th>
+          </td>
         </tr>
       </table>
     % endif
