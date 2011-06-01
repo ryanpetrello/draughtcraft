@@ -80,8 +80,8 @@
 
   /* Builder UI */
   .step  {
-    overflow: hidden;
     display: none;
+    clear: both;
     background: url('/images/sidebar.png') top right repeat-y #FFF;
   }
   .step.active, #content .step.results  {
@@ -184,23 +184,49 @@
     float: left;
     padding-bottom: 10px;
 
+      /* H3 Ribbon Style */
       h3  {
         font-size: 1.1em;
-        padding: 0 15px;
-        margin-left: 15px;
-        border-bottom: 1px dotted #DDD;
-        color: #555;
+        position: relative;
+        color: #FFF;
+        background: #358EA7;
+        display: inline-block;
+        padding: 0 20px;
+        clear: both;
+        margin-left: -10px;
+        text-shadow: 0 -1px #055E77, 0 1px #055E77;
+
+        .box-shadow(2px, 2px, 0, #E3E3E3);
 
         &:nth-child(1)  {
-          margin-top: 10px;
+          margin-top: 15px;
         }
 
+        &:before  {
+          top: 100%;
+          content: " ";
+          display: block;
+          position: absolute;
+          height: 0;
+          width: 0;
+          z-index: 1;
+          border-style: solid;
+          border-width: 5px; 
+        }
+        &:before {
+          border-color: #156E87 #156E87 transparent transparent;
+          left: 0;
+        }    
+
+      }
+
+      fieldset  {
+        display: block;
       }
 
       ol.process  {
         padding: 0;
         margin: 15px 30px;
-        display: inline-block;
       }
 
       ol.process li  {
@@ -208,6 +234,11 @@
         list-style-type: none;
         padding-right: 20px;
         cursor: pointer;
+      }
+
+      ol.process li > span  {
+        width: 100px;
+        display: inline-block;
       }
 
   }

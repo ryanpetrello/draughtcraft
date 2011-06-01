@@ -1,4 +1,4 @@
-<div class="step active"> 
+<div class="step active clearfix"> 
 
   <%include file="../../tabs.html" args="active='ferment'" />
   
@@ -10,7 +10,7 @@
       <ol class='process'>
 
         <li>
-        <span style="width:100px;display:inline-block;">Primary for </span>
+          <span>Primary for </span>
           ${h.select(
             'days',
             7,
@@ -27,7 +27,7 @@
         </li>
 
         <li>
-        <span style="width:100px;display:inline-block;">Secondary for </span>
+          <span>Secondary for </span>
           ${h.select(
             'days',
             7,

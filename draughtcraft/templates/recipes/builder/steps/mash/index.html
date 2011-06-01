@@ -6,11 +6,14 @@
     )
 %>
 
-<div class="step active"> 
+<div class="step active clearfix"> 
 
   <%include file="../../tabs.html" args="active='mash'" />
   
   <div class="ingredient-list">
+
+    <h3>Ingredients</h3>
+
     % if recipe.mash:
       <table>
 
