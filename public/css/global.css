@@ -11,10 +11,13 @@ p  {
 a  {
   color: #607890;
 }
+a:hover  {
+  color: #304860;
+}
 nav  {
   color: #FFF;
   width: 1000px;
-  margin: 0 auto;
+  margin: 5px auto;
   position: relative;
 }
 nav ul  {
@@ -71,6 +74,8 @@ h3  {
   clear: both;
   width: 1000px;
   margin: 0 auto;
+  position: relative;
+  top: 5px;
   background: #F0F0F0;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
