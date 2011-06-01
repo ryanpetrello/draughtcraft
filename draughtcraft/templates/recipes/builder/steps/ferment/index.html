@@ -4,48 +4,6 @@
   
   <div class="ingredient-list">
 
-    <h3>Fermentation Schedule</h3>
-
-    <fieldset>
-      <ol class='process'>
-
-        <li>
-          <span>Primary for </span>
-          ${h.select(
-            'days',
-            7,
-            range(91),
-            class_ = 'unit'
-          )}
-          day(s) at 
-          ${h.select(
-            'temperature',
-            68,
-            range(101),
-            class_ = 'unit'
-          )} &#186;F
-        </li>
-
-        <li>
-          <span>Secondary for </span>
-          ${h.select(
-            'days',
-            7,
-            range(91),
-            class_ = 'unit'
-          )}
-          day(s) at 
-          ${h.select(
-            'temperature',
-            68,
-            range(101),
-            class_ = 'unit'
-          )} &#186;F
-        </li>
-
-      </ol>
-    </fieldset>
-
     <h3>Ingredients</h3>
 
     % if recipe.fermentation:
@@ -112,6 +70,49 @@
         </tr>
       </table>
     % endif
+
+    <h3>Fermentation Schedule</h3>
+
+    <fieldset>
+      <ol class='process'>
+
+        <li>
+          <span>Primary for </span>
+          ${h.select(
+            'days',
+            7,
+            range(91),
+            class_ = 'unit'
+          )}
+          day(s) at 
+          ${h.select(
+            'temperature',
+            68,
+            range(101),
+            class_ = 'unit'
+          )} &#186;F
+        </li>
+
+        <li>
+          <span>Secondary for </span>
+          ${h.select(
+            'days',
+            7,
+            range(91),
+            class_ = 'unit'
+          )}
+          day(s) at 
+          ${h.select(
+            'temperature',
+            68,
+            range(101),
+            class_ = 'unit'
+          )} &#186;F
+        </li>
+
+      </ol>
+
+    </fieldset>
   </div>
 
   <div class="inventory">
