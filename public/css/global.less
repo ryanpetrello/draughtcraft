@@ -1,4 +1,13 @@
 /*
+ * Mixins
+ */
+.box-shadow () {
+  box-shadow: @arguments;
+  -moz-box-shadow: @arguments;
+  -webkit-box-shadow: @arguments;
+}
+
+/*
  * General page styles
  */
 body  {
@@ -19,40 +28,51 @@ nav  {
   width: 1000px;
   margin: 5px auto;
   position: relative;
-}
-nav ul  {
-  padding: 10px 15px;
-  overflow: hidden;
-  float: right;
-}
-nav ul li  {
-  float: left;
-  line-height: 50px;
-  padding-left: 12px;
-}
-nav ul li input  {
-  margin-top: 15px;
-  width: 200px;
-}
-nav div.logo  {
-  position: absolute;
-  top: 10px;
-  left: 5px;
-}
-nav div.logo strong  {
-  font-weight: normal;
-  color: #EFFFAE;
-}
-nav div.logo img  {
-  height: 50px;
-  padding-right: 2px;
-  vertical-align: middle;
-}
-nav ul a, nav ul a:visited  {
-  color: #EFFFAE;
-}
-nav ul a:hover  {
-  color: #FFF;
+
+  ul  {
+    padding: 10px 15px;
+    overflow: hidden;
+    float: right;
+
+    li  {
+      float: left;
+      line-height: 50px;
+      padding-left: 12px;
+
+      input  {
+        margin-top: 15px;
+        width: 200px;
+      }
+
+    }
+
+    a, a:visited  {
+      color: #EFFFAE;
+    }
+    a:hover  {
+      color: #FFF;
+    }
+
+  }
+
+  div.logo  {
+    position: absolute;
+    top: 10px;
+    left: 5px;
+
+    strong  {
+      font-weight: normal;
+      color: #EFFFAE;
+    }
+
+    img  {
+      height: 50px;
+      padding-right: 2px;
+      vertical-align: middle;
+    }
+
+  }
+
 }
 h1  {
   font-size: 1.85em;
@@ -128,7 +148,9 @@ footer  {
   background: #55AEC7;
   color: #FFF;
   padding: 15px 0 2px;
-}
-footer a  {
-  color: #FFF !important;
+
+  a  {
+    color: #FFF !important;
+  }
+
 }
