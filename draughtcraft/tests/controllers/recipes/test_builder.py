@@ -11,10 +11,10 @@ class TestRecipeBuilder(TestApp):
         assert response.status_int == 302
 
         assert model.Recipe.query.count() == 1
-        assert response.headers['Location'].endswith('/recipes/1/builder')
+        assert response.headers['Location'].endswith('/recipes/1/american-ale/builder')
 
     def test_recipe_missing(self):
-        response = self.get('/recipes/1', status=404)
+        response = self.get('/recipes/1/american-ale', status=404)
         assert response.status_int == 404
 
 
@@ -30,7 +30,7 @@ class TestMashAdditions(TestApp):
         )
         model.commit()
 
-        self.post('/recipes/1/builder/async', params={
+        self.post('/recipes/1/american-ale/builder/async', params={
             'type'          : 'RecipeAddition',
             'ingredient'    : 1,
             'use'           : 'MASH',
@@ -50,7 +50,7 @@ class TestMashAdditions(TestApp):
         model.Hop(name = 'Cascade')
         model.commit()
 
-        self.post('/recipes/1/builder/async', params={
+        self.post('/recipes/1/american-ale/builder/async', params={
             'type'          : 'HopAddition',
             'ingredient'    : 1,
             'use'           : 'MASH',
@@ -81,7 +81,7 @@ class TestMashAdditions(TestApp):
             copy = params.copy()
             del copy[k]
 
-            response = self.post('/recipes/1/builder/async', params=copy, status=400)
+            response = self.post('/recipes/1/american-ale/builder/async', params=copy, status=400)
             assert response.status_int == 400
 
         assert model.RecipeAddition.query.count() == 0
@@ -99,7 +99,7 @@ class TestBoilAdditions(TestApp):
         )
         model.commit()
 
-        self.post('/recipes/1/builder/async', params={
+        self.post('/recipes/1/american-ale/builder/async', params={
             'type'          : 'RecipeAddition',
             'ingredient'    : 1,
             'use'           : 'BOIL',
@@ -122,7 +122,7 @@ class TestBoilAdditions(TestApp):
         )
         model.commit()
 
-        self.post('/recipes/1/builder/async', params={
+        self.post('/recipes/1/american-ale/builder/async', params={
             'type'          : 'HopAddition',
             'ingredient'    : 1,
             'use'           : 'BOIL',
@@ -156,7 +156,7 @@ class TestBoilAdditions(TestApp):
             copy = params.copy()
             del copy[k]
 
-            response = self.post('/recipes/1/builder/async', params=copy, status=400)
+            response = self.post('/recipes/1/american-ale/builder/async', params=copy, status=400)
             assert response.status_int == 400
 
         assert model.RecipeAddition.query.count() == 0
@@ -172,7 +172,7 @@ class TestFermentationAdditions(TestApp):
         )
         model.commit()
 
-        self.post('/recipes/1/builder/async', params={
+        self.post('/recipes/1/american-ale/builder/async', params={
             'type'          : 'HopAddition',
             'ingredient'    : 1,
             'use'           : 'SECONDARY',
@@ -197,7 +197,7 @@ class TestFermentationAdditions(TestApp):
         )
         model.commit()
 
-        self.post('/recipes/1/builder/async', params={
+        self.post('/recipes/1/american-ale/builder/async', params={
             'type'          : 'RecipeAddition',
             'ingredient'    : 1,
             'use'           : 'PRIMARY',
@@ -229,7 +229,7 @@ class TestFermentationAdditions(TestApp):
             copy = params.copy()
             del copy[k]
 
-            response = self.post('/recipes/1/builder/async', params=copy, status=400)
+            response = self.post('/recipes/1/american-ale/builder/async', params=copy, status=400)
             assert response.status_int == 400
 
         assert model.RecipeAddition.query.count() == 0
@@ -243,7 +243,7 @@ class TestRecipeSettings(TestApp):
         model.commit()
 
         assert model.Recipe.get(1).style is None
-        self.post('/recipes/1/builder/async/settings/style', params={
+        self.post('/recipes/1/american-ale/builder/async/settings/style', params={
             'target': 1
         })
         
@@ -255,7 +255,7 @@ class TestRecipeSettings(TestApp):
         model.commit()
 
         assert model.Recipe.get(1).style == model.Style.get(1)
-        self.post('/recipes/1/builder/async/settings/style', params={
+        self.post('/recipes/1/american-ale/builder/async/settings/style', params={
             'target': '' 
         })
         
@@ -279,7 +279,7 @@ class TestRecipeChange(TestApp):
         )
         model.commit()
 
-        self.put('/recipes/1/builder/async', params={
+        self.put('/recipes/1/american-ale/builder/async', params={
             'additions-0.type'          : 'RecipeAddition',
             'additions-0.amount'        : '10 lb',
             'additions-0.use'           : 'MASH',
@@ -314,7 +314,7 @@ class TestRecipeChange(TestApp):
         # the unit should fall back to the ingredient's
         # default unit.
         #
-        self.put('/recipes/1/builder/async', params={
+        self.put('/recipes/1/american-ale/builder/async', params={
             'additions-0.type'          : 'RecipeAddition',
             'additions-0.amount'        : '5',
             'additions-0.use'           : 'MASH',
@@ -350,7 +350,7 @@ class TestRecipeChange(TestApp):
         )
         model.commit()
 
-        self.put('/recipes/1/builder/async', params={
+        self.put('/recipes/1/american-ale/builder/async', params={
             'additions-0.type'          : 'HopAddition',
             'additions-0.amount'        : '2 oz',
             'additions-0.use'           : 'BOIL',
@@ -404,7 +404,7 @@ class TestRecipeChange(TestApp):
         )
         model.commit()
 
-        self.put('/recipes/1/builder/async', params={
+        self.put('/recipes/1/american-ale/builder/async', params={
             'additions-0.type'          : 'HopAddition',
             'additions-0.amount'        : '2 oz',
             'additions-0.use'           : 'FIRST WORT',
@@ -441,7 +441,7 @@ class TestRecipeChange(TestApp):
         )
         model.commit()
 
-        self.put('/recipes/1/builder/async', params={
+        self.put('/recipes/1/american-ale/builder/async', params={
             'additions-0.type'          : 'HopAddition',
             'additions-0.amount'        : '2 oz',
             'additions-0.use'           : 'FLAME OUT',
@@ -473,7 +473,7 @@ class TestRecipeChange(TestApp):
         )
         model.commit()
 
-        self.put('/recipes/1/builder/async', params={
+        self.put('/recipes/1/american-ale/builder/async', params={
             'additions-0.type'      : 'RecipeAddition',
             'additions-0.use'       : 'SECONDARY',
             'additions-0.amount'    : 1,
@@ -509,7 +509,7 @@ class TestRecipeChange(TestApp):
             copy = params.copy()
             del copy[k]
 
-            response = self.put('/recipes/1/builder/async', params=copy, status=200)
+            response = self.put('/recipes/1/american-ale/builder/async', params=copy, status=200)
             assert response.status_int == 200
 
         a = model.RecipeAddition.get(1)
@@ -542,7 +542,7 @@ class TestRecipeChange(TestApp):
             copy = params.copy()
             del copy[k]
 
-            response = self.put('/recipes/1/builder/async', params=copy, status=200)
+            response = self.put('/recipes/1/american-ale/builder/async', params=copy, status=200)
             assert response.status_int == 200
 
         a = model.HopAddition.get(1)
@@ -564,6 +564,6 @@ class TestRecipeRemoval(TestApp):
         )
         model.commit()
 
-        self.delete('/recipes/1/builder/async/1')
+        self.delete('/recipes/1/american-ale/builder/async/1')
 
         assert model.RecipeAddition.query.count() == 0

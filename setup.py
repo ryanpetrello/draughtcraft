@@ -16,7 +16,9 @@ setup(
     author_email = '',
     install_requires = [
         "pecan",
-        #TODO
+        "sqlalchemy",
+        "elixir",
+        "pytest-cov"
     ],
     zip_safe = False,
     paster_plugins = ['Pecan'],
