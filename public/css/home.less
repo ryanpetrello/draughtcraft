@@ -1,0 +1,66 @@
+/*
+ * Mixins
+ */
+.border-radius (@radius) {
+  border-radius: @radius;
+  -moz-border-radius: @radius;
+  -webkit-border-radius: @radius;
+  -webkit-background-clip: padding;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+}
+
+#topnav, #content  {
+  width: 600px;
+}
+#topnav input  {
+  width: 175px;
+}
+h1  {
+  padding: 0 1em;
+  text-align: center;
+}
+h3.ribbon  {
+  margin-top: 25px;
+  font-size: 18px;
+  padding: 0 42px;
+  &.right  {
+    background: #B9C566;
+    text-shadow: 0 -1px #899536, 0 1px #899536;
+    &:after  {
+      border-color: #798526 transparent transparent #798526;
+    }    
+  }
+}
+#content-inner > div  {
+  background: #FFF;
+  .border-radius(10px);
+}
+#content-inner ul  {
+  padding: 25px 0; 
+
+  li  {
+    list-style-type: none;
+    float: left;
+    width: 28%;
+    padding: 0 15px;
+
+    h4  {
+      padding: 1em 0;
+    }
+
+    &.center  {
+      border-left: 1px solid #E3E3E3;
+      border-right: 1px solid #E3E3E3;
+    }
+
+    &:nth-child(1)  {
+      padding-left: 0;
+    }
+    &:nth-child(3)  {
+      padding-right: 0;
+    }
+
+  }
+
+}

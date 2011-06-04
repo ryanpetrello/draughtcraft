@@ -99,9 +99,7 @@ h3  {
   background: #F0F0F0;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
-}
-#content-inner  {
-  padding: 0 25px;
+  border-radius: 10px;
 }
 
 /*
@@ -120,6 +118,16 @@ h3.ribbon  {
   margin-top: 15px;
   text-shadow: 0 -1px #055E77, 0 1px #055E77;
 
+  a  {
+    color: #FFF;
+    text-decoration: none;
+
+    &:hover  {
+      text-decoration: underline;
+    }
+
+  }
+
   .box-shadow(2px, 2px, 0, #E3E3E3);
 
   &:before  {
@@ -132,11 +140,33 @@ h3.ribbon  {
     z-index: 1;
     border-style: solid;
     border-width: 5px; 
-  }
-  &:before {
     border-color: #156E87 #156E87 transparent transparent;
     left: 0;
   }    
+
+  &.right  {
+    float: right;
+    margin-right: -10px;
+    .box-shadow(-2px, 2px, 0, #E3E3E3);
+
+    &:before  { display: none; } 
+    &:after  {
+      top: 100%;
+      content: " ";
+      display: block;
+      position: absolute;
+      height: 0;
+      width: 0;
+      z-index: 1;
+      border-style: solid;
+      border-width: 5px; 
+      border-color: #156E87 transparent transparent #156E87;
+      right: 0;
+    }    
+
+    
+  }
+
 }
 
 

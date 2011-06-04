@@ -1,7 +1,46 @@
 <%inherit file="layout.html" />
 
+<%def name="style()">
+    <link rel="stylesheet/less" type="text/css" media="screen" href="/css/home.less" />
+</%def>
+
 <h1>
-
-  <p>Testing 1 2 3</p>
-
+  Make a Homebrew.  Let Us Help.
 </h1>
+
+<div>
+  <h3 class="ribbon">
+    <a href="/recipes/create">Create Your Own Recipe</a>
+  </h3>
+  <h3 class="ribbon right">
+    <a href="/browse">Browse Existing Recipes</a>
+  </h3>
+
+  <ul class="clearfix">
+    <li>
+      <h4>Craft Your Own</h4>
+      <p>
+        Build, store and share your recipes in an online, managed
+        platform made <strong>especially</strong> for homebrew enthusiasts.
+      </p>
+      <p><a href="/recipes/create">Create a Recipe Now</a></p>
+    </li>
+    <li class="center">
+      <h4>Draw Inspiration</h4>
+      <p>
+        Join a growing community of hobbyists across the world and gain access
+        to their library of curated recipes.
+      </p>
+      <p><a href="/browse">Browse Recipes</a></p>
+    </li>
+    <li>
+      <h4>A Tool That Fits</h4>
+      <p>
+      Brewing is <strong>easy</strong>, and your tools should be, too.  DraughtCraft is
+        hassle-free software targeted explicitly towards homebrewers.
+      </p>
+      <p><a href="#">Learn More</a></p>
+    </li>
+  </ul>
+
+</div>
