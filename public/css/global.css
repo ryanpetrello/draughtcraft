@@ -85,6 +85,42 @@ h3  {
 }
 
 /*
+ * Reusable page elements/styles
+ */
+
+h3.ribbon  {
+  font-size: 1.1em;
+  position: relative;
+  color: #FFF;
+  background: #358EA7;
+  display: inline-block;
+  padding: 0 20px;
+  clear: both;
+  margin-left: -10px;
+  margin-top: 15px;
+  text-shadow: 0 -1px #055E77, 0 1px #055E77;
+
+  .box-shadow(2px, 2px, 0, #E3E3E3);
+
+  &:before  {
+    top: 100%;
+    content: " ";
+    display: block;
+    position: absolute;
+    height: 0;
+    width: 0;
+    z-index: 1;
+    border-style: solid;
+    border-width: 5px; 
+  }
+  &:before {
+    border-color: #156E87 #156E87 transparent transparent;
+    left: 0;
+  }    
+}
+
+
+/*
  * Footer
  */
 footer  {
