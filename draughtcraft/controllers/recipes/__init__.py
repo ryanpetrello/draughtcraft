@@ -1,6 +1,6 @@
-from pecan              import expose, redirect, request, abort
-from pecan.decorators   import transactional
+from pecan              import expose, request, abort
 from draughtcraft       import model
+from create             import RecipeCreationController
 from builder            import RecipeBuilderController
 
 
@@ -24,7 +24,7 @@ class RecipeController(object):
             abort(404)
 
         request.context['recipe'] = recipe
-    
+
 
 class RecipesController(object):
 
@@ -32,10 +32,4 @@ class RecipesController(object):
     def _lookup(self, recipeID, *remainder):
         return RecipeController(recipeID), remainder
 
-    @expose()
-    @transactional()
-    def create(self):
-        recipe = model.Recipe()
-        recipe.flush()
-
-        redirect('/recipes/%d/american-ale/builder' % recipe.id)
+    create = RecipeCreationController()

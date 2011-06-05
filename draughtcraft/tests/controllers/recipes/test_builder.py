@@ -2,21 +2,6 @@ from draughtcraft.tests     import TestApp
 from draughtcraft           import model
 from datetime               import timedelta
 
-class TestRecipeBuilder(TestApp):
-
-    def test_recipe_create(self):
-        assert model.Recipe.query.count() == 0
-
-        response = self.get('/recipes/create')
-        assert response.status_int == 302
-
-        assert model.Recipe.query.count() == 1
-        assert response.headers['Location'].endswith('/recipes/1/american-ale/builder')
-
-    def test_recipe_missing(self):
-        response = self.get('/recipes/1/american-ale', status=404)
-        assert response.status_int == 404
-
 
 class TestMashAdditions(TestApp):
 
