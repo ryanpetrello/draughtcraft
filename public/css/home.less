@@ -21,7 +21,7 @@ h1  {
   text-align: center;
 }
 h3.ribbon  {
-  margin-top: 25px;
+  margin-top: 15px;
   font-size: 18px;
   padding: 0 42px;
   &.right  {
@@ -35,6 +35,12 @@ h3.ribbon  {
 #content-inner > div  {
   background: #FFF;
   .border-radius(10px);
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  -moz-border-radius-topright: 0;
+  -moz-border-radius-topleft: 0;
+  -webkit-border-top-right-radius: 0;
+  -webkit-border-top-left-radius: 0;
 }
 #content-inner ul  {
   padding: 25px 0; 
@@ -50,8 +56,8 @@ h3.ribbon  {
     }
 
     &.center  {
-      border-left: 1px solid #E3E3E3;
-      border-right: 1px solid #E3E3E3;
+      border-left: 1px dotted #CCC;
+      border-right: 1px dotted #CCC;
     }
 
     &:nth-child(1)  {
