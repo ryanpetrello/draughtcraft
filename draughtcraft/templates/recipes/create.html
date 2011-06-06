@@ -1,0 +1,64 @@
+<%inherit file="../layout.html" />
+
+<%def name="style()">
+    <link rel="stylesheet/less" type="text/css" media="screen" href="/css/thin.less" />
+    <link rel="stylesheet/less" type="text/css" media="screen" href="/css/recipes/create.less" />
+</%def>
+
+<h1>
+  Create a New Recipe
+</h1>
+
+<div>
+
+  <form>
+    <fieldset>
+      <dl class="clearfix">
+        <dt><label for="name">Recipe Name</label></dt>
+        <dd>
+          ${h.text('name', 'e.g., Rocky Mountain River IPA', class_='default')}
+          <small>You can change this later.</small>
+        </dd>
+        <dt>
+          <label for="type">Recipe Type</label>
+          <a href="#" class="question">Which should I choose?</a>
+        </dt>
+        <dd>
+          ${h.select('type', None, [
+            ('MASH', 'All Grain'),
+            ('EXTRACT', 'Extract'),
+            ('EXTRACTSTEEP', 'Extract with Steeped Grains'),
+            ('MINIMASH', 'Extract with Mini-Mash')
+          ])}
+        </dd>
+        <dt><label for="gallons">Final Volume</label></dt>
+        <dd>
+          ${h.select(
+            'gallons', 
+            5,
+            [(v, '%d Gallon(s)' % v) for v in [1, 2, 3, 4, 5, 8, 10, 15, 20, 25]]
+          )}
+        </dd>
+      </dl>
+    </fieldset>
+  </form>
+
+  <div class="info">
+    <h4>Become a Member</h4>
+    <p>
+      DraughtCraft members can save, share, and organize their recipes online.
+      Best all of, signing up is easy and free!
+    </p>
+    <p>
+      <a href="/signup">Sign Up Now</a>
+    </p>
+  </div>
+
+  <div class="buttons clearfix">
+    <button class="ribbon">
+      Create Recipe 
+    </button>
+    or <a href="javascript:history.go(-1);">Go Back</a>
+  </div>
+
+</div>

@@ -1,0 +1,89 @@
+/*
+ * Mixins
+ */
+.box-shadow () {
+  box-shadow: @arguments;
+  -moz-box-shadow: @arguments;
+  -webkit-box-shadow: @arguments;
+}
+
+h1  {
+  font-size: 20px;
+  padding-top: .33em;
+  padding-bottom: .33em;
+  text-align: left;
+}
+#content-inner  {
+  div.info  {
+    float: left;
+    display: inline-block;
+    padding: 25px;
+    padding-top: 25px;
+    width: 200px;
+    h4  {
+      font-size: 14px;
+      padding-bottom: 10px;
+    }
+  }
+  form  {
+    float: left;
+    padding: 25px 0 0 15px;
+    display: inline-block;
+  }
+  fieldset  {
+    padding-right: 35px;
+    border-right: 1px dotted #CCC;
+    display: inline-block;
+  }
+  dt, dd  {
+    padding: 0 0 20px 20px;
+    vertical-align: middle;
+  }
+  dt  {
+    clear: left;
+    font-size: 14px;
+    font-weight: bold;
+    padding-bottom: 10px;
+
+    a.question  {
+      font-size: 11px;
+      padding-left: 5px;
+      color: #7F9F3E;
+
+      &:hover  {
+        color: #9FBF5E;
+      }
+
+    }
+
+  }
+  dd  {
+
+    input  {
+      width: 250px;
+      padding: 5px;
+      font-size: 12px;
+    }
+    input.default  {
+      color: #888;
+    }
+    
+    small  {
+      display: block;
+      padding: 8px 0 0 0;
+      color: #777;
+    }
+
+    select  {
+      font-size: 18px;
+    }
+
+  }
+}
+button.ribbon  {
+  padding-left: 30px;
+  padding-right: 25px;
+}
+div.buttons  {
+  clear: left;
+}

@@ -1,46 +1,7 @@
-/*
- * Mixins
- */
-.border-radius (@radius) {
-  border-radius: @radius;
-  -moz-border-radius: @radius;
-  -webkit-border-radius: @radius;
-  -webkit-background-clip: padding;
-  -moz-background-clip: padding;
-  background-clip: padding-box;
-}
-
-#topnav, #content  {
-  width: 600px;
-}
-#topnav input  {
-  width: 175px;
-}
-h1  {
-  padding: 0 1em;
-  text-align: center;
-}
 h3.ribbon  {
-  margin-top: 15px;
+  margin-top: 20px;
   font-size: 18px;
   padding: 0 42px;
-  &.right  {
-    background: #B9C566;
-    text-shadow: 0 -1px #899536, 0 1px #899536;
-    &:after  {
-      border-color: #798526 transparent transparent #798526;
-    }    
-  }
-}
-#content-inner > div  {
-  background: #FFF;
-  .border-radius(10px);
-  border-top-right-radius: 0;
-  border-top-left-radius: 0;
-  -moz-border-radius-topright: 0;
-  -moz-border-radius-topleft: 0;
-  -webkit-border-top-right-radius: 0;
-  -webkit-border-top-left-radius: 0;
 }
 #content-inner ul  {
   padding: 25px 0; 

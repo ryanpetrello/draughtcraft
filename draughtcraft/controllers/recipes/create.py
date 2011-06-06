@@ -4,7 +4,7 @@ from draughtcraft   import model
 
 class RecipeCreationController(RestController):
 
-    @expose('index.html')
+    @expose('recipes/create.html')
     def index(self):
         return dict()
 

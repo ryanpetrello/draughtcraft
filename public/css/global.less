@@ -18,7 +18,7 @@ p  {
   padding-bottom: 1em;
 }
 a, a:visited  {
-  color: #8098B0;
+  color: #3399CC;
 }
 a:hover  {
   color: #304860;
@@ -106,16 +106,20 @@ h3  {
  * Reusable page elements/styles
  */
 
-h3.ribbon  {
+h3.ribbon, button.ribbon  {
+  border: 0;
+  font-size: 1.05em;
+  line-height: 2.5em;
+  font-weight: bold;
   font-size: 1.1em;
+  font-family: sans-serif;
   position: relative;
   color: #FFF;
   background: #358EA7;
   display: inline-block;
   padding: 0 20px;
   clear: both;
-  margin-left: -10px;
-  margin-top: 15px;
+  margin: 15px 15px 0 -10px;
   text-shadow: 0 -1px #055E77, 0 1px #055E77;
 
   a  {
@@ -146,6 +150,8 @@ h3.ribbon  {
 
   &.right  {
     float: right;
+    background: #B9C566;
+    text-shadow: 0 -1px #899536, 0 1px #899536;
     margin-right: -10px;
     .box-shadow(-2px, 2px, 0, #E3E3E3);
 
@@ -160,13 +166,27 @@ h3.ribbon  {
       z-index: 1;
       border-style: solid;
       border-width: 5px; 
-      border-color: #156E87 transparent transparent #156E87;
       right: 0;
+      border-color: #798526 transparent transparent #798526;
     }    
 
     
   }
 
+}
+button.ribbon:hover  {
+  text-decoration: underline;
+}
+
+
+/*
+ * Standard Form Buttons
+ */
+div.buttons  {
+  padding-bottom: 25px;
+  a  {
+    padding-left: 10px;
+  }
 }
 
 
