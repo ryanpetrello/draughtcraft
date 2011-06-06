@@ -9,6 +9,10 @@ class SlugController(object):
     def __init__(self, slug):
         self.slug = slug
 
+        # Make sure the provided slug is valid
+        if slug not in [slug.slug for slug in request.context['recipe'].slugs]:
+            abort(404)
+
     builder = RecipeBuilderController()
 
 

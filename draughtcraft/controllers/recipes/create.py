@@ -16,10 +16,8 @@ class RecipeCreationController(RestController):
         htmlfill            = dict(auto_insert_errors = True, prefix_error = False)
     )
     def post(self, **kw):
-        recipe = model.Recipe()
-        recipe.name = kw.get('name')
-        recipe.slugs.append(
-            model.RecipeSlug(recipe.name)
+        recipe = model.Recipe(
+            name = kw.get('name')
         )
         recipe.flush()
 

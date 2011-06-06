@@ -6,7 +6,7 @@ from datetime               import timedelta
 class TestMashAdditions(TestApp):
 
     def test_fermentable(self):
-        model.Recipe()
+        model.Recipe(name='Rocky Mountain River IPA')
         model.Fermentable(
             name        = '2-Row',
             origin      = 'US',
@@ -15,7 +15,7 @@ class TestMashAdditions(TestApp):
         )
         model.commit()
 
-        self.post('/recipes/1/american-ale/builder/async', params={
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async', params={
             'type'          : 'RecipeAddition',
             'ingredient'    : 1,
             'use'           : 'MASH',
@@ -31,11 +31,11 @@ class TestMashAdditions(TestApp):
         assert a.fermentable == model.Fermentable.get(1)
 
     def test_hop(self):
-        model.Recipe()
+        model.Recipe(name='Rocky Mountain River IPA')
         model.Hop(name = 'Cascade')
         model.commit()
 
-        self.post('/recipes/1/american-ale/builder/async', params={
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async', params={
             'type'          : 'HopAddition',
             'ingredient'    : 1,
             'use'           : 'MASH',
@@ -51,7 +51,7 @@ class TestMashAdditions(TestApp):
         assert a.hop == model.Hop.get(1)
 
     def test_schema_failure(self):
-        model.Recipe()
+        model.Recipe(name="Rocky Mountain River IPA")
         model.Fermentable(name = '2-Row', origin='US')
         model.commit()
        
@@ -66,7 +66,7 @@ class TestMashAdditions(TestApp):
             copy = params.copy()
             del copy[k]
 
-            response = self.post('/recipes/1/american-ale/builder/async', params=copy, status=400)
+            response = self.post('/recipes/1/rocky-mountain-river-ipa/builder/async', params=copy, status=400)
             assert response.status_int == 400
 
         assert model.RecipeAddition.query.count() == 0
@@ -75,7 +75,7 @@ class TestMashAdditions(TestApp):
 class TestBoilAdditions(TestApp):
 
     def test_fermentable(self):
-        model.Recipe()
+        model.Recipe(name="Rocky Mountain River IPA")
         model.Fermentable(
             name        = '2-Row',
             origin      = 'US',
@@ -84,7 +84,7 @@ class TestBoilAdditions(TestApp):
         )
         model.commit()
 
-        self.post('/recipes/1/american-ale/builder/async', params={
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async', params={
             'type'          : 'RecipeAddition',
             'ingredient'    : 1,
             'use'           : 'BOIL',
@@ -100,14 +100,14 @@ class TestBoilAdditions(TestApp):
         assert a.fermentable == model.Fermentable.get(1)
 
     def test_hop(self):
-        model.Recipe()
+        model.Recipe(name="Rocky Mountain River IPA")
         model.Hop(
             name        = 'Cascade', 
             alpha_acid  = 5.5
         )
         model.commit()
 
-        self.post('/recipes/1/american-ale/builder/async', params={
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async', params={
             'type'          : 'HopAddition',
             'ingredient'    : 1,
             'use'           : 'BOIL',
@@ -126,7 +126,7 @@ class TestBoilAdditions(TestApp):
         assert a.alpha_acid == 5.5
 
     def test_schema_failure(self):
-        model.Recipe()
+        model.Recipe(name="Rocky Mountain River IPA")
         model.Fermentable(name = '2-Row', origin='US')
         model.commit()
        
@@ -141,7 +141,7 @@ class TestBoilAdditions(TestApp):
             copy = params.copy()
             del copy[k]
 
-            response = self.post('/recipes/1/american-ale/builder/async', params=copy, status=400)
+            response = self.post('/recipes/1/rocky-mountain-river-ipa/builder/async', params=copy, status=400)
             assert response.status_int == 400
 
         assert model.RecipeAddition.query.count() == 0
@@ -150,14 +150,14 @@ class TestBoilAdditions(TestApp):
 class TestFermentationAdditions(TestApp):
 
     def test_hop(self):
-        model.Recipe()
+        model.Recipe(name="Rocky Mountain River IPA")
         model.Hop(
             name        = 'Cascade', 
             alpha_acid  = 5.5
         )
         model.commit()
 
-        self.post('/recipes/1/american-ale/builder/async', params={
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async', params={
             'type'          : 'HopAddition',
             'ingredient'    : 1,
             'use'           : 'SECONDARY',
@@ -174,7 +174,7 @@ class TestFermentationAdditions(TestApp):
         assert a.alpha_acid == 5.5
 
     def test_yeast(self):
-        model.Recipe()
+        model.Recipe(name="Rocky Mountain River IPA")
         model.Yeast(
             name = 'Wyeast 1056 - American Ale',
             form = 'LIQUID',
@@ -182,7 +182,7 @@ class TestFermentationAdditions(TestApp):
         )
         model.commit()
 
-        self.post('/recipes/1/american-ale/builder/async', params={
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async', params={
             'type'          : 'RecipeAddition',
             'ingredient'    : 1,
             'use'           : 'PRIMARY',
@@ -196,7 +196,7 @@ class TestFermentationAdditions(TestApp):
         assert a.yeast == model.Yeast.get(1)
 
     def test_schema_failure(self):
-        model.Recipe()
+        model.Recipe(name="Rocky Mountain River IPA")
         model.Hop(
             name        = 'Cascade', 
             alpha_acid  = 5.5
@@ -214,7 +214,7 @@ class TestFermentationAdditions(TestApp):
             copy = params.copy()
             del copy[k]
 
-            response = self.post('/recipes/1/american-ale/builder/async', params=copy, status=400)
+            response = self.post('/recipes/1/rocky-mountain-river-ipa/builder/async', params=copy, status=400)
             assert response.status_int == 400
 
         assert model.RecipeAddition.query.count() == 0
@@ -223,24 +223,24 @@ class TestFermentationAdditions(TestApp):
 class TestRecipeSettings(TestApp):
 
     def test_style_change(self):
-        model.Recipe()
+        model.Recipe(name="Rocky Mountain River IPA")
         model.Style(name = u'American Ale')
         model.commit()
 
         assert model.Recipe.get(1).style is None
-        self.post('/recipes/1/american-ale/builder/async/settings/style', params={
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/settings/style', params={
             'target': 1
         })
         
         assert model.Recipe.get(1).style == model.Style.get(1)
 
     def test_style_remove(self):
-        recipe = model.Recipe()
+        recipe = model.Recipe(name="Rocky Mountain River IPA")
         recipe.style = model.Style(name = u'American Ale')
         model.commit()
 
         assert model.Recipe.get(1).style == model.Style.get(1)
-        self.post('/recipes/1/american-ale/builder/async/settings/style', params={
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/settings/style', params={
             'target': '' 
         })
         
@@ -251,7 +251,7 @@ class TestRecipeChange(TestApp):
 
     def test_mash_change(self):
         model.RecipeAddition(
-            recipe      = model.Recipe(),
+            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
             fermentable = model.Fermentable(
                 name        = '2-Row',
                 origin      = 'US',
@@ -264,7 +264,7 @@ class TestRecipeChange(TestApp):
         )
         model.commit()
 
-        self.put('/recipes/1/american-ale/builder/async', params={
+        self.put('/recipes/1/rocky-mountain-river-ipa/builder/async', params={
             'additions-0.type'          : 'RecipeAddition',
             'additions-0.amount'        : '10 lb',
             'additions-0.use'           : 'MASH',
@@ -279,7 +279,7 @@ class TestRecipeChange(TestApp):
 
     def test_unitless_mash_change(self):
         model.RecipeAddition(
-            recipe      = model.Recipe(),
+            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
             fermentable = model.Fermentable(
                 name            = '2-Row',
                 origin          = 'US',
@@ -299,7 +299,7 @@ class TestRecipeChange(TestApp):
         # the unit should fall back to the ingredient's
         # default unit.
         #
-        self.put('/recipes/1/american-ale/builder/async', params={
+        self.put('/recipes/1/rocky-mountain-river-ipa/builder/async', params={
             'additions-0.type'          : 'RecipeAddition',
             'additions-0.amount'        : '5',
             'additions-0.use'           : 'MASH',
@@ -314,7 +314,7 @@ class TestRecipeChange(TestApp):
 
     def test_boil_hop_change(self):
         model.HopAddition(
-            recipe      = model.Recipe(),
+            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
             hop         = model.Hop(name = 'Cascade'),
             amount      = .0625, # 1 oz
             unit        = 'POUND',
@@ -324,7 +324,7 @@ class TestRecipeChange(TestApp):
             use         = 'BOIL'
         )
         model.HopAddition(
-            recipe      = model.Recipe(),
+            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
             hop         = model.Hop(name = 'Centennial'),
             amount      = .0625, # 1 oz
             unit        = 'POUND',
@@ -335,7 +335,7 @@ class TestRecipeChange(TestApp):
         )
         model.commit()
 
-        self.put('/recipes/1/american-ale/builder/async', params={
+        self.put('/recipes/1/rocky-mountain-river-ipa/builder/async', params={
             'additions-0.type'          : 'HopAddition',
             'additions-0.amount'        : '2 oz',
             'additions-0.use'           : 'BOIL',
@@ -378,7 +378,7 @@ class TestRecipeChange(TestApp):
         boil duration (by default, this is 60 minutes).
         """
         model.HopAddition(
-            recipe      = model.Recipe(),
+            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
             hop         = model.Hop(name = 'Cascade'),
             amount      = .0625, # 1 oz
             unit        = 'POUND',
@@ -389,7 +389,7 @@ class TestRecipeChange(TestApp):
         )
         model.commit()
 
-        self.put('/recipes/1/american-ale/builder/async', params={
+        self.put('/recipes/1/rocky-mountain-river-ipa/builder/async', params={
             'additions-0.type'          : 'HopAddition',
             'additions-0.amount'        : '2 oz',
             'additions-0.use'           : 'FIRST WORT',
@@ -415,7 +415,7 @@ class TestRecipeChange(TestApp):
         should forcibly be set zero minutes. 
         """
         model.HopAddition(
-            recipe      = model.Recipe(),
+            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
             hop         = model.Hop(name = 'Cascade'),
             amount      = .0625, # 1 oz
             unit        = 'POUND',
@@ -426,7 +426,7 @@ class TestRecipeChange(TestApp):
         )
         model.commit()
 
-        self.put('/recipes/1/american-ale/builder/async', params={
+        self.put('/recipes/1/rocky-mountain-river-ipa/builder/async', params={
             'additions-0.type'          : 'HopAddition',
             'additions-0.amount'        : '2 oz',
             'additions-0.use'           : 'FLAME OUT',
@@ -447,7 +447,7 @@ class TestRecipeChange(TestApp):
 
     def test_yeast_change(self):
         model.RecipeAddition(
-            recipe      = model.Recipe(),
+            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
             yeast       = model.Yeast(
                 name = 'Wyeast 1056 - American Ale',
                 form = 'LIQUID',
@@ -458,7 +458,7 @@ class TestRecipeChange(TestApp):
         )
         model.commit()
 
-        self.put('/recipes/1/american-ale/builder/async', params={
+        self.put('/recipes/1/rocky-mountain-river-ipa/builder/async', params={
             'additions-0.type'      : 'RecipeAddition',
             'additions-0.use'       : 'SECONDARY',
             'additions-0.amount'    : 1,
@@ -470,7 +470,7 @@ class TestRecipeChange(TestApp):
 
     def test_schema_failure(self):
         model.RecipeAddition(
-            recipe      = model.Recipe(),
+            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
             fermentable = model.Fermentable(
                 name        = '2-Row',
                 origin      = 'US',
@@ -494,7 +494,7 @@ class TestRecipeChange(TestApp):
             copy = params.copy()
             del copy[k]
 
-            response = self.put('/recipes/1/american-ale/builder/async', params=copy, status=200)
+            response = self.put('/recipes/1/rocky-mountain-river-ipa/builder/async', params=copy, status=200)
             assert response.status_int == 200
 
         a = model.RecipeAddition.get(1)
@@ -503,7 +503,7 @@ class TestRecipeChange(TestApp):
 
     def test_hop_schema_failure(self):
         model.HopAddition(
-            recipe      = model.Recipe(),
+            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
             hop         = model.Hop(name = 'Cascade', alpha_acid=5.5),
             amount      = 0.0625,
             unit        = 'POUND',
@@ -527,7 +527,7 @@ class TestRecipeChange(TestApp):
             copy = params.copy()
             del copy[k]
 
-            response = self.put('/recipes/1/american-ale/builder/async', params=copy, status=200)
+            response = self.put('/recipes/1/rocky-mountain-river-ipa/builder/async', params=copy, status=200)
             assert response.status_int == 200
 
         a = model.HopAddition.get(1)
@@ -541,7 +541,7 @@ class TestRecipeRemoval(TestApp):
 
     def test_addition_removal(self):
         model.RecipeAddition(
-            recipe      = model.Recipe(),
+            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
             fermentable = model.Fermentable(name = '2-Row', origin='US'),
             amount      = 12,
             unit        = 'POUND',
@@ -549,6 +549,6 @@ class TestRecipeRemoval(TestApp):
         )
         model.commit()
 
-        self.delete('/recipes/1/american-ale/builder/async/1')
+        self.delete('/recipes/1/rocky-mountain-river-ipa/builder/async/1')
 
         assert model.RecipeAddition.query.count() == 0
