@@ -1,6 +1,7 @@
 from draughtcraft.tests     import TestApp
 from draughtcraft           import model
 
+
 class TestRecipeCreation(TestApp):
 
     def test_creation(self):
@@ -32,8 +33,12 @@ class TestRecipeCreation(TestApp):
         }
 
         response = self.post('/recipes/create', params=params)
-        assert response.status_int == 302
-        assert response.headers['Location'].endswith('/recipes/1/american-ale/builder')
+
         assert model.Recipe.query.count() == 1
         r = model.Recipe.get(1)
         assert r.name == u'Rocky Mountain River IPA'
+        assert len(r.slugs) == 1
+        assert r.slugs[0].slug == 'rocky-mountain-river-ipa'
+
+        assert response.status_int == 302
+        assert response.headers['Location'].endswith('/recipes/1/rocky-mountain-river-ipa/builder')

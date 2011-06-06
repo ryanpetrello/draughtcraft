@@ -17,6 +17,7 @@ class Recipe(Entity):
     name                = Field(Unicode(256))
 
     additions           = OneToMany('RecipeAddition', inverse='recipe')
+    slugs               = OneToMany('RecipeSlug', inverse='recipe')
     style               = ManyToOne('Style', inverse='recipes')
 
     @property

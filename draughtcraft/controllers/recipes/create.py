@@ -18,6 +18,9 @@ class RecipeCreationController(RestController):
     def post(self, **kw):
         recipe = model.Recipe()
         recipe.name = kw.get('name')
+        recipe.slugs.append(
+            model.RecipeSlug(recipe.name)
+        )
         recipe.flush()
 
-        redirect('/recipes/%d/american-ale/builder' % recipe.id)
+        redirect('/recipes/%d/%s/builder' % (recipe.id, recipe.slugs[0].slug))
