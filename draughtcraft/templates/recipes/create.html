@@ -22,7 +22,12 @@
       <dl class="clearfix">
         <dt><label for="name">Recipe Name</label></dt>
         <dd>
-          ${h.text('name', 'e.g., Rocky Mountain River IPA', class_='default')}
+          ${h.text(
+            'name', 
+            'e.g., Rocky Mountain River IPA', 
+            tabindex = '1', 
+            class_ = 'default'
+          )}
           <small>You can change this later.</small>
         </dd>
         <dt>
@@ -35,14 +40,15 @@
             ('EXTRACT', 'Extract'),
             ('EXTRACTSTEEP', 'Extract with Steeped Grains'),
             ('MINIMASH', 'Extract with Mini-Mash')
-          ])}
+          ], tabindex='2')}
         </dd>
         <dt><label for="gallons">Final Volume</label></dt>
         <dd>
           ${h.select(
             'gallons', 
             5,
-            [(v, '%d Gallon(s)' % v) for v in [1, 2, 3, 4, 5, 8, 10, 15, 20, 25]]
+            [(v, '%d Gallon(s)' % v) for v in [1, 2, 3, 4, 5, 8, 10, 15, 20, 25]],
+            tabindex='3'
           )}
         </dd>
       </dl>
@@ -56,15 +62,15 @@
       Best all of, signing up is easy and free!
     </p>
     <p>
-      <a href="/signup">Sign Up Now</a>
+      <a href="/signup" tabindex="6">Sign Up Now</a>
     </p>
   </div>
 
   <div class="buttons clearfix">
-    <button class="ribbon">
+    <button class="ribbon" tabindex="4">
       Create Recipe 
     </button>
-    or <a href="javascript:history.go(-1);">Go Back</a>
+    or <a href="javascript:history.go(-1);" tabindex="5">Go Back</a>
   </div>
 
 </div>
