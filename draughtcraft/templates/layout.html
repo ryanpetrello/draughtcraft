@@ -35,7 +35,15 @@
           <a href="#">Sign In</a>
         </li>
         <li>
-          <input type="search" placeholder="Search People, Recipes..." autosave="com.draughtcraft.search" incremental="true" results="5" />
+          <input
+            name="search"
+            type="search"
+            placeholder="Search People, Recipes..."
+            value="${static('search', '')}"
+            autosave="com.draughtcraft.search"
+            incremental="true" 
+            results="5"
+          />
         </li>
       </ul>
     </nav>

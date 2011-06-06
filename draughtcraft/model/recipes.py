@@ -7,6 +7,13 @@ from draughtcraft.lib.units         import UnitConvert
 
 class Recipe(Entity):
 
+    TYPES = (
+        'MASH',
+        'EXTRACT',
+        'EXTRACTSTEEP',
+        'MINIMASH'
+    )
+
     name                = Field(Unicode(256))
 
     additions           = OneToMany('RecipeAddition', inverse='recipe')
@@ -88,7 +95,7 @@ class Recipe(Entity):
 
 class RecipeAddition(Entity):
 
-    USES = [
+    USES = (
         'MASH',
         'FIRST WORT',
         'BOIL',
@@ -96,7 +103,7 @@ class RecipeAddition(Entity):
         'FLAME OUT',
         'PRIMARY',
         'SECONDARY'
-    ]
+    )
 
     using_options(inheritance='multi', polymorphic=True)
 
@@ -159,11 +166,11 @@ class RecipeAddition(Entity):
 
 class HopAddition(RecipeAddition):
 
-    FORMS = [
+    FORMS = (
         'LEAF',
         'PELLET',
         'PLUG'
-    ]
+    )
 
     form                = Field(Enum(*FORMS), default='LEAF')
     alpha_acid          = Field(Float())

@@ -15,9 +15,9 @@
   Create a New Recipe
 </h1>
 
-<div>
+<div class="clearfix">
 
-  <form>
+  <form method="POST">
     <fieldset>
       <dl class="clearfix">
         <dt><label for="name">Recipe Name</label></dt>
@@ -26,6 +26,7 @@
             'name', 
             'e.g., Rocky Mountain River IPA', 
             tabindex = '1', 
+            size = '256',
             class_ = 'default'
           )}
           <small>You can change this later.</small>
@@ -53,6 +54,14 @@
         </dd>
       </dl>
     </fieldset>
+
+    <div class="buttons">
+      <button class="ribbon" tabindex="4">
+        Create Recipe 
+      </button>
+      or <a href="javascript:history.go(-1);" tabindex="5">Go Back</a>
+    </div>
+
   </form>
 
   <div class="info">
@@ -64,13 +73,6 @@
     <p>
       <a href="/signup" tabindex="6">Sign Up Now</a>
     </p>
-  </div>
-
-  <div class="buttons clearfix">
-    <button class="ribbon" tabindex="4">
-      Create Recipe 
-    </button>
-    or <a href="javascript:history.go(-1);" tabindex="5">Go Back</a>
   </div>
 
 </div>

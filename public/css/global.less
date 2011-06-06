@@ -88,6 +88,28 @@ h3  {
 }
 
 /*
+ * Error message display
+ */
+.error-message  {
+  font-size: smaller;
+  padding-top: 8px;
+  display: block;
+  color: #990000;
+  &:after  {
+    content: "." /* htmlfill errors don't tend to have punctuation. */
+  }
+}
+input.error  {
+  border-color: #FFAAAA;
+  background: #FFE8E8;
+  color: #CC0000;
+  .box-shadow(0, 0, 0.40em, #FF6666);
+}
+input.error:focus  {
+  outline: 0px;
+}
+
+/*
  * Main page layout
  */
 #content  {
