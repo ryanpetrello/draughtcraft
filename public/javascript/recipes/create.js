@@ -3,7 +3,16 @@
  */
 $.draughtcraft.recipes.create.initFormListeners = function(){
     $('input[name="name"].default').focus(function(){
-        $(this).removeClass('default').val('').unbind();
+        $(this).removeClass('default').val('').unbind('focus');
+    }).change(function(){
+        $(this).removeClass('error')   
+    });
+
+    // Before submitting the creation form, remove the default value.
+    // This will prevent people from mistakenly making a recipe with the
+    // default placeholder name text.
+    $('form').submit(function(){
+        $('input[name="name"].default').val('');
     });
 };
 
