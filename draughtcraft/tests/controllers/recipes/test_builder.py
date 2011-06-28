@@ -250,13 +250,24 @@ class TestRecipeSettings(TestApp):
         model.Recipe(name="Rocky Mountain River IPA")
         model.commit()
 
-        assert model.Recipe.get(1).style == model.Style.get(1)
+        assert model.Recipe.get(1).gallons == 5.0
         self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/settings/volume', params={
             'volume'    : 10.0,
             'unit'      : 'GALLON' 
         })
         
         assert model.Recipe.get(1).gallons == 10.0
+
+    def test_notes_update(self):
+        model.Recipe(name="Rocky Mountain River IPA")
+        model.commit()
+
+        assert model.Recipe.get(1).notes is None
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/settings/notes', params={
+            'notes'    : u'Testing 1 2 3...'
+        })
+        
+        assert model.Recipe.get(1).notes == u'Testing 1 2 3...'
 
 
 class TestRecipeChange(TestApp):

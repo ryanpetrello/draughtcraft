@@ -1,5 +1,5 @@
 from elixir import (
-    Entity, Field, Unicode, Interval, Float, Enum, using_options,
+    Entity, Field, Unicode, UnicodeText, Interval, Float, Enum, using_options,
     OneToMany, ManyToOne, entities
 )
 from draughtcraft.lib.calculations  import Calculations
@@ -16,6 +16,7 @@ class Recipe(Entity):
 
     name                = Field(Unicode(256))
     gallons             = Field(Float, default=5)
+    notes               = Field(UnicodeText)
 
     additions           = OneToMany('RecipeAddition', inverse='recipe')
     slugs               = OneToMany('RecipeSlug', inverse='recipe')

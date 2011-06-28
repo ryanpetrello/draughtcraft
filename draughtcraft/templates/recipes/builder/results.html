@@ -48,7 +48,9 @@
         ${matches(recipe, 'og')}
       </td>
       <td rowspan="5" class="notes">
-        <textarea></textarea>
+        ${h.form('async/settings/notes')}
+          <textarea name="notes">${recipe.notes}</textarea>
+        ${h.end_form()}
       </td>
     </tr>
 

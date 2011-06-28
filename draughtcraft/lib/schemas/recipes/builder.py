@@ -111,9 +111,22 @@ class RecipeChange(FilteredSchema):
 
 
 class RecipeStyle(FilteredSchema):
+    """
+    This schema is for modifying the BJCP target style for a recipe.
+    """
     target = ModelObject(model.Style, if_empty=None)
 
 
 class RecipeVolume(FilteredSchema):
+    """
+    This recipe is for modifying the volume/batch size of a recipe.
+    """
     volume  = validators.Number()
     unit    = validators.OneOf(['GALLON'])
+
+
+class RecipeNotes(FilteredSchema):
+    """
+    This recipe is for modifying notes/remarks for a recipe.
+    """
+    notes   = validators.String()
