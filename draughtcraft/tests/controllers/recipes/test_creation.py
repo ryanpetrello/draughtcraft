@@ -13,7 +13,8 @@ class TestRecipeCreation(TestApp):
         params = {
             'name'      : 'Rocky Mountain River IPA',
             'type'      : 'MASH',
-            'gallons'   : 5
+            'volume'    : 5,
+            'unit'      : 'GALLON'
         }
         for k in params:
             copy = params.copy()
@@ -29,7 +30,8 @@ class TestRecipeCreation(TestApp):
         params = {
             'name'      : 'Rocky Mountain River IPA',
             'type'      : 'MASH',
-            'gallons'   : 5
+            'volume'    : 25,
+            'unit'      : 'GALLON'
         }
 
         response = self.post('/recipes/create', params=params)
@@ -37,6 +39,7 @@ class TestRecipeCreation(TestApp):
         assert model.Recipe.query.count() == 1
         r = model.Recipe.get(1)
         assert r.name == u'Rocky Mountain River IPA'
+        assert r.gallons == 25
         assert len(r.slugs) == 1
         assert r.slugs[0].slug == 'rocky-mountain-river-ipa'
 

@@ -46,10 +46,14 @@
         <dt><label for="gallons">Final Volume</label></dt>
         <dd>
           ${h.select(
-            'gallons', 
+            'volume', 
             5,
             [(v, '%d Gallon(s)' % v) for v in [1, 2, 3, 4, 5, 8, 10, 15, 20, 25]],
             tabindex='3'
+          )}
+          ${h.hidden(
+            'unit',
+            'GALLON'
           )}
         </dd>
       </dl>

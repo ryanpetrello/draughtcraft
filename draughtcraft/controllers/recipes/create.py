@@ -17,7 +17,8 @@ class RecipeCreationController(RestController):
     )
     def post(self, **kw):
         recipe = model.Recipe(
-            name = kw.get('name')
+            name        = kw.get('name'),
+            gallons     = kw.get('volume')
         )
         recipe.flush()
 
