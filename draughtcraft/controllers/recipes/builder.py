@@ -4,7 +4,8 @@ from draughtcraft                               import model
 from draughtcraft.lib.schemas.recipes.builder   import (
                                                         RecipeChange, 
                                                         RecipeAddition,
-                                                        RecipeStyle
+                                                        RecipeStyle,
+                                                        RecipeVolume
                                                         )
 from elixir                                     import entities
 from datetime                                   import timedelta
@@ -30,6 +31,18 @@ class RecipeSettingsController(object):
     )
     def _style(self, target):
         self.recipe.style = target
+        return dict(recipe = self.recipe)
+
+    @expose(generic=True)
+    def volume(self): pass
+
+    @volume.when(
+        method      = 'POST',
+        template    = 'recipes/builder/async.html',
+        schema      = RecipeVolume()
+    )
+    def _volume(self, volume, unit):
+        self.recipe.gallons = volume
         return dict(recipe = self.recipe)
 
 

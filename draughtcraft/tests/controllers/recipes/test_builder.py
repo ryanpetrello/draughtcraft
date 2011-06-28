@@ -246,6 +246,18 @@ class TestRecipeSettings(TestApp):
         
         assert model.Recipe.get(1).style is None
 
+    def test_volume_change(self):
+        model.Recipe(name="Rocky Mountain River IPA")
+        model.commit()
+
+        assert model.Recipe.get(1).style == model.Style.get(1)
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/settings/volume', params={
+            'volume'    : 10.0,
+            'unit'      : 'GALLON' 
+        })
+        
+        assert model.Recipe.get(1).gallons == 10.0
+
 
 class TestRecipeChange(TestApp):
 

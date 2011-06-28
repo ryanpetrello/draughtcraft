@@ -112,3 +112,8 @@ class RecipeChange(FilteredSchema):
 
 class RecipeStyle(FilteredSchema):
     target = ModelObject(model.Style, if_empty=None)
+
+
+class RecipeVolume(FilteredSchema):
+    volume  = validators.Number()
+    unit    = validators.OneOf(['GALLON'])

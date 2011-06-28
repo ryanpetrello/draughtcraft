@@ -24,12 +24,16 @@
     ${h.end_form()}
   </fieldset>
   <fieldset>
-    ${h.form('async/settings/gallons')}
+    ${h.form('async/settings/volume')}
       ${h.select(
-        'gallons', 
-        recipe.gallons,
-        [(v, '%d Gallon(s)' % v) for v in [1, 2, 3, 4, 5, 8, 10, 15, 20, 25]],
+        'volume', 
+        [recipe.gallons],
+        [(float(v), '%d Gallon(s)' % v) for v in [1, 2, 3, 4, 5, 8, 10, 15, 20, 25]],
         class_ = 'gallons'
+      )}
+      ${h.hidden(
+        'unit',
+        'GALLON'
       )}
     ${h.end_form()}
   </fieldset>

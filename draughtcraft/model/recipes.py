@@ -15,6 +15,7 @@ class Recipe(Entity):
     )
 
     name                = Field(Unicode(256))
+    gallons             = Field(Float, default=5)
 
     additions           = OneToMany('RecipeAddition', inverse='recipe')
     slugs               = OneToMany('RecipeSlug', inverse='recipe')
@@ -38,10 +39,6 @@ class Recipe(Entity):
     @property
     def boil_minutes(self):
         return 60
-
-    @property
-    def gallons(self):
-        return 5
 
     def _partition(self, additions):
         """
