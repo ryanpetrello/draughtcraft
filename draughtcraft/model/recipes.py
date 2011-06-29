@@ -1,6 +1,6 @@
 from elixir import (
-    Entity, Field, Unicode, UnicodeText, Interval, Float, Enum, using_options,
-    OneToMany, ManyToOne, entities
+    Entity, Field, Unicode, UnicodeText, Integer, Interval, Float, Enum,
+    using_options, OneToMany, ManyToOne, entities
 )
 from draughtcraft.lib.calculations  import Calculations
 from draughtcraft.lib.units         import UnitConvert
@@ -19,6 +19,7 @@ class Recipe(Entity):
     notes               = Field(UnicodeText)
 
     additions           = OneToMany('RecipeAddition', inverse='recipe')
+    fermentation_steps  = OneToMany('FermentationStep', inverse='recipe')
     slugs               = OneToMany('RecipeSlug', inverse='recipe')
     style               = ManyToOne('Style', inverse='recipes')
 
@@ -189,3 +190,18 @@ class HopAddition(RecipeAddition):
         if self.amount == 0:
             unit = 'OUNCE'
         return UnitConvert.to_str(self.amount, unit)
+
+
+class FermentationStep(Entity):
+
+    STEPS = (
+        'PRIMARY',
+        'SECONDARY',
+        'TERTIARY'
+    )
+
+    step            = Field(Enum(*STEPS))
+    days            = Field(Integer)
+    fahrenheit      = Field(Float)
+
+    recipe          = ManyToOne('Recipe', inverse='fermentation_steps')

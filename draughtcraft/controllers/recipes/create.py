@@ -20,6 +20,13 @@ class RecipeCreationController(RestController):
             name        = kw.get('name'),
             gallons     = kw.get('volume')
         )
+        recipe.fermentation_steps.append(
+            model.FermentationStep(
+                step = 'PRIMARY',
+                days = 7,
+                fahrenheit = 65
+            )
+        )
         recipe.flush()
 
         redirect('/recipes/%d/%s/builder' % (recipe.id, recipe.slugs[0].slug))

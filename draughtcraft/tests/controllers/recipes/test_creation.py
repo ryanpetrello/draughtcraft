@@ -43,5 +43,8 @@ class TestRecipeCreation(TestApp):
         assert len(r.slugs) == 1
         assert r.slugs[0].slug == 'rocky-mountain-river-ipa'
 
+        assert len(r.fermentation_steps) == 1
+        assert r.fermentation_steps[0].step == 'PRIMARY'
+
         assert response.status_int == 302
         assert response.headers['Location'].endswith('/recipes/1/rocky-mountain-river-ipa/builder')
