@@ -3,7 +3,7 @@
  */
 $.draughtcraft.recipes.builder.fetchRecipe = function(){
     $.ajax({
-        url: window.location.pathname+'/async',
+        url: window.location.pathname+'/async/ingredients',
         cache: false,
         success: function(html){
             $.draughtcraft.recipes.builder.__injectRecipeContent__(html);
@@ -210,7 +210,7 @@ $.draughtcraft.recipes.builder.initListeners = function(){
 $.draughtcraft.recipes.builder.removeAddition = function(addition){
     if(confirm('Are you sure you want to remove this?'))
         $.ajax({
-            url: window.location.pathname+'/async/'+addition,
+            url: window.location.pathname+'/async/ingredients/'+addition,
             type: 'DELETE',
             cache: false,
             success: function(html){

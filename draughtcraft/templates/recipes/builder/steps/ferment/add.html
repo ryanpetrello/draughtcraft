@@ -15,7 +15,7 @@
 <h3>Add to Fermenter</h3>
 
 <fieldset>
-  ${h.form('async', hidden_fields = hidden())}
+  ${h.form('async/ingredients', hidden_fields = hidden())}
     ${h.select(
       'ingredient', 
       None, 
@@ -32,7 +32,7 @@
 </fieldset>
 
 <fieldset>
-  ${h.form('async', hidden_fields = hidden('HopAddition'))}
+  ${h.form('async/ingredients', hidden_fields = hidden('HopAddition'))}
     ${h.select(
       'ingredient', 
       None, 
@@ -49,7 +49,7 @@
 </fieldset>
 
 <fieldset>
-  ${h.form('async', hidden_fields = hidden())}
+  ${h.form('async/ingredients', hidden_fields = hidden())}
     ${h.select(
       'ingredient', 
       None, 
