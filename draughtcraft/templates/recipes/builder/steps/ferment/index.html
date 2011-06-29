@@ -78,20 +78,25 @@
 
         % for s in recipe.fermentation_steps:
           <li>
-            <span>${s.step.title()} for </span>
-            ${h.select(
-              'days',
-              [s.days],
-              range(91),
-              class_ = 'unit'
-            )}
-            day(s) at 
-            ${h.select(
-              'temperature',
-              [int(s.fahrenheit)],
-              range(101),
-              class_ = 'unit'
-            )} &#186;F
+            ${h.form('async/fermentation_steps?_method=put')}
+
+              ${h.hidden('step', s.id)}
+            
+              <span>${s.step.title()} for </span>
+              ${h.select(
+                'days',
+                [s.days],
+                range(91),
+                class_ = 'unit'
+              )}
+              day(s) at 
+              ${h.select(
+                'temperature',
+                [int(s.fahrenheit)],
+                range(101),
+                class_ = 'unit'
+              )} &#186;F
+            ${h.end_form()}
           </li>
         % endfor
 
