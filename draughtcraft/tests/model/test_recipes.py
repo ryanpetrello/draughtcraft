@@ -334,6 +334,38 @@ class TestRecipe(object):
         assert recipe.contains(y1, 'invalid') is False
         assert recipe.contains(y2, 'invalid') is False
 
+    def test_next_fermentation_step(self):
+        recipe = model.Recipe()
+        recipe.fermentation_steps.append(
+            model.FermentationStep(
+                step = 'PRIMARY',
+                days = 7,
+                fahrenheit = 50
+            )
+        )
+
+        assert recipe.next_fermentation_step == 'SECONDARY'
+
+        recipe.fermentation_steps.append(
+            model.FermentationStep(
+                step = 'SECONDARY',
+                days = 14,
+                fahrenheit = 35
+            )
+        )
+
+        assert recipe.next_fermentation_step == 'TERTIARY'
+
+        recipe.fermentation_steps.append(
+            model.FermentationStep(
+                step = 'TERTIARY',
+                days = 31,
+                fahrenheit = 35
+            )
+        )
+
+        assert recipe.next_fermentation_step == None
+
 
 class TestFermentationStep(object):
 

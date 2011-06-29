@@ -99,6 +99,24 @@ class Recipe(Entity):
 
         return False
 
+    @property
+    def next_fermentation_step(self):
+        """
+        The next available fermentation step for a recipe.
+        e.g., if temperature/length is already defined for "PRIMARY" a
+        fermentation period, returns "SECONDARY".  If "SECONDARY" is already
+        defined, returns "TERTIARY".
+
+        Always returns one of `model.FermentationStep.STEPS`.
+        """
+
+        total = len(self.fermentation_steps)
+
+        return {
+            1   : 'SECONDARY',
+            2   : 'TERTIARY'
+        }.get(total, None)
+
 
 class RecipeAddition(Entity):
 
@@ -109,7 +127,8 @@ class RecipeAddition(Entity):
         'POST-BOIL',
         'FLAME OUT',
         'PRIMARY',
-        'SECONDARY'
+        'SECONDARY',
+        'TERTIARY'
     )
 
     using_options(inheritance='multi', polymorphic=True)

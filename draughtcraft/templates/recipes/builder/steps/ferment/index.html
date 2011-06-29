@@ -13,7 +13,7 @@
         % if recipe.fermentation.get(h.model.Yeast):
           <tr>
             <th class="type" />
-            <th class="use">Use</th>
+            <th class="use">Add to</th>
             <th />
             <th>Strain</th>
             <th>Form</th>
@@ -76,39 +76,28 @@
     <fieldset>
       <ol class='process'>
 
-        <li>
-          <span>Primary for </span>
-          ${h.select(
-            'days',
-            7,
-            range(91),
-            class_ = 'unit'
-          )}
-          day(s) at 
-          ${h.select(
-            'temperature',
-            68,
-            range(101),
-            class_ = 'unit'
-          )} &#186;F
-        </li>
+        % for s in recipe.fermentation_steps:
+          <li>
+            <span>${s.step.title()} for </span>
+            ${h.select(
+              'days',
+              [s.days],
+              range(91),
+              class_ = 'unit'
+            )}
+            day(s) at 
+            ${h.select(
+              'temperature',
+              [int(s.fahrenheit)],
+              range(101),
+              class_ = 'unit'
+            )} &#186;F
+          </li>
+        % endfor
 
-        <li>
-          <span>Secondary for </span>
-          ${h.select(
-            'days',
-            7,
-            range(91),
-            class_ = 'unit'
-          )}
-          day(s) at 
-          ${h.select(
-            'temperature',
-            68,
-            range(101),
-            class_ = 'unit'
-          )} &#186;F
-        </li>
+        % if recipe.next_fermentation_step:
+          <li><a href="#">Add ${recipe.next_fermentation_step.title()}...</a>
+        % endif
 
       </ol>
 
