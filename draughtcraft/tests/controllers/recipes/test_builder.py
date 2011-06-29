@@ -270,6 +270,84 @@ class TestRecipeSettings(TestApp):
         assert model.Recipe.get(1).notes == u'Testing 1 2 3...'
 
 
+class TestFermentationStepChange(TestApp):
+
+    def test_fermentation_step_add(self):
+        recipe = model.Recipe(
+            name        = u'Rocky Mountain River IPA'
+        )
+        recipe.fermentation_steps.append(
+            model.FermentationStep(
+                step = 'PRIMARY',
+                days = 7,
+                fahrenheit = 65
+            )
+        )
+        model.commit()
+
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/fermentation_steps')
+
+        recipe = model.Recipe.get(1)
+        assert len(recipe.fermentation_steps) == 2
+        assert recipe.fermentation_steps[0].step == 'PRIMARY'
+        assert recipe.fermentation_steps[0].days == 7
+        assert recipe.fermentation_steps[0].fahrenheit == 65
+        assert recipe.fermentation_steps[1].step == 'SECONDARY'
+        assert recipe.fermentation_steps[1].days == 7
+        assert recipe.fermentation_steps[1].fahrenheit == 65
+
+    def test_fermentation_step_update(self):
+        recipe = model.Recipe(
+            name        = u'Rocky Mountain River IPA'
+        )
+        recipe.fermentation_steps.append(
+            model.FermentationStep(
+                step = 'PRIMARY',
+                days = 7,
+                fahrenheit = 65
+            )
+        )
+        model.commit()
+
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/fermentation_steps?_method=put', params={
+            'step'          : 1,
+            'days'          : 14,
+            'temperature'   : 68
+        })
+
+        recipe = model.Recipe.get(1)
+        assert len(recipe.fermentation_steps) == 1
+        assert recipe.fermentation_steps[0].step == 'PRIMARY'
+        assert recipe.fermentation_steps[0].days == 14
+        assert recipe.fermentation_steps[0].fahrenheit == 68
+
+    def test_fermentation_step_delete(self):
+        recipe = model.Recipe(
+            name        = u'Rocky Mountain River IPA'
+        )
+        recipe.fermentation_steps.extend([
+            model.FermentationStep(
+                step = 'PRIMARY',
+                days = 7,
+                fahrenheit = 65
+            ),
+            model.FermentationStep(
+                step = 'SECONDARY',
+                days = 14,
+                fahrenheit = 50
+            )
+        ])
+        model.commit()
+
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/fermentation_steps?_method=delete')
+
+        recipe = model.Recipe.get(1)
+        assert len(recipe.fermentation_steps) == 1
+        assert recipe.fermentation_steps[0].step == 'PRIMARY'
+        assert recipe.fermentation_steps[0].days == 7
+        assert recipe.fermentation_steps[0].fahrenheit == 65
+
+
 class TestRecipeChange(TestApp):
 
     def test_mash_change(self):

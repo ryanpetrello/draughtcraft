@@ -6,10 +6,55 @@ from draughtcraft.lib.schemas.recipes.builder   import (
                                                         RecipeAddition,
                                                         RecipeStyle,
                                                         RecipeVolume,
-                                                        RecipeNotes
+                                                        RecipeNotes,
+                                                        FermentationStepUpdate
                                                         )
 from elixir                                     import entities
 from datetime                                   import timedelta
+
+
+class FermentationStepsController(RestController):
+    """
+    Used to modify, add, and remove the recipe's fermentation schedule
+    (e.g., Primary, Secondary, length and temperatures...)
+    """
+
+    @property
+    def recipe(self):
+        return request.context['recipe']
+
+    @expose('recipes/builder/async.html')
+    def post(self):
+        """
+        Used to add the next applicable fermentation step to the recipe.
+        """
+        last_step = self.recipe.fermentation_steps[-1]
+        self.recipe.fermentation_steps.append(
+            model.FermentationStep(
+                step        = self.recipe.next_fermentation_step,
+                days        = last_step.days,
+                fahrenheit  = last_step.fahrenheit
+            )
+        )
+        return dict(recipe = self.recipe)
+
+    @expose(
+        'recipes/builder/async.html',
+        schema = FermentationStepUpdate()
+    )
+    def put(self, step, **kw):
+        """
+        Used to update an existing fermentation step's parameters (e.g.,
+        duration, temperature).
+        """
+        step.days = kw['days']
+        step.fahrenheit = kw['temperature']
+        return dict(recipe = self.recipe)
+
+    @expose('recipes/builder/async.html')
+    def delete(self):
+        self.recipe.fermentation_steps[-1].delete()
+        return dict(recipe = self.recipe)
 
 
 class RecipeSettingsController(object):
@@ -66,9 +111,9 @@ class RecipeSettingsController(object):
     def _notes(self, notes):
         self.recipe.notes = notes
         return dict(recipe = self.recipe)
-    
 
-class RecipeBuilderAsyncController(RestController):
+
+class IngredientsController(RestController):
 
     def __rendered__(self):
         return dict(
@@ -182,7 +227,12 @@ class RecipeBuilderAsyncController(RestController):
 
         return self.__rendered__()
 
-    settings = RecipeSettingsController()
+
+class RecipeBuilderAsyncController(object):
+
+    ingredients         = IngredientsController()
+    fermentation_steps  = FermentationStepsController()
+    settings            = RecipeSettingsController()
 
 
 class RecipeBuilderController(object):

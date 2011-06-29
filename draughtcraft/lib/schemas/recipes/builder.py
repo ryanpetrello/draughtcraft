@@ -119,7 +119,7 @@ class RecipeStyle(FilteredSchema):
 
 class RecipeVolume(FilteredSchema):
     """
-    This recipe is for modifying the volume/batch size of a recipe.
+    This schema is for modifying the volume/batch size of a recipe.
     """
     volume  = validators.Number()
     unit    = validators.OneOf(['GALLON'])
@@ -127,6 +127,15 @@ class RecipeVolume(FilteredSchema):
 
 class RecipeNotes(FilteredSchema):
     """
-    This recipe is for modifying notes/remarks for a recipe.
+    This schema is for modifying notes/remarks for a recipe.
     """
     notes   = validators.String()
+
+
+class FermentationStepUpdate(FilteredSchema):
+    """
+    This schema is for modifying a fermentation step's parameters.
+    """
+    step        = ModelObject(model.FermentationStep, if_empty=None)
+    days        = validators.Int()
+    temperature = validators.Number()
