@@ -49,7 +49,7 @@
       </td>
       <td rowspan="5" class="notes">
         ${h.form('async/settings/notes')}
-          <textarea name="notes">${recipe.notes}</textarea>
+          <textarea name="notes">${recipe.notes or ''}</textarea>
         ${h.end_form()}
       </td>
     </tr>
