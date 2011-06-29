@@ -97,11 +97,28 @@
                 class_ = 'unit'
               )} &#186;F
             ${h.end_form()}
+
+            % if s == recipe.fermentation_steps[-1] and s.step != 'PRIMARY':
+              ${h.form('async/fermentation_steps?_method=delete')}
+                <a href="#" onclick="$(this).hide().closest('form').submit();return false;">
+                  <img src="/images/close.png" />
+                </a>
+              ${h.end_form()}
+            % endif
+
           </li>
         % endfor
 
         % if recipe.next_fermentation_step:
-          <li><a href="#">Add ${recipe.next_fermentation_step.title()}...</a>
+          
+          ${h.form('async/fermentation_steps')}
+            <li>
+              <a href="#" onclick="$(this).hide().closest('form').submit();return false;">
+                Add ${recipe.next_fermentation_step.title()}...
+              </a>
+            </li>
+          ${h.end_form()}
+
         % endif
 
       </ol>

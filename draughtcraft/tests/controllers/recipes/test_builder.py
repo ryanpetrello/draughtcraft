@@ -316,6 +316,7 @@ class TestFermentationStepChange(TestApp):
         })
 
         recipe = model.Recipe.get(1)
+        assert model.FermentationStep.query.count() == 1
         assert len(recipe.fermentation_steps) == 1
         assert recipe.fermentation_steps[0].step == 'PRIMARY'
         assert recipe.fermentation_steps[0].days == 14
