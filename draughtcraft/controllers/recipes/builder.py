@@ -53,9 +53,10 @@ class FermentationStepsController(RestController):
 
     @expose('recipes/builder/async.html')
     def delete(self):
-        step = self.recipe.fermentation_steps[-1]
-        self.recipe.fermentation_steps.remove(step)
-        step.delete()
+        if len(self.recipe.fermentation_steps) > 1:
+            step = self.recipe.fermentation_steps[-1]
+            self.recipe.fermentation_steps.remove(step)
+            step.delete()
         return dict(recipe = self.recipe)
 
 

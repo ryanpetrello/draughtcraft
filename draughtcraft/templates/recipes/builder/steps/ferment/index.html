@@ -101,7 +101,7 @@
             % if s == recipe.fermentation_steps[-1] and s.step != 'PRIMARY':
               ${h.form('async/fermentation_steps?_method=delete')}
                 <a href="#" onclick="$(this).hide().closest('form').submit();return false;">
-                  <img src="/images/close.png" />
+                  <img class="close" src="/images/close.png" />
                 </a>
               ${h.end_form()}
             % endif
