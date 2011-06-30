@@ -10,6 +10,19 @@ class RootController(object):
     def index(self):
         return dict()
 
+    @expose(
+        generic     = True,
+        template    = 'login.html'
+    )
+    def login(self):
+        return dict()
+
+    @login.when(
+        method      = 'POST'
+    )
+    def _post_login(self, username, password):
+        return dict()
+
     error   = ErrorController()
     recipes = RecipesController()
     signup  = SignupController()
