@@ -32,3 +32,10 @@ sqlalchemy = {
     'poolclass'     : NullPool,
     'encoding'      : 'utf-8'
 }
+
+session = {
+    'key'            : 'draughtcraft',
+    'type'           : 'cookie',
+    'validate_key'   : 'example',
+    '__force_dict__' : True
+}

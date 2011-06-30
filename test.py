@@ -30,3 +30,10 @@ sqlalchemy = {
     'pool_recycle'  : 3600,
     'encoding'      : 'utf-8'
 }
+
+session = {
+    'key'            : 'draughtcraft',
+    'type'           : 'cookie',
+    'validate_key'   : 'example',
+    '__force_dict__' : True
+}
