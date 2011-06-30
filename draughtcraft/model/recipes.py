@@ -22,6 +22,7 @@ class Recipe(Entity):
     fermentation_steps  = OneToMany('FermentationStep', inverse='recipe')
     slugs               = OneToMany('RecipeSlug', inverse='recipe')
     style               = ManyToOne('Style', inverse='recipes')
+    author              = ManyToOne('User', inverse='recipes')
 
     def __init__(self, **kwargs):
         super(Recipe, self).__init__(**kwargs)

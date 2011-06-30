@@ -40,5 +40,6 @@ from ingredients    import *
 from recipes        import *
 from slugs          import *
 from styles         import *
+from users          import *
 
 elixir.setup_all()
