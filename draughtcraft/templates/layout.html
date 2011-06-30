@@ -42,11 +42,13 @@
         <a href="/"><img src="/images/logo.png" /></a>
       </div>
       <ul>
+        % if h.request.context['user']:
+          <li>
+            <a href="/recipes/create">New Recipe</a>
+          </li>
+        % endif
         <li>
-          <a href="#">People</a>
-        </li>
-        <li>
-          <a href="#">Recipes</a>
+          <a href="#">Browse</a>
         </li>
         % if h.request.context['user'] is None:
           <li>
