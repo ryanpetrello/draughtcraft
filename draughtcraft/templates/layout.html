@@ -23,6 +23,12 @@
     % if h.request.context['user']:
       <nav class="user">
         <ul>
+          <li>
+          <img src="${h.request.context['user'].gravatar}?s=140"
+            width="20"
+            class="gravatar"
+          />
+          </li>
           <li>${h.request.context['user'].username}</li>
           <li><a href="/">dashboard</a></li>
           <li><a href="/">settings</a></li>
