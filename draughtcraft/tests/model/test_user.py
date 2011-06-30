@@ -1,5 +1,5 @@
 from draughtcraft   import model
-from hashlib        import sha256
+from hashlib        import sha256, md5
 
 
 class TestUser(object):
@@ -18,3 +18,13 @@ class TestUser(object):
 
         correct = sha256('tryagain' + 'example').hexdigest()
         assert user.password == correct
+
+    def test_gravatar(self):
+        user = model.User(
+            username    = u'ryanpetrello',
+            password    = u'testing123',
+            email       = u'  RYAN@example.COM  ' 
+        )
+        assert user.gravatar == "http://www.gravatar.com/avatar/%s" % (
+            md5('ryan@example.com').hexdigest()
+        )
