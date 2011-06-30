@@ -31,9 +31,11 @@
         <li>
           <a href="#">Recipes</a>
         </li>
-        <li>
-          <a href="/login">Sign In</a>
-        </li>
+        % if h.request.context['user'] is None:
+          <li>
+            <a href="/login">Sign In</a>
+          </li>
+        % endif
         <li>
           <input
             name="search"

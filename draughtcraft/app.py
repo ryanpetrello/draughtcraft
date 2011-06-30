@@ -1,6 +1,7 @@
 from pecan                  import make_app
 from pecan.hooks            import TransactionHook
 from draughtcraft           import model
+from draughtcraft.lib.auth  import AuthenticationHook
 from draughtcraft.templates import helpers
 from beaker.middleware      import SessionMiddleware
 
@@ -27,7 +28,8 @@ def setup_app(config):
                  model.commit,
                  model.rollback,
                  model.clear
-             )
+             ),
+             AuthenticationHook()
         ],   
         extra_template_vars = dict(
             h           = helpers

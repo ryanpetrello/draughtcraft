@@ -1,4 +1,6 @@
-from pecan                              import expose, request
+from pecan                              import expose, request, redirect
+from draughtcraft                       import model
+from draughtcraft.lib.auth              import save_user_session
 from draughtcraft.lib.schemas.login     import LoginSchema
 
 from error      import ErrorController
@@ -25,11 +27,8 @@ class RootController(object):
         error_handler   = lambda: request.path
     )
     def _post_login(self, username, password):
-
-        print username
-        print password
-        
-        return dict()
+        save_user_session(model.User.get_by(username=username))
+        redirect('/')
 
     error   = ErrorController()
     recipes = RecipesController()
