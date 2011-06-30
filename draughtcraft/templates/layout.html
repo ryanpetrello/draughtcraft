@@ -20,6 +20,17 @@
   </head>
   <body>
 
+    % if h.request.context['user']:
+      <nav class="user">
+        <ul>
+          <li>${h.request.context['user'].username}</li>
+          <li><a href="/">dashboard</a></li>
+          <li><a href="/">settings</a></li>
+          <li><a href="/logout">logout</a></li>
+        </ul>
+      </nav>
+    % endif
+
     <nav id="topnav">
       <div class="logo">
         <a href="/"><img src="/images/logo.png" /></a>

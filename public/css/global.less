@@ -6,6 +6,14 @@
   -moz-box-shadow: @arguments;
   -webkit-box-shadow: @arguments;
 }
+.border-radius (@radius) {
+  border-radius: @radius;
+  -moz-border-radius: @radius;
+  -webkit-border-radius: @radius;
+  -webkit-background-clip: padding;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+}
 
 /*
  * General page styles
@@ -30,7 +38,7 @@ nav  {
   position: relative;
 
   ul  {
-    padding: 10px 15px;
+    padding: 20px 0 0 15px;
     overflow: hidden;
     float: right;
 
@@ -69,6 +77,30 @@ nav  {
       height: 50px;
       padding-right: 2px;
       vertical-align: middle;
+      padding-top: 8px;
+    }
+
+  }
+
+  &.user  {
+
+    ul  {
+      position: absolute;
+      top: -12px;
+      right: 0;
+      z-index: 1;
+      padding: 5px 15px 10px 0;
+      background: #358EA7;
+      .border-radius(5px);
+      li  {
+        line-height: inherit;
+        a  {
+          text-decoration: none;
+          &:hover  {
+            text-decoration: underline;
+          }
+        }
+      }
     }
 
   }
