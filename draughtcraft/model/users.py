@@ -24,9 +24,13 @@ class User(Entity):
 
     @password.setter
     def password(self, v):
+        self._password = self.__hash_password__(v)
+
+    @classmethod
+    def __hash_password__(self, v):
         salt = getattr(
             getattr(conf, 'session', None), 
             'password_salt', 
             'example'
         )
-        self._password = sha256(v + salt).hexdigest()
+        return sha256(v + salt).hexdigest()
