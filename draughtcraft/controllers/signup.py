@@ -1,4 +1,5 @@
 from pecan                              import expose, request, redirect
+from draughtcraft                       import model
 from draughtcraft.lib.schemas.signup    import SignupSchema
 
 class SignupController(object):
@@ -17,4 +18,11 @@ class SignupController(object):
         error_handler   = lambda: request.path
     )
     def _post(self, username, password, password_confirm, email):
+
+        model.User(
+            username    = username,
+            password    = password,
+            email       = email
+        )
+
         redirect('/recipes/create')
