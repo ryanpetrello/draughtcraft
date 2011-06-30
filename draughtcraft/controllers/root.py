@@ -2,6 +2,7 @@ from pecan import expose
 
 from error      import ErrorController
 from recipes    import RecipesController
+from signup     import SignupController
 
 class RootController(object):
 
@@ -9,5 +10,6 @@ class RootController(object):
     def index(self):
         return dict()
 
-    recipes = RecipesController()
     error   = ErrorController()
+    recipes = RecipesController()
+    signup  = SignupController()
