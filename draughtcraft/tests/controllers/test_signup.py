@@ -2,7 +2,7 @@ from draughtcraft.tests     import TestApp
 from draughtcraft           import model
 
 
-class TestRecipeCreation(TestApp):
+class TestSignup(TestApp):
 
     def test_signup_form(self):
         assert model.User.query.count() == 0
