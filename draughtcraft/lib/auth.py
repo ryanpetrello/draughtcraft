@@ -22,3 +22,7 @@ def save_user_session(user):
     session = request.environ['beaker.session']
     session['user_id'] = user.id
     session.save()
+    
+def remove_user_session():
+    session = request.environ['beaker.session']
+    session.delete()

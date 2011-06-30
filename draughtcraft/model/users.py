@@ -1,5 +1,6 @@
-from elixir     import Entity, Field, Unicode, OneToMany
+from elixir     import Entity, Field, Unicode, DateTime, OneToMany
 from pecan      import conf
+from datetime   import datetime
 from hashlib    import sha256
 
 
@@ -11,6 +12,7 @@ class User(Entity):
     username    = Field(Unicode(64), unique=True)
     _password   = Field(Unicode(64), colname='password', synonym='password')
     email       = Field(Unicode(64), index=True)
+    signup_date = Field(DateTime, default=datetime.utcnow)
 
     recipes     = OneToMany('Recipe', inverse='author')
 
