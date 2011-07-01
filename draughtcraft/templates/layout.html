@@ -35,7 +35,7 @@
               dashboard
             </a>
           </li>
-          <li><a href="/">settings</a></li>
+          <li><a href="/profile">settings</a></li>
           <li><a href="/logout">logout</a></li>
         </ul>
       </nav>
@@ -52,7 +52,7 @@
           </li>
         % endif
         <li>
-          <a href="#">Browse Recipes</a>
+          <a href="/recipes">Browse Recipes</a>
         </li>
         % if h.request.context['user'] is None:
           <li>
