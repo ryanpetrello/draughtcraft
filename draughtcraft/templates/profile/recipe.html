@@ -1,8 +1,8 @@
 <%page args="recipe" />
 
-<dt class="recipe">
+<dt class="recipe clearfix">
   <span class="srm srm-${min(int(round(recipe.calculations.srm)), 30)}">
-    <img src="/images/glass.png" width="38" class="glass" />
+    <img src="/images/glass-plain.png" width="38" class="glass" />
   </span>
   <h3>
     <a href="${recipe.url(h.request.context['user'] != recipe.author)}">
