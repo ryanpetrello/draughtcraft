@@ -366,6 +366,28 @@ class TestRecipe(object):
 
         assert recipe.next_fermentation_step == None
 
+    def test_url(self):
+        recipe = model.Recipe(
+            id      = 1,
+            name    = u'Rocky Mountain River IPA'
+        )        
+        assert recipe.url() == '/recipes/1/rocky-mountain-river-ipa/'
+        assert recipe.url(False) == '/recipes/1/rocky-mountain-river-ipa/builder'
+
+    def test_printable_type(self):
+        assert model.Recipe(
+            type = u'MASH'
+        ).printable_type == 'All Grain'
+        assert model.Recipe(
+            type = u'EXTRACT'
+        ).printable_type == 'Extract'
+        assert model.Recipe(
+            type = u'EXTRACTSTEEP'
+        ).printable_type == 'Extract with Steeped Grains'
+        assert model.Recipe(
+            type = u'MINIMASH'
+        ).printable_type == 'Extract with Mini-Mash'
+
 
 class TestFermentationStep(object):
 
