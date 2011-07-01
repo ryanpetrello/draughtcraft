@@ -1,0 +1,32 @@
+<%inherit file="../layout.html" />
+
+<%def name="style()">
+    <link rel="stylesheet/less" type="text/css" media="screen" href="/css/profile.less" />
+</%def>
+
+<h1 class="clearfix">
+  <img src="${h.request.context['user'].gravatar}?s=60" class="gravatar" />
+  ${user.username}
+</h1> 
+
+<div class="clearfix">
+
+  <dl class="profile">
+    % if user.full_name.strip():
+      <dt>Full Name</dt>
+        <dd>${user.full_name}</dd>
+    % endif
+    <dt>Member Since</dt>
+      <dd>${user.signup_date}</dd>
+    <dt>
+      <a href="/profile">
+        Edit Your Profile
+      </a>
+      
+  </dl>
+
+  <dl class="recipes">
+    <dt>You currently have zero recipes.  Why not <a href="/recipes/create">add one</a>?</dt>
+  </dl>
+
+</div>

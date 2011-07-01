@@ -1,0 +1,64 @@
+/*
+ * Mixins
+ */
+.border-radius (@radius) {
+  border-radius: @radius;
+  -moz-border-radius: @radius;
+  -webkit-border-radius: @radius;
+  -webkit-background-clip: padding;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+}
+
+#content  {
+
+  /* Content-level selectors */
+
+  h1  {
+    padding: .5em;
+    line-height: 60px;
+    vertical-align: middle;
+    img  {
+      padding: 2px;
+      background: #FFF;
+      border: 1px solid #CCC;
+      vertical-align: middle;
+      margin-right: .25em;
+    }
+  }
+  #content-inner  {
+    padding: 0;
+  }
+  #content-inner > div  {
+    background: #FFF;
+    padding: 0;
+    .border-radius(10px);
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    -moz-border-radius-topright: 0;
+    -moz-border-radius-topleft: 0;
+    -webkit-border-top-right-radius: 0;
+    -webkit-border-top-left-radius: 0;
+  }
+
+  dl.profile  {
+    padding: 15px;
+    display: block;
+    float: left;
+    dt, dd  {
+      float: left;
+      padding-bottom: 10px;
+    }
+    dt  {
+      color: #999;
+      width: 125px;
+      clear: left;
+    }
+  }
+
+  dl.recipes  {
+    padding: 15px;
+    float: left;
+  }
+
+}

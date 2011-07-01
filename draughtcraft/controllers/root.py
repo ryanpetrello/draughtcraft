@@ -4,6 +4,7 @@ from draughtcraft.lib.auth              import save_user_session, remove_user_se
 from draughtcraft.lib.schemas.login     import LoginSchema
 
 from error      import ErrorController
+from profile    import ProfilesController
 from recipes    import RecipesController
 from signup     import SignupController
 
@@ -36,5 +37,6 @@ class RootController(object):
         redirect('/')
 
     error   = ErrorController()
+    profile = ProfilesController()
     recipes = RecipesController()
     signup  = SignupController()
