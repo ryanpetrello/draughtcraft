@@ -17,9 +17,9 @@
         <dd>${user.full_name}</dd>
     % endif
     <dt>Member Since</dt>
-      <dd>${user.signup_date}</dd>
+      <dd>${h.format_date(user.signup_date)}</dd>
     % if user == h.request.context['user']:
-      <dt>
+      <dt class="edit">
         <a href="/profile">
           Edit Your Profile
         </a>
@@ -30,9 +30,14 @@
 
   <dl class="recipes">
     % if not len(user.recipes) and user == h.request.context['user']:
-      <dt>You don't have any recipes yet.  Why not <a href="/recipes/create">add one</a>?</dt>
+      <dt class="empty">
+        You don't have any recipes yet.  Why not <a href="/recipes/create">add
+          one</a>?
+      </dt>
     % elif not len(user.recipes):
-      <dt>${user.username} doesn't have any recipes yet.</dt>
+      <dt class="empty">
+        ${user.username} doesn't have any recipes yet.
+      </dt>
     % endif
   </dl>
 
