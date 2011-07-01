@@ -48,3 +48,31 @@ class TestRecipeCreation(TestApp):
 
         assert response.status_int == 302
         assert response.headers['Location'].endswith('/recipes/1/rocky-mountain-river-ipa/builder')
+
+    def test_recipe_author(self):
+        #
+        # Make a user and authenticate as them.
+        #
+        model.User(
+            username = 'ryanpetrello',
+            password = 'secret'
+        )
+        model.commit()
+        response = self.post('/login', params={
+            'username'  : 'ryanpetrello',
+            'password'  : 'secret'
+        })
+        assert 'user_id' in response.environ['beaker.session']
+
+        params = {
+            'name'      : 'Rocky Mountain River IPA',
+            'type'      : 'MASH',
+            'volume'    : 25,
+            'unit'      : 'GALLON'
+        }
+
+        self.post('/recipes/create', params=params)
+
+        assert model.Recipe.query.count() == 1
+        r = model.Recipe.get(1)
+        assert r.author.id == 1
