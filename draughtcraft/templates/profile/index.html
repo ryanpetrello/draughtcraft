@@ -28,6 +28,10 @@
       
   </dl>
 
+  % if len(user.recipes):
+    <h2>Recipes (${len(user.recipes)})</h2>
+  % endif
+
   <dl class="recipes">
     % if not len(user.recipes) and user == h.request.context['user']:
       <dt class="empty">
@@ -38,6 +42,10 @@
       <dt class="empty">
         ${user.username} doesn't have any recipes yet.
       </dt>
+    % else:
+      % for recipe in user.recipes:
+        <%include file="recipe.html" args="recipe=recipe" />
+      % endfor
     % endif
   </dl>
 

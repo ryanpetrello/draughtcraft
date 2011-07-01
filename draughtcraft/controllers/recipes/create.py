@@ -19,6 +19,7 @@ class RecipeCreationController(RestController):
         recipe = model.Recipe(
             name        = kw.get('name'),
             gallons     = kw.get('volume'),
+            type        = kw.get('type'),
             author      = request.context['user']
         )
         recipe.fermentation_steps.append(

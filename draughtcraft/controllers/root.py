@@ -12,6 +12,8 @@ class RootController(object):
 
     @expose('index.html')
     def index(self):
+        if request.context['user']:
+            redirect('/profile/%s' % request.context['user'].username)
         return dict()
 
     @expose(

@@ -38,6 +38,7 @@ class TestRecipeCreation(TestApp):
 
         assert model.Recipe.query.count() == 1
         r = model.Recipe.get(1)
+        assert r.type == 'MASH'
         assert r.name == u'Rocky Mountain River IPA'
         assert r.gallons == 25
         assert len(r.slugs) == 1

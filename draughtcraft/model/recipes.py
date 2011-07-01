@@ -14,6 +14,7 @@ class Recipe(Entity):
         'MINIMASH'
     )
 
+    type                = Field(Enum(*TYPES), default='MASH')
     name                = Field(Unicode(256))
     gallons             = Field(Float, default=5)
     notes               = Field(UnicodeText)
@@ -117,6 +118,25 @@ class Recipe(Entity):
             1   : 'SECONDARY',
             2   : 'TERTIARY'
         }.get(total, None)
+
+    def url(self, public=True):
+        """
+        The URL for a recipe.
+        """
+        return '/recipes/%s/%s/%s' % (
+            self.id,
+            self.slugs[0].slug,
+            '' if public else 'builder'
+        )
+
+    @property
+    def printable_type(self):
+        return {
+            'MASH'          : 'All Grain',
+            'EXTRACT'       : 'Extract',
+            'EXTRACTSTEEP'  : 'Extract with Steeped Grains',
+            'MINIMASH'      : 'Extract with Mini-Mash'
+        }[self.type]
 
 
 class RecipeAddition(Entity):
