@@ -5,7 +5,7 @@
 </%def>
 
 <h1 class="clearfix">
-  <img src="${h.request.context['user'].gravatar}?s=60" class="gravatar" />
+  <img src="${user.gravatar}?s=60" class="gravatar" />
   ${user.username}
 </h1> 
 
@@ -18,15 +18,22 @@
     % endif
     <dt>Member Since</dt>
       <dd>${user.signup_date}</dd>
-    <dt>
-      <a href="/profile">
-        Edit Your Profile
-      </a>
+    % if user == h.request.context['user']:
+      <dt>
+        <a href="/profile">
+          Edit Your Profile
+        </a>
+      </dt>
+    % endif
       
   </dl>
 
   <dl class="recipes">
-    <dt>You currently have zero recipes.  Why not <a href="/recipes/create">add one</a>?</dt>
+    % if not len(user.recipes) and user == h.request.context['user']:
+      <dt>You don't have any recipes yet.  Why not <a href="/recipes/create">add one</a>?</dt>
+    % elif not len(user.recipes):
+      <dt>${user.username} doesn't have any recipes yet.</dt>
+    % endif
   </dl>
 
 </div>
