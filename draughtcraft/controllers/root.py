@@ -6,6 +6,7 @@ from draughtcraft.lib.schemas.login     import LoginSchema
 from error      import ErrorController
 from profile    import ProfilesController
 from recipes    import RecipesController
+from settings   import SettingsController
 from signup     import SignupController
 
 class RootController(object):
@@ -38,7 +39,8 @@ class RootController(object):
         remove_user_session()
         redirect('/')
 
-    error   = ErrorController()
-    profile = ProfilesController()
-    recipes = RecipesController()
-    signup  = SignupController()
+    error       = ErrorController()
+    profile     = ProfilesController()
+    recipes     = RecipesController()
+    settings    = SettingsController()
+    signup      = SignupController()

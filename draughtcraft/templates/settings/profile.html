@@ -1,0 +1,67 @@
+<%inherit file="../layout.html" />
+
+<%def name="title()">Edit Your Profile</%def>
+
+<%def name="style()">
+    <link rel="stylesheet/less" type="text/css" media="screen" href="/css/thin.less" />
+    <link rel="stylesheet/less" type="text/css" media="screen" href="/css/settings/shared.less" />
+</%def>
+
+<%def name="javascript()">
+    <script type="text/javascript" src="/javascript/recipes/create.js"></script>
+</%def>
+
+<h1>
+  <a href="http://gravatar.com" target="window"><img src="${user.gravatar}?s=60" class="gravatar" /></a>
+  Edit Your Profile
+</h1>
+
+<div class="clearfix">
+
+  <form method="POST">
+    <fieldset>
+      <dl class="clearfix">
+
+        <dt><label for="name">Full Name</label></dt>
+        <dd>
+          ${h.text(
+            'first_name', 
+            user.first_name,
+            tabindex = '1',
+            class_ = 'short'
+          )}
+          ${h.text(
+            'last_name', 
+            user.last_name,
+            tabindex = '2',
+            class_ = 'short'
+          )}
+          <div>
+            <small>First</small>
+            <small>Last</small>
+          </div>
+        </dd>
+
+        <dt><label for="name">Email</label></dt>
+        <dd>
+          ${h.text(
+            'email', 
+            user.email,
+            tabindex = '3', 
+            size = '256'
+          )}
+        </dd>
+
+      </dl>
+    </fieldset>
+
+    <div class="buttons">
+      <button class="ribbon" tabindex="4">
+        Save
+      </button>
+      or <a href="/" tabindex="5">Cancel</a>
+    </div>
+
+  </form>
+
+</div>
