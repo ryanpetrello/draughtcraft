@@ -12,6 +12,13 @@ def setup_app(config):
         return SessionMiddleware(app, **options)
     
     model.init_model()
+
+    config.app.errors = {
+        '404': '/error/404',
+        '401': '/error/401',
+        '403': '/error/403',
+        '500': '/error/500'
+    }
     
     return make_app(
         config.app.root,
