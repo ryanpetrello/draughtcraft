@@ -1,4 +1,4 @@
-from draughtcraft.tests     import TestApp
+from draughtcraft.tests     import TestApp, TestAuthenticatedApp
 from draughtcraft           import model
 
 
@@ -50,21 +50,10 @@ class TestRecipeCreation(TestApp):
         assert response.status_int == 302
         assert response.headers['Location'].endswith('/recipes/1/rocky-mountain-river-ipa/builder')
 
-    def test_recipe_author(self):
-        #
-        # Make a user and authenticate as them.
-        #
-        model.User(
-            username = 'ryanpetrello',
-            password = 'secret'
-        )
-        model.commit()
-        response = self.post('/login', params={
-            'username'  : 'ryanpetrello',
-            'password'  : 'secret'
-        })
-        assert 'user_id' in response.environ['beaker.session']
 
+class TestUserRecipeCreation(TestAuthenticatedApp):
+
+    def test_recipe_author(self):
         params = {
             'name'      : 'Rocky Mountain River IPA',
             'type'      : 'MASH',

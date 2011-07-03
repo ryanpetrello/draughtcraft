@@ -59,3 +59,27 @@ class TestApp(TestCase):
         @returns (paste.fixture.TestResponse)
         """
         return self._do_request(url, 'DELETE', **kwargs)
+
+
+class TestAuthenticatedApp(TestApp):
+    """
+    A controller test that creates a default user and logs in as them.
+    """
+
+    def setUp(self):
+        super(TestAuthenticatedApp, self).setUp()
+
+        #
+        # Make a user and authenticate as them.
+        #
+        dcmodel.User(
+            username = 'ryanpetrello',
+            password = 'secret',
+            email    = 'ryan@example.com'
+        )
+        dcmodel.commit()
+        response = self.post('/login', params={
+            'username'  : 'ryanpetrello',
+            'password'  : 'secret'
+        })
+        assert 'user_id' in response.environ['beaker.session']
