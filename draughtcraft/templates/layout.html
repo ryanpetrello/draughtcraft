@@ -29,7 +29,11 @@
             class="gravatar"
           />
           </li>
-          <li>${h.request.context['user'].username}</li>
+          <li>
+            <a href="/profile/${h.request.context['user'].username}" class="profile">
+              ${h.request.context['user'].username}
+            </a>
+          </li>
           <li><a href="/settings/profile">settings</a></li>
           <li><a href="/logout">logout</a></li>
         </ul>
