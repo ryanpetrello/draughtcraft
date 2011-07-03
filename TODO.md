@@ -14,9 +14,9 @@ Settings
 * Forgot Password
 * Change Password
 * Defaults
-    . IBU Formula
-    . Default Gallon Increment
-    . Default Recipe Type (e.g., All Grain...)
+    - IBU Formula
+    - Default Gallon Increment
+    - Default Recipe Type (e.g., All Grain...)
 
 User Experience
 ---------------
