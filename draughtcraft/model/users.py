@@ -14,6 +14,8 @@ class User(Entity):
     email       = Field(Unicode(64), index=True)
     signup_date = Field(DateTime, default=datetime.utcnow)
 
+    location    = Field(Unicode(256))
+
     recipes     = OneToMany('Recipe', inverse='author')
 
     @property

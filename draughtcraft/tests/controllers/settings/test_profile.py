@@ -17,7 +17,8 @@ class TestProfileSettings(TestAuthenticatedApp):
         params = {
             'first_name'    : '',
             'last_name'     : '',
-            'email'         : 'ryantesting123@example.com'
+            'email'         : 'ryantesting123@example.com',
+            'location'      : ''
         }
         self.post('/settings/profile/', params=params)
 
@@ -27,7 +28,8 @@ class TestProfileSettings(TestAuthenticatedApp):
         params = {
             'first_name'    : '',
             'last_name'     : '',
-            'email'         : ''
+            'email'         : '',
+            'location'      : ''
         }
 
         assert model.User.get(1).email == 'ryan@example.com'
@@ -41,7 +43,8 @@ class TestProfileSettings(TestAuthenticatedApp):
         params = {
             'first_name'    : '',
             'last_name'     : '',
-            'email'         : 'ryan@invalid'
+            'email'         : 'ryan@invalid',
+            'location'      : ''
         }
 
         assert model.User.get(1).email == 'ryan@example.com'
@@ -55,7 +58,8 @@ class TestProfileSettings(TestAuthenticatedApp):
         params = {
             'first_name'    : 'Ryan',
             'last_name'     : 'Petrello',
-            'email'         : 'ryantesting123@example.com'
+            'email'         : 'ryantesting123@example.com',
+            'location'      : ''
         }
         self.post('/settings/profile/', params=params)
 

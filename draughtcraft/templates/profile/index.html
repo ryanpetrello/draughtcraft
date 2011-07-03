@@ -16,6 +16,10 @@
       <dt>Full Name</dt>
         <dd>${user.full_name}</dd>
     % endif
+    % if user.location:
+      <dt>Location</dt>
+        <dd>${user.location}</dd>
+    % endif
     <dt>Member Since</dt>
       <dd>${h.format_date(user.signup_date)}</dd>
     % if user == h.request.context['user']:
