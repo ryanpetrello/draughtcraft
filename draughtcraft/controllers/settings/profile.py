@@ -1,4 +1,6 @@
-from pecan                                      import expose, request, redirect
+from pecan                                      import (expose, request,
+                                                        response, redirect)
+from draughtcraft.lib.notice                    import notify
 from draughtcraft.lib.schemas.settings.profile  import UserProfileSchema
 
 
@@ -26,4 +28,5 @@ class ProfileController(object):
         for k,v in kw.items():
             setattr(user, k, v)
 
-        redirect('/settings/profile')
+        notify('Your settings have been saved.')
+        redirect('/settings/profile', headers=response.headers)

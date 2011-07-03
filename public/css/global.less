@@ -175,7 +175,7 @@ input.error:focus  {
  * Reusable page elements/styles
  */
 
-h3.ribbon, button.ribbon  {
+.ribbon  {
   border: 0;
   font-size: 1.05em;
   line-height: 2.5em;
@@ -238,8 +238,18 @@ h3.ribbon, button.ribbon  {
       right: 0;
       border-color: #798526 transparent transparent #798526;
     }    
+  }
 
-    
+  &.notice-general  {
+    background: #DDF5DD; 
+    color: #668866;
+    font-weight: normal;
+    font-size: 1em;
+    text-shadow: none;
+    .box-shadow(2px, 2px, 0, #C7E0C7);
+    &:before  {
+      border-color: #A7C0A7 #A7C0A7 transparent transparent;
+    }    
   }
 
 }

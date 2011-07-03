@@ -1,5 +1,6 @@
 from pecan                      import request
 from draughtcraft               import model
+from draughtcraft.lib.notice    import notices
 from webhelpers.html.tags       import *
 
 def format_percentage(decimal, digits=2, symbol=True):
