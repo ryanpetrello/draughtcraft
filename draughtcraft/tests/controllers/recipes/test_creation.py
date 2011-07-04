@@ -72,3 +72,23 @@ class TestUserRecipeCreation(TestAuthenticatedApp):
         assert model.Recipe.query.count() == 1
         r = model.Recipe.get(1)
         assert r.author.id == 1
+
+    def test_recipe_author_no_trial_recipe(self):
+        """
+        If the recipe is created by an authenticated user, a `trial_recipe_id`
+        should not be stored in the session.
+        """
+        params = {
+            'name'      : 'Rocky Mountain River IPA',
+            'type'      : 'MASH',
+            'volume'    : 25,
+            'unit'      : 'GALLON'
+        }
+
+        response = self.post('/recipes/create', params=params)
+
+        assert model.Recipe.query.count() == 1
+        r = model.Recipe.get(1)
+        assert r.author.id == 1
+
+        assert 'trial_recipe_id' not in response.environ['beaker.session']

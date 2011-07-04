@@ -36,6 +36,7 @@ class RecipeCreationController(RestController):
         # If the recipe is created by a guest instead of an authenticated
         # user, store the trial recipe in a cookie.
         #
-        save_trial_recipe(recipe)
+        if recipe.author is None:
+            save_trial_recipe(recipe)
 
         redirect('/recipes/%d/%s/builder' % (recipe.id, recipe.slugs[0].slug))
