@@ -39,4 +39,4 @@ class RecipeCreationController(RestController):
         if recipe.author is None:
             save_trial_recipe(recipe)
 
-        redirect('/recipes/%d/%s/builder' % (recipe.id, recipe.slugs[0].slug))
+        redirect('/recipes/%d/%s/builder/' % (recipe.id, recipe.slugs[0].slug))

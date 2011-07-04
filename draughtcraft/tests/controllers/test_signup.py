@@ -189,3 +189,47 @@ class TestSignup(TestApp):
 
         self.post('/signup/', params=params)
         assert model.User.query.count() == 1
+
+
+class TestRecipeConversion(TestApp):
+
+    def test_trial_recipe_conversion(self):
+        """
+        Create a recipe as a guest.
+        After signup, the recipe should belong to the newly created user.
+        """
+
+        params = {
+            'name'      : 'Rocky Mountain River IPA',
+            'type'      : 'MASH',
+            'volume'    : 25,
+            'unit'      : 'GALLON'
+        }
+
+        self.post('/recipes/create', params=params)
+        assert model.Recipe.query.count() == 1
+        assert model.Recipe.get(1).author == None
+
+        params = {
+            'username'          : 'test',
+            'password'          : 'secret',
+            'password_confirm'  : 'secret',
+            'email'             : 'ryan@example.com'
+        }
+
+        assert model.User.query.count() == 0
+        response = self.post('/signup/', params=params)
+
+        assert model.User.query.count() == 1
+        user = model.User.get(1)
+
+        assert user.username == 'test'
+        assert user.password
+        assert user.email == 'ryan@example.com'
+
+        #
+        # The recipe should have been attached to the new user, and the
+        # `trial_recipe_id` record should have been removed from the session.
+        #
+        assert len(user.recipes) == 1
+        assert 'trial_recipe_id' not in response.environ['beaker.session']

@@ -678,9 +678,13 @@ class TestRecipeRemoval(TestAuthenticatedApp):
         assert model.RecipeAddition.query.count() == 0
 
 
-class TestRecipeLookup(TestAuthenticatedApp):
+class TestAuthenticatedUserRecipeLookup(TestAuthenticatedApp):
 
     def test_lookup(self):
+        """
+        If the recipe has an author, and we're logged in as that author,
+        we should have access to edit the recipe.
+        """
         model.Recipe(
             name    = 'American IPA',
             slugs   = [
@@ -703,7 +707,64 @@ class TestRecipeLookup(TestAuthenticatedApp):
         response = self.get('/recipes/1/invalid_slug/builder/', status=404)
         assert response.status_int == 404
 
-    def test_unauthorized_lookup(self):
+    def test_unauthorized_lookup_trial_recipe(self):
+        """
+        If the recipe has no author, and we're logged in as any user,
+        we should *not* have access to edit the recipe.
+        """
+        model.Recipe(
+            name    = 'American IPA',
+            slugs   = [
+                model.RecipeSlug('American IPA')
+            ]
+        )
+        model.commit()
+
+        response = self.get('/recipes/1/american-ipa/builder/', status=401)
+        assert response.status_int == 401
+
+    def test_unauthorized_lookup_other_user(self):
+        """
+        If the recipe has an author, and we're logged in as another user,
+        we should *not* have access to edit the recipe.
+        """
+        model.Recipe(
+            name    = 'American IPA',
+            slugs   = [
+                model.RecipeSlug('American IPA')
+            ],
+            author  = model.User()
+        )
+        model.commit()
+
+        response = self.get('/recipes/1/american-ipa/builder/', status=401)
+        assert response.status_int == 401
+
+
+class TestTrialRecipeLookup(TestApp):
+
+    def test_unauthorized_lookup_trial_user(self):
+        """
+        If the recipe has an author, and we're *not* logged in as any user,
+        we should *not* have access to edit the recipe.
+        """
+        model.Recipe(
+            name    = 'American IPA',
+            slugs   = [
+                model.RecipeSlug('American IPA')
+            ],
+            author  = model.User.get(1)
+        )
+        model.commit()
+
+        response = self.get('/recipes/1/american-ipa/builder/', status=401)
+        assert response.status_int == 401
+
+    def test_unauthorized_lookup_trial_user(self):
+        """
+        If the recipe is a trial recipe, but is not *our* trial recipe,
+        we should *not* have access to edit the recipe.
+        """
         model.Recipe(
             name    = 'American IPA',
             slugs   = [

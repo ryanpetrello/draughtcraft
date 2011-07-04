@@ -72,3 +72,45 @@ class TestLogin(TestApp):
         assert response.environ['beaker.session']['user_id'] == 1
         response = self.get('/logout')
         assert 'user_id' not in response.environ['beaker.session']
+
+
+class TestRecipeConversion(TestApp):
+
+    def test_trial_recipe_conversion(self):
+        """
+        Create a recipe as a guest.
+        After login, the recipe should belong to the authenticated user.
+        """
+
+        params = {
+            'name'      : 'Rocky Mountain River IPA',
+            'type'      : 'MASH',
+            'volume'    : 25,
+            'unit'      : 'GALLON'
+        }
+
+        self.post('/recipes/create', params=params)
+        assert model.Recipe.query.count() == 1
+        assert model.Recipe.get(1).author == None
+
+        # Create a new user
+        model.User(
+            username = 'ryanpetrello',
+            password = 'secret'
+        )
+        model.commit()
+
+        # Log in as the new user
+        assert len(model.User.get(1).recipes) == 0
+        response = self.post('/login', params={
+            'username'  : 'ryanpetrello',
+            'password'  : 'secret'
+        })
+        assert response.environ['beaker.session']['user_id'] == 1
+
+        #
+        # The recipe should have been attached to the new user, and the
+        # `trial_recipe_id` record should have been removed from the session.
+        #
+        assert len(model.User.get(1).recipes) == 1
+        assert 'trial_recipe_id' not in response.environ['beaker.session']

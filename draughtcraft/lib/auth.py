@@ -38,3 +38,8 @@ def save_trial_recipe(recipe):
     session = request.environ['beaker.session']
     session['trial_recipe_id'] = recipe.id
     session.save()
+
+def remove_trial_recipe():
+    session = request.environ['beaker.session']
+    del session['trial_recipe_id']
+    session.save()

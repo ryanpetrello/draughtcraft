@@ -1,6 +1,8 @@
 from pecan                              import expose, request, redirect
 from draughtcraft                       import model
-from draughtcraft.lib.auth              import save_user_session, remove_user_session
+from draughtcraft.lib.auth              import (save_user_session, 
+                                                remove_user_session, 
+                                                remove_trial_recipe)
 from draughtcraft.lib.schemas.login     import LoginSchema
 
 from error      import ErrorController
@@ -31,7 +33,13 @@ class RootController(object):
         error_handler   = lambda: request.path
     )
     def _post_login(self, username, password):
-        save_user_session(model.User.get_by(username=username))
+        user = model.User.get_by(username=username)
+        save_user_session(user)
+
+        if request.context['trial_recipe']:
+            request.context['trial_recipe'].author = user
+            remove_trial_recipe()
+
         redirect('/')
 
     @expose()
