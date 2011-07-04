@@ -38,6 +38,16 @@
     ${h.end_form()}
   </fieldset>
 
+  % if recipe.author:
+    <a href="/profile/${recipe.author.username}">
+      <img 
+        src="${recipe.author.gravatar}?s=45" 
+        class="gravatar"
+        title="${recipe.author.username}"
+      />
+    </a>
+  % endif
+
   <div id="builder-ajax">
     <div class="builder-loading">
       <img src="/images/loading.gif" /> 

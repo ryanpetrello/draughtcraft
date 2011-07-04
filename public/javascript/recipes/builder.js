@@ -274,4 +274,7 @@ $(document).ready(function(){
     $.draughtcraft.recipes.builder.initRecipeSettings();
     $.draughtcraft.recipes.builder.fetchRecipe();
     $.draughtcraft.recipes.builder.handleAnchor();
+
+    // Register a JS tooltip on the author's thumbnail (if there is one).
+    $('img.gravatar').tipTip({'delay': 50});
 });
