@@ -37,6 +37,7 @@ class FermentationStepsController(RestController):
                 fahrenheit  = last_step.fahrenheit
             )
         )
+        self.recipe.touch()
         return dict(recipe = self.recipe)
 
     @expose(
@@ -50,6 +51,7 @@ class FermentationStepsController(RestController):
         """
         step.days = kw['days']
         step.fahrenheit = kw['temperature']
+        self.recipe.touch()
         return dict(recipe = self.recipe)
 
     @expose('recipes/builder/async.html')
@@ -84,6 +86,7 @@ class RecipeSettingsController(object):
     )
     def _style(self, target):
         self.recipe.style = target
+        self.recipe.touch()
         return dict(recipe = self.recipe)
 
     #
@@ -99,6 +102,7 @@ class RecipeSettingsController(object):
     )
     def _volume(self, volume, unit):
         self.recipe.gallons = volume
+        self.recipe.touch()
         return dict(recipe = self.recipe)
 
     #
@@ -114,6 +118,7 @@ class RecipeSettingsController(object):
     )
     def _notes(self, notes):
         self.recipe.notes = notes
+        self.recipe.touch()
         return dict(recipe = self.recipe)
 
 
@@ -136,6 +141,7 @@ class IngredientsController(RestController):
         addition = model.RecipeAddition.get(int(id))
         if addition:
             addition.delete()
+            addition.recipe.touch()
         return self.__rendered__()
 
     @expose(
@@ -190,6 +196,7 @@ class IngredientsController(RestController):
                 if v is not None:
                     setattr(addition, k, v)
 
+        request.context['recipe'].touch()
         return self.__rendered__()
 
     @expose(
@@ -229,6 +236,7 @@ class IngredientsController(RestController):
         setattr(entity, ingredient.row_type, ingredient)
         entity.recipe = request.context['recipe']
 
+        request.context['recipe'].touch()
         return self.__rendered__()
 
 

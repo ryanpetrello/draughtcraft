@@ -1,9 +1,10 @@
 from elixir import (
     Entity, Field, Unicode, UnicodeText, Integer, Interval, Float, Enum,
-    using_options, OneToMany, ManyToOne, entities
+    DateTime, using_options, OneToMany, ManyToOne, entities
 )
 from draughtcraft.lib.calculations  import Calculations
 from draughtcraft.lib.units         import UnitConvert
+from datetime                       import datetime
 
 class Recipe(Entity):
 
@@ -18,6 +19,8 @@ class Recipe(Entity):
     name                = Field(Unicode(256))
     gallons             = Field(Float, default=5)
     notes               = Field(UnicodeText)
+    creation_date       = Field(DateTime, default=datetime.utcnow)
+    last_updated        = Field(DateTime, default=datetime.utcnow)
 
     additions           = OneToMany('RecipeAddition', inverse='recipe')
     fermentation_steps  = OneToMany('FermentationStep', inverse='recipe')
@@ -137,6 +140,9 @@ class Recipe(Entity):
             'EXTRACTSTEEP'  : 'Extract with Steeped Grains',
             'MINIMASH'      : 'Extract with Mini-Mash'
         }[self.type]
+
+    def touch(self):
+        self.last_updated = datetime.utcnow()
 
 
 class RecipeAddition(Entity):
