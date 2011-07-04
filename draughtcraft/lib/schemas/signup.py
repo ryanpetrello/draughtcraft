@@ -11,6 +11,15 @@ class SignupSchema(FilteredSchema):
                             UniqueUsername(not_empty=True),
                             validators.Regex(regex='^[a-zA-Z0-9_]{4,}$')
                           )
+    password            = All(
+                            validators.String(not_empty=True),
+                            validators.Regex(
+                                regex='^.{4,}$',
+                                messages={
+                                    'invalid': 'Passwords must be at least 4 characters in length.'
+                                }
+                            )
+                          )
     password            = validators.String(not_empty=True)
     password_confirm    = validators.String(not_empty=True)
     email               = UniqueEmail(not_empty=True)
