@@ -16,8 +16,11 @@ setup(
     author_email = '',
     install_requires = [
         "pecan",
-        "sqlalchemy",
         "elixir",
+        "beaker",
+        "formencode",
+        "webhelpers",
+        "webflash",
         "pytest-cov"
     ],
     zip_safe = False,
