@@ -1,12 +1,12 @@
-from draughtcraft.tests     import TestApp
+from draughtcraft.tests     import TestApp, TestAuthenticatedApp
 from draughtcraft           import model
 from datetime               import timedelta
 
 
-class TestMashAdditions(TestApp):
+class TestMashAdditions(TestAuthenticatedApp):
 
     def test_fermentable(self):
-        model.Recipe(name='Rocky Mountain River IPA')
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.Fermentable(
             name        = '2-Row',
             origin      = 'US',
@@ -31,7 +31,7 @@ class TestMashAdditions(TestApp):
         assert a.fermentable == model.Fermentable.get(1)
 
     def test_hop(self):
-        model.Recipe(name='Rocky Mountain River IPA')
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.Hop(name = 'Cascade')
         model.commit()
 
@@ -51,7 +51,7 @@ class TestMashAdditions(TestApp):
         assert a.hop == model.Hop.get(1)
 
     def test_schema_failure(self):
-        model.Recipe(name="Rocky Mountain River IPA")
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.Fermentable(name = '2-Row', origin='US')
         model.commit()
        
@@ -72,10 +72,10 @@ class TestMashAdditions(TestApp):
         assert model.RecipeAddition.query.count() == 0
 
 
-class TestBoilAdditions(TestApp):
+class TestBoilAdditions(TestAuthenticatedApp):
 
     def test_fermentable(self):
-        model.Recipe(name="Rocky Mountain River IPA")
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.Fermentable(
             name        = '2-Row',
             origin      = 'US',
@@ -100,7 +100,7 @@ class TestBoilAdditions(TestApp):
         assert a.fermentable == model.Fermentable.get(1)
 
     def test_hop(self):
-        model.Recipe(name="Rocky Mountain River IPA")
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.Hop(
             name        = 'Cascade', 
             alpha_acid  = 5.5
@@ -126,7 +126,7 @@ class TestBoilAdditions(TestApp):
         assert a.alpha_acid == 5.5
 
     def test_schema_failure(self):
-        model.Recipe(name="Rocky Mountain River IPA")
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.Fermentable(name = '2-Row', origin='US')
         model.commit()
        
@@ -147,10 +147,10 @@ class TestBoilAdditions(TestApp):
         assert model.RecipeAddition.query.count() == 0
 
 
-class TestFermentationAdditions(TestApp):
+class TestFermentationAdditions(TestAuthenticatedApp):
 
     def test_hop(self):
-        model.Recipe(name="Rocky Mountain River IPA")
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.Hop(
             name        = 'Cascade', 
             alpha_acid  = 5.5
@@ -174,7 +174,7 @@ class TestFermentationAdditions(TestApp):
         assert a.alpha_acid == 5.5
 
     def test_yeast(self):
-        model.Recipe(name="Rocky Mountain River IPA")
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.Yeast(
             name = 'Wyeast 1056 - American Ale',
             form = 'LIQUID',
@@ -196,7 +196,7 @@ class TestFermentationAdditions(TestApp):
         assert a.yeast == model.Yeast.get(1)
 
     def test_schema_failure(self):
-        model.Recipe(name="Rocky Mountain River IPA")
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.Hop(
             name        = 'Cascade', 
             alpha_acid  = 5.5
@@ -220,10 +220,10 @@ class TestFermentationAdditions(TestApp):
         assert model.RecipeAddition.query.count() == 0
 
 
-class TestRecipeSettings(TestApp):
+class TestRecipeSettings(TestAuthenticatedApp):
 
     def test_style_change(self):
-        model.Recipe(name="Rocky Mountain River IPA")
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.Style(name = u'American Ale')
         model.commit()
 
@@ -235,7 +235,7 @@ class TestRecipeSettings(TestApp):
         assert model.Recipe.get(1).style == model.Style.get(1)
 
     def test_style_remove(self):
-        recipe = model.Recipe(name="Rocky Mountain River IPA")
+        recipe = model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         recipe.style = model.Style(name = u'American Ale')
         model.commit()
 
@@ -247,7 +247,7 @@ class TestRecipeSettings(TestApp):
         assert model.Recipe.get(1).style is None
 
     def test_volume_change(self):
-        model.Recipe(name="Rocky Mountain River IPA")
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.commit()
 
         assert model.Recipe.get(1).gallons == 5.0
@@ -259,7 +259,7 @@ class TestRecipeSettings(TestApp):
         assert model.Recipe.get(1).gallons == 10.0
 
     def test_notes_update(self):
-        model.Recipe(name="Rocky Mountain River IPA")
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.commit()
 
         assert model.Recipe.get(1).notes is None
@@ -270,12 +270,10 @@ class TestRecipeSettings(TestApp):
         assert model.Recipe.get(1).notes == u'Testing 1 2 3...'
 
 
-class TestFermentationStepChange(TestApp):
+class TestFermentationStepChange(TestAuthenticatedApp):
 
     def test_fermentation_step_add(self):
-        recipe = model.Recipe(
-            name        = u'Rocky Mountain River IPA'
-        )
+        recipe = model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         recipe.fermentation_steps.append(
             model.FermentationStep(
                 step = 'PRIMARY',
@@ -297,9 +295,7 @@ class TestFermentationStepChange(TestApp):
         assert recipe.fermentation_steps[1].fahrenheit == 65
 
     def test_fermentation_step_update(self):
-        recipe = model.Recipe(
-            name        = u'Rocky Mountain River IPA'
-        )
+        recipe = model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         recipe.fermentation_steps.append(
             model.FermentationStep(
                 step = 'PRIMARY',
@@ -323,9 +319,7 @@ class TestFermentationStepChange(TestApp):
         assert recipe.fermentation_steps[0].fahrenheit == 68
 
     def test_fermentation_step_delete(self):
-        recipe = model.Recipe(
-            name        = u'Rocky Mountain River IPA'
-        )
+        recipe = model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         recipe.fermentation_steps.extend([
             model.FermentationStep(
                 step = 'PRIMARY',
@@ -349,11 +343,14 @@ class TestFermentationStepChange(TestApp):
         assert recipe.fermentation_steps[0].fahrenheit == 65
 
 
-class TestRecipeChange(TestApp):
+class TestRecipeChange(TestAuthenticatedApp):
 
     def test_mash_change(self):
         model.RecipeAddition(
-            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
+            recipe      = model.Recipe(
+                name='Rocky Mountain River IPA', 
+                author=model.User.get(1)
+            ),
             fermentable = model.Fermentable(
                 name        = '2-Row',
                 origin      = 'US',
@@ -381,7 +378,10 @@ class TestRecipeChange(TestApp):
 
     def test_unitless_mash_change(self):
         model.RecipeAddition(
-            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
+            recipe      = model.Recipe(
+                name='Rocky Mountain River IPA', 
+                author=model.User.get(1)
+            ),
             fermentable = model.Fermentable(
                 name            = '2-Row',
                 origin          = 'US',
@@ -415,8 +415,12 @@ class TestRecipeChange(TestApp):
         assert a.ingredient == model.Fermentable.get(1)
 
     def test_boil_hop_change(self):
+        recipe = model.Recipe(
+            name        = 'Rocky Mountain River IPA', 
+            author      = model.User.get(1)
+        )
         model.HopAddition(
-            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
+            recipe      = recipe,
             hop         = model.Hop(name = 'Cascade'),
             amount      = .0625, # 1 oz
             unit        = 'POUND',
@@ -426,7 +430,7 @@ class TestRecipeChange(TestApp):
             use         = 'BOIL'
         )
         model.HopAddition(
-            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
+            recipe      = recipe,
             hop         = model.Hop(name = 'Centennial'),
             amount      = .0625, # 1 oz
             unit        = 'POUND',
@@ -480,7 +484,10 @@ class TestRecipeChange(TestApp):
         boil duration (by default, this is 60 minutes).
         """
         model.HopAddition(
-            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
+            recipe      = model.Recipe(
+                name='Rocky Mountain River IPA', 
+                author=model.User.get(1)
+            ),
             hop         = model.Hop(name = 'Cascade'),
             amount      = .0625, # 1 oz
             unit        = 'POUND',
@@ -517,7 +524,10 @@ class TestRecipeChange(TestApp):
         should forcibly be set zero minutes. 
         """
         model.HopAddition(
-            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
+            recipe      = model.Recipe(
+                name='Rocky Mountain River IPA', 
+                author=model.User.get(1)
+            ),
             hop         = model.Hop(name = 'Cascade'),
             amount      = .0625, # 1 oz
             unit        = 'POUND',
@@ -549,7 +559,10 @@ class TestRecipeChange(TestApp):
 
     def test_yeast_change(self):
         model.RecipeAddition(
-            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
+            recipe      = model.Recipe(
+                name='Rocky Mountain River IPA', 
+                author=model.User.get(1)
+            ),
             yeast       = model.Yeast(
                 name = 'Wyeast 1056 - American Ale',
                 form = 'LIQUID',
@@ -572,7 +585,10 @@ class TestRecipeChange(TestApp):
 
     def test_schema_failure(self):
         model.RecipeAddition(
-            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
+            recipe      = model.Recipe(
+                name='Rocky Mountain River IPA', 
+                author=model.User.get(1)
+            ),
             fermentable = model.Fermentable(
                 name        = '2-Row',
                 origin      = 'US',
@@ -605,7 +621,10 @@ class TestRecipeChange(TestApp):
 
     def test_hop_schema_failure(self):
         model.HopAddition(
-            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
+            recipe      = model.Recipe(
+                name='Rocky Mountain River IPA', 
+                author=model.User.get(1)
+            ),
             hop         = model.Hop(name = 'Cascade', alpha_acid=5.5),
             amount      = 0.0625,
             unit        = 'POUND',
@@ -639,11 +658,14 @@ class TestRecipeChange(TestApp):
         assert a.alpha_acid == 5.5
 
 
-class TestRecipeRemoval(TestApp):
+class TestRecipeRemoval(TestAuthenticatedApp):
 
     def test_addition_removal(self):
         model.RecipeAddition(
-            recipe      = model.Recipe(name="Rocky Mountain River IPA"),
+            recipe      = model.Recipe(
+                name='Rocky Mountain River IPA', 
+                author=model.User.get(1)
+            ),
             fermentable = model.Fermentable(name = '2-Row', origin='US'),
             amount      = 12,
             unit        = 'POUND',
@@ -654,3 +676,41 @@ class TestRecipeRemoval(TestApp):
         self.delete('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients/1')
 
         assert model.RecipeAddition.query.count() == 0
+
+
+class TestRecipeLookup(TestAuthenticatedApp):
+
+    def test_lookup(self):
+        model.Recipe(
+            name    = 'American IPA',
+            slugs   = [
+                model.RecipeSlug('American IPA'),
+                model.RecipeSlug('American IPA (Revised)')
+            ],
+            author  = model.User.get(1)
+        )
+        model.commit()
+
+        response = self.get('/recipes/500/american-ipa/builder/', status=404)
+        assert response.status_int == 404
+
+        response = self.get('/recipes/1/american-ipa/builder/')
+        assert response.status_int == 200
+
+        response = self.get('/recipes/1/american-ipa-revised/builder/')
+        assert response.status_int == 200
+
+        response = self.get('/recipes/1/invalid_slug/builder/', status=404)
+        assert response.status_int == 404
+
+    def test_unauthorized_lookup(self):
+        model.Recipe(
+            name    = 'American IPA',
+            slugs   = [
+                model.RecipeSlug('American IPA')
+            ]
+        )
+        model.commit()
+
+        response = self.get('/recipes/1/american-ipa/builder/', status=401)
+        assert response.status_int == 401

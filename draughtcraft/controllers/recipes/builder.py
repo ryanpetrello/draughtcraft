@@ -1,4 +1,5 @@
 from pecan                                      import expose, request, abort
+from pecan.secure                               import SecureController
 from pecan.rest                                 import RestController
 from draughtcraft                               import model
 from draughtcraft.lib.schemas.recipes.builder   import (
@@ -238,7 +239,16 @@ class RecipeBuilderAsyncController(object):
     settings            = RecipeSettingsController()
 
 
-class RecipeBuilderController(object):
+class RecipeBuilderController(SecureController):
+
+    @classmethod
+    def check_permissions(cls):
+        recipe = request.context['recipe']
+        if recipe.author:
+            return recipe.author == request.context['user']
+        if recipe == request.context['trial_recipe']:
+            return True
+        return False
 
     @expose('recipes/builder/index.html')
     def index(self):

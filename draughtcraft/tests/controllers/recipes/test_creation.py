@@ -50,6 +50,12 @@ class TestRecipeCreation(TestApp):
         assert response.status_int == 302
         assert response.headers['Location'].endswith('/recipes/1/rocky-mountain-river-ipa/builder')
 
+        #
+        # Because the user isn't logged in, we'll assume they're a guest
+        # and store the recipe as a `trial_recipe` in their session.
+        #
+        assert 'trial_recipe_id' in response.environ['beaker.session']
+
 
 class TestUserRecipeCreation(TestAuthenticatedApp):
 
