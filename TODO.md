@@ -16,7 +16,6 @@ Recipe Viewer
 Settings
 --------
 * Forgot Password
-* Change Password
 * Defaults
     - IBU Formula
     - Default Gallon Increment
