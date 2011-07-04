@@ -25,6 +25,6 @@ class TestUser(object):
             password    = u'testing123',
             email       = u'  RYAN@example.COM  ' 
         )
-        assert user.gravatar == "http://www.gravatar.com/avatar/%s" % (
+        assert user.gravatar == "http://www.gravatar.com/avatar/%s?d=mm" % (
             md5('ryan@example.com').hexdigest()
         )
