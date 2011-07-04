@@ -143,6 +143,21 @@ class TestSignup(TestApp):
         self.post('/signup/', params=params)
         assert model.User.query.count() == 0
 
+    def test_password_length(self):
+        """
+        Passwords should be at least 4 characters in length.
+        """
+        params = {
+            'username'          : 'test',
+            'password'          : 'foo',
+            'password_confirm'  : 'foo',
+            'email'             : 'ryan@example.com'
+        }
+
+        assert model.User.query.count() == 0
+        self.post('/signup/', params=params)
+        assert model.User.query.count() == 0
+
     def test_invalid_email(self):
         """
         Emails should be valid email addresses

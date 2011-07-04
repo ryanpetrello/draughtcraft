@@ -20,7 +20,6 @@ class SignupSchema(FilteredSchema):
                                 }
                             )
                           )
-    password            = validators.String(not_empty=True)
     password_confirm    = validators.String(not_empty=True)
     email               = UniqueEmail(not_empty=True)
 

@@ -23,6 +23,7 @@ class PasswordController(object):
     )
     def index_post(self, **kw):
         user = request.context['user']
+        user.password = kw['password']
 
         notify('Your password has been changed.')
         redirect('/settings/password', headers=response.headers)
