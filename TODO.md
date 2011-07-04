@@ -1,8 +1,6 @@
 Beta
 ====
 
-* Initial User Conversion Experience (e.g., Convert Your Recipe at Signup)
-
 Recipe Builder
 --------------
 * Configurable batch size
@@ -10,7 +8,6 @@ Recipe Builder
 * Save/Edit Workflow
 * Duplicate Recipes
 * Printable Recipes
-* Enforce Editing Permissions
 
 Recipe Viewer
 -------------
