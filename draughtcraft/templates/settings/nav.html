@@ -1,0 +1,19 @@
+<%page args="current" />
+
+<h1>
+  <a href="http://gravatar.com" target="window"><img src="${user.gravatar}?s=60" class="gravatar" /></a>
+  ${h.request.context['user'].username}'s Settings
+</h1>
+
+<%def name="navitem(name, href)">
+  <li class="${'current' if name.lower() == current else ''}">
+    <a href="${href}">${name}</a>
+  </li>
+</%def>
+
+<nav class="settings">
+  <ul>
+    ${navitem('Profile', '/settings/profile')}
+    ${navitem('Password', '/settings/password')}
+  </ul>
+</nav>

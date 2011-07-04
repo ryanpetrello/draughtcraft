@@ -20,6 +20,33 @@ h1  {
     margin-right: .25em;
   }
 }
+nav.settings  {
+  margin: 0;
+  width: auto;
+  ul  {
+    display: block;
+    padding-top: 0;
+    background: #F8F8F8;
+    float: none;
+    li  {
+      line-height: 30px;
+      padding: 3px 12px;
+      a  {
+        color: #145B74;
+      }
+      &.current  {
+        background: #FFF;
+        border: 1px solid #E8E8E8;
+        border-bottom: 0;
+        border-top: 0;
+        a  {
+          text-decoration: none;
+          color: #000;
+        }
+      }
+    }
+  }
+}
 #content-inner  {
   div.info  {
     padding: 25px;
