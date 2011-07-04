@@ -126,7 +126,7 @@ class Recipe(Entity):
         return '/recipes/%s/%s/%s' % (
             self.id,
             self.slugs[0].slug,
-            '' if public else 'builder'
+            '' if public else 'builder/'
         )
 
     @property

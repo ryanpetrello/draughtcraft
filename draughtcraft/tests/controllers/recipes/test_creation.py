@@ -9,6 +9,27 @@ class TestRecipeCreation(TestApp):
         self.get('/recipes/create')
         assert model.Recipe.query.count() == 0
 
+    def test_only_one_trial_recipe_allowed(self):
+        """
+        If you're not authenticated, and you create a recipe, and then attempt
+        to make another, you should be automatically redirected to your first
+        recipe.
+        """
+        params = {
+            'name'      : 'Rocky Mountain River IPA',
+            'type'      : 'MASH',
+            'volume'    : 25,
+            'unit'      : 'GALLON'
+        }
+
+        self.post('/recipes/create', params=params)
+        
+        response = self.get('/recipes/create')
+        assert response.status_int == 302
+        assert response.headers['Location'].endswith(
+            '/recipes/1/rocky-mountain-river-ipa/builder/'
+        )
+
     def test_schema_validation(self):
         params = {
             'name'      : 'Rocky Mountain River IPA',

@@ -372,7 +372,7 @@ class TestRecipe(object):
             name    = u'Rocky Mountain River IPA'
         )        
         assert recipe.url() == '/recipes/1/rocky-mountain-river-ipa/'
-        assert recipe.url(False) == '/recipes/1/rocky-mountain-river-ipa/builder'
+        assert recipe.url(False) == '/recipes/1/rocky-mountain-river-ipa/builder/'
 
     def test_printable_type(self):
         assert model.Recipe(

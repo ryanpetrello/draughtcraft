@@ -8,6 +8,14 @@ class RecipeCreationController(RestController):
 
     @expose('recipes/create.html')
     def get_all(self):
+        #
+        # If you're not logged in, and you already have a trial recipe,
+        # redirect to *that* recipe so you can't create another one.
+        #
+        recipe = request.context['trial_recipe'] 
+        if request.context['user'] is None and recipe is not None:
+            redirect(recipe.url(public=False)) 
+
         return dict()
 
     @expose(
