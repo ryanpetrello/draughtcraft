@@ -1,7 +1,7 @@
 <%page args="current" />
 
 <h1>
-  <a href="http://gravatar.com" target="window"><img src="${user.gravatar}?s=60" class="gravatar" /></a>
+  <a href="http://gravatar.com" target="window"><img src="${user.gravatar}&s=60" class="gravatar" /></a>
   ${h.request.context['user'].username}'s Settings
 </h1>
 

@@ -35,7 +35,7 @@ class User(Entity):
 
     @property
     def gravatar(self):
-        return 'http://www.gravatar.com/avatar/%s' % (
+        return 'http://www.gravatar.com/avatar/%s?d=mm' % (
             md5(self.email.strip().lower()).hexdigest()
         )
 

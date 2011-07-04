@@ -24,7 +24,7 @@
       <nav class="user">
         <ul>
           <li>
-          <img src="${h.request.context['user'].gravatar}?s=140"
+          <img src="${h.request.context['user'].gravatar}&s=140"
             width="20"
             class="gravatar"
           />
@@ -36,6 +36,17 @@
           </li>
           <li><a href="/settings/profile">settings</a></li>
           <li><a href="/logout">logout</a></li>
+        </ul>
+      </nav>
+    % else:
+      <nav class="user">
+        <ul>
+          <li>
+          <img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?s=140&d=mm"
+            width="20"
+            class="gravatar"
+          />
+          <li><a href="/login">login</a></li>
         </ul>
       </nav>
     % endif
@@ -56,9 +67,6 @@
         % if h.request.context['user'] is None:
           <li>
             <a href="/signup" class='signup'>Sign Up</a>
-          </li>
-          <li>
-            <a href="/login">Log In</a>
           </li>
         % endif
         <li>
