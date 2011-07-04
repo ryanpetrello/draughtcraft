@@ -1,5 +1,6 @@
 from pecan          import request
 from pecan.secure   import SecureController
+from password       import PasswordController
 from profile        import ProfileController
 
 
@@ -9,4 +10,5 @@ class SettingsController(SecureController):
     def check_permissions(cls):
         return request.context['user'] is not None
 
-    profile = ProfileController()
+    password    = PasswordController()
+    profile     = ProfileController()

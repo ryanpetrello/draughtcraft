@@ -6,7 +6,7 @@ Recipe Builder
 * Configurable batch size
 * Configurable recipe type (e.g., All Grain, Steep, Extract, etc...)
 * Save/Edit Workflow
-* Duplicate Recipes
+* Duplicate Recipes, including the idea of `origin` recipes (similar to fork)
 * Printable Recipes
 
 Recipe Viewer
