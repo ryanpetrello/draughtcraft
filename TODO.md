@@ -16,10 +16,6 @@ Recipe Viewer
 Settings
 --------
 * Forgot Password
-* Defaults
-    - IBU Formula
-    - Default Gallon Increment
-    - Default Recipe Type (e.g., All Grain...)
 
 User Experience
 ---------------
