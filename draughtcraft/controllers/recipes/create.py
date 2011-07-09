@@ -47,4 +47,13 @@ class RecipeCreationController(RestController):
         if recipe.author is None:
             save_trial_recipe(recipe)
 
+        #
+        # If we have an authenticated user, and this is their first recipe,
+        # save their choices as defaults so they'll be used again on their
+        # next recipe.
+        #
+        if recipe.author:
+            recipe.author.settings['default_recipe_type'] = recipe.type
+            recipe.author.settings['default_recipe_volume'] = recipe.gallons
+
         redirect('/recipes/%d/%s/builder/' % (recipe.id, recipe.slugs[0].slug))

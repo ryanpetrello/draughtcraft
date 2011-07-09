@@ -118,3 +118,34 @@ class TestUserRecipeCreation(TestAuthenticatedApp):
         assert r.author.id == 1
 
         assert 'trial_recipe_id' not in response.environ['beaker.session']
+
+    def test_default_settings_for_first_recipe(self):
+        """
+        If the created recipe is the first recipe for the authenticated user,
+        store their chosen settings as defaults (they're likely to use them
+        again next time).
+        """
+        params = {
+            'name'      : 'Rocky Mountain River IPA (Extract)',
+            'type'      : 'EXTRACT',
+            'volume'    : 25,
+            'unit'      : 'GALLON'
+        }
+        self.post('/recipes/create', params=params)
+
+        r = model.Recipe.get(1)
+        assert r.author.settings['default_recipe_type'] == 'EXTRACT'
+        assert r.author.settings['default_recipe_volume'] == 25
+
+        # This is not the first recipe, so we shouldn't save new defaults.
+        params = {
+            'name'      : 'Rocky Mountain River IPA (All-Grain)',
+            'type'      : 'GRAIN',
+            'volume'    : 5,
+            'unit'      : 'GALLON'
+        }
+        self.post('/recipes/create', params=params)
+
+        r = model.Recipe.get(1)
+        assert r.author.settings['default_recipe_type'] == 'EXTRACT'
+        assert r.author.settings['default_recipe_volume'] == 25
