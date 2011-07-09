@@ -36,18 +36,19 @@
           <a href="#" class="question">Which should I choose?</a>
         </dt>
         <dd>
-          ${h.select('type', None, [
-            ('MASH', 'All Grain'),
-            ('EXTRACT', 'Extract'),
-            ('EXTRACTSTEEP', 'Extract with Steeped Grains'),
-            ('MINIMASH', 'Extract with Mini-Mash')
-          ], tabindex='2')}
+            ${h.select('type', 
+            h.request.context['user'].settings['default_recipe_type'] if h.request.context['user'] else None, [
+                ('MASH', 'All Grain'),
+                ('EXTRACT', 'Extract'),
+                ('EXTRACTSTEEP', 'Extract with Steeped Grains'),
+                ('MINIMASH', 'Extract with Mini-Mash')
+            ], tabindex='2')}
         </dd>
         <dt><label for="gallons">Final Volume</label></dt>
         <dd>
           ${h.select(
             'volume', 
-            5,
+            h.request.context['user'].settings['default_recipe_volume'] if h.request.context['user'] else 5,
             [(v, '%s Gallon(s)' % v) for v in [1, 2, 2.5, 3, 4, 5, 8, 10, 15, 20, 25]],
             tabindex='3'
           )}
