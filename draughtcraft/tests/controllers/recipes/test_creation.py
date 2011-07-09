@@ -140,12 +140,12 @@ class TestUserRecipeCreation(TestAuthenticatedApp):
         # This is not the first recipe, so we shouldn't save new defaults.
         params = {
             'name'      : 'Rocky Mountain River IPA (All-Grain)',
-            'type'      : 'GRAIN',
+            'type'      : 'MASH',
             'volume'    : 5,
             'unit'      : 'GALLON'
         }
         self.post('/recipes/create', params=params)
 
-        r = model.Recipe.get(1)
+        r = model.Recipe.get(2)
         assert r.author.settings['default_recipe_type'] == 'EXTRACT'
         assert r.author.settings['default_recipe_volume'] == 25

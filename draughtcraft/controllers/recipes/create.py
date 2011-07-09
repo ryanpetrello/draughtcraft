@@ -52,7 +52,7 @@ class RecipeCreationController(RestController):
         # save their choices as defaults so they'll be used again on their
         # next recipe.
         #
-        if recipe.author:
+        if recipe.author and len(recipe.author.recipes) == 1:
             recipe.author.settings['default_recipe_type'] = recipe.type
             recipe.author.settings['default_recipe_volume'] = recipe.gallons
 
