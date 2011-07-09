@@ -21,6 +21,7 @@ setup(
         "formencode",
         "webhelpers",
         "webflash",
+        "simplejson",
         "pytest-cov"
     ],
     zip_safe = False,
