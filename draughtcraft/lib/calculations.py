@@ -89,6 +89,14 @@ class Calculations(object):
         """
         (Estimated) IBU of the recipe based on available hops and utilization.
         """
+
+        #
+        # Attempt to look up the preferred calculation method for the 
+        # recipe's author.
+        #
+        user = self.recipe.author
+        if user:
+            return getattr(self, user.settings['default_ibu_formula'], self.tinseth)
         return self.tinseth
 
     @property
