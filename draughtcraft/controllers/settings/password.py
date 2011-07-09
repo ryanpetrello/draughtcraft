@@ -18,8 +18,7 @@ class PasswordController(object):
         method              = 'POST',
         schema              = UserPasswordSchema(),
         error_handler       = lambda: request.path,
-        htmlfill            = dict(auto_insert_errors = True, prefix_error = False),
-        variable_decode     = True
+        htmlfill            = dict(auto_insert_errors = True, prefix_error = False)
     )
     def index_post(self, **kw):
         user = request.context['user']
