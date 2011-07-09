@@ -1,0 +1,61 @@
+<%inherit file="../layout.html" />
+
+<%def name="title()">Edit Your Recipe Settings</%def>
+
+<%def name="style()">
+    <link rel="stylesheet/less" type="text/css" media="screen" href="/css/thin.less" />
+    <link rel="stylesheet/less" type="text/css" media="screen" href="/css/settings/shared.less" />
+</%def>
+
+<%include file="nav.html" args="current='recipes'" />
+
+<div class="clearfix">
+
+  ${h.notices.render()}
+
+  <form method="POST">
+    <fieldset>
+      <dl class="clearfix">
+
+        <dt><label for="name">Default Recipe Type</label></dt>
+        <dd>
+          ${h.select('default_recipe_type', user.settings['default_recipe_type'], [
+            ('MASH', 'All Grain'),
+            ('EXTRACT', 'Extract'),
+            ('EXTRACTSTEEP', 'Extract with Steeped Grains'),
+            ('MINIMASH', 'Extract with Mini-Mash')
+          ], tabindex='1')}
+        </dd>
+
+        <dt><label for="name">Default Batch Size</label></dt>
+        <dd>
+          ${h.select(
+            'default_recipe_volume', 
+            user.settings['default_recipe_volume'],
+            [(v, '%s Gallon(s)' % v) for v in [1, 2, 2.5, 3, 4, 5, 8, 10, 15, 20, 25]],
+            tabindex='2'
+          )}
+        </dd>
+
+        <dt><label for="name">Preferred IBU Calculation</label></dt>
+        <dd>
+          ${h.select('default_ibu_formula', user.settings['default_ibu_formula'], [
+            ('tinseth', 'Tinseth Formula'),
+            ('rager', 'Rager Formula'),
+            ('daniels', 'Daniels Formula')
+          ], tabindex='3')}
+        </dd>
+
+      </dl>
+    </fieldset>
+
+    <div class="buttons">
+      <button class="ribbon" tabindex="4">
+        Save
+      </button>
+      or <a href="/" tabindex="5">Cancel</a>
+    </div>
+
+  </form>
+
+</div>

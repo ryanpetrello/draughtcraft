@@ -2,6 +2,7 @@ from pecan          import request
 from pecan.secure   import SecureController
 from password       import PasswordController
 from profile        import ProfileController
+from recipe         import RecipeController
 
 
 class SettingsController(SecureController):
@@ -12,3 +13,4 @@ class SettingsController(SecureController):
 
     password    = PasswordController()
     profile     = ProfileController()
+    recipe      = RecipeController()

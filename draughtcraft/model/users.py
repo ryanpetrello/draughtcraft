@@ -1,7 +1,11 @@
-from elixir     import Entity, Field, Unicode, DateTime, OneToMany
-from pecan      import conf
-from datetime   import datetime
-from hashlib    import sha256, md5
+from elixir                             import (Entity, Field, Unicode, DateTime,
+                                                UnicodeText, OneToMany, ManyToOne)
+from pecan                              import conf
+from simplejson                         import loads, dumps
+from datetime                           import datetime
+from hashlib                            import sha256, md5
+from sqlalchemy.ext.associationproxy    import AssociationProxy
+from sqlalchemy.orm.collections         import attribute_mapped_collection
 
 
 class User(Entity):
@@ -16,7 +20,15 @@ class User(Entity):
 
     location    = Field(Unicode(256))
 
-    recipes     = OneToMany('Recipe', inverse='author')
+    recipes         = OneToMany('Recipe', inverse='author')
+    user_settings   = OneToMany('UserSetting', cascade='all, delete-orphan',
+                                   collection_class=attribute_mapped_collection('name'))
+    settings        = AssociationProxy('user_settings', 'value', 
+                                          creator=lambda name, value: UserSetting(name=name, value=value))
+
+    def __init__(self, *args, **kwargs):
+        super(User, self).__init__(*args, **kwargs)
+        UserSetting.init_defaults(self)
 
     @property
     def full_name(self):
@@ -47,3 +59,32 @@ class User(Entity):
             'example'
         )
         return sha256(v + salt).hexdigest()
+
+
+class UserSetting(Entity):
+    user        = ManyToOne('User')
+    name        = Field(Unicode(64), index=True)
+    _value      = Field(UnicodeText)
+
+    __defaults__ = {
+        'default_ibu_formula'   : 'tinseth',
+        'default_recipe_volume' : 5,
+        'default_recipe_type'   : 'MASH'
+    }
+
+    @classmethod
+    def init_defaults(cls, user):
+        defaults = UserSetting.__defaults__.items()
+        for n, v in defaults:
+            cls(user=user, name=n, value=v)
+
+    """
+    Encode the actual value as JSON so we can retain its data type.
+    """
+    @property
+    def value(self):
+        return loads(self._value)
+
+    @value.setter
+    def value(self, v):
+        self._value = dumps(v)

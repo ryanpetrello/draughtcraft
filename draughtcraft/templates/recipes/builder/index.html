@@ -28,7 +28,7 @@
       ${h.select(
         'volume', 
         [recipe.gallons],
-        [(float(v), '%d Gallon(s)' % v) for v in [1, 2, 3, 4, 5, 8, 10, 15, 20, 25]],
+        [(float(v), '%s Gallon(s)' % v) for v in [1, 2, 2.5, 3, 4, 5, 8, 10, 15, 20, 25]],
         class_ = 'gallons'
       )}
       ${h.hidden(
