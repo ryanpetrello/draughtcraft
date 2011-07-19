@@ -1,6 +1,12 @@
 origin,name,type,ppg,lovibond,description
+BELGIAN,Aromatic Malt,MALT,36,26,"A kilned barley malt used to give beer a strong, aggressive malt aroma and rich color."
+BELGIAN,Biscuit Malt,MALT,36,23,"Used in English ales, brown ales and porters. Adds a biscuit-like flavor and aroma."
+BELGIAN,Caramunich Malt,MALT,33,56,"Caramel, copper colored malt. Used in Belgian ales and German bocks."
+BELGIAN,Caravienne Malt,MALT,34,22,Light Belgian crystal malt. Used in light Trappist and Abbey style Belgian ales.
 BELGIAN,Pale Malt,MALT,36,2,A standard base malt for many beer recipes.
 BELGIAN,Pilsner Malt,MALT,36,2,Base malt for Belgian beer styles.
+BELGIAN,Special B Malt,MALT,30,180,"A dark, flavorful crystal malt traditionally malted in Belgium. In small amounts, it gives a unique flavor to the finished beer that is often compared to raisins or dried fruit."
+BELGIAN,Wheat Malt,MALT,37,2,Malted wheat base for use in all wheat styles.
 GERMAN,Acidulated Malt,MALT,27,3,A type of malted barley which contains a small proportion of lactic acid. Traditionally used by German brewers to adjust malt PH without chemicals to adhere to German purity laws.
 GERMAN,Brumalt,MALT,33,23,"Dark German malt developed to add malt flavor of Alt, Marzen and Oktoberfest beers. Helps create authentic maltiness without having to do a decoction mash."
 GERMAN,Chocolate Wheat Malt,MALT,25,425,Intensifies aroma and color in top-fermented beers such as dark wheat beers.
