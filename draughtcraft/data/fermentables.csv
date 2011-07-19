@@ -32,10 +32,12 @@ UK,Peat Smoked Malt,MALT,34,3,Robust smoky malt that provides a smoky flavor. Us
 UK,Pilsner Malt,MALT,37,2,Pilsner base malt for English beer styles.
 US,2-Row Malt,MALT,36,2,A standard base malt for many beer recipes.
 US,6-Row Malt,MALT,35,2,A base malt with a higher diastatic power than 2-Row Malt to help convert other adjuncts.
+US,Barley Hulls,ADJUNCT,0,0,"Hulls are introduced to improve the speed of lautering when making high gravity or high adjunct beers. Hulls are neutral in flavor, body, and color, and are inert. Good for wheat beers, Wits, and others that have high protein mashes."
 US,Black Barley,GRAIN,25,500,"Unmalted barley roasted at high temperature to create a dry, coffee-like flavor. Imparts the sharp, acrid flavor characteristic of dry stouts."
 US,Black Patent Malt,MALT,25,500,Provides dark color and dry roasted flavor characteristic of Stouts and Porters.
 US,"Brown Sugar, Dark",SUGAR,46,50,"Imparts a rich sweet flavor. Used in Scottish ales, holiday ales and some old ales."
 US,"Brown Sugar, Light",SUGAR,46,8,"Imparts a rich sweet flavor. Used in Scottish ales, holiday ales and some old ales."
+US,Cane (Beet) Sugar,SUGAR,46,0,Common household baking sugar. Lightens flavor and body of beer.
 US,Chocolate Malt,MALT,28,350,"A dark malt that gives a rich red or brown color and a nutty flavor. Used in brown ales, porters, and some stouts."
 US,Corn Grits,GRAIN,37,1,Imparts a corn or grain taste. Mash required. Used to increase gravity of American lagers.
 US,Corn Sugar,SUGAR,46,0,
@@ -54,6 +56,7 @@ US,Flaked Oats,GRAIN,37,1,"Adds body, mouth-feel, and head retention to beer. Us
 US,Flaked Rice,GRAIN,32,1,"Used to add fermentables without increasing body or flavor. Produces a milder, less grainy tasting beer."
 US,Flaked Rye,GRAIN,36,2,"Imparts a dry, crisp rye flavor. Can be easier to mash than raw rye."
 US,Flaked Wheat,GRAIN,35,1.6,Increases body and foam retention. Used in place of raw or torrefied wheat for faster conversion and better yield.
+US,Honey,EXTRACT,35,1,Can be used to lighten flavor and body when substituted for malt.
 US,Milk Sugar,SUGAR,35,0,"Not fully fermentable, so it adds lasting sweetness. Lactose can be added to lend sweetness to Sweet Stouts and Porters."
 US,Molasses,SUGAR,36,80,"Imparts a strong, sweet flavor. Used primarily in stouts and porters."
 US,Munich Malt - 10L,MALT,35,10,"Provides a malty-sweet flavor characteristic and adds a slight orange color to the beer."
@@ -67,4 +70,5 @@ US,Torrefied Barley,GRAIN,36,2,"Raw barley that has been ""popped"" open to open
 US,Torrefied Wheat,GRAIN,36,1.7,"Raw wheat that has been ""popped"" open to open kernels. Used in place of raw wheat for faster conversion and higher yields. High in haze-producing protein."
 US,Turbinado Sugar,SUGAR,44,10,"Light, raw brown sugar. May be used in British pale ales or high gravity Belgian ales."
 US,Victory Malt,MALT,34,25,"Toasted malt that adds a nutty, biscuit, and/or toasted flavor to English ales."
+US,Wheat Hulls,ADJUNCT,0,0,"Hulls are introduced to improve the speed of lautering when making high gravity or high adjunct beers. Hulls are neutral in flavor, body, and color, and are inert. Good for wheat beers, Wits, and others that have high protein mashes."
 US,White Wheat Malt,MALT,40,2,"White wheat gives a malty flavor not available from raw wheat.  Used in Weiss, Wit and White beers."
