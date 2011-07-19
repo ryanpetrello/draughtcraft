@@ -1,6 +1,9 @@
 origin,name,type,ppg,lovibond,description
 BELGIAN,Aromatic Malt,MALT,36,26,"A kilned barley malt used to give beer a strong, aggressive malt aroma and rich color."
 BELGIAN,Biscuit Malt,MALT,36,23,"Used in English ales, brown ales and porters. Adds a biscuit-like flavor and aroma."
+BELGIAN,"Candi Sugar, Amber",SUGAR,36,75,"Crystalized candi sugar (sucrose) used in many Belgian Tripels, Dubbels, and holiday ales."
+BELGIAN,"Candi Sugar, Clear",SUGAR,36,1,"Crystalized candi sugar (sucrose) used in many Belgian Tripels, Dubbels, and holiday ales."
+BELGIAN,"Candi Sugar, Dark",SUGAR,36,275,"Crystalized candi sugar (sucrose) used in many Belgian Tripels, Dubbels, and holiday ales."
 BELGIAN,Caramunich Malt,MALT,33,56,"Caramel, copper colored malt. Used in Belgian ales and German bocks."
 BELGIAN,Caravienne Malt,MALT,34,22,Light Belgian crystal malt. Used in light Trappist and Abbey style Belgian ales.
 BELGIAN,Pale Malt,MALT,36,2,A standard base malt for many beer recipes.
@@ -20,7 +23,9 @@ GERMAN,Wheat Malt,MALT,39,2,Malted wheat base for use in all wheat styles.
 UK,Amber Malt,MALT,35,22,"Roasted specialty malt used in some English browns, milds and old ales to add color and a biscuit taste."
 UK,Brown Malt,MALT,32,65,"Imparts a dry, biscuit flavor. Used in nut brown ales, porters and some Belgian ales."
 UK,Chocolate Malt,MALT,34,450,"Dark malt that gives a rich red or brown color and nutty flavor. Maintains some malty flavor, but not as dark as roasted malt."
+UK,Dememera Sugar,SUGAR,46,2,"Dark, unrefined brown sugar that contains molasses and other dark impurities. Great for brown ales and porters. Adds slight sweetness and smooth character."
 UK,English Mild Malt,MALT,37,4,A light specialty malt used in Brown Ales.
+UK,Invert Sugar,SUGAR,46,0,Used to increase starting gravity and also as an adjunct for some Belgian and English ales.
 UK,Maris Otter,MALT,38,3,A premium base malt from the UK.
 UK,Pale Malt,MALT,36,3,"Base malt for English beer styles.Lower diastatic power than American 2 Row."
 UK,Peat Smoked Malt,MALT,34,3,Robust smoky malt that provides a smoky flavor. Used in scottish ales and wee heavy ales.
@@ -29,8 +34,12 @@ US,2-Row Malt,MALT,36,2,A standard base malt for many beer recipes.
 US,6-Row Malt,MALT,35,2,A base malt with a higher diastatic power than 2-Row Malt to help convert other adjuncts.
 US,Black Barley,GRAIN,25,500,"Unmalted barley roasted at high temperature to create a dry, coffee-like flavor. Imparts the sharp, acrid flavor characteristic of dry stouts."
 US,Black Patent Malt,MALT,25,500,Provides dark color and dry roasted flavor characteristic of Stouts and Porters.
+US,"Brown Sugar, Dark",SUGAR,46,50,"Imparts a rich sweet flavor. Used in Scottish ales, holiday ales and some old ales."
+US,"Brown Sugar, Light",SUGAR,46,8,"Imparts a rich sweet flavor. Used in Scottish ales, holiday ales and some old ales."
 US,Chocolate Malt,MALT,28,350,"A dark malt that gives a rich red or brown color and a nutty flavor. Used in brown ales, porters, and some stouts."
 US,Corn Grits,GRAIN,37,1,Imparts a corn or grain taste. Mash required. Used to increase gravity of American lagers.
+US,Corn Sugar,SUGAR,46,0,
+US,Corn Syrup,SUGAR,36,1,Syrup derived from corn with many of the same properties as corn sugar. May be used to enhance gravity without adding much body or flavor.
 US,Crystal 10L,MALT,34,10,"This light malt will lend body and mouth feel with a minimum of color, but with a light caramel sweetness."
 US,Crystal 20L,MALT,34,20,"This malt will provide a golden color and a sweet, mild caramel flavor."
 US,Crystal 40L,MALT,34,40,"This malt will lend a balance of medium caramel color, flavor, and body."
@@ -45,13 +54,17 @@ US,Flaked Oats,GRAIN,37,1,"Adds body, mouth-feel, and head retention to beer. Us
 US,Flaked Rice,GRAIN,32,1,"Used to add fermentables without increasing body or flavor. Produces a milder, less grainy tasting beer."
 US,Flaked Rye,GRAIN,36,2,"Imparts a dry, crisp rye flavor. Can be easier to mash than raw rye."
 US,Flaked Wheat,GRAIN,35,1.6,Increases body and foam retention. Used in place of raw or torrefied wheat for faster conversion and better yield.
-US,Raw Barley,GRAIN,28,2,Unmalted barley which can be used to add body to your beer. Use in homebrew requires very fine milling combined with a decoction or multi-stage mash.
-US,Torrefied Barley,GRAIN,36,2,"Raw barley that has been ""popped"" open to open kernels. Used in place of raw barley for faster conversion and higher yields. High in haze-producing protein."
-US,Torrefied Wheat,GRAIN,36,1.7,"Raw wheat that has been ""popped"" open to open kernels. Used in place of raw wheat for faster conversion and higher yields. High in haze-producing protein."
+US,Milk Sugar,SUGAR,35,0,"Not fully fermentable, so it adds lasting sweetness. Lactose can be added to lend sweetness to Sweet Stouts and Porters."
+US,Molasses,SUGAR,36,80,"Imparts a strong, sweet flavor. Used primarily in stouts and porters."
 US,Munich Malt - 10L,MALT,35,10,"Provides a malty-sweet flavor characteristic and adds a slight orange color to the beer."
 US,Munich Malt - 20L,MALT,35,20,"Provides a malty-sweet flavor characteristic and adds an orange to deep orange color to the beer."
+US,Raw Barley,GRAIN,28,2,Unmalted barley which can be used to add body to your beer. Use in homebrew requires very fine milling combined with a decoction or multi-stage mash.
 US,Rye Malt,MALT,29,5,"Adds a dry, crisp character to the beer.  Yields a deep red color, and a distinctive rye flavor."
-US,Special Roast,MALT,33,50,"Used in English ales, nut brown ales and porters. Adds a toasted, biscuit-like flavor and aroma."
+US,Special Roast,MALT,33,50,"Used in English ales, nut brown ales and porters. Adds a toasted, biscuit-like flavor and aroma."
+US,"Sugar, Table (Sucrose)",SUGAR,46,1,"White table sugar, or sucrose, is primarily used to increase alcohol."
 US,Toasted Malt,MALT,29,28,A malt that adds reddish orange color and body without adding sweetness.
-US,Victory Malt,MALT,34,25,"Toasted malt that adds a nutty, biscuit, and/or toasted flavor to English ales."
+US,Torrefied Barley,GRAIN,36,2,"Raw barley that has been ""popped"" open to open kernels. Used in place of raw barley for faster conversion and higher yields. High in haze-producing protein."
+US,Torrefied Wheat,GRAIN,36,1.7,"Raw wheat that has been ""popped"" open to open kernels. Used in place of raw wheat for faster conversion and higher yields. High in haze-producing protein."
+US,Turbinado Sugar,SUGAR,44,10,"Light, raw brown sugar. May be used in British pale ales or high gravity Belgian ales."
+US,Victory Malt,MALT,34,25,"Toasted malt that adds a nutty, biscuit, and/or toasted flavor to English ales."
 US,White Wheat Malt,MALT,40,2,"White wheat gives a malty flavor not available from raw wheat.  Used in Weiss, Wit and White beers."
