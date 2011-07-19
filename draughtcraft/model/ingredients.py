@@ -49,6 +49,7 @@ class Fermentable(Ingredient):
 
     TYPES = [
         'MALT',
+        'GRAIN',
         'ADJUNCT',
         'EXTRACT',
         'SUGAR'

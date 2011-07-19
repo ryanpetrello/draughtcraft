@@ -3,7 +3,12 @@ BELGIAN,Pale Malt,MALT,36,2,A standard base malt for many beer recipes.
 BELGIAN,Pilsner Malt,MALT,36,2,Base malt for Belgian beer styles.
 GERMAN,Pilsner Malt,MALT,37,2,German base malt for Pilsners and Bohemian Lagers.
 GERMAN,Vienna Malt,MALT,36,4,"A kiln-dried barley malt darker than pale ale malt, but not as dark as Munich Malt. It imparts a golden to orange color and a distinctive toast or biscuit malt aroma to the beer."
+UK,Amber Malt,MALT,35,22,"Roasted specialty malt used in some English browns, milds and old ales to add color and a biscuit taste."
+UK,Brown Malt,MALT,32,65,"Imparts a dry, biscuit flavor. Used in nut brown ales, porters and some Belgian ales."
+UK,Chocolate Malt,MALT,34,450,"Dark malt that gives a rich red or brown color and nutty flavor. Maintains some malty flavor, but not as dark as roasted malt."
+UK,English Mild Malt,MALT,37,4,A light specialty malt used in Brown Ales.
 UK,Pale Malt,MALT,36,3,"Base malt for English beer styles.Lower diastatic power than American 2 Row."
+UK,Peat Smoked Malt,MALT,34,3,Robust smoky malt that provides a smoky flavor. Used in scottish ales and wee heavy ales.
 UK,Pilsner Malt,MALT,37,2,Pilsner base malt for English beer styles.
 US,2-Row Malt,MALT,36,2,A standard base malt for many beer recipes.
 US,6-Row Malt,MALT,35,2,A base malt with a higher diastatic power than 2-Row Malt to help convert other adjuncts.
