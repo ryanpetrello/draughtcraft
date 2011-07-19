@@ -1,8 +1,16 @@
 origin,name,type,ppg,lovibond,description
 BELGIAN,Pale Malt,MALT,36,2,A standard base malt for many beer recipes.
 BELGIAN,Pilsner Malt,MALT,36,2,Base malt for Belgian beer styles.
+GERMAN,Acidulated Malt,MALT,27,3,A type of malted barley which contains a small proportion of lactic acid. Traditionally used by German brewers to adjust malt PH without chemicals to adhere to German purity laws.
+GERMAN,Brumalt,MALT,33,23,"Dark German malt developed to add malt flavor of Alt, Marzen and Oktoberfest beers. Helps create authentic maltiness without having to do a decoction mash."
+GERMAN,Chocolate Wheat Malt,MALT,25,425,Intensifies aroma and color in top-fermented beers such as dark wheat beers.
+GERMAN,Dark Wheat Malt,MALT,39,9,Dark malted wheat base for use in dark wheat styles such as Dunkleweizen.
+GERMAN,Melanoidin Malt,MALT,37,20,"Aromatic malt from Bamberg, Germany. Promotes a full flavor and rounds off beer color. Promotes deep red color and malty flavor."
+GERMAN,Munich Malt,MALT,37,9,Munich Malt has a malty sweet flavor characteristic and adds a reddish amber color to the beer.
 GERMAN,Pilsner Malt,MALT,37,2,German base malt for Pilsners and Bohemian Lagers.
+GERMAN,Smoked Malt,MALT,37,9,"Malt that has been smoked over an open fire to create a distinctive ""smoked"" flavor and aroma. Used primarily for German Rauchbier but can also be added to Brown Ales and Porters."
 GERMAN,Vienna Malt,MALT,36,4,"A kiln-dried barley malt darker than pale ale malt, but not as dark as Munich Malt. It imparts a golden to orange color and a distinctive toast or biscuit malt aroma to the beer."
+GERMAN,Wheat Malt,MALT,39,2,Malted wheat base for use in all wheat styles.
 UK,Amber Malt,MALT,35,22,"Roasted specialty malt used in some English browns, milds and old ales to add color and a biscuit taste."
 UK,Brown Malt,MALT,32,65,"Imparts a dry, biscuit flavor. Used in nut brown ales, porters and some Belgian ales."
 UK,Chocolate Malt,MALT,34,450,"Dark malt that gives a rich red or brown color and nutty flavor. Maintains some malty flavor, but not as dark as roasted malt."
