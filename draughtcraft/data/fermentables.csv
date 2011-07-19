@@ -1,0 +1,27 @@
+origin,name,type,ppg,lovibond,description
+BELGIAN,Pale Malt,MALT,36,2,A standard base malt for many beer recipes.
+BELGIAN,Pilsner Malt,MALT,36,2,Base malt for Belgian beer styles.
+GERMAN,Pilsner Malt,MALT,37,2,German base malt for Pilsners and Bohemian Lagers.
+GERMAN,Vienna Malt,MALT,36,4,"A kiln-dried barley malt darker than pale ale malt, but not as dark as Munich Malt. It imparts a golden to orange color and a distinctive toast or biscuit malt aroma to the beer."
+UK,Pale Malt,MALT,36,3,"Base malt for English beer styles.Lower diastatic power than American 2 Row."
+UK,Pilsner Malt,MALT,37,2,Pilsner base malt for English beer styles.
+US,2-Row Malt,MALT,36,2,A standard base malt for many beer recipes.
+US,6-Row Malt,MALT,35,2,A base malt with a higher diastatic power than 2-Row Malt to help convert other adjuncts.
+US,Black Barley,GRAIN,25,500,"Unmalted barley roasted at high temperature to create a dry, coffee-like flavor. Imparts the sharp, acrid flavor characteristic of dry stouts."
+US,Black Patent Malt,MALT,25,500,Provides dark color and dry roasted flavor characteristic of Stouts and Porters.
+US,Chocolate Malt,MALT,28,350,"A dark malt that gives a rich red or brown color and a nutty flavor. Used in brown ales, porters, and some stouts."
+US,Crystal 10L,MALT,34,10,"This light malt will lend body and mouth feel with a minimum of color, but with a light caramel sweetness."
+US,Crystal 20L,MALT,34,20,"This malt will provide a golden color and a sweet, mild caramel flavor."
+US,Crystal 40L,MALT,34,40,"This malt will lend a balance of medium caramel color, flavor, and body."
+US,Crystal 60L,MALT,34,60,"This malt will lend a well rounded caramel flavor, color and sweetness."
+US,Crystal 80L,MALT,34,80,"This malt will lend a well a pronounced caramel flavor, color and sweetness."
+US,Crystal 90L,MALT,34,90,"This malt will lend a well a pronounced caramel flavor, color and sweetness."
+US,Crystal 120L,MALT,33,120,"This malt will lend a complex sharp caramel flavor and aroma to beers. Used in smaller quantities this malt will add color and slight sweetness to beers, while heavier concentrations are well suited to strong beers."
+US,Cara-Pils/Dextrine,MALT,33,2,"Significantly increases foam/head retention and body of the beer.  Also sold under the names ""Dextrine"" and ""Cara-Foam""."
+US,Munich Malt - 10L,MALT,35,10,"Provides a malty-sweet flavor characteristic and adds a slight orange color to the beer."
+US,Munich Malt - 20L,MALT,35,20,"Provides a malty-sweet flavor characteristic and adds an orange to deep orange color to the beer."
+US,Rye Malt,MALT,29,5,"Adds a dry, crisp character to the beer.  Yields a deep red color, and a distinctive rye flavor."
+US,Special Roast,MALT,33,50,"Used in English ales, nut brown ales and porters. Adds a toasted, biscuit-like flavor and aroma."
+US,Toasted Malt,MALT,29,28,A malt that adds reddish orange color and body without adding sweetness.
+US,Victory Malt,MALT,34,25,"Toasted malt that adds a nutty, biscuit, and/or toasted flavor to English ales."
+US,White Wheat Malt,MALT,40,2,"White wheat gives a malty flavor not available from raw wheat.  Used in Weiss, Wit and White beers."
