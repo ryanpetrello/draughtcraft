@@ -22,7 +22,7 @@ ORIGINS = [
 
 class Ingredient(Entity):
 
-    using_options(inheritance='multi', polymorphic=True)
+    using_options(inheritance='concrete', polymorphic=True)
     
     name                = Field(Unicode(256))
     description         = Field(UnicodeText)
@@ -45,7 +45,7 @@ class Ingredient(Entity):
 
 class Fermentable(Ingredient):
 
-    using_options(inheritance='multi', polymorphic=True)
+    using_options(inheritance='concrete', polymorphic=True)
 
     TYPES = [
         'MALT',
@@ -72,7 +72,7 @@ class Fermentable(Ingredient):
 
 class Hop(Ingredient):
 
-    using_options(inheritance='multi', polymorphic=True)
+    using_options(inheritance='concrete', polymorphic=True)
 
     alpha_acid          = Field(Float())
     origin              = Field(Enum(*ORIGINS))
@@ -89,7 +89,7 @@ class Hop(Ingredient):
 
 class Yeast(Ingredient):
 
-    using_options(inheritance='multi', polymorphic=True)
+    using_options(inheritance='concrete', polymorphic=True)
 
     TYPES = [
         'ALE',
@@ -120,6 +120,6 @@ class Yeast(Ingredient):
 
 class Extra(Ingredient):
 
-    using_options(inheritance='multi', polymorphic=True)
+    using_options(inheritance='concrete', polymorphic=True)
 
     additions           = OneToMany('RecipeAddition', inverse='extra')
