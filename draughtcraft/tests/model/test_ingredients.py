@@ -16,8 +16,9 @@ class TestIngredients(TestApp):
         ).printed_name == u'2-Row (Belgian)'
 
         assert model.Hop(
-            name    = 'Cascade'
-        ).printed_name == u'Cascade'
+            name    = 'Cascade',
+            origin  = 'US'
+        ).printed_name == u'(US) Cascade'
 
         assert model.Yeast(
             name    = 'Wyeast 1056 - American Ale'

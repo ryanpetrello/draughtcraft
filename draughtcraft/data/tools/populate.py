@@ -27,7 +27,7 @@ handle = SqlSoup(
 )
 
 for table, cls in tables:
-    for ingredient in getattr(handle, table).all():
+    for ingredient in getattr(handle, table).order_by('id').all():
 
         # Coerce the data mapping into a dictionary
         kwargs = dict(

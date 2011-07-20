@@ -32,7 +32,7 @@ class TestMashAdditions(TestAuthenticatedApp):
 
     def test_hop(self):
         model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.Hop(name = 'Cascade')
+        model.Hop(name = 'Cascade', origin = 'US')
         model.commit()
 
         self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params={
@@ -103,7 +103,8 @@ class TestBoilAdditions(TestAuthenticatedApp):
         model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.Hop(
             name        = 'Cascade', 
-            alpha_acid  = 5.5
+            alpha_acid  = 5.5,
+            origin      = 'US'
         )
         model.commit()
 
@@ -153,7 +154,8 @@ class TestFermentationAdditions(TestAuthenticatedApp):
         model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.Hop(
             name        = 'Cascade', 
-            alpha_acid  = 5.5
+            alpha_acid  = 5.5,
+            origin      = 'US'
         )
         model.commit()
 
@@ -421,7 +423,7 @@ class TestRecipeChange(TestAuthenticatedApp):
         )
         model.HopAddition(
             recipe      = recipe,
-            hop         = model.Hop(name = 'Cascade'),
+            hop         = model.Hop(name = 'Cascade', origin = 'US'),
             amount      = .0625, # 1 oz
             unit        = 'POUND',
             duration    = timedelta(minutes=30),
@@ -431,7 +433,7 @@ class TestRecipeChange(TestAuthenticatedApp):
         )
         model.HopAddition(
             recipe      = recipe,
-            hop         = model.Hop(name = 'Centennial'),
+            hop         = model.Hop(name = 'Centennial', origin = 'US'),
             amount      = .0625, # 1 oz
             unit        = 'POUND',
             duration    = timedelta(minutes=60),
@@ -488,7 +490,7 @@ class TestRecipeChange(TestAuthenticatedApp):
                 name='Rocky Mountain River IPA', 
                 author=model.User.get(1)
             ),
-            hop         = model.Hop(name = 'Cascade'),
+            hop         = model.Hop(name = 'Cascade', origin = 'US'),
             amount      = .0625, # 1 oz
             unit        = 'POUND',
             duration    = timedelta(minutes=30),
@@ -528,7 +530,7 @@ class TestRecipeChange(TestAuthenticatedApp):
                 name='Rocky Mountain River IPA', 
                 author=model.User.get(1)
             ),
-            hop         = model.Hop(name = 'Cascade'),
+            hop         = model.Hop(name = 'Cascade', origin = 'US'),
             amount      = .0625, # 1 oz
             unit        = 'POUND',
             duration    = timedelta(minutes=30),
@@ -625,7 +627,7 @@ class TestRecipeChange(TestAuthenticatedApp):
                 name='Rocky Mountain River IPA', 
                 author=model.User.get(1)
             ),
-            hop         = model.Hop(name = 'Cascade', alpha_acid=5.5),
+            hop         = model.Hop(name = 'Cascade', alpha_acid=5.5, origin = 'US'),
             amount      = 0.0625,
             unit        = 'POUND',
             use         = 'BOIL',

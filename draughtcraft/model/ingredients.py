@@ -79,6 +79,13 @@ class Hop(Ingredient):
 
     additions           = OneToMany('RecipeAddition', inverse='hop')
 
+    @property
+    def printed_name(self):
+        origin = self.origin
+        if len(origin) > 2:
+            origin = origin.title()
+        return '(%s) %s' % (origin, self.name)
+
 
 class Yeast(Ingredient):
 
