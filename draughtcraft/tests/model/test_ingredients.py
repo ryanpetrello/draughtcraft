@@ -37,10 +37,10 @@ class TestIngredients(TestApp):
         assert model.Fermentable.excluding(model.Fermentable.get(1), model.Fermentable.get(2)) == []
         assert model.Fermentable.excluding() == [model.Fermentable.get(1), model.Fermentable.get(2)]
 
-        assert model.Hop.excluding(model.Hop.get(3)) == [model.Hop.get(4)]
-        assert model.Hop.excluding(model.Hop.get(3), model.Hop.get(4)) == []
-        assert model.Hop.excluding() == [model.Hop.get(3), model.Hop.get(4)]
+        assert model.Hop.excluding(model.Hop.get(1)) == [model.Hop.get(2)]
+        assert model.Hop.excluding(model.Hop.get(1), model.Hop.get(2)) == []
+        assert model.Hop.excluding() == [model.Hop.get(1), model.Hop.get(2)]
 
-        assert model.Yeast.excluding(model.Yeast.get(5)) == [model.Yeast.get(6)]
-        assert model.Yeast.excluding(model.Yeast.get(5), model.Yeast.get(6)) == []
-        assert model.Yeast.excluding() == [model.Yeast.get(5), model.Yeast.get(6)]
+        assert model.Yeast.excluding(model.Yeast.get(1)) == [model.Yeast.get(2)]
+        assert model.Yeast.excluding(model.Yeast.get(1), model.Yeast.get(2)) == []
+        assert model.Yeast.excluding() == [model.Yeast.get(1), model.Yeast.get(2)]
