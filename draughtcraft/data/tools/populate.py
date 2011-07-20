@@ -1,4 +1,6 @@
 from elixir                         import entities
+from sqlalchemy.ext.sqlsoup         import SqlSoup
+
 from draughtcraft                   import model, data
 
 import os
@@ -12,23 +14,42 @@ model.metadata.create_all()
 print "GENERATING INGREDIENTS"
 print "="*80
 
-files = [
-    ('fermentables.js', 'Fermentable'),
-    ('hops.js', 'Hop'),
-    ('yeast.js', 'Yeast'),
-    ('extras.js', 'Extra')
+tables = [
+    ('fermentables', 'Fermentable'),
+    ('hops', 'Hop'),
+    ('yeast', 'Yeast'),
+    ('extras', 'Extra')
 ]
 
-for f, type in files:
+path = os.path.dirname(os.path.abspath(data.__file__))
+handle = SqlSoup(
+    'sqlite:///%s' % os.path.join(path, 'ingredients.db')
+)
 
-    path = os.path.dirname(os.path.abspath(data.__file__))
-    handle = open(os.path.join(path, f), 'rb')
-    jsondata = json.loads(handle.read())
+for table, cls in tables:
+    for ingredient in getattr(handle, table).all():
 
-    for ingredient in jsondata:
-        ingredient = dict([(str(k), v) for k,v in ingredient.items()])
-        result = getattr(entities, type)(**ingredient)
-        print result.printed_name
+        # Coerce the data mapping into a dictionary
+        kwargs = dict(
+            (
+                k, 
+                getattr(ingredient, k, '')
+            )
+            for k in ingredient.c.keys()
+        )
+
+        # Attempt to look up the entity first
+        ingredient = getattr(entities, cls).get(kwargs['id'])
+
+        # If the entity doesn't already exist, create it
+        if ingredient is None:
+            ingredient = getattr(entities, cls)()
+
+        # Update necessary columns
+        for k,v in kwargs.items():
+            setattr(ingredient, k, v)
+
+        print ingredient.printed_name
 
 print "GENERATING STYLES"
 print "="*80
