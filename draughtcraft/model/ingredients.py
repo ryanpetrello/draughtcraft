@@ -13,6 +13,7 @@ ORIGINS = [
     'CZECH',
     'FRENCH',
     'GERMAN',
+    'JAPANESE',
     'NEW ZEALAND',
     'POLISH',
     'SLOVENIAN',
