@@ -12,9 +12,10 @@ ORIGINS = [
     'CANADIAN',
     'CZECH',
     'FRENCH',
+    'GERMAN',
+    'NEW ZEALAND',
     'POLISH',
     'SLOVENIAN',
-    'GERMAN',
     'UK',
     'US'
 ]

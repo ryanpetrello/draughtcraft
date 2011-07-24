@@ -85,6 +85,7 @@ def run():
 
             # If the entity doesn't already exist, create it
             new = False
+            changed = False
 
             if ingredient is None:
                 new = True
@@ -92,12 +93,27 @@ def run():
 
             # Update necessary columns
             for k,v in kwargs.items():
+                if getattr(ingredient, k) != v:
+                    print "="*80
+                    print k
+                    print getattr(ingredient, k)
+                    print v
+                    print "="*80
+                    changed = True
                 setattr(ingredient, k, v)
 
-            print "%s (%s)" % (
-                ingredient.printed_name,
-                '%s New %s' % (GREEN, ENDS) if new else '%s Update %s' % (YELLOW, ENDS)
-            )
+            if new is True:
+                print "%s (%s)" % (
+                    ingredient.printed_name,
+                    '%s New %s' % (GREEN, ENDS)
+                )
+            elif changed is True:
+                print "%s (%s)" % (
+                    ingredient.printed_name,
+                    '%s Updated %s' % (YELLOW, ENDS)
+                )
+            else:
+                print "%s (No Changes)" % ingredient.printed_name
 
     print BLUE + "GENERATING STYLES" + ENDS
     print "="*80
