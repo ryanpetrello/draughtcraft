@@ -94,11 +94,6 @@ def run():
             # Update necessary columns
             for k,v in kwargs.items():
                 if getattr(ingredient, k) != v:
-                    print "="*80
-                    print k
-                    print getattr(ingredient, k)
-                    print v
-                    print "="*80
                     changed = True
                 setattr(ingredient, k, v)
 
