@@ -73,11 +73,12 @@ class Calculations(object):
     def srm(self):
         total = 0
         fermentables = [a for a in self.recipe.additions if a.fermentable]
-        for f in fermentables:
-            total += (f.amount * f.ingredient.lovibond)
-
         gallons = float(self.recipe.gallons)
-        srm = total / gallons
+        for f in fermentables:
+            mcu = (f.amount * f.ingredient.lovibond) / gallons
+            total += mcu
+
+        srm = 1.4922 * (total ** 0.6859)
 
         return round(srm, 1)
 
