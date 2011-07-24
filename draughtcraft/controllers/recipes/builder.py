@@ -233,7 +233,7 @@ class IngredientsController(RestController):
         # `hop`, `yeast`)
         #
         entity = cls(**kw)
-        setattr(entity, ingredient.__class__.__name__.lower(), ingredient)
+        setattr(entity, ingredient.row_type, ingredient)
         entity.recipe = request.context['recipe']
 
         request.context['recipe'].touch()
