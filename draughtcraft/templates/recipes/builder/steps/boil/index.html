@@ -12,72 +12,74 @@
 
   <div class="ingredient-list">
 
-    <h3 class="ribbon">Ingredients</h3>
+    ${h.form('async/ingredients?_method=put')}
+      <h3 class="ribbon">Ingredients</h3>
 
-    % if recipe.boil:
-      <table>
+      % if recipe.boil:
+        <table>
 
-        <!-- Malt Additions -->
-        % if recipe.boil.get(h.model.Fermentable):
+          <!-- Malt Additions -->
+          % if recipe.boil.get(h.model.Fermentable):
+            <tr>
+              <th class="type" />
+              <th class="time">Use</th>
+              <th class="amount">Amount</th>
+              <th>Fermentable</th>
+              <th>PPG</th>
+              <th class="unit">L</th>
+              <th />
+            </tr>
+
+            % for addition in sort(recipe.boil.get(h.model.Fermentable)):
+              <%include file="../additions/fermentable.html" args="i=recipe.additions.index(addition), addition=addition" />
+            % endfor
+          %endif
+
+          <!-- Hop Additions -->
+          % if recipe.boil.get(h.model.Hop):
+            <tr>
+              <th class="type" />
+              <th class="time">Use</th>
+              <th class="amount">Amount</th>
+              <th>Variety</th>
+              <th>Form</th>
+              <th class="unit">AA</th>
+              <th />
+            </tr>
+
+            % for addition in sort(recipe.boil.get(h.model.Hop)):
+              <%include file="../additions/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
+            % endfor
+          %endif
+
+          <!-- Extra Additions -->
+          % if recipe.boil.get(h.model.Extra):
+            <tr>
+              <th class="type" />
+              <th class="time">Use</th>
+              <th class="amount">Amount</th>
+              <th>Name</th>
+              <th></th>
+              <th class="unit"></th>
+              <th />
+            </tr>
+
+            % for addition in sort(recipe.boil.get(h.model.Extra)):
+              <%include file="../additions/extra.html" args="i=recipe.additions.index(addition), addition=addition" />
+            % endfor
+          %endif
+
+        </table>
+      % else:
+        <table>
           <tr>
-            <th class="type" />
-            <th class="time">Use</th>
-            <th class="amount">Amount</th>
-            <th>Fermentable</th>
-            <th>PPG</th>
-            <th class="unit">L</th>
-            <th />
+            <td>
+              Choose one or more boil additions for this recipe.
+            </td>
           </tr>
-
-          % for addition in sort(recipe.boil.get(h.model.Fermentable)):
-            <%include file="../additions/fermentable.html" args="i=recipe.additions.index(addition), addition=addition" />
-          % endfor
-        %endif
-
-        <!-- Hop Additions -->
-        % if recipe.boil.get(h.model.Hop):
-          <tr>
-            <th class="type" />
-            <th class="time">Use</th>
-            <th class="amount">Amount</th>
-            <th>Variety</th>
-            <th>Form</th>
-            <th class="unit">AA</th>
-            <th />
-          </tr>
-
-          % for addition in sort(recipe.boil.get(h.model.Hop)):
-            <%include file="../additions/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
-          % endfor
-        %endif
-
-        <!-- Extra Additions -->
-        % if recipe.boil.get(h.model.Extra):
-          <tr>
-            <th class="type" />
-            <th class="time">Use</th>
-            <th class="amount">Amount</th>
-            <th>Name</th>
-            <th></th>
-            <th class="unit"></th>
-            <th />
-          </tr>
-
-          % for addition in sort(recipe.boil.get(h.model.Extra)):
-            <%include file="../additions/extra.html" args="i=recipe.additions.index(addition), addition=addition" />
-          % endfor
-        %endif
-
-      </table>
-    % else:
-      <table>
-        <tr>
-          <td>
-            Choose one or more boil additions for this recipe.
-          </td>
-        </tr>
-      </table>
-    % endif
+        </table>
+      % endif
+    ${h.end_form()}
 
     <h3 class="ribbon">Boil Duration</h3>
 

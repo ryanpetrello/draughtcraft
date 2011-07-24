@@ -4,72 +4,74 @@
   
   <div class="ingredient-list">
 
-    <h3 class="ribbon">Ingredients</h3>
+    ${h.form('async/ingredients?_method=put')}
+      <h3 class="ribbon">Ingredients</h3>
 
-    % if recipe.fermentation:
-      <table>
+      % if recipe.fermentation:
+        <table>
 
-        <!-- Yeast Additions -->
-        % if recipe.fermentation.get(h.model.Yeast):
+          <!-- Yeast Additions -->
+          % if recipe.fermentation.get(h.model.Yeast):
+            <tr>
+              <th class="type" />
+              <th class="use">Add to</th>
+              <th />
+              <th>Strain</th>
+              <th>Form</th>
+              <th />
+              <th />
+            </tr>
+
+            % for addition in recipe.fermentation.get(h.model.Yeast):
+              <%include file="../additions/yeast.html" args="i=recipe.additions.index(addition), addition=addition" />
+            % endfor
+          %endif
+
+          <!-- Hop Additions -->
+          % if recipe.fermentation.get(h.model.Hop):
+            <tr>
+              <th class="type" />
+              <th class="use">Use</th>
+              <th class="amount">Amount</th>
+              <th>Variety</th>
+              <th>Form</th>
+              <th class="unit">AA</th>
+              <th />
+            </tr>
+
+            % for addition in recipe.fermentation.get(h.model.Hop):
+              <%include file="../additions/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
+            % endfor
+          %endif
+
+          <!-- Extra Additions -->
+          % if recipe.fermentation.get(h.model.Extra):
+            <tr>
+              <th class="type" />
+              <th class="use">Use</th>
+              <th class="amount">Amount</th>
+              <th>Name</th>
+              <th></th>
+              <th class="unit"></th>
+              <th />
+            </tr>
+
+            % for addition in recipe.fermentation.get(h.model.Extra):
+              <%include file="../additions/extra.html" args="i=recipe.additions.index(addition), addition=addition" />
+            % endfor
+          %endif
+
+        </table>
+      % else:
+        <table>
           <tr>
-            <th class="type" />
-            <th class="use">Add to</th>
-            <th />
-            <th>Strain</th>
-            <th>Form</th>
-            <th />
-            <th />
+            <td>
+              Choose yeast(s) for fermentation.
+            </td>
           </tr>
-
-          % for addition in recipe.fermentation.get(h.model.Yeast):
-            <%include file="../additions/yeast.html" args="i=recipe.additions.index(addition), addition=addition" />
-          % endfor
-        %endif
-
-        <!-- Hop Additions -->
-        % if recipe.fermentation.get(h.model.Hop):
-          <tr>
-            <th class="type" />
-            <th class="use">Use</th>
-            <th class="amount">Amount</th>
-            <th>Variety</th>
-            <th>Form</th>
-            <th class="unit">AA</th>
-            <th />
-          </tr>
-
-          % for addition in recipe.fermentation.get(h.model.Hop):
-            <%include file="../additions/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
-          % endfor
-        %endif
-
-        <!-- Extra Additions -->
-        % if recipe.fermentation.get(h.model.Extra):
-          <tr>
-            <th class="type" />
-            <th class="use">Use</th>
-            <th class="amount">Amount</th>
-            <th>Name</th>
-            <th></th>
-            <th class="unit"></th>
-            <th />
-          </tr>
-
-          % for addition in recipe.fermentation.get(h.model.Extra):
-            <%include file="../additions/extra.html" args="i=recipe.additions.index(addition), addition=addition" />
-          % endfor
-        %endif
-
-      </table>
-    % else:
-      <table>
-        <tr>
-          <td>
-            Choose yeast(s) for fermentation.
-          </td>
-        </tr>
-      </table>
-    % endif
+        </table>
+      % endif
+    ${h.end_form()}
 
     <h3 class="ribbon">Fermentation Schedule</h3>
 
