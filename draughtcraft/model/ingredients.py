@@ -26,6 +26,7 @@ class Ingredient(Entity):
 
     using_options(inheritance='multi', polymorphic=True)
     
+    uid                 = Field(Unicode(32), unique=True)
     name                = Field(Unicode(256))
     description         = Field(UnicodeText)
     default_unit        = Field(Enum(*UNITS), default='POUND', nullable=True)

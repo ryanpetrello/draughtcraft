@@ -12,6 +12,7 @@ BLUE = '\033[94m'
 DARKBLUE = '\033[90m'
 GREEN = '\033[92m'
 YELLOW = '\033[93m'
+RED = '\033[91m'
 ENDS = '\033[0m'
 
 class EnvCommand(Command):
@@ -40,17 +41,34 @@ class EnvCommand(Command):
 
 def run():
     print "="*80
-    print BLUE + "CONFIGURING ENVIRONMENT" + ENDS
+    print BLUE + "LOADING ENVIRONMENT" + ENDS
     print "="*80
     EnvCommand('env').run([sys.argv[1]])
 
     print BLUE + "BUILDING SCHEMA" + ENDS
     print "="*80
-    model.start()
-    model.metadata.create_all()
+    try:
+        print "STARTING A TRANSACTION..."
+        print "="*80
+        model.start()
+        model.metadata.create_all()
 
-    print BLUE + "GENERATING INGREDIENTS" + ENDS
-    print "="*80
+        print BLUE + "GENERATING INGREDIENTS" + ENDS
+        print "="*80
+        populate()
+    except:
+        model.rollback()
+        print "="*80
+        print "%s ROLLING BACK... %s" % (RED, ENDS)
+        print "="*80
+        raise
+    else:
+        print "="*80
+        print "%s COMMITING... %s" % (GREEN, ENDS)
+        print "="*80
+        model.commit()
+
+def populate():
 
     tables = [
         ('fermentables', 'Fermentable'),
@@ -68,7 +86,7 @@ def run():
         print "-"*80
         print DARKBLUE + table.upper() + ENDS
         print "-"*80
-        for ingredient in getattr(handle, table).order_by('id').all():
+        for ingredient in getattr(handle, table).all():
 
             # Coerce the data mapping into a dictionary
             kwargs = dict(
@@ -80,8 +98,8 @@ def run():
             )
 
             # Attempt to look up the entity first
-            primary_key = kwargs.pop('id')
-            ingredient = getattr(entities, cls).get(primary_key)
+            uid = kwargs['uid']
+            ingredient = getattr(entities, cls).get_by(uid=uid)
 
             # If the entity doesn't already exist, create it
             new = False
@@ -110,6 +128,7 @@ def run():
             else:
                 print "%s (No Changes)" % ingredient.printed_name
 
+    print "="*80
     print BLUE + "GENERATING STYLES" + ENDS
     print "="*80
 
