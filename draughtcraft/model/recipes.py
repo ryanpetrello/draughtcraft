@@ -208,7 +208,8 @@ class RecipeAddition(Entity):
             'POST-BOIL'     : 'boil',
             'FLAME OUT'     : 'boil',
             'PRIMARY'       : 'fermentation',
-            'SECONDARY'     : 'fermentation'
+            'SECONDARY'     : 'fermentation',
+            'TERTIARY'      : 'fermentation'
         })[self.use]
 
     @property
