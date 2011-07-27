@@ -97,7 +97,10 @@ class Yeast(Ingredient):
     TYPES = [
         'ALE',
         'LAGER',
-        'WILD'
+        'WILD',
+        'MEAD',
+        'CIDER',
+        'WINE'
     ]
 
     FORMS = [
