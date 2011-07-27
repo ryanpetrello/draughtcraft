@@ -20,12 +20,13 @@
       'ingredient', 
       None, 
       (
-        [('', 'Add Yeast...')] + 
-        [
-          (yeast.id, yeast.printed_name) for yeast in h.model.Yeast.excluding(
-            *[a.ingredient for a in h.request.context['recipe'].fermentation.get(h.model.Yeast, [])]
-          )
-        ]
+        [('', 'Add Yeast...')] + sorted(
+          [
+            (yeast.id, yeast.printed_name) for yeast in h.model.Yeast.excluding(
+              *[a.ingredient for a in h.request.context['recipe'].fermentation.get(h.model.Yeast, [])]
+            )
+          ], key = lambda f: f[1]
+        )
       )
     )}
   ${h.end_form()}
