@@ -22,6 +22,7 @@ setup(
         "webhelpers",
         "webflash",
         "simplejson",
+        "python-postmark",
         "pytest-cov"
     ],
     zip_safe = False,

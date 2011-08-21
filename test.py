@@ -32,8 +32,12 @@ sqlalchemy = {
 }
 
 session = {
-    'key'            : 'draughtcraft',
-    'type'           : 'cookie',
-    'validate_key'   : 'example',
-    '__force_dict__' : True
+    'key'               : 'draughtcraft',
+    'type'              : 'cookie',
+    'validate_key'      : 'example',
+    '__force_dict__'    : True
+}
+
+postmark = {
+    'api_key'       : 'POSTMARK_API_TEST'
 }
