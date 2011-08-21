@@ -84,7 +84,17 @@
     <h3 class="ribbon">Boil Duration</h3>
 
     <ol class='process'>
-      <li>Boil for <a href="#">60</a> minutes.</li>
+      ${h.form('async/settings/boil_minutes', method='POST')}
+
+        <li>
+          Boil for 
+          ${h.text(
+            'minutes',
+            recipe.boil_minutes,
+            class_ = 'unit'
+          )}
+          minutes.
+        </li>
     </ol>
 
   </div>

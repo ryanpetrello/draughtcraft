@@ -18,6 +18,7 @@ class Recipe(Entity):
     type                = Field(Enum(*TYPES), default='MASH')
     name                = Field(Unicode(256))
     gallons             = Field(Float, default=5)
+    boil_minutes        = Field(Integer, default=60)
     notes               = Field(UnicodeText)
     creation_date       = Field(DateTime, default=datetime.utcnow)
     last_updated        = Field(DateTime, default=datetime.utcnow)
@@ -42,10 +43,6 @@ class Recipe(Entity):
     @property
     def efficiency(self):
         return .75
-
-    @property
-    def boil_minutes(self):
-        return 60
 
     def _partition(self, additions):
         """

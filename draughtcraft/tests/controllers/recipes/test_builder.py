@@ -248,6 +248,17 @@ class TestRecipeSettings(TestAuthenticatedApp):
         
         assert model.Recipe.get(1).style is None
 
+    def test_boil_duration_change(self):
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
+        model.commit()
+
+        assert model.Recipe.get(1).boil_minutes == 60
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/settings/boil_minutes', params={
+            'minutes'    : 90
+        })
+        
+        assert model.Recipe.get(1).boil_minutes == 90
+
     def test_volume_change(self):
         model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.commit()

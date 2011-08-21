@@ -6,6 +6,7 @@ from draughtcraft.lib.schemas.recipes.builder   import (
                                                         RecipeChange, 
                                                         RecipeAddition,
                                                         RecipeStyle,
+                                                        RecipeBoilMinutes,
                                                         RecipeVolume,
                                                         RecipeNotes,
                                                         FermentationStepUpdate
@@ -106,6 +107,29 @@ class RecipeSettingsController(object):
         return dict(recipe = self.recipe)
 
     #
+    # Recipe Batch/Volume
+    #
+    @expose(generic=True)
+    def boil_minutes(self): pass
+
+    @boil_minutes.when(
+        method          = 'POST',
+        template        = 'recipes/builder/async.html',
+        schema          = RecipeBoilMinutes(),
+        error_handler   = lambda: '%sasync/ingredients' % request.context['recipe'].url(public=False),
+        htmlfill        = dict(
+            auto_insert_errors  = True, 
+            prefix_error        = False,
+            encoding            = u'utf-8',
+            force_defaults      = False
+        )
+    )
+    def _boil_minutes(self, minutes):
+        self.recipe.boil_minutes = minutes
+        self.recipe.touch()
+        return dict(recipe = self.recipe)
+
+    #
     # Recipe Notes and Remarks
     #
     @expose(generic=True)
@@ -148,7 +172,11 @@ class IngredientsController(RestController):
         'recipes/builder/async.html',
         schema              = RecipeChange(),
         error_handler       = lambda: request.path,
-        htmlfill            = dict(auto_insert_errors = True, prefix_error = False),
+        htmlfill            = dict(
+            auto_insert_errors  = False, 
+            encoding            = u'utf-8',
+            force_defaults      = False
+        ),
         variable_decode     = True
     )
     def put(self, **kw):

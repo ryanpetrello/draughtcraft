@@ -54,7 +54,7 @@ class HopValidator(validators.FormValidator):
         self.validate_python(field_dict, state)
     
     def validate_python(self, field_dict, state):
-        
+
         # get the addition type, (e.g., RecipeAddition, HopAddition)
         addition_type = field_dict.get('type', '')
         
@@ -65,6 +65,9 @@ class HopValidator(validators.FormValidator):
                 errors['form'] = self.message('empty', state)
             if not field_dict.get('alpha_acid'):
                 errors['alpha_acid'] = self.message('empty', state)
+
+            # Attempt to validate alpha_acid as a valid number/float
+            validators.Number.to_python(field_dict['alpha_acid'])
     
         # raise the errors, if any
         if errors:
@@ -115,6 +118,13 @@ class RecipeStyle(FilteredSchema):
     This schema is for modifying the BJCP target style for a recipe.
     """
     target = ModelObject(model.Style, if_empty=None)
+
+
+class RecipeBoilMinutes(FilteredSchema):
+    """
+    This schema is for modifying the boil duration (in minutes) for a recipe.
+    """
+    minutes  = validators.Number(not_empty=True)
 
 
 class RecipeVolume(FilteredSchema):
