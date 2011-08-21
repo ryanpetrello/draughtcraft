@@ -13,6 +13,8 @@
   ${h.form('async/ingredients?_method=put')}
     <div class="ingredient-list">
 
+      <% i = 0 %>
+
       <h3 class="ribbon">Ingredients</h3>
 
       % if recipe.mash:
@@ -31,7 +33,8 @@
             </tr>
 
             % for addition in sort(recipe.mash.get(h.model.Fermentable)):
-              <%include file="../additions/fermentable.html" args="i=recipe.additions.index(addition), addition=addition" />
+              <%include file="../additions/fermentable.html" args="i=i, addition=addition" />
+              <% i += 1 %>
             % endfor
           %endif
 
@@ -48,7 +51,8 @@
             </tr>
 
             % for addition in sort(recipe.mash.get(h.model.Hop)):
-              <%include file="../additions/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
+              <%include file="../additions/hop.html" args="i=i, addition=addition" />
+              <% i += 1 %>
             % endfor
           %endif
 
@@ -65,7 +69,8 @@
             </tr>
 
             % for addition in sort(recipe.mash.get(h.model.Extra)):
-              <%include file="../additions/extra.html" args="i=recipe.additions.index(addition), addition=addition" />
+              <%include file="../additions/extra.html" args="i=i, addition=addition" />
+              <% i += 1 %>
             % endfor
           %endif
 

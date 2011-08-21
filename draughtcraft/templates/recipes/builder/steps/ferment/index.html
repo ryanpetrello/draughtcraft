@@ -4,6 +4,8 @@
   
   <div class="ingredient-list">
 
+    <% i = 0 %>
+
     ${h.form('async/ingredients?_method=put')}
       <h3 class="ribbon">Ingredients</h3>
 
@@ -23,7 +25,8 @@
             </tr>
 
             % for addition in recipe.fermentation.get(h.model.Yeast):
-              <%include file="../additions/yeast.html" args="i=recipe.additions.index(addition), addition=addition" />
+              <%include file="../additions/yeast.html" args="i=i, addition=addition" />
+              <% i += 1 %>
             % endfor
           %endif
 
@@ -40,7 +43,8 @@
             </tr>
 
             % for addition in recipe.fermentation.get(h.model.Hop):
-              <%include file="../additions/hop.html" args="i=recipe.additions.index(addition), addition=addition" />
+              <%include file="../additions/hop.html" args="i=i, addition=addition" />
+              <% i += 1 %>
             % endfor
           %endif
 
@@ -57,7 +61,8 @@
             </tr>
 
             % for addition in recipe.fermentation.get(h.model.Extra):
-              <%include file="../additions/extra.html" args="i=recipe.additions.index(addition), addition=addition" />
+              <%include file="../additions/extra.html" args="i=i, addition=addition" />
+              <% i += 1 %>
             % endfor
           %endif
 

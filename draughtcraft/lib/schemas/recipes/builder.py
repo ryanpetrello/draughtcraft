@@ -1,6 +1,6 @@
 from formencode                     import ForEach, Invalid, validators
 from draughtcraft                   import model
-from draughtcraft.lib.units         import UnitConvert
+from draughtcraft.lib.units         import UnitConvert, UnitException
 from draughtcraft.lib.schemas.base  import FilteredSchema, ModelObject
 from datetime                       import timedelta
 
@@ -33,8 +33,10 @@ class AmountValidator(validators.FancyValidator):
         if not value: return None
         try:
             return UnitConvert.from_str(value)
+        except UnitException, e:
+            raise Invalid(e.message, value, state)
         except Exception, e:
-            raise Invalid(e, value, state)
+            raise Invalid('Please enter a valid amount', value, state)
 
     def _from_python(self, value, state):
         if value:
@@ -84,7 +86,7 @@ class BaseRecipeAddition(FilteredSchema):
     """ 
     type        = validators.OneOf(['RecipeAddition', 'HopAddition'])
     use         = validators.OneOf(model.RecipeAddition.USES)
-    amount      = AmountValidator(if_invalid=None)
+    amount      = AmountValidator()
     duration    = TimeDeltaValidator(if_missing=None) # Timedelta in Minutes
 
     # Hop-specific
@@ -110,7 +112,9 @@ class RecipeAdditionChange(BaseRecipeAddition):
 
 
 class RecipeChange(FilteredSchema):
-    additions   = ForEach(RecipeAdditionChange)
+    mash_additions          = ForEach(RecipeAdditionChange)
+    boil_additions          = ForEach(RecipeAdditionChange)
+    fermentation_additions  = ForEach(RecipeAdditionChange)
 
 
 class RecipeStyle(FilteredSchema):

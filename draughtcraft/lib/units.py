@@ -48,10 +48,6 @@ class InvalidUnitException(UnitException):
     pass
 
 
-class InvalidUnitParseException(UnitException):
-    pass
-
-
 class PoundOunceMerge(object):
 
     signature = ["POUND", "OUNCE"]
@@ -213,7 +209,7 @@ class UnitConvert(object):
                 coerced = UNIT_MAP[unit[:-1]]
 
             if coerced not in UNITS:
-                raise InvalidUnitException('Invalid unit type %s' % unit)
+                raise InvalidUnitException('`%s` is not a valid unit' % unit)
 
             return coerced
 

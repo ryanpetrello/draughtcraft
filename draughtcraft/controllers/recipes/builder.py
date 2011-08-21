@@ -173,7 +173,8 @@ class IngredientsController(RestController):
         schema              = RecipeChange(),
         error_handler       = lambda: request.path,
         htmlfill            = dict(
-            auto_insert_errors  = False, 
+            auto_insert_errors  = True, 
+            prefix_error        = False,
             encoding            = u'utf-8',
             force_defaults      = False
         ),
@@ -185,44 +186,47 @@ class IngredientsController(RestController):
         Contains a list of `additions` for which updated information is
         available.
         """
+        
+        keys = ('mash_additions', 'boil_additions', 'fermentation_additions')
+        for addition_class in keys:
+            additions = kw.get(addition_class)
+            for row in additions:
+                # Clean up the hash a bit
+                row.pop('type')
 
-        for row in kw.get('additions'):
-            # Clean up the hash a bit
-            row.pop('type')
+                # Grab the addition record
+                addition = row.pop('addition')
 
-            # Grab the addition record
-            addition = row.pop('addition')
+                #
+                # Apply the amount and unit
+                # (if a valid amount/unit combination
+                # can be parsed from the user's entry)
+                #
+                if 'amount' in row:
+                    pair = row.pop('amount')
+                    if pair:
+                        amount, unit = pair
+                        addition.amount = amount
+                        addition.unit = unit or addition.ingredient.default_unit
+                
+                #
+                # For "First Wort" additions,
+                # change the duration to the full length of the boil
+                #
+                # For "Flame Out" additions,
+                # change the duration to 0 minutes.
+                #
+                if 'use' in row:
+                    if row['use'] == 'FIRST WORT':
+                        row['duration'] = timedelta(minutes=addition.recipe.boil_minutes)
+                    elif row['use'] == 'FLAME OUT':
+                        row['duration'] = timedelta(minutes=0)
+                    elif not row['duration']:
+                        row['duration'] = timedelta(minutes=addition.recipe.boil_minutes)
 
-            #
-            # Apply the amount and unit
-            # (if a valid amount/unit combination
-            # can be parsed from the user's entry)
-            #
-            if 'amount' in row:
-                pair = row.pop('amount')
-                if pair:
-                    amount, unit = pair
-                    addition.amount = amount
-                    addition.unit = unit or addition.ingredient.default_unit
-            
-            #
-            # For "First Wort" additions,
-            # change the duration to the full length of the boil
-            #
-            # For "Flame Out" additions,
-            # change the duration to 0 minutes.
-            #
-            if 'use' in row:
-                if row['use'] == 'FIRST WORT':
-                    row['duration'] = timedelta(minutes=addition.recipe.boil_minutes)
-                elif row['use'] == 'FLAME OUT':
-                    row['duration'] = timedelta(minutes=0)
-                elif not row['duration']:
-                    row['duration'] = timedelta(minutes=addition.recipe.boil_minutes)
-
-            for k,v in row.items():
-                if v is not None:
-                    setattr(addition, k, v)
+                for k,v in row.items():
+                    if v is not None:
+                        setattr(addition, k, v)
 
         request.context['recipe'].touch()
         return self.__rendered__()

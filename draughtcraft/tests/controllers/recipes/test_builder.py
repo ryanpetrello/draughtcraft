@@ -377,10 +377,10 @@ class TestRecipeChange(TestAuthenticatedApp):
         model.commit()
 
         self.put('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params={
-            'additions-0.type'          : 'RecipeAddition',
-            'additions-0.amount'        : '10 lb',
-            'additions-0.use'           : 'MASH',
-            'additions-0.addition'      : 1
+            'mash_additions-0.type'          : 'RecipeAddition',
+            'mash_additions-0.amount'        : '10 lb',
+            'mash_additions-0.use'           : 'MASH',
+            'mash_additions-0.addition'      : 1
         })
 
         a = model.RecipeAddition.get(1)
@@ -415,10 +415,10 @@ class TestRecipeChange(TestAuthenticatedApp):
         # default unit.
         #
         self.put('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params={
-            'additions-0.type'          : 'RecipeAddition',
-            'additions-0.amount'        : '5',
-            'additions-0.use'           : 'MASH',
-            'additions-0.addition'      : 1
+            'mash_additions-0.type'          : 'RecipeAddition',
+            'mash_additions-0.amount'        : '5',
+            'mash_additions-0.use'           : 'MASH',
+            'mash_additions-0.addition'      : 1
         })
 
         a = model.RecipeAddition.get(1)
@@ -455,20 +455,20 @@ class TestRecipeChange(TestAuthenticatedApp):
         model.commit()
 
         self.put('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params={
-            'additions-0.type'          : 'HopAddition',
-            'additions-0.amount'        : '2 oz',
-            'additions-0.use'           : 'BOIL',
-            'additions-0.alpha_acid'    : 7,
-            'additions-0.duration'      : 10,
-            'additions-0.addition'      : 1,
-            'additions-0.form'          : 'PELLET',
-            'additions-1.type'          : 'HopAddition',
-            'additions-1.amount'        : '.5 oz',
-            'additions-1.use'           : 'BOIL',
-            'additions-1.alpha_acid'    : 4,
-            'additions-1.duration'      : 45,
-            'additions-1.addition'      : 2,
-            'additions-1.form'          : 'PLUG'
+            'boil_additions-0.type'          : 'HopAddition',
+            'boil_additions-0.amount'        : '2 oz',
+            'boil_additions-0.use'           : 'BOIL',
+            'boil_additions-0.alpha_acid'    : 7,
+            'boil_additions-0.duration'      : 10,
+            'boil_additions-0.addition'      : 1,
+            'boil_additions-0.form'          : 'PELLET',
+            'boil_additions-1.type'          : 'HopAddition',
+            'boil_additions-1.amount'        : '.5 oz',
+            'boil_additions-1.use'           : 'BOIL',
+            'boil_additions-1.alpha_acid'    : 4,
+            'boil_additions-1.duration'      : 45,
+            'boil_additions-1.addition'      : 2,
+            'boil_additions-1.form'          : 'PLUG'
         })
 
         a = model.RecipeAddition.get(1)
@@ -512,13 +512,13 @@ class TestRecipeChange(TestAuthenticatedApp):
         model.commit()
 
         self.put('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params={
-            'additions-0.type'          : 'HopAddition',
-            'additions-0.amount'        : '2 oz',
-            'additions-0.use'           : 'FIRST WORT',
-            'additions-0.alpha_acid'    : 7,
-            'additions-0.duration'      : 30,
-            'additions-0.addition'      : 1,
-            'additions-0.form'          : 'PELLET'
+            'boil_additions-0.type'          : 'HopAddition',
+            'boil_additions-0.amount'        : '2 oz',
+            'boil_additions-0.use'           : 'FIRST WORT',
+            'boil_additions-0.alpha_acid'    : 7,
+            'boil_additions-0.duration'      : 30,
+            'boil_additions-0.addition'      : 1,
+            'boil_additions-0.form'          : 'PELLET'
         })
 
         a = model.RecipeAddition.get(1)
@@ -552,13 +552,13 @@ class TestRecipeChange(TestAuthenticatedApp):
         model.commit()
 
         self.put('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params={
-            'additions-0.type'          : 'HopAddition',
-            'additions-0.amount'        : '2 oz',
-            'additions-0.use'           : 'FLAME OUT',
-            'additions-0.alpha_acid'    : 7,
-            'additions-0.duration'      : 30,
-            'additions-0.addition'      : 1,
-            'additions-0.form'          : 'PELLET'
+            'boil_additions-0.type'          : 'HopAddition',
+            'boil_additions-0.amount'        : '2 oz',
+            'boil_additions-0.use'           : 'FLAME OUT',
+            'boil_additions-0.alpha_acid'    : 7,
+            'boil_additions-0.duration'      : 30,
+            'boil_additions-0.addition'      : 1,
+            'boil_additions-0.form'          : 'PELLET'
         })
 
         a = model.RecipeAddition.get(1)
@@ -587,10 +587,10 @@ class TestRecipeChange(TestAuthenticatedApp):
         model.commit()
 
         self.put('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params={
-            'additions-0.type'      : 'RecipeAddition',
-            'additions-0.use'       : 'SECONDARY',
-            'additions-0.amount'    : 1,
-            'additions-0.addition'  : 1
+            'fermentation_additions-0.type'      : 'RecipeAddition',
+            'fermentation_additions-0.use'       : 'SECONDARY',
+            'fermentation_additions-0.amount'    : 1,
+            'fermentation_additions-0.addition'  : 1
         })
 
         a = model.RecipeAddition.get(1)
