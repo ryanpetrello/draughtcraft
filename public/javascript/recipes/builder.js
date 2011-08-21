@@ -50,6 +50,14 @@ $.draughtcraft.recipes.builder.__injectRecipeContent__ = function(html){
     if(difference.length)
         $('#'+difference[0]).find('input, select').eq(0).focus();
 
+    //
+    // Visually stripe the recipe ingredients
+    // 
+    $('tr.addition').each(function(index){
+        if(index % 2 == 0)
+            $(this).addClass('even');
+    });
+
     $.draughtcraft.recipes.builder.__afterRecipeInject();
 };
 
