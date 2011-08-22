@@ -2,6 +2,7 @@ from pecan                  import make_app
 from pecan.hooks            import TransactionHook
 from draughtcraft           import model
 from draughtcraft.lib.auth  import AuthenticationHook
+from draughtcraft.lib.csrf  import CSRFPreventionHook 
 from draughtcraft.templates import helpers
 from beaker.middleware      import SessionMiddleware
 
@@ -29,14 +30,15 @@ def setup_app(config):
         template_path   = config.app.template_path,
         force_canonical = config.app.force_canonical,
         hooks           = [
-             TransactionHook(
-                 model.start,
-                 model.start,
-                 model.commit,
-                 model.rollback,
-                 model.clear
-             ),
-             AuthenticationHook()
+            TransactionHook(
+                model.start,
+                model.start,
+                model.commit,
+                model.rollback,
+                model.clear
+            ),
+            AuthenticationHook(),
+            CSRFPreventionHook() 
         ],   
         extra_template_vars = dict(
             h           = helpers

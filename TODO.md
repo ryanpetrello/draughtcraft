@@ -12,6 +12,10 @@ Recipe Viewer
 -------------
 * Add ability to view others' recipes (but not edit them)
 
+Bugs
+-------------
+* Fix BJCP Style Categories import duplicates
+
 0.1
 ====
 

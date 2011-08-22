@@ -1,6 +1,5 @@
-from draughtcraft.tests             import TestApp
-from draughtcraft                   import model
-from draughtcraft.lib.secure_form   import authentication_token
+from draughtcraft.tests     import TestApp
+from draughtcraft           import model
 
 
 class TestSignup(TestApp):
@@ -28,16 +27,11 @@ class TestSignup(TestApp):
         assert model.User.query.count() == 0
 
     def test_successful_signup(self):
-        response = self.get('/signup/')
-        session = response.environ['beaker.session']
-        token = session['_form_authentication_token']
-
         params = {
-            'username'                      : 'test',
-            'password'                      : 'secret',
-            'password_confirm'              : 'secret',
-            'email'                         : 'ryan@example.com',
-            '_form_authentication_token'    : token
+            'username'          : 'test',
+            'password'          : 'secret',
+            'password_confirm'  : 'secret',
+            'email'             : 'ryan@example.com'
         }
 
         assert model.User.query.count() == 0
@@ -50,37 +44,15 @@ class TestSignup(TestApp):
         assert user.password
         assert user.email == 'ryan@example.com'
 
-    def test_cross_site_forgery(self):
-        """
-        Ensure that signup submissions can't be submitted remotely.
-        """
-        params = {
-            'username'                      : 'test',
-            'password'                      : 'secret',
-            'password_confirm'              : 'secret',
-            'email'                         : 'ryan@example.com'
-        }
-
-        assert model.User.query.count() == 0
-        response = self.post('/signup/', params=params)
-        assert model.User.query.count() == 0
-        assert response.status_int == 200
-        assert 'validation_errors' in response.request.pecan
-
     def test_username_length(self):
         """
         Usernames should be >= 4 chars
         """
-        response = self.get('/signup/')
-        session = response.environ['beaker.session']
-        token = session['_form_authentication_token']
-
         params = {
-            'username'                      : 'test',
-            'password'                      : 'secret',
-            'password_confirm'              : 'secret',
-            'email'                         : 'ryan@example.com',
-            '_form_authentication_token'    : token
+            'username'          : 'test',
+            'password'          : 'secret',
+            'password_confirm'  : 'secret',
+            'email'             : 'ryan@example.com'
         }
 
         assert model.User.query.count() == 0
@@ -89,11 +61,10 @@ class TestSignup(TestApp):
         assert model.User.query.count() == 1
 
         params = {
-            'username'                      : 'tes',
-            'password'                      : 'secret',
-            'password_confirm'              : 'secret',
-            'email'                         : 'ryan@example.com',
-            '_form_authentication_token'    : token
+            'username'          : 'tes',
+            'password'          : 'secret',
+            'password_confirm'  : 'secret',
+            'email'             : 'ryan@example.com'
         }
 
         self.post('/signup/', params=params)
@@ -104,16 +75,11 @@ class TestSignup(TestApp):
         """
         Usernames should be globally unique
         """
-        response = self.get('/signup/')
-        session = response.environ['beaker.session']
-        token = session['_form_authentication_token']
-
         params = {
-            'username'                      : 'test',
-            'password'                      : 'secret',
-            'password_confirm'              : 'secret',
-            'email'                         : 'ryan@example.com',
-            '_form_authentication_token'    : token
+            'username'          : 'test',
+            'password'          : 'secret',
+            'password_confirm'  : 'secret',
+            'email'             : 'ryan@example.com'
         }
 
         assert model.User.query.count() == 0
@@ -121,11 +87,10 @@ class TestSignup(TestApp):
         assert model.User.query.count() == 1
 
         params = {
-            'username'                      : 'test',
-            'password'                      : 'secret',
-            'password_confirm'              : 'secret',
-            'email'                         : 'ryan2@example.com',
-            '_form_authentication_token'    : token
+            'username'          : 'test',
+            'password'          : 'secret',
+            'password_confirm'  : 'secret',
+            'email'             : 'ryan2@example.com'
         }
 
         self.post('/signup/', params=params)
@@ -135,16 +100,11 @@ class TestSignup(TestApp):
         """
         Usernames should only contain numbers, letters, and underscores
         """
-        response = self.get('/signup/')
-        session = response.environ['beaker.session']
-        token = session['_form_authentication_token']
-
         params = {
-            'username'                      : 'testing_023456789_TESTING_',
-            'password'                      : 'secret',
-            'password_confirm'              : 'secret',
-            'email'                         : 'ryan@example.com',
-            '_form_authentication_token'    : token
+            'username'          : 'testing_023456789_TESTING_',
+            'password'          : 'secret',
+            'password_confirm'  : 'secret',
+            'email'             : 'ryan@example.com'
         }
 
         assert model.User.query.count() == 0
@@ -160,11 +120,10 @@ class TestSignup(TestApp):
             'testing_023456789_TESTING_$',
         ]:
             params = {
-                'username'                      : username,
-                'password'                      : 'secret',
-                'password_confirm'              : 'secret',
-                'email'                         : 'ryan@example.com',
-                '_form_authentication_token'    : token
+                'username'          : username,
+                'password'          : 'secret',
+                'password_confirm'  : 'secret',
+                'email'             : 'ryan@example.com'
             }
             self.post('/signup/', params=params)
             assert model.User.query.count() == 1
@@ -225,16 +184,11 @@ class TestSignup(TestApp):
         """
         Emails should be globally unique
         """
-        response = self.get('/signup/')
-        session = response.environ['beaker.session']
-        token = session['_form_authentication_token']
-
         params = {
-            'username'                      : 'test',
-            'password'                      : 'secret',
-            'password_confirm'              : 'secret',
-            'email'                         : 'ryan@example.com',
-            '_form_authentication_token'    : token
+            'username'          : 'test',
+            'password'          : 'secret',
+            'password_confirm'  : 'secret',
+            'email'             : 'ryan@example.com'
         }
 
         assert model.User.query.count() == 0
@@ -242,11 +196,10 @@ class TestSignup(TestApp):
         assert model.User.query.count() == 1
 
         params = {
-            'username'                      : 'testing',
-            'password'                      : 'secret',
-            'password_confirm'              : 'secret',
-            'email'                         : 'ryan@example.com',
-            '_form_authentication_token'    : token
+            'username'          : 'testing',
+            'password'          : 'secret',
+            'password_confirm'  : 'secret',
+            'email'             : 'ryan@example.com'
         }
 
         self.post('/signup/', params=params)
@@ -260,9 +213,6 @@ class TestRecipeConversion(TestApp):
         Create a recipe as a guest.
         After signup, the recipe should belong to the newly created user.
         """
-        response = self.get('/signup/')
-        session = response.environ['beaker.session']
-        token = session['_form_authentication_token']
 
         params = {
             'name'      : 'Rocky Mountain River IPA',
@@ -276,11 +226,10 @@ class TestRecipeConversion(TestApp):
         assert model.Recipe.get(1).author == None
 
         params = {
-            'username'                      : 'test',
-            'password'                      : 'secret',
-            'password_confirm'              : 'secret',
-            'email'                         : 'ryan@example.com',
-            '_form_authentication_token'    : token
+            'username'          : 'test',
+            'password'          : 'secret',
+            'password_confirm'  : 'secret',
+            'email'             : 'ryan@example.com'
         }
 
         assert model.User.query.count() == 0
