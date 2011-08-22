@@ -23,7 +23,8 @@ setup(
         "webflash",
         "simplejson",
         "python-postmark",
-        "pytest-cov"
+        "pytest-cov",
+        "fudge"
     ],
     zip_safe = False,
     paster_plugins = ['Pecan'],

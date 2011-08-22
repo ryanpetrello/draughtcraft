@@ -1,7 +1,8 @@
 from pecan              import conf
 from pecan.templating   import RendererFactory
-from postmark           import PMMail as Message
 from mako               import exceptions
+
+import postmark
 
 __all__ = ['send']
 
@@ -72,13 +73,18 @@ def send(to, template, subject, ns={}, sender='notify@draughtcraft.com',
 
     email = EmailTemplate(template, '%s/emails' % conf.app.template_path)
 
-    Message(
+    # If necessary, convert lists to comma-delimited strings
+    def _flatten(s):
+        return ','.join(s) if isinstance(s, list) else s
+
+    mail = postmark.PMMail(
         api_key     = conf.postmark.api_key,
-        to          = to,
-        cc          = cc,
-        bcc         = bcc,
+        to          = _flatten(to),
+        cc          = _flatten(cc),
+        bcc         = _flatten(bcc),
         subject     = subject,
         sender      = sender,
         html_body   = email.html(ns),
-        text_body   = email.text(ns),
-    ).send()
+        text_body   = email.text(ns)
+    )
+    mail.send()
