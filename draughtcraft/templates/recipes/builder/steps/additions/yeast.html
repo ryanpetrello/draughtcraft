@@ -1,3 +1,7 @@
+<%!
+  from draughtcraft.lib.csrf import token_key, authentication_token 
+%>
+
 <%page args="i, addition" />
 
 ${h.hidden(
@@ -37,7 +41,7 @@ ${h.hidden(
   </td>
   <td />
   <td class="close">
-    <a href="#" onclick="$.draughtcraft.recipes.builder.removeAddition(${addition.id});return false;">
+    <a href="#" onclick="$.draughtcraft.recipes.builder.removeAddition('${addition.id}?${token_key}=${authentication_token()}');return false;">
       <img src="/images/close.png" />
     </a>
   </td>

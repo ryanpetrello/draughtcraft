@@ -15,7 +15,6 @@ Recipe Viewer
 Bugs
 -------------
 * Fix BJCP Style Categories import duplicates
-* Make DELETE requests `safe` with a legitimate HTTP POST _method=delete submission.
 
 0.1
 ====
