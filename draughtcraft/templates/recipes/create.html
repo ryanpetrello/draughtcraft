@@ -17,7 +17,7 @@
 
 <div class="clearfix">
 
-  <form method="POST">
+  ${h.form('')}
     <fieldset>
       <dl class="clearfix">
         <dt><label for="name">Recipe Name</label></dt>
@@ -67,7 +67,7 @@
       or <a href="javascript:history.go(-1);" tabindex="5">Go Back</a>
     </div>
 
-  </form>
+  ${h.end_form()}
 
   % if h.request.context['user'] is None:
     <div class="info">
