@@ -24,9 +24,7 @@ class RootController(object):
         template    = 'login.html'
     )
     def login(self, **kw):
-        return dict(
-            welcome = 'welcome' in kw
-        )
+        return dict(welcome = 'welcome' in kw)
 
     @login.when(
         method          = 'POST',
