@@ -42,7 +42,7 @@ class TestEmailSend(object):
     @fudge.patch('postmark.PMMail')
     def test_send(self, FakeMail):
 
-        ns = {'first_name': 'Bob'}
+        ns = {'username': 'sample_user'}
 
         (FakeMail.expects_call().with_args(
             api_key     = conf.postmark.api_key,

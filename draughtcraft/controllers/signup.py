@@ -1,6 +1,7 @@
 from pecan                              import expose, request, redirect
 from draughtcraft                       import model
 from draughtcraft.lib.auth              import remove_trial_recipe
+from draughtcraft.lib.email             import send
 from draughtcraft.lib.schemas.signup    import SignupSchema
 
 class SignupController(object):
@@ -29,5 +30,12 @@ class SignupController(object):
         if request.context['trial_recipe']:
             request.context['trial_recipe'].author = user
             remove_trial_recipe()
+
+        send(
+            user.email,
+            'signup',
+            'Welcome to DraughtCraft',
+            {'username':username}
+        )
 
         redirect('/recipes/create')

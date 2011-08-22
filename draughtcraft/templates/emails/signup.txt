@@ -1,11 +1,11 @@
-Hi ${first_name},
+Hi there!
 
 Thanks for signing up for DraughtCraft.
 
 DraughtCraft helps you build, store and share your recipes in an online,
 managed platform made especially for homebrew enthusiasts.
 
-You can log in to your new account at http://draughtcraft.com/login or get
-started building a recipe right now.
+You can log in with your username (${username}) and password at 
+http://draughtcraft.com/login and get started building a recipe right now.
 
 Thanks again from the team at DraughtCraft!
