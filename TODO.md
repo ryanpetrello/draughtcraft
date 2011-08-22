@@ -12,10 +12,6 @@ Recipe Viewer
 -------------
 * Add ability to view others' recipes (but not edit them)
 
-User Experience
----------------
-* Post-Signup Verbiage/Thank You/Instructions
-
 0.1
 ====
 
