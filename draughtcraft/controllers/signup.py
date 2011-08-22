@@ -38,4 +38,4 @@ class SignupController(object):
             {'username':username}
         )
 
-        redirect('/recipes/create')
+        redirect('/login?welcome')

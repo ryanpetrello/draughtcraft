@@ -23,8 +23,10 @@ class RootController(object):
         generic     = True,
         template    = 'login.html'
     )
-    def login(self):
-        return dict()
+    def login(self, **kw):
+        return dict(
+            welcome = 'welcome' in kw
+        )
 
     @login.when(
         method          = 'POST',

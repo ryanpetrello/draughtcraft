@@ -18,7 +18,11 @@
 </%def>
 
 <h1>
-  Login
+  % if welcome:
+    Thanks for signing up for DraughtCraft.
+  % else:
+    Login
+  % endif
 </h1>
 
 <div class="clearfix">
@@ -56,14 +60,22 @@
   ${h.end_form()}
 
   <div class="info">
-    <h4>Become a Member</h4>
-    <p>
-      DraughtCraft members can save, share, and organize their recipes online.
-      Best all of, signing up is easy and free!
-    </p>
-    <p>
-      <a href="/signup" tabindex="6">Sign Up Now</a>
-    </p>
+    % if welcome:
+      <h4>Craft Your Own</h4>
+      <p>
+        Build, store and share your recipes in an online, managed
+        platform made <strong>especially</strong> for homebrew enthusiasts.
+      </p>
+    % else:
+      <h4>Become a Member</h4>
+      <p>
+        DraughtCraft members can save, share, and organize their recipes online.
+        Best all of, signing up is easy and free!
+      </p>
+      <p>
+        <a href="/signup" tabindex="6">Sign Up Now</a>
+      </p>
+    % endif
   </div>
 
 </div>

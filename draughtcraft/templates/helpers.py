@@ -1,7 +1,8 @@
-from pecan                      import request
-from draughtcraft               import model
-from draughtcraft.lib.notice    import notices
-from webhelpers.html.tags       import *
+from pecan                              import request
+from draughtcraft                       import model
+from draughtcraft.lib.notice            import notices
+from webhelpers.html.tags               import *
+from draughtcraft.lib.secure_form       import secure_form as form
 
 def format_percentage(decimal, digits=2, symbol=True):
     value = decimal * 100.00
