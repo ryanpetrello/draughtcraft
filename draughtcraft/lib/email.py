@@ -3,6 +3,8 @@ from pecan.templating   import RendererFactory
 from postmark           import PMMail as Message
 from mako               import exceptions
 
+__all__ = ['send']
+
 
 class EmailTemplate(object):
     """
@@ -46,10 +48,12 @@ class EmailTemplate(object):
     def html(self, ns):
         body = self.__render__('html', ns)
         if body:
-            return self.__html_wrap__ % body
+            return (self.__html_wrap__ % body.strip())
 
     def text(self, ns):
-        return self.__render__('txt', ns)
+        body = self.__render__('txt', ns)
+        if body:
+            return body.strip()
 
 
 def send(to, template, subject, ns={}, sender='notify@draughtcraft.com',
