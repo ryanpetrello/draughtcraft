@@ -84,7 +84,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
 
         return copy
 
-    def fork(self):
+    def revise(self):
         # Make a copy of the recipe
         copy = self.duplicate()
 

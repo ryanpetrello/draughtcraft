@@ -852,7 +852,7 @@ class TestRecipeRevisions(TestModel):
         )
         assert revision.duplicate() == revision
 
-    def test_simple_fork(self):
+    def test_simple_revision(self):
         model.Recipe(
             type            = 'MASH',
             name            = 'Rocky Mountain River IPA',
@@ -863,7 +863,7 @@ class TestRecipeRevisions(TestModel):
         model.commit()
 
         recipe = model.Recipe.query.first()
-        recipe.fork()
+        recipe.revise()
         model.commit()
 
         assert model.Recipe.query.count() == 2
@@ -871,3 +871,52 @@ class TestRecipeRevisions(TestModel):
         revision = model.Recipe.query.first()
         assert revision.head == head
         assert revision in head.revisions
+
+    def test_multiple_revisions(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.'
+        )
+        model.commit()
+
+        # Revise once...
+        recipe = model.Recipe.query.first()
+        recipe.revise()
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+        head = model.Recipe.query.all()[-1]
+        revision = model.Recipe.query.first()
+        assert revision.head == head
+        assert revision in head.revisions
+
+        # Revise again...
+        head.revise()
+        model.commit()
+
+        assert model.Recipe.query.count() == 3
+        head = model.Recipe.get_by(head=None)
+
+        revisions = model.Recipe.query.filter(model.Recipe.head != None)
+        assert revisions.count() == 2
+        for r in revisions:
+            assert r.head == head
+            assert r != head
+            assert r in head.revisions
+
+        # Revise again...
+        head.revise()
+        model.commit()
+
+        assert model.Recipe.query.count() == 4
+        head = model.Recipe.get_by(head=None)
+
+        revisions = model.Recipe.query.filter(model.Recipe.head != None)
+        assert revisions.count() == 3
+        for r in revisions:
+            assert r.head == head
+            assert r != head
+            assert r in head.revisions
