@@ -91,6 +91,13 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         # Set the source revision's HEAD to the new copy
         self.head = copy
 
+        #
+        # Remove the author since this is no longer a valid HEAD revision.
+        # If we need to access the author, we can do so through the `self.head`
+        # relationship.
+        #
+        self.author = None
+
         return copy
 
     @property

@@ -837,6 +837,35 @@ class TestRecipeCopy(TestModel):
 
 class TestRecipeRevisions(TestModel):
 
+    def test_author_recipes(self):
+        """
+        `model.User.recipes` should not include recipe revisions (only recipes
+        that represent the HEAD revision).
+        """
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            author          = model.User()
+        )
+        model.commit()
+
+        assert model.User.query.count() == 1
+        assert model.Recipe.query.count() == 1
+        assert len(model.User.get(1).recipes) == 1
+
+        recipe = model.Recipe.query.first()
+        recipe.revise()
+        model.commit()
+
+        assert model.User.query.count() == 1
+        assert model.Recipe.query.count() == 2
+        assert len(model.User.get(1).recipes) == 1
+        assert model.User.get(1).recipes[0].head == None
+        assert len(model.User.get(1).recipes[0].revisions) == 1
+
     def test_shallow_copy(self):
         """
         Recipe revisions that are *not* the head revision should be a copy
