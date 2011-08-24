@@ -556,3 +556,74 @@ class TestRecipeCopy(TestModel):
         assert r1.fermentation_steps[1].step == r2.fermentation_steps[1].step == 'SECONDARY'
         assert r1.fermentation_steps[1].days == r2.fermentation_steps[1].days == 90
         assert r1.fermentation_steps[1].fahrenheit == r2.fermentation_steps[1].fahrenheit == 45
+
+    def test_additions_copy(self):
+        recipe = model.Recipe(name = u'Sample Recipe')
+
+        grain = model.Fermentable()
+        primary_hop = model.Hop()
+        bittering_hop = model.Hop()
+        yeast = model.Yeast()
+        recipe.additions = [
+            model.RecipeAddition(
+                use         = 'MASH',
+                fermentable = grain
+            ),
+            model.RecipeAddition(
+                use         = 'MASH',
+                hop         = primary_hop
+            ),
+            model.RecipeAddition(
+                use         = 'FIRST WORT',
+                hop         = primary_hop
+            ),
+            model.RecipeAddition(
+                use         = 'BOIL',
+                hop         = primary_hop,
+            ),
+            model.RecipeAddition(
+                use         = 'POST-BOIL',
+                hop         = primary_hop
+            ),
+            model.RecipeAddition(
+                use         = 'FLAME OUT',
+                hop         = bittering_hop
+            ),
+            model.RecipeAddition(
+                use         = 'PRIMARY',
+                yeast       = yeast
+            ),
+            model.RecipeAddition(
+                use         = 'SECONDARY',
+                yeast       = yeast
+            )
+        ]
+        model.commit()
+
+        assert model.Recipe.query.count() == 1
+        assert model.RecipeAddition.query.count() == 8
+        assert model.Fermentable.query.count() == 1
+        assert model.Hop.query.count() == 2
+        assert model.Yeast.query.count() == 1
+
+        recipe = model.Recipe.query.first()
+        deepcopy(recipe)
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+        assert model.RecipeAddition.query.count() == 16
+        assert model.Fermentable.query.count() == 1
+        assert model.Hop.query.count() == 2
+        assert model.Yeast.query.count() == 1
+
+        r1, r2 = model.Recipe.get(1), model.Recipe.get(2)
+        assert len(r1.additions) == len(r2.additions) == 8
+
+        assert r1.additions[0].fermentable == r2.additions[0].fermentable == model.Fermentable.query.first()
+        assert r1.additions[1].hop == r2.additions[1].hop == model.Hop.query.first()
+        assert r1.additions[2].hop == r2.additions[2].hop == model.Hop.query.first()
+        assert r1.additions[3].hop == r2.additions[3].hop == model.Hop.query.first()
+        assert r1.additions[4].hop == r2.additions[4].hop == model.Hop.query.first()
+        assert r1.additions[5].hop == r2.additions[5].hop == model.Hop.query.all()[-1]
+        assert r1.additions[6].yeast == r2.additions[6].yeast == model.Yeast.query.first()
+        assert r1.additions[7].yeast == r2.additions[7].yeast == model.Yeast.query.all()[-1]

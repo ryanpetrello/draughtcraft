@@ -3,8 +3,9 @@ from elixir import (
     UnicodeText, Enum, using_options,
     OneToMany
 )
-from draughtcraft.lib.units     import UNITS
-from sqlalchemy                 import not_
+from draughtcraft.model.deepcopy    import ShallowCopyMixin
+from draughtcraft.lib.units         import UNITS
+from sqlalchemy                     import not_
 
 ORIGINS = [
     'AUSTRALIAN',
@@ -22,7 +23,7 @@ ORIGINS = [
 ]
 
 
-class Ingredient(Entity):
+class Ingredient(Entity, ShallowCopyMixin):
 
     using_options(inheritance='multi', polymorphic=True)
     
