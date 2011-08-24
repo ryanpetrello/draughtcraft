@@ -520,3 +520,39 @@ class TestRecipeCopy(TestModel):
 
         assert r1.slugs[1] != r2.slugs[1]
         assert r1.slugs[1].slug == r2.slugs[1].slug == 'my-favorite-ipa'
+
+    def test_fermentation_steps_copy(self):
+        model.Recipe(
+            name                    = 'Rocky Mountain River IPA',
+            fermentation_steps      = [
+                model.FermentationStep(
+                    step        = 'PRIMARY',
+                    days        = 14,
+                    fahrenheit  = 65
+                ),
+                model.FermentationStep(
+                    step        = 'SECONDARY',
+                    days        = 90,
+                    fahrenheit  = 45
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        deepcopy(recipe)
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+        assert model.FermentationStep.query.count() == 4
+
+        r1, r2 = model.Recipe.get(1), model.Recipe.get(2)
+        assert len(r1.fermentation_steps) == len(r2.fermentation_steps) == 2
+        
+        assert r1.fermentation_steps[0].step == r2.fermentation_steps[0].step == 'PRIMARY'
+        assert r1.fermentation_steps[0].days == r2.fermentation_steps[0].days == 14
+        assert r1.fermentation_steps[0].fahrenheit == r2.fermentation_steps[0].fahrenheit == 65
+
+        assert r1.fermentation_steps[1].step == r2.fermentation_steps[1].step == 'SECONDARY'
+        assert r1.fermentation_steps[1].days == r2.fermentation_steps[1].days == 90
+        assert r1.fermentation_steps[1].fahrenheit == r2.fermentation_steps[1].fahrenheit == 45

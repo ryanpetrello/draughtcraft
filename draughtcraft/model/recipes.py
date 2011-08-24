@@ -237,7 +237,7 @@ class HopAddition(RecipeAddition):
         return UnitConvert.to_str(self.amount, unit)
 
 
-class FermentationStep(Entity, ShallowCopyMixin):
+class FermentationStep(Entity, DeepCopyMixin):
 
     STEPS = (
         'PRIMARY',
