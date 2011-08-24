@@ -1,12 +1,13 @@
 from elixir import (Entity, OneToMany, Field, Unicode, Integer, Float, 
                     UnicodeText)
+from draughtcraft.model.deepcopy        import ShallowCopyMixin
 
 
 class InvalidStatistic(Exception):
     pass
 
 
-class Style(Entity):
+class Style(Entity, ShallowCopyMixin):
 
     name            = Field(Unicode(256))
     description     = Field(UnicodeText)

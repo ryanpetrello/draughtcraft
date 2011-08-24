@@ -701,8 +701,8 @@ class TestAuthenticatedUserRecipeLookup(TestAuthenticatedApp):
         model.Recipe(
             name    = 'American IPA',
             slugs   = [
-                model.RecipeSlug('American IPA'),
-                model.RecipeSlug('American IPA (Revised)')
+                model.RecipeSlug(name = 'American IPA'),
+                model.RecipeSlug(name = 'American IPA (Revised)')
             ],
             author  = model.User.get(1)
         )
@@ -728,7 +728,7 @@ class TestAuthenticatedUserRecipeLookup(TestAuthenticatedApp):
         model.Recipe(
             name    = 'American IPA',
             slugs   = [
-                model.RecipeSlug('American IPA')
+                model.RecipeSlug(name = 'American IPA')
             ]
         )
         model.commit()
@@ -744,7 +744,7 @@ class TestAuthenticatedUserRecipeLookup(TestAuthenticatedApp):
         model.Recipe(
             name    = 'American IPA',
             slugs   = [
-                model.RecipeSlug('American IPA')
+                model.RecipeSlug(name = 'American IPA')
             ],
             author  = model.User()
         )
@@ -764,7 +764,7 @@ class TestTrialRecipeLookup(TestApp):
         model.Recipe(
             name    = 'American IPA',
             slugs   = [
-                model.RecipeSlug('American IPA')
+                model.RecipeSlug(name = 'American IPA')
             ],
             author  = model.User.get(1)
         )
@@ -781,7 +781,7 @@ class TestTrialRecipeLookup(TestApp):
         model.Recipe(
             name    = 'American IPA',
             slugs   = [
-                model.RecipeSlug('American IPA')
+                model.RecipeSlug(name = 'American IPA')
             ]
         )
         model.commit()

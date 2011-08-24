@@ -1,5 +1,6 @@
 from elixir                             import (Entity, Field, Unicode, DateTime,
                                                 UnicodeText, OneToMany, ManyToOne)
+from draughtcraft.model.deepcopy        import ShallowCopyMixin
 from pecan                              import conf
 from simplejson                         import loads, dumps
 from datetime                           import datetime
@@ -8,7 +9,7 @@ from sqlalchemy.ext.associationproxy    import AssociationProxy
 from sqlalchemy.orm.collections         import attribute_mapped_collection
 
 
-class User(Entity):
+class User(Entity, ShallowCopyMixin):
 
     first_name  = Field(Unicode(64))
     last_name   = Field(Unicode(64))

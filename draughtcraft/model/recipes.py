@@ -4,9 +4,10 @@ from elixir import (
 )
 from draughtcraft.lib.calculations  import Calculations
 from draughtcraft.lib.units         import UnitConvert
+from draughtcraft.model.deepcopy    import DeepCopyMixin, ShallowCopyMixin
 from datetime                       import datetime
 
-class Recipe(Entity):
+class Recipe(Entity, DeepCopyMixin):
 
     TYPES = (
         'MASH',
@@ -142,7 +143,7 @@ class Recipe(Entity):
         self.last_updated = datetime.utcnow()
 
 
-class RecipeAddition(Entity):
+class RecipeAddition(Entity, DeepCopyMixin):
 
     USES = (
         'MASH',
@@ -236,7 +237,7 @@ class HopAddition(RecipeAddition):
         return UnitConvert.to_str(self.amount, unit)
 
 
-class FermentationStep(Entity):
+class FermentationStep(Entity, ShallowCopyMixin):
 
     STEPS = (
         'PRIMARY',

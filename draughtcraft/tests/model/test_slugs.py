@@ -12,27 +12,23 @@ class TestSlugGeneration(object):
         assert slug.slug == 'custom'
 
     def test_slug_generation(self): 
-        slug = model.RecipeSlug('Beer')
+        slug = model.RecipeSlug(name='Beer')
         assert slug.slug == 'beer'
 
-        slug = model.RecipeSlug('American Ale')
+        slug = model.RecipeSlug(name='American Ale')
         assert slug.slug == 'american-ale'
 
-        slug = model.RecipeSlug("Ryan's American Ale")
+        slug = model.RecipeSlug(name="Ryan's American Ale")
         assert slug.slug == 'ryans-american-ale'
 
-        slug = model.RecipeSlug('Fancy Wit-Bier')
+        slug = model.RecipeSlug(name='Fancy Wit-Bier')
         assert slug.slug == 'fancy-wit-bier'
 
-        slug = model.RecipeSlug('Spaced Out  IPA')
+        slug = model.RecipeSlug(name='Spaced Out  IPA')
         assert slug.slug == 'spaced-out-ipa'
 
-        slug = model.RecipeSlug('Holy Moly! Imperial Stout')
+        slug = model.RecipeSlug(name='Holy Moly! Imperial Stout')
         assert slug.slug == 'holy-moly-imperial-stout'
 
-        slug = model.RecipeSlug('$$$')
+        slug = model.RecipeSlug(name='$$$')
         assert slug.slug == 'custom-recipe'
-
-    def test_empty_name(self):
-        with pytest.raises(AssertionError):
-            model.RecipeSlug('')

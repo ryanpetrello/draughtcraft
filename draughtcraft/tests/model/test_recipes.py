@@ -1,5 +1,7 @@
 from draughtcraft       import model
+from draughtcraft.tests import TestModel
 from datetime           import timedelta
+from copy               import deepcopy
 
 
 class TestRecipeAddition(object):
@@ -426,3 +428,35 @@ class TestFermentationStep(object):
         assert steps[2].days == 31
         assert steps[2].fahrenheit == 35
         assert steps[2].recipe == recipe
+
+
+class TestRecipeCopy(TestModel):
+
+    def test_simple_copy(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.'
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        deepcopy(recipe)
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+        assert model.RecipeSlug.query.count() == 2
+
+        r1, r2 = model.Recipe.get(1), model.Recipe.get(2)
+
+        assert r1.type == r2.type == 'MASH'
+        assert r1.name == r2.name == 'Rocky Mountain River IPA'
+        assert r1.gallons == r2.gallons == 5
+        assert r1.boil_minutes == r2.boil_minutes == 60
+        assert r1.notes == r2.notes == u'This is my favorite recipe.'
+
+        assert len(r1.slugs) == len(r2.slugs) == 1
+        assert r1.slugs[0] != r2.slugs[0]
+        assert r1.slugs[0].slug == r2.slugs[0].slug == 'rocky-mountain-river-ipa'

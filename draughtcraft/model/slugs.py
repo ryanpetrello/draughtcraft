@@ -1,17 +1,19 @@
-from elixir     import Entity, Field, Unicode, ManyToOne
+from draughtcraft.model.deepcopy    import DeepCopyMixin
+from elixir                         import Entity, Field, Unicode, ManyToOne
 
 import re
 
-class RecipeSlug(Entity):
+class RecipeSlug(Entity, DeepCopyMixin):
 
     slug            = Field(Unicode(256))
 
     recipe          = ManyToOne('Recipe', inverse='slugs')
 
-    def __init__(self, name, slug=None):
-        super(RecipeSlug, self).__init__(name=name, slug=slug)
+    def __init__(self, *args, **kwargs):
+        super(RecipeSlug, self).__init__(*args, **kwargs)
 
-        if slug is None:
+        if kwargs.get('name') and kwargs.get('slug') is None:
+            name = kwargs['name']
 
             # The name must be at least one character to generate a slug
             assert name

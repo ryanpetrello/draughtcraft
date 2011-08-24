@@ -4,9 +4,7 @@ from unittest           import TestCase
 
 import py.test
 
-class TestApp(TestCase):
-
-    __headers__ = {}
+class TestModel(TestCase):
 
     def setUp(self):
         # Set up a fake app
@@ -21,6 +19,21 @@ class TestApp(TestCase):
         # Tear down and dispose the DB binding
         dcmodel.metadata.bind.dispose()
         dcmodel.Session.expunge_all()
+
+
+class TestApp(TestModel):
+    """
+    A controller test starts a database transaction and creates a fake
+    WSGI app.
+    """
+
+    __headers__ = {}
+
+    def setUp(self):
+        # Set up a fake app
+        self.app = WebTestApp(py.test.wsgi_app)
+
+        super(TestApp, self).setUp()
 
     def _do_request(self, url, method='GET', **kwargs):
         methods = {
