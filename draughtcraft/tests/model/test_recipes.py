@@ -833,3 +833,41 @@ class TestRecipeCopy(TestModel):
         assert len(r2.additions) == 1
 
         assert r2.additions[0].fermentable == model.Fermentable.query.first()
+
+
+class TestRecipeRevisions(TestModel):
+
+    def test_shallow_copy(self):
+        """
+        Recipe revisions that are *not* the head revision should be a copy
+        in a "shallow" way.
+        """
+        revision = model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            head            = model.Recipe() # This revision is pointing at a HEAD recipe
+        )
+        assert revision.duplicate() == revision
+
+    def test_simple_fork(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.'
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        recipe.fork()
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+        head = model.Recipe.query.all()[-1]
+        revision = model.Recipe.query.first()
+        assert revision.head == head
+        assert revision in head.revisions

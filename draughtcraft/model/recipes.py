@@ -5,11 +5,12 @@ from elixir import (
 from draughtcraft.lib.calculations  import Calculations
 from draughtcraft.lib.units         import UnitConvert
 from draughtcraft.model.deepcopy    import DeepCopyMixin, ShallowCopyMixin
+from uuid                           import uuid4 as uuid
 from datetime                       import datetime
 from copy                           import deepcopy
 
 
-class Recipe(Entity, DeepCopyMixin):
+class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
 
     TYPES = (
         'MASH',
@@ -18,6 +19,7 @@ class Recipe(Entity, DeepCopyMixin):
         'MINIMASH'
     )
 
+    uuid                = Field(Unicode(64), index=True, default=lambda: unicode(uuid()))
     type                = Field(Enum(*TYPES), default='MASH')
     name                = Field(Unicode(256))
     gallons             = Field(Float, default=5)
@@ -25,6 +27,9 @@ class Recipe(Entity, DeepCopyMixin):
     notes               = Field(UnicodeText)
     creation_date       = Field(DateTime, default=datetime.utcnow)
     last_updated        = Field(DateTime, default=datetime.utcnow)
+
+    head                = ManyToOne('Recipe', inverse='revisions')
+    revisions           = OneToMany('Recipe', inverse='head')
 
     additions           = OneToMany('RecipeAddition', inverse='recipe')
     fermentation_steps  = OneToMany('FermentationStep', inverse='recipe')
@@ -38,6 +43,15 @@ class Recipe(Entity, DeepCopyMixin):
             self.slugs.append(
                 entities.RecipeSlug(name=kwargs['name'])
             )
+
+    def __deepcopy__(self, memo):
+        #
+        # The head revision should perform a deep copy while historical
+        # revisions should return a shallow copy/static reference.
+        #
+        if self.head:
+            return ShallowCopyMixin.__deepcopy__(self, memo)
+        return DeepCopyMixin.__deepcopy__(self, memo)
 
     def duplicate(self, overrides={}):
         """
@@ -67,6 +81,17 @@ class Recipe(Entity, DeepCopyMixin):
 
             # Set the new (overridden) value
             setattr(copy, k, v)
+
+        return copy
+
+    def fork(self):
+        # Make a copy of the recipe
+        copy = self.duplicate()
+
+        # Set the source revision's HEAD to the new copy
+        self.head = copy
+
+        return copy
 
     @property
     def calculations(self):
