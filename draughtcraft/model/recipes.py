@@ -29,7 +29,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
     last_updated        = Field(DateTime, default=datetime.utcnow)
 
     head                = ManyToOne('Recipe', inverse='revisions')
-    revisions           = OneToMany('Recipe', inverse='head')
+    revisions           = OneToMany('Recipe', inverse='head', order_by='creation_date')
 
     additions           = OneToMany('RecipeAddition', inverse='recipe')
     fermentation_steps  = OneToMany('FermentationStep', inverse='recipe')
