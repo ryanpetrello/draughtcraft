@@ -1,7 +1,6 @@
 from draughtcraft       import model
 from draughtcraft.tests import TestModel
 from datetime           import timedelta
-from copy               import deepcopy
 
 
 class TestRecipeAddition(object):
@@ -443,7 +442,7 @@ class TestRecipeCopy(TestModel):
         model.commit()
 
         recipe = model.Recipe.query.first()
-        deepcopy(recipe)
+        recipe.duplicate()
         model.commit()
 
         assert model.Recipe.query.count() == 2
@@ -461,6 +460,37 @@ class TestRecipeCopy(TestModel):
         assert r1.slugs[0] != r2.slugs[0]
         assert r1.slugs[0].slug == r2.slugs[0].slug == 'rocky-mountain-river-ipa'
 
+    def test_simple_copy_with_overrides(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.'
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        recipe.duplicate({
+            'type'          : 'EXTRACT',
+            'name'          : 'Simcoe IPA',
+            'gallons'       : 10,
+            'boil_minutes'  : 90,
+            'notes'         : u'This is a duplicate.'
+        })
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+        assert model.RecipeSlug.query.count() == 2
+
+        r1, r2 = model.Recipe.get(1), model.Recipe.get(2)
+
+        assert r2.type == 'EXTRACT'
+        assert r2.name == 'Simcoe IPA'
+        assert r2.gallons == 10
+        assert r2.boil_minutes == 90
+        assert r2.notes == u'This is a duplicate.'
+
     def test_author_copy(self):
         model.Recipe(
             name    = 'Rocky Mountain River IPA',
@@ -469,7 +499,7 @@ class TestRecipeCopy(TestModel):
         model.commit()
 
         recipe = model.Recipe.query.first()
-        deepcopy(recipe)
+        recipe.duplicate()
         model.commit()
 
         assert model.Recipe.query.count() == 2
@@ -477,6 +507,26 @@ class TestRecipeCopy(TestModel):
 
         r1, r2 = model.Recipe.get(1), model.Recipe.get(2)
         assert r1.author == r2.author == model.User.get(1)
+
+    def test_author_copy_with_overrides(self):
+        model.Recipe(
+            name    = 'Rocky Mountain River IPA',
+            author  = model.User()
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        recipe.duplicate({
+            'author' : model.User()
+        })
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+        assert model.User.query.count() == 2
+
+        r1, r2 = model.Recipe.get(1), model.Recipe.get(2)
+        assert r1.author and r2.author
+        assert r1.author != r2.author
 
     def test_style_copy(self):
         model.Recipe(
@@ -486,7 +536,7 @@ class TestRecipeCopy(TestModel):
         model.commit()
 
         recipe = model.Recipe.query.first()
-        deepcopy(recipe)
+        recipe.duplicate()
         model.commit()
 
         assert model.Recipe.query.count() == 2
@@ -494,6 +544,26 @@ class TestRecipeCopy(TestModel):
 
         r1, r2 = model.Recipe.get(1), model.Recipe.get(2)
         assert r1.style == r2.style == model.Style.get(1)
+
+    def test_style_copy_with_overrides(self):
+        model.Recipe(
+            name    = 'Rocky Mountain River IPA',
+            style   = model.Style(name = u'American IPA')
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        recipe.duplicate({
+            'style' : model.Style(name = u'Baltic Porter')
+        })
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+        assert model.Style.query.count() == 2
+
+        r1, r2 = model.Recipe.get(1), model.Recipe.get(2)
+        assert r1.style and r2.style
+        assert r1.style != r2.style
 
     def test_slugs_copy(self):
         model.Recipe(
@@ -506,7 +576,7 @@ class TestRecipeCopy(TestModel):
         model.commit()
 
         recipe = model.Recipe.query.first()
-        deepcopy(recipe)
+        recipe.duplicate()
         model.commit()
 
         assert model.Recipe.query.count() == 2
@@ -520,6 +590,33 @@ class TestRecipeCopy(TestModel):
 
         assert r1.slugs[1] != r2.slugs[1]
         assert r1.slugs[1].slug == r2.slugs[1].slug == 'my-favorite-ipa'
+
+    def test_slugs_copy_with_overrides(self):
+        model.Recipe(
+            name    = 'Rocky Mountain River IPA',
+            slugs   = [
+                model.RecipeSlug(slug=u'rocky-mountain-river-ipa'),
+                model.RecipeSlug(slug=u'my-favorite-ipa')
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        recipe.duplicate({
+            'slugs': [model.RecipeSlug(slug='custom-slug')]
+        })
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+        assert model.RecipeSlug.query.count() == 3
+
+        r1, r2 = model.Recipe.get(1), model.Recipe.get(2)
+        assert len(r1.slugs) == 2
+        assert len(r2.slugs) == 1
+
+        assert r1.slugs[0].slug == 'rocky-mountain-river-ipa'
+        assert r1.slugs[1].slug == 'my-favorite-ipa'
+        assert r2.slugs[0].slug == 'custom-slug'
 
     def test_fermentation_steps_copy(self):
         model.Recipe(
@@ -540,7 +637,7 @@ class TestRecipeCopy(TestModel):
         model.commit()
 
         recipe = model.Recipe.query.first()
-        deepcopy(recipe)
+        recipe.duplicate()
         model.commit()
 
         assert model.Recipe.query.count() == 2
@@ -556,6 +653,45 @@ class TestRecipeCopy(TestModel):
         assert r1.fermentation_steps[1].step == r2.fermentation_steps[1].step == 'SECONDARY'
         assert r1.fermentation_steps[1].days == r2.fermentation_steps[1].days == 90
         assert r1.fermentation_steps[1].fahrenheit == r2.fermentation_steps[1].fahrenheit == 45
+
+    def test_fermentation_steps_copy_with_override(self):
+        model.Recipe(
+            name                    = 'Rocky Mountain River IPA',
+            fermentation_steps      = [
+                model.FermentationStep(
+                    step        = 'PRIMARY',
+                    days        = 14,
+                    fahrenheit  = 65
+                ),
+                model.FermentationStep(
+                    step        = 'SECONDARY',
+                    days        = 90,
+                    fahrenheit  = 45
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        recipe.duplicate({
+            'fermentation_steps' : [model.FermentationStep(
+                step        = 'PRIMARY',
+                days        = 21,
+                fahrenheit  = 75
+            )]
+        })
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+        assert model.FermentationStep.query.count() == 3
+
+        r1, r2 = model.Recipe.get(1), model.Recipe.get(2)
+        assert len(r1.fermentation_steps) == 2
+        assert len(r2.fermentation_steps) == 1
+        
+        assert r2.fermentation_steps[0].step == 'PRIMARY'
+        assert r2.fermentation_steps[0].days == 21
+        assert r2.fermentation_steps[0].fahrenheit == 75
 
     def test_additions_copy(self):
         recipe = model.Recipe(name = u'Sample Recipe')
@@ -607,7 +743,7 @@ class TestRecipeCopy(TestModel):
         assert model.Yeast.query.count() == 1
 
         recipe = model.Recipe.query.first()
-        deepcopy(recipe)
+        recipe.duplicate()
         model.commit()
 
         assert model.Recipe.query.count() == 2
@@ -627,3 +763,73 @@ class TestRecipeCopy(TestModel):
         assert r1.additions[5].hop == r2.additions[5].hop == model.Hop.query.all()[-1]
         assert r1.additions[6].yeast == r2.additions[6].yeast == model.Yeast.query.first()
         assert r1.additions[7].yeast == r2.additions[7].yeast == model.Yeast.query.all()[-1]
+
+    def test_additions_copy_with_overrides(self):
+        recipe = model.Recipe(name = u'Sample Recipe')
+
+        grain = model.Fermentable()
+        primary_hop = model.Hop()
+        bittering_hop = model.Hop()
+        yeast = model.Yeast()
+        recipe.additions = [
+            model.RecipeAddition(
+                use         = 'MASH',
+                fermentable = grain
+            ),
+            model.RecipeAddition(
+                use         = 'MASH',
+                hop         = primary_hop
+            ),
+            model.RecipeAddition(
+                use         = 'FIRST WORT',
+                hop         = primary_hop
+            ),
+            model.RecipeAddition(
+                use         = 'BOIL',
+                hop         = primary_hop,
+            ),
+            model.RecipeAddition(
+                use         = 'POST-BOIL',
+                hop         = primary_hop
+            ),
+            model.RecipeAddition(
+                use         = 'FLAME OUT',
+                hop         = bittering_hop
+            ),
+            model.RecipeAddition(
+                use         = 'PRIMARY',
+                yeast       = yeast
+            ),
+            model.RecipeAddition(
+                use         = 'SECONDARY',
+                yeast       = yeast
+            )
+        ]
+        model.commit()
+
+        assert model.Recipe.query.count() == 1
+        assert model.RecipeAddition.query.count() == 8
+        assert model.Fermentable.query.count() == 1
+        assert model.Hop.query.count() == 2
+        assert model.Yeast.query.count() == 1
+
+        recipe = model.Recipe.query.first()
+        recipe.duplicate({
+            'additions' : [model.RecipeAddition(
+                use         = 'MASH',
+                fermentable = model.Fermentable.query.first()
+            )]
+        })
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+        assert model.RecipeAddition.query.count() == 9
+        assert model.Fermentable.query.count() == 1
+        assert model.Hop.query.count() == 2
+        assert model.Yeast.query.count() == 1
+
+        r1, r2 = model.Recipe.get(1), model.Recipe.get(2)
+        assert len(r1.additions) == 8
+        assert len(r2.additions) == 1
+
+        assert r2.additions[0].fermentable == model.Fermentable.query.first()

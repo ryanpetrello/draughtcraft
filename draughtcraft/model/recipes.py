@@ -6,6 +6,8 @@ from draughtcraft.lib.calculations  import Calculations
 from draughtcraft.lib.units         import UnitConvert
 from draughtcraft.model.deepcopy    import DeepCopyMixin, ShallowCopyMixin
 from datetime                       import datetime
+from copy                           import deepcopy
+
 
 class Recipe(Entity, DeepCopyMixin):
 
@@ -36,6 +38,35 @@ class Recipe(Entity, DeepCopyMixin):
             self.slugs.append(
                 entities.RecipeSlug(name=kwargs['name'])
             )
+
+    def duplicate(self, overrides={}):
+        """
+        Used to duplicate a recipe.
+
+        An optional hash of `overrides` can be specified to override the
+        default copied values, e.g.,
+
+        dupe = user.recipes[0].duplicate({'author': otheruser})
+        assert dupe.author == otheruser
+        """
+        # Make a deep copy of the instance
+        copy = deepcopy(self)
+
+        # For each override...
+        for k,v in overrides.items():
+
+            # If the key is already defined, and is a list (i.e., a ManyToOne)
+            if isinstance(getattr(copy, k, None), list):
+
+                #
+                # Delete each existing entity, because we're about to
+                # override the value.
+                #
+                for i in getattr(copy, k):
+                    i.delete()
+
+            # Set the new (overridden) value
+            setattr(copy, k, v)
 
     @property
     def calculations(self):
