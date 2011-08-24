@@ -2,19 +2,45 @@ from copy               import deepcopy
 from sqlalchemy.orm     import object_mapper, ColumnProperty, RelationshipProperty
 
 
-class ShallowCopyMixin(object):
-
-    def __deepcopy__(self, memo):
-        return self
-
-
 class DeepCopyMixin(object):
+    """
+    Used in conjunction with `ShallowCopyMixin` to clone elixir.Entity
+    instances.
+
+    Any elixir.Entity can "mix-in" this class and be copy.deepcopy()'ed to
+    produce a unique, duplicated row.
+
+    Referenced relationships (e.g., ManyToOne, OneToMany, OneToOne) must also
+    implement either `DeepCopyMixin` or `ShallowCopyMixin`.
+
+    For example:
+
+    ------------------------
+    class Store(Entity, DeepCopyMixin):
+        name        = Field(UnicodeText) 
+        products    = OneToMany('Product')
+
+    class Product(Entity, DeepCopyMixin):
+        name        = Field(UnicodeText) 
+        price       = Field(Float) 
+        categories  = OneToMany('GlobalCategory')
+
+    class GlobalCategory(Entity, ShallowCopyMixin):
+        category    = Field(UnicodeText) 
+    ------------------------
+
+    `copy.deepcopy(Store.get(N))` would produce a new `Store` row and a new
+    `Product` row, but the `GlobalCategory` would be shared between both
+    products (i.e., not duplicated, just a shared reference).
+
+    """
 
     def __deepcopy__(self, memo):
+        # Instantiate a copy of the instance
         cls = self.__class__
         newobj = cls() 
 
-        # Store the copied reference in the memo to avoid backreferences...
+        # Store the copied reference in the memo to avoid back-references...
         memo[self] = newobj
 
         # Look at each property of the object, based on the mapper definition
@@ -75,3 +101,14 @@ class DeepCopyMixin(object):
                             setattr(newobj, prop.key, deepcopy(rel, memo))
 
         return newobj
+
+
+class ShallowCopyMixin(object):
+    """
+    A faux copy that just returns the source object.
+
+    Used to "mix-in" to relationships that you don't want a unique copy of.
+    """
+
+    def __deepcopy__(self, memo):
+        return self

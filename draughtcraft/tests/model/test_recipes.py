@@ -460,3 +460,63 @@ class TestRecipeCopy(TestModel):
         assert len(r1.slugs) == len(r2.slugs) == 1
         assert r1.slugs[0] != r2.slugs[0]
         assert r1.slugs[0].slug == r2.slugs[0].slug == 'rocky-mountain-river-ipa'
+
+    def test_author_copy(self):
+        model.Recipe(
+            name    = 'Rocky Mountain River IPA',
+            author  = model.User()
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        deepcopy(recipe)
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+        assert model.User.query.count() == 1
+
+        r1, r2 = model.Recipe.get(1), model.Recipe.get(2)
+        assert r1.author == r2.author == model.User.get(1)
+
+    def test_style_copy(self):
+        model.Recipe(
+            name    = 'Rocky Mountain River IPA',
+            style   = model.Style(name = u'American IPA')
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        deepcopy(recipe)
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+        assert model.Style.query.count() == 1
+
+        r1, r2 = model.Recipe.get(1), model.Recipe.get(2)
+        assert r1.style == r2.style == model.Style.get(1)
+
+    def test_slugs_copy(self):
+        model.Recipe(
+            name    = 'Rocky Mountain River IPA',
+            slugs   = [
+                model.RecipeSlug(slug=u'rocky-mountain-river-ipa'),
+                model.RecipeSlug(slug=u'my-favorite-ipa')
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        deepcopy(recipe)
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+        assert model.RecipeSlug.query.count() == 4
+
+        r1, r2 = model.Recipe.get(1), model.Recipe.get(2)
+        assert len(r1.slugs) == len(r2.slugs) == 2
+
+        assert r1.slugs[0] != r2.slugs[0]
+        assert r1.slugs[0].slug == r2.slugs[0].slug == 'rocky-mountain-river-ipa'
+
+        assert r1.slugs[1] != r2.slugs[1]
+        assert r1.slugs[1].slug == r2.slugs[1].slug == 'my-favorite-ipa'

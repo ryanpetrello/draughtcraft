@@ -32,7 +32,7 @@ class Recipe(Entity, DeepCopyMixin):
 
     def __init__(self, **kwargs):
         super(Recipe, self).__init__(**kwargs)
-        if kwargs.get('name'):
+        if kwargs.get('name') and not kwargs.get('slugs'):
             self.slugs.append(
                 entities.RecipeSlug(name=kwargs['name'])
             )
