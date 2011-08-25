@@ -28,9 +28,6 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
     creation_date       = Field(DateTime, default=datetime.utcnow)
     last_updated        = Field(DateTime, default=datetime.utcnow)
 
-    head                = ManyToOne('Recipe', inverse='revisions')
-    revisions           = OneToMany('Recipe', inverse='head', order_by='creation_date')
-
     additions           = OneToMany('RecipeAddition', inverse='recipe')
     fermentation_steps  = OneToMany('FermentationStep', inverse='recipe')
     slugs               = OneToMany('RecipeSlug', inverse='recipe')
@@ -43,15 +40,6 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
             self.slugs.append(
                 entities.RecipeSlug(name=kwargs['name'])
             )
-
-    def __deepcopy__(self, memo):
-        #
-        # The head revision should perform a deep copy while historical
-        # revisions should return a shallow copy/static reference.
-        #
-        if self.head:
-            return ShallowCopyMixin.__deepcopy__(self, memo)
-        return DeepCopyMixin.__deepcopy__(self, memo)
 
     def duplicate(self, overrides={}):
         """
@@ -81,22 +69,6 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
 
             # Set the new (overridden) value
             setattr(copy, k, v)
-
-        return copy
-
-    def revise(self):
-        # Make a copy of the recipe
-        copy = self.duplicate()
-
-        # Set the source revision's HEAD to the new copy
-        self.head = copy
-
-        #
-        # Remove the author since this is no longer a valid HEAD revision.
-        # If we need to access the author, we can do so through the `self.head`
-        # relationship.
-        #
-        self.author = None
 
         return copy
 
