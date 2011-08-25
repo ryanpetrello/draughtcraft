@@ -8,7 +8,7 @@
   <h3>
     % if recipe.state == "PUBLISHED":
       ${h.form("%sdraft" % recipe.url())}
-        <a href="#" class="submit">
+        <a href="#" onclick="$(this).closest('form').submit();return false;">
           ${recipe.name}
         </a>
       ${h.end_form()}
