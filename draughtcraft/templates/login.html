@@ -19,13 +19,21 @@
 
 <h1>
   % if welcome:
-    Thanks for signing up for DraughtCraft.
+    Welcome to the DraughtCraft community.
   % else:
     Login
   % endif
 </h1>
 
 <div class="clearfix">
+
+  % if welcome:
+    <div class="buttons">
+      <button class="ribbon notice-general" tabindex="4">
+        Thanks for signing up!  Go ahead and log in.
+      </button>
+    </div>
+  % endif
 
   ${h.form('')}
     <fieldset>

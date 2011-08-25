@@ -250,15 +250,19 @@ input.error + br  {
   }
 
   &.notice-general  {
-    background: #DDF5DD; 
-    color: #668866;
+    background: #AEBA5B; 
+    color: #FFF;
     font-weight: normal;
     font-size: 1em;
-    text-shadow: none;
+    text-shadow: 0 -1px #899536, 0 1px #899536;
     .box-shadow(2px, 2px, 0, #C7E0C7);
     &:before  {
-      border-color: #A7C0A7 #A7C0A7 transparent transparent;
+      border-color: #798526 #798526 transparent transparent;
     }    
+    &:hover  {
+      cursor: auto;
+      text-decoration: none;
+    }
   }
 
 }
