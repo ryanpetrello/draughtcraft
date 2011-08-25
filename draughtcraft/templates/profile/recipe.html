@@ -6,7 +6,7 @@
   </span>
 
   <h3>
-    % if recipe.state == "PUBLISHED":
+    % if recipe.state == "PUBLISHED" and h.request.context['user'] == recipe.author:
       ${h.form("%sdraft" % recipe.url())}
         <a href="#" onclick="$(this).closest('form').submit();return false;">
           ${recipe.name}
