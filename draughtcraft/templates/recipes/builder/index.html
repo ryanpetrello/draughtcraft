@@ -56,10 +56,14 @@
 
 </div>
 <div id="builder-buttons">
-  ${h.form('publish')}
-    % if recipe.author:
+  % if recipe.author:
+    ${h.form('publish')}
       <button>Publish Changes</button>
       <span class="sep">or</span> <a href="/profile/${recipe.author.username}">Cancel</a>
-    % endif
-  ${h.end_form()}
+    ${h.end_form()}
+  % else:
+    ${h.form('/signup', method='GET')}
+      <button>Save Changes</button>
+    ${h.end_form()}
+  % endif
 </div>
