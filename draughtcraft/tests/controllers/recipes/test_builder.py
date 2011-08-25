@@ -788,3 +788,19 @@ class TestTrialRecipeLookup(TestApp):
 
         response = self.get('/recipes/1/american-ipa/builder/', status=401)
         assert response.status_int == 401
+
+class TestRecipePublish(TestAuthenticatedApp):
+
+    def test_fermentable(self):
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
+        model.Fermentable(
+            name        = '2-Row',
+            origin      = 'US',
+            ppg         = 36,
+            lovibond    = 2
+        )
+        model.commit()
+
+        assert model.Recipe.query.first().state == "DRAFT"
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/publish')
+        assert model.Recipe.query.first().state == "PUBLISHED"
