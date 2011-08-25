@@ -1,10 +1,13 @@
 0.1b
 ====
 
+Search
+--------------
+* Ability to look for other recipes by style
+
 Recipe Builder
 --------------
 * Configurable recipe type (e.g., All Grain, Steep, Extract, etc...)
-* Save/Edit Workflow
 * Change recipe name
 * Printable Recipes
 
