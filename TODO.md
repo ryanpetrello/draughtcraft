@@ -29,6 +29,7 @@ Settings
 --------
 * Ability to provide customized SRM and L for fermentables (at a global level)
 * Forgot Password
+* Configurable Brewhouse Efficiency
 
 Additional
 ----------

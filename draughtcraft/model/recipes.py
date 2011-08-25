@@ -5,7 +5,6 @@ from elixir import (
 from draughtcraft.lib.calculations  import Calculations
 from draughtcraft.lib.units         import UnitConvert
 from draughtcraft.model.deepcopy    import DeepCopyMixin, ShallowCopyMixin
-from uuid                           import uuid4 as uuid
 from datetime                       import datetime
 from copy                           import deepcopy
 
@@ -24,7 +23,6 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         'PUBLISHED'
     )
 
-    uuid                = Field(Unicode(64), index=True, default=lambda: unicode(uuid()))
     type                = Field(Enum(*TYPES), default='MASH')
     name                = Field(Unicode(256))
     gallons             = Field(Float, default=5)
@@ -37,11 +35,13 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
     current_draft       = ManyToOne('Recipe', inverse='published_version')
     published_version   = OneToOne('Recipe', inverse='current_draft', order_by='creation_date')
 
-    additions           = OneToMany('RecipeAddition', inverse='recipe')
-    fermentation_steps  = OneToMany('FermentationStep', inverse='recipe')
-    slugs               = OneToMany('RecipeSlug', inverse='recipe')
+    additions           = OneToMany('RecipeAddition', inverse='recipe', cascade='all, delete-orphan')
+    fermentation_steps  = OneToMany('FermentationStep', inverse='recipe', cascade='all, delete-orphan')
+    slugs               = OneToMany('RecipeSlug', inverse='recipe', cascade='all, delete-orphan')
     style               = ManyToOne('Style', inverse='recipes')
     author              = ManyToOne('User', inverse='recipes')
+
+    __ignored_properties__ = ('current_draft', 'published_version', 'creation_date', 'state')
 
     def __init__(self, **kwargs):
         super(Recipe, self).__init__(**kwargs)
@@ -90,9 +90,38 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
             self.current_draft = None
 
         return self.duplicate({
-            'published_version' : self,
-            'state'             : 'DRAFT'
+            'published_version' : self
         })
+
+    def publish(self):
+        """
+        Used to publish an orphan draft as a new recipe.
+        """
+        assert self.state == 'DRAFT', "Only drafts can be published."
+
+        # If this recipe is a draft of another, merge the changes back in
+        if self.published_version:
+            return self.merge()
+
+        # Otherwise, just set the state to PUBLISHED
+        self.state = 'PUBLISHED'
+
+    def merge(self):
+        """
+        Used to merge a drafted recipe's changes back into its source.
+        """
+
+        # Make sure this is a draft with a source recipe
+        assert self.state == 'DRAFT', "Only drafts can be merged."
+        source = self.published_version
+        assert source is not None, "This recipe doesn't have a `published_version`."
+
+        # Clone the draft onto the published version
+        self.__copy_target__ = self.published_version
+        deepcopy(self)
+
+        # Delete the draft
+        self.delete()
 
     @property
     def calculations(self):

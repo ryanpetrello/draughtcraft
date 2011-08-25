@@ -38,7 +38,7 @@ class DeepCopyMixin(object):
     def __deepcopy__(self, memo):
         # Instantiate a copy of the instance
         cls = self.__class__
-        newobj = cls() 
+        newobj = getattr(self, '__copy_target__', None) or cls() 
 
         # Store the copied reference in the memo to avoid back-references...
         memo[self] = newobj
@@ -46,8 +46,9 @@ class DeepCopyMixin(object):
         # Look at each property of the object, based on the mapper definition
         for prop in object_mapper(self).iterate_properties: 
 
-            # If the property is the primary key, `id`, always skip it
-            if prop.key == 'id': continue
+            # If the property is the primary key, `id`, or is explicitly ignored, always skip it
+            if prop.key == 'id' or prop.key in getattr(self, '__ignored_properties__', []):
+                continue
 
             #
             # ColumnProperties are easy.  As long as the property isn't a

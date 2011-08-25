@@ -863,3 +863,52 @@ class TestDrafts(TestModel):
 
         assert draft.published_version == source
         assert source.current_draft == draft
+
+    def test_draft_merge(self):
+        source = model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            state           = u'PUBLISHED'
+        )
+        source.flush()
+        primary_key = source.id
+        creation_date = source.creation_date
+        model.commit()
+
+        # Make a new draft of the recipe
+        model.Recipe.query.first().draft()
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+
+        # Make a change to the draft
+        draft = model.Recipe.query.filter(model.Recipe.state == 'DRAFT').first()
+        draft.name = 'Simcoe IPA'
+        draft.slugs = [model.RecipeSlug(name='simcoe-ipa')]
+        draft.gallons = 10
+        draft.boil_minutes = 90
+        draft.notes = u'This is a modified recipe'
+        model.commit()
+
+        # Merge the draft back into its origin recipe.
+        draft = model.Recipe.query.filter(model.Recipe.state == 'DRAFT').first()
+        draft.publish()
+        model.commit()
+
+        # Make sure the remaining version is the (newly saved) draft
+        assert model.Recipe.query.count() == 1
+        assert model.RecipeSlug.query.count() == 1
+        draft = model.Recipe.query.first()
+
+        assert draft.id == primary_key
+        assert draft.name == 'Simcoe IPA'
+        assert draft.state == 'PUBLISHED' # not modified
+        assert draft.creation_date == creation_date # not modified
+        assert len(draft.slugs) == 1
+        assert draft.slugs[0].slug == 'simcoe-ipa'
+        assert draft.gallons == 10
+        assert draft.boil_minutes == 90
+        assert draft.notes == u'This is a modified recipe'
