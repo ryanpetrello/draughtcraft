@@ -55,3 +55,9 @@
   </div>
 
 </div>
+<div id="builder-buttons">
+  ${h.form('publish')}
+    <button>Publish Changes</button>
+    <span class="sep">or</span> <a href="/profile/${recipe.author.username}">Cancel</a>
+  ${h.end_form()}
+</div>

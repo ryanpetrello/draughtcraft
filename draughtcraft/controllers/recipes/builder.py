@@ -1,4 +1,5 @@
-from pecan                                      import expose, request, abort
+from pecan                                      import (expose, request, abort,
+                                                        redirect)
 from pecan.secure                               import SecureController
 from pecan.rest                                 import RestController
 from draughtcraft                               import model
@@ -284,6 +285,8 @@ class RecipeBuilderController(SecureController):
     @classmethod
     def check_permissions(cls):
         recipe = request.context['recipe']
+        if recipe.state != 'DRAFT':
+            return False
         if recipe.author:
             return recipe.author == request.context['user']
         if recipe == request.context['trial_recipe']:
@@ -293,6 +296,16 @@ class RecipeBuilderController(SecureController):
     @expose('recipes/builder/index.html')
     def index(self):
         return dict(recipe = request.context['recipe'])
+
+    @expose(generic=True)
+    def publish(self):
+        pass
+
+    @publish.when(method='POST')
+    def do_publish(self):
+        recipe = request.context['recipe']
+        recipe.publish()
+        redirect('/profile/%s' % recipe.author.username)
 
     async = RecipeBuilderAsyncController()
 
