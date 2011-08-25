@@ -39,6 +39,7 @@
           ${h.password(
             'password', 
             tabindex = '2', 
+            value = static('password', ''),
             size = '256'
           )}
           <small>Choose a secure password with both letters and numbers.</small>
@@ -47,6 +48,7 @@
           ${h.password(
             'password_confirm', 
             tabindex = '3', 
+            value = static('password_confirm', ''),
             size = '256'
           )}
           <small>Type your password again.</small>

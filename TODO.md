@@ -15,7 +15,6 @@ Recipe Viewer
 Bugs
 -------------
 * Fix BJCP Style Categories import duplicates
-* Signup form htmlfill's your password on failed schema validation
 
 0.1
 ====
