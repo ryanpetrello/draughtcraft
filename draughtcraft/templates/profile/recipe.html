@@ -4,11 +4,21 @@
   <span class="srm srm-${min(int(round(recipe.calculations.srm)), 30)}">
     <img src="/images/glass-plain.png" width="38" class="glass" />
   </span>
+
   <h3>
-    <a href="${recipe.url(h.request.context['user'] != recipe.author)}">
-      ${recipe.name}
-    </a>
+    % if recipe.state == "PUBLISHED":
+      ${h.form("%sdraft" % recipe.url())}
+        <a href="#" class="submit">
+          ${recipe.name}
+        </a>
+      ${h.end_form()}
+    % else:
+      <a href="${recipe.url(h.request.context['user'] != recipe.author)}">
+        ${recipe.name}
+      </a>
+    % endif    
   </h3>
+
   <h4>${recipe.style.name if recipe.style else 'No Target Style Chosen'}</h4>
   <h4>${recipe.printable_type}</h4>
 </dt>

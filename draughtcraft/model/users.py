@@ -52,7 +52,7 @@ class User(Entity, ShallowCopyMixin):
 
     @property
     def drafts(self):
-        return filter(lambda r: r.state == "DRAFT", self.recipes)
+        return filter(lambda r: r.state == "DRAFT" and r.published_version is None, self.recipes)
 
     @property
     def gravatar(self):

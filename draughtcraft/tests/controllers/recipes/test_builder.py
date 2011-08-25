@@ -791,7 +791,7 @@ class TestTrialRecipeLookup(TestApp):
 
 class TestRecipePublish(TestAuthenticatedApp):
 
-    def test_fermentable(self):
+    def test_simple_publish(self):
         model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.Fermentable(
             name        = '2-Row',

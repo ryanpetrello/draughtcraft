@@ -1,4 +1,4 @@
-from pecan              import expose, request, abort
+from pecan              import expose, request, abort, redirect
 from draughtcraft       import model
 from create             import RecipeCreationController
 from builder            import RecipeBuilderController
@@ -12,6 +12,21 @@ class SlugController(object):
         # Make sure the provided slug is valid
         if slug not in [slug.slug for slug in request.context['recipe'].slugs]:
             abort(404)
+
+    @expose(generic=True)
+    def draft(self): pass
+
+    @draft.when(method="POST")
+    def do_draft(self):
+        source = request.context['recipe']
+        if source.author is None or source.author != request.context['user']:
+            abort(401)
+        if source.state != "PUBLISHED":
+            abort(401)
+
+        draft = source.draft()
+        draft.flush()
+        redirect("%sbuilder" % draft.url())
 
     builder = RecipeBuilderController()
 
