@@ -696,10 +696,10 @@ class TestRecipeCopy(TestModel):
     def test_additions_copy(self):
         recipe = model.Recipe(name = u'Sample Recipe')
 
-        grain = model.Fermentable()
-        primary_hop = model.Hop()
-        bittering_hop = model.Hop()
-        yeast = model.Yeast()
+        grain           = model.Fermentable()
+        primary_hop     = model.Hop()
+        bittering_hop   = model.Hop()
+        yeast           = model.Yeast()
         recipe.additions = [
             model.RecipeAddition(
                 use         = 'MASH',
@@ -767,10 +767,10 @@ class TestRecipeCopy(TestModel):
     def test_additions_copy_with_overrides(self):
         recipe = model.Recipe(name = u'Sample Recipe')
 
-        grain = model.Fermentable()
-        primary_hop = model.Hop()
-        bittering_hop = model.Hop()
-        yeast = model.Yeast()
+        grain           = model.Fermentable()
+        primary_hop     = model.Hop()
+        bittering_hop   = model.Hop()
+        yeast           = model.Yeast()
         recipe.additions = [
             model.RecipeAddition(
                 use         = 'MASH',
@@ -901,14 +901,166 @@ class TestDrafts(TestModel):
         # Make sure the remaining version is the (newly saved) draft
         assert model.Recipe.query.count() == 1
         assert model.RecipeSlug.query.count() == 1
-        draft = model.Recipe.query.first()
+        published = model.Recipe.query.first()
 
-        assert draft.id == primary_key
-        assert draft.name == 'Simcoe IPA'
-        assert draft.state == 'PUBLISHED' # not modified
-        assert draft.creation_date == creation_date # not modified
-        assert len(draft.slugs) == 1
-        assert draft.slugs[0].slug == 'simcoe-ipa'
-        assert draft.gallons == 10
-        assert draft.boil_minutes == 90
-        assert draft.notes == u'This is a modified recipe'
+        assert published.id == primary_key
+        assert published.name == 'Simcoe IPA'
+        assert published.state == 'PUBLISHED' # not modified
+        assert published.creation_date == creation_date # not modified
+        assert len(published.slugs) == 1
+        assert published.slugs[0].slug == 'simcoe-ipa'
+        assert published.gallons == 10
+        assert published.boil_minutes == 90
+        assert published.notes == u'This is a modified recipe'
+
+    def test_draft_merge_style(self):
+        model.Recipe(
+            name    = 'Rocky Mountain River IPA',
+            style   = model.Style(name='American IPA'),
+            state   = u'PUBLISHED'
+        )
+        model.commit()
+
+        # Make a new draft of the recipe
+        model.Recipe.query.first().draft()
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+
+        # Change the style of the draft
+        draft = model.Recipe.query.filter(model.Recipe.state == 'DRAFT').first()
+        draft.style = model.Style(name='Baltic Porter')
+        model.commit()
+
+        # Merge the draft back into its origin recipe.
+        draft = model.Recipe.query.filter(model.Recipe.state == 'DRAFT').first()
+        draft.publish()
+        model.commit()
+
+        # Make sure the remaining version is the (newly saved) draft
+        assert model.Recipe.query.count() == 1
+        assert model.Style.query.count() == 2
+        published = model.Recipe.query.first()
+
+        assert published.style == model.Style.get_by(name='Baltic Porter')
+
+    def test_draft_merge_fermentation_steps(self):
+        model.Recipe(
+            name    = 'Rocky Mountain River IPA',
+            fermentation_steps      = [
+                model.FermentationStep(
+                    step        = 'PRIMARY',
+                    days        = 14,
+                    fahrenheit  = 65
+                ),
+                model.FermentationStep(
+                    step        = 'SECONDARY',
+                    days        = 90,
+                    fahrenheit  = 45
+                )
+            ],
+            state   = u'PUBLISHED'
+        )
+        model.commit()
+
+        # Make a new draft of the recipe
+        model.Recipe.query.first().draft()
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+
+        # Change the fermentation schedule of the draft
+        draft = model.Recipe.query.filter(model.Recipe.state == 'DRAFT').first()
+        draft.fermentation_steps = [model.FermentationStep(
+            step        = 'PRIMARY',
+            days        = 21,
+            fahrenheit  = 75
+        )]
+        model.commit()
+
+        # Merge the draft back into its origin recipe.
+        draft = model.Recipe.query.filter(model.Recipe.state == 'DRAFT').first()
+        draft.publish()
+        model.commit()
+
+        # Make sure the remaining version is the (newly saved) draft
+        assert model.Recipe.query.count() == 1
+        assert model.FermentationStep.query.count() == 1
+        published = model.Recipe.query.first()
+        
+        assert published.fermentation_steps[0].step == 'PRIMARY'
+        assert published.fermentation_steps[0].days == 21
+        assert published.fermentation_steps[0].fahrenheit == 75
+
+    def test_draft_merge_additions(self):
+        recipe = model.Recipe(
+            name    = 'Rocky Mountain River IPA',
+            state   = u'PUBLISHED'
+        )
+
+        # Add some ingredients
+        grain           = model.Fermentable()
+        primary_hop     = model.Hop()
+        bittering_hop   = model.Hop()
+        yeast           = model.Yeast()
+        recipe.additions = [
+            model.RecipeAddition(
+                use         = 'MASH',
+                fermentable = grain
+            ),
+            model.RecipeAddition(
+                use         = 'MASH',
+                hop         = primary_hop
+            ),
+            model.RecipeAddition(
+                use         = 'FIRST WORT',
+                hop         = primary_hop
+            ),
+            model.RecipeAddition(
+                use         = 'BOIL',
+                hop         = primary_hop,
+            ),
+            model.RecipeAddition(
+                use         = 'POST-BOIL',
+                hop         = primary_hop
+            ),
+            model.RecipeAddition(
+                use         = 'FLAME OUT',
+                hop         = bittering_hop
+            ),
+            model.RecipeAddition(
+                use         = 'PRIMARY',
+                yeast       = yeast
+            ),
+            model.RecipeAddition(
+                use         = 'SECONDARY',
+                yeast       = yeast
+            )
+        ]
+        model.commit()
+
+        # Make a new draft of the recipe
+        model.Recipe.query.first().draft()
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+
+        # Change the ingredients of the draft
+        draft = model.Recipe.query.filter(model.Recipe.state == 'DRAFT').first()
+        draft.additions = [model.RecipeAddition(
+            use         = 'MASH',
+            fermentable = model.Fermentable.query.first()
+        )]
+        model.commit()
+
+        # Merge the draft back into its origin recipe.
+        draft = model.Recipe.query.filter(model.Recipe.state == 'DRAFT').first()
+        draft.publish()
+        model.commit()
+
+        # Make sure the remaining version is the (newly saved) draft
+        assert model.Recipe.query.count() == 1
+        assert model.RecipeAddition.query.count() == 1
+        published = model.Recipe.query.first()
+
+        assert published.additions[0].fermentable == model.Fermentable.query.first()
