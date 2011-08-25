@@ -1,6 +1,6 @@
 from elixir import (
     Entity, Field, Unicode, UnicodeText, Integer, Interval, Float, Enum,
-    DateTime, using_options, OneToMany, ManyToOne, entities
+    DateTime, using_options, OneToMany, ManyToOne, OneToOne, entities
 )
 from draughtcraft.lib.calculations  import Calculations
 from draughtcraft.lib.units         import UnitConvert
@@ -19,6 +19,11 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         'MINIMASH'
     )
 
+    STATES = (
+        'DRAFT',
+        'PUBLISHED'
+    )
+
     uuid                = Field(Unicode(64), index=True, default=lambda: unicode(uuid()))
     type                = Field(Enum(*TYPES), default='MASH')
     name                = Field(Unicode(256))
@@ -27,6 +32,10 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
     notes               = Field(UnicodeText)
     creation_date       = Field(DateTime, default=datetime.utcnow)
     last_updated        = Field(DateTime, default=datetime.utcnow)
+
+    state               = Field(Enum(*STATES), default='DRAFT')
+    current_draft       = ManyToOne('Recipe', inverse='published_version')
+    published_version   = OneToOne('Recipe', inverse='current_draft', order_by='creation_date')
 
     additions           = OneToMany('RecipeAddition', inverse='recipe')
     fermentation_steps  = OneToMany('FermentationStep', inverse='recipe')
@@ -71,6 +80,19 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
             setattr(copy, k, v)
 
         return copy
+
+    def draft(self):
+        """
+        Used to create a new, unpublished draft of a recipe.
+        """
+        if self.current_draft:
+            self.current_draft.delete()
+            self.current_draft = None
+
+        return self.duplicate({
+            'published_version' : self,
+            'state'             : 'DRAFT'
+        })
 
     @property
     def calculations(self):

@@ -833,3 +833,33 @@ class TestRecipeCopy(TestModel):
         assert len(r2.additions) == 1
 
         assert r2.additions[0].fermentable == model.Fermentable.query.first()
+
+
+class TestDrafts(TestModel):
+
+    def test_draft_creation(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            state           = u'PUBLISHED'
+        )
+        model.commit()
+
+        model.Recipe.query.first().draft()
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+        source = model.Recipe.query.filter(model.Recipe.published_version == None).first()
+        draft = model.Recipe.query.filter(model.Recipe.published_version != None).first()
+
+        assert source != draft
+        assert source.type == draft.type == 'MASH'
+        assert source.name == draft.name == 'Rocky Mountain River IPA'
+        assert source.state != draft.state
+        assert draft.state == 'DRAFT'
+
+        assert draft.published_version == source
+        assert source.current_draft == draft
