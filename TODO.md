@@ -16,7 +16,6 @@ Bugs
 -------------
 * Fix BJCP Style Categories import duplicates
 * Signup form htmlfill's your password on failed schema validation
-* Make the temperature values for fermentation steps order *DESC*
 
 0.1
 ====

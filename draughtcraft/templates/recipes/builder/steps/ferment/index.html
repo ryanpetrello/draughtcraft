@@ -100,7 +100,7 @@
               ${h.select(
                 'temperature',
                 [int(s.fahrenheit)],
-                range(101),
+                range(100, 31, -1),
                 class_ = 'unit'
               )} &#186;F
             ${h.end_form()}
