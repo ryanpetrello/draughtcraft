@@ -32,25 +32,40 @@
       
   </dl>
 
-  % if len(user.recipes):
-    <h2>Recipes (${len(user.recipes)})</h2>
-  % endif
-
-  <dl class="recipes">
-    % if not len(user.recipes) and user == h.request.context['user']:
-      <dt class="empty">
-        You don't have any recipes yet.  Why not <a href="/recipes/create">add
-          one</a>?
-      </dt>
-    % elif not len(user.recipes):
-      <dt class="empty">
-        ${user.username} doesn't have any recipes yet.
-      </dt>
-    % else:
-      % for recipe in user.recipes:
-        <%include file="recipe.html" args="recipe=recipe" />
-      % endfor
+  <div class="recipe-container">
+    % if len(user.published_recipes):
+      <h2>Recipes (${len(user.published_recipes)})</h2>
     % endif
-  </dl>
+
+    <dl class="recipes">
+      % if not len(user.published_recipes) and user == h.request.context['user']:
+        <dt class="empty">
+          You don't have any recipes yet.  Why not <a href="/recipes/create">add
+            one</a>?
+        </dt>
+      % elif not len(user.published_recipes):
+        <dt class="empty">
+          <b>${user.username}</b> hasn't added any recipes yet.
+        </dt>
+      % else:
+        % for recipe in user.published_recipes:
+          <%include file="recipe.html" args="recipe=recipe" />
+        % endfor
+      % endif
+    </dl>
+
+    % if user == h.request.context['user']:
+      % if len(user.drafts):
+        <h2>Drafts (${len(user.drafts)})</h2>
+      % endif
+
+      <dl class="recipes">
+        % for recipe in user.drafts:
+          <%include file="recipe.html" args="recipe=recipe" />
+        % endfor
+      </dl>
+    % endif
+
+  </div>
 
 </div>

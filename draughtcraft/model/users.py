@@ -47,6 +47,14 @@ class User(Entity, ShallowCopyMixin):
         self._password = self.__hash_password__(v)
 
     @property
+    def published_recipes(self):
+        return filter(lambda r: r.state == "PUBLISHED", self.recipes)
+
+    @property
+    def drafts(self):
+        return filter(lambda r: r.state == "DRAFT", self.recipes)
+
+    @property
     def gravatar(self):
         return 'http://www.gravatar.com/avatar/%s?d=mm' % (
             md5(self.email.strip().lower()).hexdigest()
