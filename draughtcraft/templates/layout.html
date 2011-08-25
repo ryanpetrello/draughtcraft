@@ -24,10 +24,12 @@
       <nav class="user">
         <ul>
           <li>
-          <img src="${h.request.context['user'].gravatar}&s=140"
-            width="20"
-            class="gravatar"
-          />
+            <a href="/settings/profile" class="profile">
+              <img src="${h.request.context['user'].gravatar}&s=140"
+                width="20"
+                class="gravatar"
+              />
+            </a>
           </li>
           <li>
             <a href="/profile/${h.request.context['user'].username}" class="profile">
@@ -42,10 +44,12 @@
       <nav class="user">
         <ul>
           <li>
-          <img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?s=140&d=mm"
-            width="20"
-            class="gravatar"
-          />
+            <a href="/login">
+              <img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?s=140&d=mm"
+                width="20"
+                class="gravatar"
+              />
+            </a>
           <li><a href="/login">Login</a></li>
         </ul>
       </nav>
