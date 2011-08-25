@@ -1064,3 +1064,24 @@ class TestDrafts(TestModel):
         published = model.Recipe.query.first()
 
         assert published.additions[0].fermentable == model.Fermentable.query.first()
+
+    def test_simple_publish(self):
+        source = model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            state           = u'DRAFT'
+        )
+        source.flush()
+        primary_key = source.id
+        model.commit()
+
+        # Make a new draft of the recipe
+        model.Recipe.query.first().publish()
+        model.commit()
+
+        assert model.Recipe.query.count() == 1
+        assert model.Recipe.query.first().id == primary_key
+        assert model.Recipe.query.first().state == "PUBLISHED"
