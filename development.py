@@ -1,5 +1,4 @@
 from draughtcraft.controllers.root  import RootController
-from sqlalchemy.pool                import NullPool
 
 import draughtcraft
 
@@ -25,7 +24,6 @@ sqlalchemy = {
     'echo'          : False,
     'echo_pool'     : False,
     'pool_recycle'  : 3600,
-    'poolclass'     : NullPool,
     'encoding'      : 'utf-8'
 }
 

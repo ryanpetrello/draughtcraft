@@ -1,4 +1,4 @@
-from draughtcraft.controllers.root import RootController
+from draughtcraft.controllers.root  import RootController
 
 import draughtcraft
 
@@ -16,11 +16,7 @@ app = {
     'template_path' : '%(confdir)s/draughtcraft/templates',
     'reload'        : True,
     'debug'         : True,
-    'logging'       : False,
-    'errors'        : {
-        '404'            : '/error/404',
-        '__force_dict__' : True
-    }
+    'logging'       : False
 }
 
 sqlalchemy = {

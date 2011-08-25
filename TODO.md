@@ -7,13 +7,16 @@ Search
 
 Recipe Builder
 --------------
-* Configurable recipe type (e.g., All Grain, Steep, Extract, etc...)
 * Change recipe name
 * Printable Recipes
 
 Recipe Viewer
 -------------
 * Add ability to view others' recipes (but not edit them)
+
+Additional
+-------------
+* Fix "Bottom" Beer Glass on Builder
 
 Bugs
 -------------
@@ -24,6 +27,7 @@ Bugs
 
 Recipe Builder
 --------------
+* Configurable recipe type (e.g., All Grain, Steep, Extract, etc...)
 * Duplicate Recipes, including the idea of `origin` recipes (similar to fork)
 
 Settings
@@ -35,3 +39,4 @@ Settings
 Additional
 ----------
 * International Unit Support
+* Ingredient Description Pages
