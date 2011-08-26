@@ -789,6 +789,7 @@ class TestTrialRecipeLookup(TestApp):
         response = self.get('/recipes/1/american-ipa/builder/', status=401)
         assert response.status_int == 401
 
+
 class TestRecipePublish(TestAuthenticatedApp):
 
     def test_simple_publish(self):
@@ -804,3 +805,19 @@ class TestRecipePublish(TestAuthenticatedApp):
         assert model.Recipe.query.first().state == "DRAFT"
         self.post('/recipes/1/rocky-mountain-river-ipa/builder/publish')
         assert model.Recipe.query.first().state == "PUBLISHED"
+
+
+class TestRecipeNameChange(TestAuthenticatedApp):
+
+    def test_simple_name_change(self):
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
+        model.commit()
+
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/name', params={
+            'name': u'Simcoe IPA'
+        })
+        assert model.Recipe.query.first().name == "Simcoe IPA"
+        slugs = model.Recipe.query.first().slugs
+        assert len(slugs) == 2
+        assert slugs[0].slug == 'rocky-mountain-river-ipa'
+        assert slugs[1].slug == 'simcoe-ipa'
