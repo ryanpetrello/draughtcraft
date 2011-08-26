@@ -13,7 +13,9 @@
 
 <div id="builder">
 
-  <h1>${recipe.name}</h1> 
+  <h1>
+    ${h.text('name', value=recipe.name)}
+  </h1> 
   <fieldset>
     ${h.form('async/settings/style')}
       ${h.select(

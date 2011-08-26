@@ -285,4 +285,20 @@ $(document).ready(function(){
 
     // Register a JS tooltip on the author's thumbnail (if there is one).
     $('img.gravatar').tipTip({'delay': 50});
+
+    // Register a JS tooltip on the name input field
+    var msg = 'Click here to edit the recipe name.';
+    $('h1').tipTip({
+        'delay': 50,
+        'content': msg
+    });
+    $('h1 input').focus(function(){
+        $('h1').tipTip('hide').tipTip('destroy');
+    }).blur(function(){
+        $('h1').tipTip({
+            'delay': 50,
+            'content': msg
+        })
+    });
+
 });
