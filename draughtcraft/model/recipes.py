@@ -37,7 +37,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
 
     additions           = OneToMany('RecipeAddition', inverse='recipe', cascade='all, delete-orphan')
     fermentation_steps  = OneToMany('FermentationStep', inverse='recipe', cascade='all, delete-orphan')
-    slugs               = OneToMany('RecipeSlug', inverse='recipe', cascade='all, delete-orphan')
+    slugs               = OneToMany('RecipeSlug', inverse='recipe', order_by='id', cascade='all, delete-orphan')
     style               = ManyToOne('Style', inverse='recipes')
     author              = ManyToOne('User', inverse='recipes')
 
@@ -212,7 +212,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         """
         return '/recipes/%s/%s/%s' % (
             self.id,
-            self.slugs[0].slug,
+            self.slugs[-1].slug,
             '' if public else 'builder/'
         )
 

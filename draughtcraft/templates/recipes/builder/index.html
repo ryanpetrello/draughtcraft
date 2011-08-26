@@ -13,42 +13,46 @@
 
 <div id="builder">
 
-  <h1>
-    ${h.text('name', value=recipe.name)}
-  </h1> 
-  <fieldset>
-    ${h.form('async/settings/style')}
-      ${h.select(
-        'target', 
-        recipe.style.id if recipe.style else None, 
-        [('', 'No Target Style Chosen')] + [(s.id, s.name) for s in h.model.Style.query.order_by(h.model.Style.name).all()],
-      )}
+  <div class="header">
+    ${h.form('async/name', class_='name')}
+      <h1>
+        ${h.text('name', value=recipe.name)}
+      </h1> 
     ${h.end_form()}
-  </fieldset>
-  <fieldset>
-    ${h.form('async/settings/volume')}
-      ${h.select(
-        'volume', 
-        [recipe.gallons],
-        [(float(v), '%s Gallon(s)' % v) for v in [1, 2, 2.5, 3, 4, 5, 8, 10, 15, 20, 25]],
-        class_ = 'gallons'
-      )}
-      ${h.hidden(
-        'unit',
-        'GALLON'
-      )}
-    ${h.end_form()}
-  </fieldset>
+    <fieldset>
+      ${h.form('async/settings/style')}
+        ${h.select(
+          'target', 
+          recipe.style.id if recipe.style else None, 
+          [('', 'No Target Style Chosen')] + [(s.id, s.name) for s in h.model.Style.query.order_by(h.model.Style.name).all()],
+        )}
+      ${h.end_form()}
+    </fieldset>
+    <fieldset>
+      ${h.form('async/settings/volume')}
+        ${h.select(
+          'volume', 
+          [recipe.gallons],
+          [(float(v), '%s Gallon(s)' % v) for v in [1, 2, 2.5, 3, 4, 5, 8, 10, 15, 20, 25]],
+          class_ = 'gallons'
+        )}
+        ${h.hidden(
+          'unit',
+          'GALLON'
+        )}
+      ${h.end_form()}
+    </fieldset>
 
-  % if recipe.author:
-    <a href="/profile/${recipe.author.username}">
-      <img 
-        src="${recipe.author.gravatar}&s=45" 
-        class="gravatar"
-        title="${recipe.author.username}"
-      />
-    </a>
-  % endif
+    % if recipe.author:
+      <a href="/profile/${recipe.author.username}">
+        <img 
+          src="${recipe.author.gravatar}&s=45" 
+          class="gravatar"
+          title="${recipe.author.username}"
+        />
+      </a>
+    % endif
+  </div>
 
   <div id="builder-ajax">
     <div class="builder-loading">

@@ -279,6 +279,23 @@ class RecipeBuilderAsyncController(object):
     fermentation_steps  = FermentationStepsController()
     settings            = RecipeSettingsController()
 
+    @expose(generic=True)
+    def name(self): pass
+
+    @name.when(
+        method      = 'POST',
+        template    = 'json'
+    )
+    def do_name(self, name):
+        # If the name has changed, generate a new slug
+        recipe = request.context['recipe']
+        if recipe.name != name:
+            recipe.slugs.append(
+                entities.RecipeSlug(name=name)
+            )
+
+        recipe.name = name
+        return dict()
 
 class RecipeBuilderController(SecureController):
 

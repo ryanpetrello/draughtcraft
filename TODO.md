@@ -7,7 +7,6 @@ Search
 
 Recipe Builder
 --------------
-* Change recipe name
 * Printable Recipes
 
 Recipe Viewer
