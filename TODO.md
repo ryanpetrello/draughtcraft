@@ -9,10 +9,6 @@ Recipe Viewer
 -------------
 * Add ability to view others' recipes (but not edit them)
 
-Additional
--------------
-* Fix "Bottom" Beer Glass on Builder
-
 Bugs
 -------------
 * Fix BJCP Style Categories import duplicates
