@@ -15,7 +15,10 @@ class SlugController(object):
 
     @expose('recipes/builder/async.html')
     def async(self):
-        return dict(recipe = request.context['recipe'])
+        recipe = request.context['recipe']
+        if recipe.state != "PUBLISHED":
+            abort(404)
+        return dict(recipe = recipe)
 
     @expose('recipes/builder/index.html')
     def index(self):
