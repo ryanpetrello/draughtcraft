@@ -27,3 +27,4 @@ Additional
 ----------
 * International Unit Support
 * Ingredient Description Pages
+* "Build Your First Recipe" Short Tutorial w/ Tooltips
