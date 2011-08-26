@@ -19,6 +19,14 @@
         <span class="step-help">Boil </span>Ingredients
     </h3>
 
+      % if not editable:
+        <p class="instruction">
+          Collect the wort and bring it to a boil.
+
+          Add the following hops for the provided durations:
+        </p>
+      % endif
+
       % if recipe.boil:
         <table>
 

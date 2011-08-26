@@ -19,6 +19,14 @@
         <span class="step-help">Mash </span>Ingredients
       </h3>
 
+      % if not editable:
+        <p class="instruction">
+          If necessary, crush grains.
+
+          Dough in the following fermentable ingredients:
+        </p>
+      % endif
+
       % if recipe.mash:
         <table>
 

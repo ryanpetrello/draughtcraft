@@ -11,6 +11,15 @@
           <span class="step-help">Fermentation </span>Ingredients
       </h3>
 
+      % if not editable:
+        <p class="instruction">
+          Chill the wort to the appropriate pitching temperature and transfer
+          if to your fermenter.
+          <br /><br />
+          Add yeast to your fermenter as described below.
+        </p>
+      % endif
+
       % if recipe.fermentation:
         <table>
 

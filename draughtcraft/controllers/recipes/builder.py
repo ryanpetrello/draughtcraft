@@ -151,7 +151,8 @@ class IngredientsController(RestController):
 
     def __rendered__(self):
         return dict(
-            recipe = request.context['recipe']
+            recipe      = request.context['recipe'],
+            editable    = True
         )
 
     @expose('recipes/builder/async.html')
