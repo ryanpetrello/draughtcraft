@@ -5,10 +5,6 @@ Search
 --------------
 * Ability to look for other recipes by style
 
-Recipe Builder
---------------
-* Printable Recipes
-
 Recipe Viewer
 -------------
 * Add ability to view others' recipes (but not edit them)
