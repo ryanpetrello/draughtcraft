@@ -8,6 +8,7 @@ Search
 Bugs
 -------------
 * Fix BJCP Style Categories import duplicates
+* Ensure that welcome email only sends after a successful signup commit.
 
 0.1
 ====
