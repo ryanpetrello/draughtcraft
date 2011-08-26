@@ -2,7 +2,8 @@
 
 <%def name="style()">
     <link rel="stylesheet/less" type="text/css" media="screen" href="/css/recipes/builder.less" />
-    <link rel="stylesheet" type="text/css" href="/css/jquery.selectbox.css" />
+    <link rel="stylesheet/less" type="text/css" media="print" href="/css/recipes/builder.print.less" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/jquery.selectbox.css" />
 </%def>
 
 <%def name="javascript()">
@@ -44,7 +45,8 @@
     </fieldset>
 
     % if recipe.author:
-      <a href="/profile/${recipe.author.username}">
+      <p class="author">By: ${recipe.author.full_name or recipe.author.username}</p>
+      <a href="/profile/${recipe.author.username}" class="author">
         <img 
           src="${recipe.author.gravatar}&s=45" 
           class="gravatar"

@@ -21,7 +21,7 @@
               <th>Strain</th>
               <th>Form</th>
               <th />
-              <th />
+              <th class="close" />
             </tr>
 
             % for addition in recipe.fermentation.get(h.model.Yeast):
@@ -39,7 +39,7 @@
               <th>Variety</th>
               <th>Form</th>
               <th class="unit">AA</th>
-              <th />
+              <th class="close" />
             </tr>
 
             % for addition in recipe.fermentation.get(h.model.Hop):
@@ -57,7 +57,7 @@
               <th>Name</th>
               <th></th>
               <th class="unit"></th>
-              <th />
+              <th class="close" />
             </tr>
 
             % for addition in recipe.fermentation.get(h.model.Extra):
@@ -119,7 +119,7 @@
         % if recipe.next_fermentation_step:
           
           ${h.form('async/fermentation_steps')}
-            <li>
+            <li class="add-step">
               <a href="#" onclick="$(this).hide().closest('form').submit();return false;">
                 Add ${recipe.next_fermentation_step.title()}...
               </a>
