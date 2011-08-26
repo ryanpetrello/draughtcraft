@@ -312,7 +312,10 @@ class RecipeBuilderController(SecureController):
 
     @expose('recipes/builder/index.html')
     def index(self):
-        return dict(recipe = request.context['recipe'])
+        return dict(
+            recipe      = request.context['recipe'],
+            editable    = True
+        )
 
     @expose(generic=True)
     def publish(self):

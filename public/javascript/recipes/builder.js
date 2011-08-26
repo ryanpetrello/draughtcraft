@@ -121,6 +121,9 @@ $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
         'menuTransition'    : 'fade',
         'menuSpeed'         : 'fast'
     });
+
+    // Hide unnecessary verbiage helpers
+    $('h3 span.step-help').remove();
     
 };
 

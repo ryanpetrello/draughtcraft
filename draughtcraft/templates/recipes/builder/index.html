@@ -2,14 +2,21 @@
 
 <%def name="style()">
     <link rel="stylesheet/less" type="text/css" media="screen" href="/css/recipes/builder.less" />
+    % if not editable:
+      <link rel="stylesheet/less" type="text/css" media="screen" href="/css/recipes/viewer.less" />
+    % endif
     <link rel="stylesheet/less" type="text/css" media="print" href="/css/recipes/builder.print.less" />
     <link rel="stylesheet" type="text/css" media="screen" href="/css/jquery.selectbox.css" />
 </%def>
 
 <%def name="javascript()">
-    <script type="text/javascript" src="/javascript/jquery.form.min.js"></script>
-    <script type="text/javascript" src="/javascript/recipes/builder.js"></script>
-    <script type="text/javascript" src="/javascript/jquery.selectbox.min.js"></script>
+    % if editable:
+      <script type="text/javascript" src="/javascript/jquery.form.min.js"></script>
+      <script type="text/javascript" src="/javascript/recipes/builder.js"></script>
+      <script type="text/javascript" src="/javascript/jquery.selectbox.min.js"></script>
+    % else:
+      <script type="text/javascript" src="/javascript/recipes/viewer.js"></script>
+    % endif
 </%def>
 
 <div id="builder">

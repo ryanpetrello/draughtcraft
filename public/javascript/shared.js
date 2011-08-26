@@ -6,4 +6,5 @@ if($.draughtcraft == undefined){
     $.draughtcraft.recipes = {};
     $.draughtcraft.recipes.create = {};
     $.draughtcraft.recipes.builder = {};
+    $.draughtcraft.recipes.viewer = {};
 }

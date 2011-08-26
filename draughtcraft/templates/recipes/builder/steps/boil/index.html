@@ -15,7 +15,9 @@
     <% i = 0 %>
 
     ${h.form('async/ingredients?_method=put')}
-      <h3 class="ribbon">Ingredients</h3>
+    <h3 class="ribbon">
+        <span class="step-help">Boil </span>Ingredients
+    </h3>
 
       % if recipe.boil:
         <table>

@@ -1,0 +1,44 @@
+.border-radius (@radius) {
+  border-radius: @radius;
+  -moz-border-radius: @radius;
+  -webkit-border-radius: @radius;
+  -webkit-background-clip: padding;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+}
+nav.user, #topnav, #content  {
+  width: 800px;
+}
+#content  {
+  h1  {
+    padding-right: 8px;
+  }
+  .header  {
+    fieldset  {
+      .border-radius(8px);
+      padding: 4px 12px;
+      background: #4C9EBE;
+      color: #FFF;
+    }
+  }
+  div.step  {
+    background: #FFF;
+    h2  {
+      display: none;
+    }
+    div.inventory  {
+      display: none;
+    }
+    div.ingredient-list  {
+      width: 760px !important;
+      table  {
+        width: 760px;
+      }
+    }
+  }
+}
+div#builder-buttons  {
+  form  {
+    visibility: hidden;
+  }
+}
