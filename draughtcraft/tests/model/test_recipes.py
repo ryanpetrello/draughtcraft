@@ -2,6 +2,8 @@ from draughtcraft       import model
 from draughtcraft.tests import TestModel
 from datetime           import timedelta
 
+import unittest
+
 
 class TestRecipeAddition(object):
 
@@ -1085,3 +1087,29 @@ class TestDrafts(TestModel):
         assert model.Recipe.query.count() == 1
         assert model.Recipe.query.first().id == primary_key
         assert model.Recipe.query.first().state == "PUBLISHED"
+
+
+class TestRecipeViews(TestModel):
+
+    def test_views(self):
+        recipe = model.Recipe()
+        for i in range(5):
+            model.RecipeView(recipe=recipe)
+        model.commit()
+
+        assert len(model.Recipe.query.first().views) == 5
+
+    def test_duplicate_recipe_with_views(self):
+        """
+        When a recipe is duplicated, its view count should reset.
+        """
+        recipe = model.Recipe(state="PUBLISHED")
+        for i in range(5):
+            model.RecipeView(recipe=recipe)
+        model.commit()
+
+        model.Recipe.query.first().draft()
+        model.commit()
+
+        assert len(model.Recipe.get_by(state="PUBLISHED").views) == 5
+        assert len(model.Recipe.get_by(state="DRAFT").views) == 0

@@ -35,13 +35,14 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
     current_draft       = ManyToOne('Recipe', inverse='published_version')
     published_version   = OneToOne('Recipe', inverse='current_draft', order_by='creation_date')
 
+    views               = OneToMany('RecipeView', inverse='recipe', cascade='all, delete-orphan')
     additions           = OneToMany('RecipeAddition', inverse='recipe', cascade='all, delete-orphan')
     fermentation_steps  = OneToMany('FermentationStep', inverse='recipe', cascade='all, delete-orphan')
     slugs               = OneToMany('RecipeSlug', inverse='recipe', order_by='id', cascade='all, delete-orphan')
     style               = ManyToOne('Style', inverse='recipes')
     author              = ManyToOne('User', inverse='recipes')
 
-    __ignored_properties__ = ('current_draft', 'published_version', 'creation_date', 'state')
+    __ignored_properties__ = ('current_draft', 'published_version', 'views', 'creation_date', 'state')
 
     def __init__(self, **kwargs):
         super(Recipe, self).__init__(**kwargs)
@@ -336,3 +337,10 @@ class FermentationStep(Entity, DeepCopyMixin):
     fahrenheit      = Field(Float)
 
     recipe          = ManyToOne('Recipe', inverse='fermentation_steps')
+
+
+class RecipeView(Entity):
+
+    datetime        = Field(DateTime, default=datetime.utcnow())
+
+    recipe          = ManyToOne('Recipe', inverse='views')
