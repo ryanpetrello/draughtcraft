@@ -16,7 +16,11 @@
           Chill the wort to the appropriate pitching temperature and transfer
           if to your fermenter.
           <br /><br />
-          Add yeast to your fermenter as described below.
+          % if recipe.type != 'MASH':
+            If necessary, top up the fermenter with water to ${int(recipe.gallons)} gallons.
+            <br /><br />
+          % endif
+          Add yeast to your fermenter as indicated below.
         </p>
       % endif
 
