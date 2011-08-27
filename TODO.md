@@ -4,11 +4,17 @@
 Search
 --------------
 * Ability to look for other recipes by style
+    * Filter by Style
+    * Filter by SRM Range
+    * Filter by Batch Size
+    * Filter by Type (Mash, Extract, etc...)
+    * "Most Viewed" Recipe
+
+* Store the # of Views a Recipe Has
 
 Bugs
 -------------
 * Fix BJCP Style Categories import duplicates
-* Ensure that welcome email only sends after a successful signup commit.
 
 0.1
 ====

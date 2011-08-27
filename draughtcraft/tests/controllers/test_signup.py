@@ -1,5 +1,8 @@
+from pecan                  import abort
 from draughtcraft.tests     import TestApp
 from draughtcraft           import model
+
+import fudge
 
 
 class TestSignup(TestApp):
@@ -26,7 +29,15 @@ class TestSignup(TestApp):
 
         assert model.User.query.count() == 0
 
-    def test_successful_signup(self):
+    @fudge.patch('draughtcraft.lib.email.send')
+    def test_successful_signup(self, fake_send):
+        (fake_send.expects_call().with_args(
+            'ryan@example.com',
+            'signup',
+            'Welcome to DraughtCraft',
+            {'username':'test'}
+        ))
+
         params = {
             'username'          : 'test',
             'password'          : 'secret',
@@ -43,6 +54,36 @@ class TestSignup(TestApp):
         assert user.username == 'test'
         assert user.password
         assert user.email == 'ryan@example.com'
+
+    @fudge.patch('draughtcraft.lib.email.send', 'pecan.redirect')
+    def test_signup_failure(self, fake_send, fake_redirect):
+        """
+        If signup fails for some reason (a traceback is thrown, for instance)
+        a welcome email should *not* be queued through Postmark.
+        """
+
+        #
+        # Cause the redirect at the end of the signup method to fail and throw
+        # an HTTP 500 for some reason.
+        #
+        (fake_redirect.expects_call().with_args(
+            '/login?welcome'
+        ).calls(lambda code: abort(500)))
+
+        # Make sure that emaillib.send() is not called.
+        (fake_send.is_callable().times_called(0))
+
+        params = {
+            'username'          : 'test',
+            'password'          : 'secret',
+            'password_confirm'  : 'secret',
+            'email'             : 'ryan@example.com'
+        }
+
+        assert model.User.query.count() == 0
+        self.post('/signup/', params=params, status=500)
+
+        assert model.User.query.count() == 0
 
     def test_username_length(self):
         """
