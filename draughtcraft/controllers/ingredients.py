@@ -5,9 +5,9 @@ from draughtcraft           import model
 
 class IngredientsController(RestController):
 
-    @expose()
+    @expose('ingredients/index.html')
     def get_one(self, ingredientID):
         ingredient = model.Ingredient.get(int(ingredientID))
         if ingredient is None:
             abort(404)
-        return ingredient.printed_name
+        return dict(ingredient=ingredient)

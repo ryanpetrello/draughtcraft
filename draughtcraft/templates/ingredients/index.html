@@ -1,0 +1,48 @@
+<div class="ingredient-info">
+
+  <%def name="fermentable()">
+    <ul>
+      <li>
+        <b>Type:</b> ${ingredient.type.capitalize()}
+      </li>
+      <li>
+        <b>PPG:</b> ${ingredient.ppg}
+      </li>
+      <li>
+        <b>Lovibond:</b> ${ingredient.lovibond}
+      </li>
+    </ul>
+  </%def>
+
+  <%def name="hop()">
+    <ul>
+      <li>
+        <b>Alpha Acid Units:</b> ${ingredient.alpha_acid}
+      </li>
+    </ul>
+  </%def>
+
+  <%def name="yeast()">
+    <ul>
+      <li>
+        <b>Type:</b> ${ingredient.type.capitalize()}
+      </li>
+      <li>
+        <b>Form:</b> ${ingredient.form.capitalize()}
+      </li>
+      <li>
+        <b>Attenuation:</b> ${h.format_percentage(ingredient.attenuation)}
+      </li>
+      <li>
+        <b>Flocculation:</b> ${'/'.join([v.capitalize() for v in ingredient.flocculation.split('/')])}
+      </li>
+    </ul>
+  </%def>
+
+  <%def name="extra()">
+  </%def>
+
+  <h2>${ingredient.printed_name}</h2>
+  ${getattr(local, ingredient.row_type)()}
+  <p>${ingredient.description}</p>
+</div>
