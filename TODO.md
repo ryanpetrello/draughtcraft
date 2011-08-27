@@ -12,10 +12,6 @@ Search
 
 * Store the # of Views a Recipe Has
 
-Bugs
--------------
-* Fix BJCP Style Categories import duplicates
-
 0.1
 ====
 

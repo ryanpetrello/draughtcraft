@@ -132,20 +132,49 @@ def populate():
     print BLUE + "GENERATING STYLES" + ENDS
     print "="*80
 
-    path = os.path.dirname(os.path.abspath(data.__file__))
-    handle = open(os.path.join(path, 'styles.js'), 'rb')
-    styles = json.loads(handle.read())
+    handle = SqlSoup(
+        'sqlite:///%s' % os.path.join(path, 'styles.db')
+    )
+    for style in handle.styles.all():
+        # Coerce the data mapping into a dictionary
+        kwargs = dict(
+            (
+                k, 
+                getattr(style, k, '')
+            )
+            for k in style.c.keys()
+        )
 
-    for s in styles:
-        s = dict([(str(k), v) for k,v in s.items()])
-        style = entities.Style(**s)
+        # Attempt to look up the entity first
+        uid = kwargs['uid']
+        style = entities.Style.get_by(uid=uid)
 
-        # Normalize ABV as a percentage
-        if style.min_abv and style.max_abv:
-            style.min_abv /= 100
-            style.max_abv /= 100
+        # If the entity doesn't already exist, create it
+        new = False
+        changed = False
 
-        print style.name
+        if style is None:
+            new = True
+            style = entities.Style()
+
+        # Update necessary columns
+        for k,v in kwargs.items():
+            if getattr(style, k) != v:
+                changed = True
+            setattr(style, k, v)
+
+        if new is True:
+            print "%s (%s)" % (
+                style.name,
+                '%s New %s' % (GREEN, ENDS)
+            )
+        elif changed is True:
+            print "%s (%s)" % (
+                style.name,
+                '%s Updated %s' % (YELLOW, ENDS)
+            )
+        else:
+            print "%s (No Changes)" % style.name
 
     model.commit()
 

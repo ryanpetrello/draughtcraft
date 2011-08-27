@@ -9,6 +9,7 @@ class InvalidStatistic(Exception):
 
 class Style(Entity, ShallowCopyMixin):
 
+    uid             = Field(Unicode(32), unique=True)
     name            = Field(Unicode(256))
     description     = Field(UnicodeText)
 
