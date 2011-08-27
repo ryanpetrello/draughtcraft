@@ -1,8 +1,10 @@
 from draughtcraft       import model
+
 import pytest
+import unittest
 
 
-class TestSlugGeneration(object):
+class TestSlugGeneration(unittest.TestCase):
 
     def test_custom_slug(self):
         slug = model.RecipeSlug(

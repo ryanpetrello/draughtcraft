@@ -5,7 +5,7 @@ from datetime           import timedelta
 import unittest
 
 
-class TestRecipeAddition(object):
+class TestRecipeAddition(unittest.TestCase):
 
     def test_fermentable_ingredient(self): 
         addition = model.RecipeAddition()
@@ -116,7 +116,7 @@ class TestRecipeAddition(object):
         assert a.minutes == 2
 
 
-class TestRecipe(object):
+class TestRecipe(unittest.TestCase):
 
     def test_recipe_components(self):
         recipe = model.Recipe()
@@ -403,7 +403,7 @@ class TestRecipe(object):
         ).printable_type == 'Extract with Mini-Mash'
 
 
-class TestFermentationStep(object):
+class TestFermentationStep(unittest.TestCase):
 
     def test_fermentation_step(self):
         recipe = model.Recipe()

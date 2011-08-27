@@ -1,8 +1,10 @@
 from draughtcraft   import model
 from hashlib        import sha256, md5
 
+import unittest
 
-class TestUser(object):
+
+class TestUser(unittest.TestCase):
 
     def test_password_conversion(self):
         user = model.User(
@@ -29,7 +31,7 @@ class TestUser(object):
             md5('ryan@example.com').hexdigest()
         )
 
-class TestUserSettings(object):
+class TestUserSettings(unittest.TestCase):
 
     def test_default_creation(self):
         user = model.User(

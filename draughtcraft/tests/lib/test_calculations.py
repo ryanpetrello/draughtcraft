@@ -1,8 +1,10 @@
 from draughtcraft           import model
 from datetime               import timedelta
 
+import unittest
 
-class TestCalculations(object):
+
+class TestCalculations(unittest.TestCase):
 
     def test_ibu_formula_selection_with_author(self):
         """

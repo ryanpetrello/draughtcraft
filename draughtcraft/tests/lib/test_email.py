@@ -4,6 +4,7 @@ from fudge.inspector            import arg
 
 import os
 import fudge
+import unittest
 
 def _gen_template_path():
     root = getattr(conf.app, 'modules', [])[0]
@@ -16,7 +17,7 @@ def _gen_template_path():
 template_path = _gen_template_path()
 
 
-class TestEmailTemplate(object):
+class TestEmailTemplate(unittest.TestCase):
 
     def test_text_rendering(self):
         template = email.EmailTemplate('sample', template_path)
@@ -37,7 +38,7 @@ class TestEmailTemplate(object):
         assert template.html({'name': 'Ryan'}) == None
 
 
-class TestEmailSend(object):
+class TestEmailSend(unittest.TestCase):
     
     @fudge.patch('postmark.PMMail')
     def test_send(self, FakeMail):

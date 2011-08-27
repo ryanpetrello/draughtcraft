@@ -3,8 +3,10 @@ from draughtcraft.lib.units         import (UnitConvert, InvalidUnitException, P
                                             UNIT_MAP)
 from pytest                         import raises
 
+import unittest
 
-class TestMergeImplementations(object):
+
+class TestMergeImplementations(unittest.TestCase):
 
     def test_pound_ounce_merge(self):
         assert PoundOunceMerge.merge((5.0, 'POUND'), (8.0, 'OUNCE')) == (5.5, 'POUND')
@@ -18,7 +20,7 @@ class TestMergeImplementations(object):
     def test_kilogram_merge(self):
         assert KilogramMerge.merge((0.45359237, 'KILOGRAM')) == (1, 'POUND')
 
-class TestExpansionImplementations(object):
+class TestExpansionImplementations(unittest.TestCase):
 
     def test_pound_expansion(self):
         assert PoundExpansion.expand(5.0) == [(5.0, 'POUND')]
@@ -58,7 +60,7 @@ class TestExpansionImplementations(object):
         assert PoundExpansion.expand(5.1713) == [(5.1713, 'POUND')]
 
 
-class TestUnitConversionFromString(object):
+class TestUnitConversionFromString(unittest.TestCase):
 
     def test_pair_detection(self):
         """
@@ -248,7 +250,7 @@ class TestUnitConversionFromString(object):
         assert (amount, unit) == (5.25, None)
 
 
-class TestUnitConversionToString(object):
+class TestUnitConversionToString(unittest.TestCase):
 
     def test_simple_conversion(self):
         assert UnitConvert.to_str(5, 'POUND') == '5 lb'
@@ -290,7 +292,7 @@ class TestUnitConversionToString(object):
         assert UnitConvert.to_str(5.25, None) == '5.25'
 
 
-class TestConversionInteroperability(object):
+class TestConversionInteroperability(unittest.TestCase):
 
     def test_opposites(self):
         original = '5 lb 4 oz'

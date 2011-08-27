@@ -1,5 +1,7 @@
 from draughtcraft       import model
+
 import pytest
+import unittest
 
 
 # Stubs
@@ -12,7 +14,7 @@ class FakeRecipe(object):
             setattr(self.calculations, k, v)
 
 
-class TestStyleDefined(object):
+class TestStyleDefined(unittest.TestCase):
 
     def test_og(self): 
         style = model.Style(
@@ -97,7 +99,7 @@ class TestStyleDefined(object):
         with pytest.raises(model.InvalidStatistic):
             assert style.defined('invalid')
 
-class TestStyleMatches(object):
+class TestStyleMatches(unittest.TestCase):
 
     def test_og(self):
         recipe = FakeRecipe(**{
