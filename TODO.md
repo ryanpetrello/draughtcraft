@@ -10,8 +10,6 @@ Search
     * Filter by Type (Mash, Extract, etc...)
     * "Most Viewed" Recipe
 
-* Store the # of Views a Recipe Has
-
 0.1
 ====
 

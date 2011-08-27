@@ -13,13 +13,6 @@ class SlugController(object):
         if slug not in [slug.slug for slug in request.context['recipe'].slugs]:
             abort(404)
 
-    @expose('recipes/builder/async.html')
-    def async(self):
-        recipe = request.context['recipe']
-        if recipe.state != "PUBLISHED":
-            abort(404)
-        return dict(recipe = recipe)
-
     @expose('recipes/builder/index.html')
     def index(self):
         recipe = request.context['recipe']
@@ -29,6 +22,23 @@ class SlugController(object):
             recipe      = recipe,
             editable    = False
         )
+
+    @expose(generic=True)
+    def async(self): pass
+
+    @async.when(
+        method      = 'POST',
+        template    = 'recipes/builder/async.html'
+    )
+    def do_async(self):
+        recipe = request.context['recipe']
+        if recipe.state != "PUBLISHED":
+            abort(404)
+
+        # Log a view for the recipe
+        model.RecipeView(recipe = recipe)
+
+        return dict(recipe = recipe)
 
     @expose(generic=True)
     def draft(self): pass

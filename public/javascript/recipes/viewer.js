@@ -2,13 +2,11 @@
  * Used to fetch and redraw the current recipe via AJAX.
  */
 $.draughtcraft.recipes.viewer.fetchRecipe = function(){
-    $.ajax({
-        url: window.location.pathname+'async',
-        cache: false,
+    $('form#async').ajaxForm({
         success: function(html){
             $.draughtcraft.recipes.viewer.__injectRecipeContent__(html);
         }
-    });
+    }).submit();
 };
 
 /*
@@ -37,7 +35,7 @@ $.draughtcraft.recipes.viewer.__injectRecipeContent__ = function(html){
 
     // Remove editing components from the DOM
     $('td.close img, img.close, li.add-step').remove();
-    $('form').attr('method', 'GET').removeAttr('action');
+    $('#builder form').attr('method', 'GET').removeAttr('action');
 };
 
 $(document).ready(function(){

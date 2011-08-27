@@ -29,11 +29,13 @@ class TestRecipePublish(TestAuthenticatedApp):
         )
         model.commit()
 
-        response = self.get('/recipes/1/rocky-mountain-river-ipa/async')
+        response = self.post('/recipes/1/rocky-mountain-river-ipa/async')
         assert response.status_int == 200
 
         model.Recipe.query.first().state = "DRAFT"
         model.commit()
 
-        response = self.get('/recipes/1/rocky-mountain-river-ipa/async', status=404)
+        response = self.post('/recipes/1/rocky-mountain-river-ipa/async', status=404)
         assert response.status_int == 404
+
+        assert len(model.Recipe.query.first().views) == 1
