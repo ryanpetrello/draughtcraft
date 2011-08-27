@@ -1,3 +1,5 @@
+$.draughtcraft.recipes.builder._first_focus = true;
+
 /*
  * Used to fetch and redraw the current recipe via AJAX.
  */
@@ -47,7 +49,9 @@ $.draughtcraft.recipes.builder.__injectRecipeContent__ = function(html){
     //
     // If a new row exists, focus on its first form element.
     //
-    if(difference.length)
+    if($.draughtcraft.recipes.builder._first_focus)
+        $.draughtcraft.recipes.builder._first_focus = false;
+    else if(difference.length)
         $('#'+difference[0]).find('input, select').eq(0).focus();
 
     //

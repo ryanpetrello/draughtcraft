@@ -12,7 +12,6 @@ Search
 
 Bugs
 --------------
-* Don't auto-focus the first field on initial recipe load.
 * Browser testing and support
 
 0.1
