@@ -10,6 +10,8 @@ Search
     * Filter by Type (Mash, Extract, etc...)
     * "Most Viewed" Recipe
 
+* Add popular malt extracts to ingredient list
+
 Bugs
 --------------
 * Browser testing and support
@@ -21,7 +23,6 @@ Bugs
 
 Recipe Builder
 --------------
-* Configurable recipe type (e.g., All Grain, Steep, Extract, etc...)
 * Duplicate Recipes, including the idea of `origin` recipes (similar to fork)
 
 Settings
