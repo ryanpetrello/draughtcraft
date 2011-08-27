@@ -9,7 +9,7 @@
 
   def hidden(type='RecipeAddition'):
     copy = hidden_fields.copy()
-    copy.update({'type': type, 'duration': 15})
+    copy.update({'type': type})
     if type == 'HopAddition':
       copy['duration'] = 60
     return copy
@@ -17,6 +17,8 @@
 %>
 
 <h3>Add to Boil</h3>
+
+<form />
 
 <fieldset>
   ${h.form('async/ingredients', hidden_fields = hidden())}
