@@ -36,6 +36,9 @@ $.draughtcraft.recipes.viewer.__injectRecipeContent__ = function(html){
     // Remove editing components from the DOM
     $('td.close img, img.close, li.add-step').remove();
     $('#builder form').attr('method', 'GET').removeAttr('action');
+    
+    // Register fancybox popups for ingredient links
+    $("a[href^='/ingredients/']").fancybox();
 };
 
 $(document).ready(function(){

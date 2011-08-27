@@ -122,9 +122,11 @@ $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
         'menuSpeed'         : 'fast'
     });
 
+    // Register fancybox popups for ingredient links
+    $("a[href^='/ingredients/']").fancybox();
+
     // Hide unnecessary verbiage helpers
     $('h3 span.step-help').remove();
-    
 };
 
 $.draughtcraft.recipes.builder.currentTab = 0;

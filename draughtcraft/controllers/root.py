@@ -5,11 +5,12 @@ from draughtcraft.lib.auth              import (save_user_session,
                                                 remove_trial_recipe)
 from draughtcraft.lib.schemas.login     import LoginSchema
 
-from error      import ErrorController
-from profile    import ProfilesController
-from recipes    import RecipesController
-from settings   import SettingsController
-from signup     import SignupController
+from error          import ErrorController
+from ingredients    import IngredientsController
+from profile        import ProfilesController
+from recipes        import RecipesController
+from settings       import SettingsController
+from signup         import SignupController
 
 class RootController(object):
 
@@ -48,6 +49,7 @@ class RootController(object):
         redirect('/')
 
     error       = ErrorController()
+    ingredients = IngredientsController()
     profile     = ProfilesController()
     recipes     = RecipesController()
     settings    = SettingsController()
