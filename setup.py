@@ -23,6 +23,7 @@ setup(
         "webflash",
         "simplejson",
         "python-postmark",
+        "pytest-xdist",
         "pytest-cov",
         "fudge"
     ],
