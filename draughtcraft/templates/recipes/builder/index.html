@@ -1,3 +1,13 @@
+<%
+  def printable_type(type):
+    return ({
+      'MASH'          : 'All-Grain',
+      'MINIMASH'      : 'Extract w/ Mini-Mash',
+      'EXTRACTSTEEP'  : 'Extract w/ Steeped Grains',
+      'EXTRACT'       : 'Extract'
+    })[type] 
+%>
+
 <%inherit file="../../layout.html" />
 
 <%def name="style()">
@@ -53,6 +63,9 @@
           'GALLON'
         )}
       ${h.end_form()}
+    </fieldset>
+    <fieldset class="type">
+      <span>${printable_type(recipe.type)}</span>
     </fieldset>
 
     % if recipe.author:
