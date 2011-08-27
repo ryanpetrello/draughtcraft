@@ -30,6 +30,7 @@ body  {
 
     form  {
         display: inline;
+        page-break-inside: avoid;
     }
 
     li  {
@@ -82,6 +83,10 @@ body  {
         padding-left: 25px;
         font-style: italic;
     }
+    td.time p.instruction  {
+      display: inline !important;
+      padding-left: 0;
+    }
 
     fieldset  {
         border: 0;
@@ -124,7 +129,7 @@ body  {
     }
 
     div.step.results  {
-        page-break-before: always;
+        page-break-inside: avoid;
         border-top: 1px solid #DDD;
         padding-top: 25px;
         margin-top: 25px;

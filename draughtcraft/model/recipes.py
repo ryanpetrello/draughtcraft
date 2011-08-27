@@ -325,6 +325,18 @@ class HopAddition(RecipeAddition):
             unit = 'OUNCE'
         return UnitConvert.to_str(self.amount, unit)
 
+    @property
+    def eta(self):
+        """
+        The number of minutes (after the boil starts) at which to add
+        the hop addition.
+
+        For a 15 minute addition in a 60 minute boil, the `eta` would be 45m
+        """
+        offset = self.recipe.boil_minutes - self.minutes
+        return '%sm' % offset
+
+
 
 class FermentationStep(Entity, DeepCopyMixin):
 
