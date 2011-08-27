@@ -1,4 +1,6 @@
-<%include file="steps/mash/index.html" />
+% if recipe.type in ('MASH', 'MINIMASH'):
+  <%include file="steps/mash/index.html" />
+% endif
 <%include file="steps/boil/index.html" />
 <%include file="steps/ferment/index.html" />
 <%include file="results.html" />

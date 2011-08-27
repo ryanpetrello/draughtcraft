@@ -22,7 +22,9 @@
 
 <h2>
   <ul>
-    ${tab('Mash', cls('mash'))}
+    % if recipe.type in ('MASH', 'MINIMASH'):
+      ${tab('Mash', cls('mash'))}
+    % endif
     ${tab('Boil', cls('boil'))}
     ${tab('Ferment', cls('ferment', last=True))}
   </ul>

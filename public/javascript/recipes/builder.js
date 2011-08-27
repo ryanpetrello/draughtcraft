@@ -36,6 +36,8 @@ $.draughtcraft.recipes.builder.__injectRecipeContent__ = function(html){
 
     $("#builder-ajax").html(html);
 
+    $.draughtcraft.recipes.builder.handleAnchor();
+
     //
     // Look for tr.additions that didn't exist *before* content injection.
     //
@@ -274,16 +276,9 @@ $.draughtcraft.recipes.builder.initRecipeSettings = function(){
  */
 $.draughtcraft.recipes.builder.handleAnchor = function(){
     var anchor = window.location.hash;
-    switch(anchor){
-        case '#mash':
-            $.draughtcraft.recipes.builder.selectTab(0);
-        break;
-        case '#boil':
-            $.draughtcraft.recipes.builder.selectTab(1);
-        break;
-        case '#ferment':
-            $.draughtcraft.recipes.builder.selectTab(2);
-        break;
+    if(anchor){
+        var tab = $('li.active a[href$='+anchor+']').closest('.step');
+        $.draughtcraft.recipes.builder.selectTab($('.step').index(tab));
     }
 };
 
@@ -382,7 +377,6 @@ $.draughtcraft.recipes.builder.handleNameField = function(){
 $(document).ready(function(){
     $.draughtcraft.recipes.builder.initRecipeSettings();
     $.draughtcraft.recipes.builder.fetchRecipe();
-    $.draughtcraft.recipes.builder.handleAnchor();
     $.draughtcraft.recipes.builder.handleNameField();
 
     // Register a JS tooltip on the author's thumbnail (if there is one).
