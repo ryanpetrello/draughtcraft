@@ -130,6 +130,8 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
 
     @property
     def efficiency(self):
+        if self.author:
+            return self.author.settings['brewhouse_efficiency']
         return .75
 
     def _partition(self, additions):

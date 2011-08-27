@@ -46,6 +46,16 @@
           ], tabindex='3')}
         </dd>
 
+        <dt><label for="name">Brewhouse Efficiency</label></dt>
+        <dd>
+          ${h.text(
+            'brewhouse_efficiency', 
+            int(user.settings['brewhouse_efficiency'] * 100),
+            class_="unit",
+            tabindex='4'
+          )} %
+        </dd>
+
       </dl>
     </fieldset>
 
@@ -56,6 +66,6 @@
       or <a href="/" tabindex="5">Cancel</a>
     </div>
 
-  ${h.end_form}
+  ${h.end_form()}
 
 </div>

@@ -40,6 +40,7 @@ class TestUserSettings(object):
         assert user.settings['default_ibu_formula'] == 'tinseth'
         assert user.settings['default_recipe_volume'] == 5
         assert user.settings['default_recipe_type'] == 'MASH'
+        assert user.settings['brewhouse_efficiency'] == .75
 
     def test_json_value(self):
         user = model.User(

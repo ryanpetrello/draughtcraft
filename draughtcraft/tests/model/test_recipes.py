@@ -369,6 +369,17 @@ class TestRecipe(object):
 
         assert recipe.next_fermentation_step == None
 
+    def test_efficiency(self):
+        assert model.Recipe().efficiency == .75
+
+        user = model.User()
+        model.UserSetting(
+            user = user,
+            name = 'brewhouse_efficiency',
+            value = .80
+        )
+        assert model.Recipe(author = user).efficiency == .80
+
     def test_url(self):
         recipe = model.Recipe(
             id      = 1,

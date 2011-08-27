@@ -10,8 +10,15 @@ Search
     * Filter by Type (Mash, Extract, etc...)
     * "Most Viewed" Recipe
 
+Bugs
+--------------
+* Don't auto-focus the first field on initial recipe load.
+* Browser testing and support
+
 0.1
 ====
+
+* Mobile Browser/Viewer
 
 Recipe Builder
 --------------
@@ -22,10 +29,8 @@ Settings
 --------
 * Ability to provide customized SRM and L for fermentables (at a global level)
 * Forgot Password
-* Configurable Brewhouse Efficiency
 
 Additional
 ----------
 * International Unit Support
-* Ingredient Description Pages
 * "Build Your First Recipe" Short Tutorial w/ Tooltips

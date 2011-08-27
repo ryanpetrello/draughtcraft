@@ -3,6 +3,7 @@ from pecan                                      import (expose, request,
 from draughtcraft.lib.notice                    import notify
 from draughtcraft.lib.schemas.settings.password import UserPasswordSchema
 
+
 class PasswordController(object):
 
     @expose(

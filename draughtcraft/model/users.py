@@ -78,7 +78,8 @@ class UserSetting(Entity):
     __defaults__ = {
         'default_ibu_formula'   : 'tinseth',
         'default_recipe_volume' : 5,
-        'default_recipe_type'   : 'MASH'
+        'default_recipe_type'   : 'MASH',
+        'brewhouse_efficiency'  : .75
     }
 
     @classmethod
