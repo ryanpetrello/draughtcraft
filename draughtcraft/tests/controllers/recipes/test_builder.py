@@ -271,6 +271,21 @@ class TestRecipeSettings(TestAuthenticatedApp):
         
         assert model.Recipe.get(1).gallons == 10.0
 
+    def test_mash_settings_change(self):
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
+        model.commit()
+
+        assert model.Recipe.query.first().mash_method == 'SINGLESTEP'
+        assert model.Recipe.query.first().mash_instructions == None
+
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/settings/mash', params={
+            'method'        : 'DECOCTION',
+            'instructions'  : 'Testing 1 2 3' 
+        })
+        
+        assert model.Recipe.query.first().mash_method == 'DECOCTION'
+        assert model.Recipe.query.first().mash_instructions == 'Testing 1 2 3'
+
     def test_notes_update(self):
         model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.commit()
