@@ -120,6 +120,8 @@ class RecipeSettingsController(object):
         schema      = RecipeMashSettings()
     )
     def _mash(self, method, instructions):
+        if self.recipe.type != 'MASH':
+            abort(405)
         self.recipe.mash_method = method
         self.recipe.mash_instructions = instructions
         self.recipe.touch()
