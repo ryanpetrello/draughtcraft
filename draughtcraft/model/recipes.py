@@ -18,6 +18,13 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         'MINIMASH'
     )
 
+    MASH_METHODS = {
+        'SINGLESTEP',
+        'TEMPERATURE',
+        'DECOCTION',
+        'MULTISTEP'
+    }
+
     STATES = (
         'DRAFT',
         'PUBLISHED'
@@ -30,6 +37,9 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
     notes               = Field(UnicodeText)
     creation_date       = Field(DateTime, default=datetime.utcnow)
     last_updated        = Field(DateTime, default=datetime.utcnow)
+
+    mash_method         = Field(Enum(*MASH_METHODS), default='SINGLESTEP')
+    mash_instructions   = Field(UnicodeText) 
 
     state               = Field(Enum(*STATES), default='DRAFT')
     current_draft       = ManyToOne('Recipe', inverse='published_version')

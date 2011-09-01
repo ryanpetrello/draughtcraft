@@ -176,7 +176,7 @@ $.draughtcraft.recipes.builder.initFocusListeners = function(){
  */
 $.draughtcraft.recipes.builder.initUpdateListeners = function(){
     // For each input field, monitor changes...
-    $('.step input, .step select, .results textarea').change(function(){
+    $('.step input, .step select, .step textarea, .results textarea').change(function(){
         // When a change occurs: 
         // 1. Submit the containing form asynchronously.
 

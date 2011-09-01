@@ -139,6 +139,15 @@ class RecipeVolume(FilteredSchema):
     unit    = validators.OneOf(['GALLON'])
 
 
+class RecipeMashSettings(FilteredSchema):
+    """
+    This schema is for modifying the mash method (e.g., Decoction) and instructions.
+    """
+
+    method          = validators.OneOf(model.Recipe.MASH_METHODS)
+    instructions    = validators.String(if_empty=None)
+
+
 class RecipeNotes(FilteredSchema):
     """
     This schema is for modifying notes/remarks for a recipe.

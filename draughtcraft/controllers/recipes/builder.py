@@ -10,6 +10,7 @@ from draughtcraft.lib.schemas.recipes.builder   import (
                                                         RecipeBoilMinutes,
                                                         RecipeVolume,
                                                         RecipeNotes,
+                                                        RecipeMashSettings,
                                                         FermentationStepUpdate
                                                         )
 from elixir                                     import entities
@@ -108,7 +109,24 @@ class RecipeSettingsController(object):
         return dict(recipe = self.recipe)
 
     #
-    # Recipe Batch/Volume
+    # Mash Method and Instructions
+    #
+    @expose(generic=True)
+    def mash(self): pass
+
+    @mash.when(
+        method      = 'POST',
+        template    = 'recipes/builder/async.html',
+        schema      = RecipeMashSettings()
+    )
+    def _mash(self, method, instructions):
+        self.recipe.mash_method = method
+        self.recipe.mash_instructions = instructions
+        self.recipe.touch()
+        return dict(recipe = self.recipe)
+
+    #
+    # Boil Duration
     #
     @expose(generic=True)
     def boil_minutes(self): pass

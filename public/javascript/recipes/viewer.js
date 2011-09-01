@@ -26,9 +26,14 @@ $.draughtcraft.recipes.viewer.__injectRecipeContent__ = function(html){
     });
 
     // Replace all fields with static <span>'s
-    $('#builder input:visible, #builder textarea').replaceWith(function(){
+    $('#builder input:visible').replaceWith(function(){
         return '<span>'+$(this).val()+'</span>';
     });
+    $('#builder textarea').replaceWith(function(){
+        return '<span>'+$(this).val().split("\n").join("<br />")+'</span>';
+    });
+    // Hide empty text areas
+    $('#builder textarea:empty').remove();
     $('#builder select').replaceWith(function(){
         return '<span>'+$(this).find('option:selected').text()+'</span>';
     });
