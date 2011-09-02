@@ -63,11 +63,11 @@ class SlugController(object):
         source = request.context['recipe']
         if request.context['user'] is None:
             redirect("/signup")
-        if source.author is None or source.author != request.context['user']:
+        if source.author is None:
             abort(401)
 
         source.duplicate({
-            'name'      : "%s (Duplicate)" % source.name,
+            'name'      : "%s (Duplicate)" % source.name if request.context['user'] == source.author else source.name,
             'author'    : request.context['user']    
         })
         redirect("/")

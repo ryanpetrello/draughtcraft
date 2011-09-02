@@ -89,7 +89,7 @@ class TestRecipeCopyAuthenticated(TestAuthenticatedApp):
 
         assert model.Recipe.get_by(name = 'Rocky Mountain River IPA (Duplicate)') is not None
 
-    def test_cannot_copy_unauthorized_recipe(self):
+    def test_copy_other_users_recipe(self):
         model.Recipe(
             name    = 'Rocky Mountain River IPA',
             author  = model.User(),
@@ -104,9 +104,16 @@ class TestRecipeCopyAuthenticated(TestAuthenticatedApp):
         model.commit()
 
         assert model.Recipe.query.count() == 1
-        response = self.post('/recipes/1/rocky-mountain-river-ipa/copy', status=401)
-        assert response.status_int == 401
-        assert model.Recipe.query.count() == 1
+        self.post('/recipes/1/rocky-mountain-river-ipa/copy')
+        assert model.Recipe.query.count() == 2
+
+        for r in model.Recipe.query.all():
+            assert r.name == 'Rocky Mountain River IPA'
+
+        recipes = model.Recipe.query.all()
+        assert recipes[0].author
+        assert recipes[1].author
+        assert recipes[0].author != recipes[1].author
 
 
 class TestRecipeCopyUnauthenticated(TestApp):
