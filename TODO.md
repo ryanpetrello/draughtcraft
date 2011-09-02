@@ -10,11 +10,13 @@ Search
     * Filter by Type (Mash, Extract, etc...)
     * "Most Viewed" Recipe
 
-* Add popular malt extracts to ingredient list
-
 Bugs
 --------------
 * Browser testing and support
+* Missing Ingredients:
+    - Popular malt extracts
+    - Roasted Barley (300 SRM)
+    - Magnum Hops
 
 0.1
 ====
