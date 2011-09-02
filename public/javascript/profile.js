@@ -7,6 +7,15 @@ $.draughtcraft.profile.initToolTips = function(){
     $('.recipe ul.badge li').each(function(){
         $(this).tipTip({'delay': 50});
     })
+
+    // Register submit events on form submission buttons
+    $('.recipe a.submit, .recipe li.submit').click(function(e){
+        e.preventDefault();
+        if($(this).hasClass('confirm') && !confirm("Are you sure you want to delete this recipe?"))
+            return;
+        $(this).closest('form').submit();
+    });
+
 };
 
 $(document).ready(function(){

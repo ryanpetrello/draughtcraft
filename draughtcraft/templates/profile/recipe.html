@@ -12,7 +12,7 @@
     <h3>
       % if recipe.state == "PUBLISHED" and h.request.context['user'] == recipe.author:
         ${h.form("%sdraft" % recipe.url())}
-          <a href="#" onclick="$(this).closest('form').submit();return false;">
+          <a href="#" class="submit">
             ${recipe.name}
           </a>
         ${h.end_form()}
@@ -24,9 +24,13 @@
     </h3>
 
     <ul class="badge">
-      <li class="copy btn" title="Copy"></li>
+      ${h.form("%scopy" % recipe.url())}
+        <li class="copy btn submit" title="Copy"></li>
+      ${h.end_form()}
       % if h.request.context['user'] == recipe.author:
-        <li class="delete btn" title="Delete"></li>
+        ${h.form("%sdelete" % recipe.url())}
+          <li class="delete btn submit confirm" title="Delete"></li>
+        ${h.end_form()}
       % endif
       <li class="views">
         ${len(recipe.views)} Views
