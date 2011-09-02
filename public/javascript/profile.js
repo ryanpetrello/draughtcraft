@@ -7,7 +7,9 @@ $.draughtcraft.profile.initToolTips = function(){
     $('.recipe ul.badge li').each(function(){
         $(this).tipTip({'delay': 50});
     })
+};
 
+$.draughtcraft.profile.initRecipeButtons = function(){
     // Register submit events on form submission buttons
     $('.recipe a.submit, .recipe li.submit').click(function(e){
         e.preventDefault();
@@ -15,7 +17,6 @@ $.draughtcraft.profile.initToolTips = function(){
             return;
         $(this).closest('form').submit();
     });
-
 };
 
 $(document).ready(function(){
