@@ -55,6 +55,35 @@ class SlugController(object):
         draft.flush()
         redirect("%sbuilder" % draft.url())
 
+    @expose(generic=True)
+    def copy(self): pass
+
+    @copy.when(method="POST")
+    def do_copy(self):
+        source = request.context['recipe']
+        if request.context['user'] is None:
+            redirect("/signup")
+        if source.author is None or source.author != request.context['user']:
+            abort(401)
+
+        source.duplicate({
+            'name'      : "%s (Duplicate)" % source.name,
+            'author'    : request.context['user']    
+        })
+        redirect("/")
+
+    @expose(generic=True)
+    def delete(self): pass
+
+    @delete.when(method="POST")
+    def do_delete(self):
+        source = request.context['recipe']
+        if source.author is None or source.author != request.context['user']:
+            abort(401)
+
+        source.delete()
+        redirect("/")
+
     builder = RecipeBuilderController()
 
 
