@@ -23,10 +23,6 @@ Bugs
 
 * Mobile Browser/Viewer
 
-Recipe Builder
---------------
-* Duplicate Recipes, including the idea of `origin` recipes (similar to fork)
-
 Settings
 --------
 * Ability to provide customized SRM and L for fermentables (at a global level)
