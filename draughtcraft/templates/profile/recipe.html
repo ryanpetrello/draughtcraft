@@ -27,6 +27,11 @@
       ${h.form("%scopy" % recipe.url())}
         <li class="first copy btn submit" title="Copy this Recipe"></li>
       ${h.end_form()}
+      % if recipe.state == 'DRAFT':
+          ${h.form("%spublish" % recipe.url(public=False))}
+            <li class="publish btn submit" title="Publish this Recipe"></li>
+          ${h.end_form()}
+      % endif
       % if h.request.context['user'] == recipe.author:
         ${h.form("%sdelete" % recipe.url())}
           <li class="delete btn submit confirm" title="Delete this Recipe"></li>

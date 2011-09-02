@@ -126,27 +126,29 @@ nav.user, #topnav, #content  {
           form  { display: inline-block; }
           li  {
             display: inline-block;
-            padding: 0 10px;
+            margin-right: 5px;
             min-height: 24px;
             line-height: 24px;
-            min-width: 4px;
             border-left: 1px solid #DDD;
             vertical-align: middle;
             &.first  {
               border-left: 0;
             }
-            &.btn  { cursor: pointer; }
+            &.btn  { 
+              cursor: pointer;
+              min-width: 24px;
+              margin-right: 0;
+            }
             &.views  {
               background: url(/images/views.png) 5px center no-repeat;
               padding-left: 25px;
-              padding-right: 5px;
             }
             &.copies  {
               background: url(/images/copies.png) 5px center no-repeat;
               padding-left: 25px;
-              padding-right: 5px;
             }
-            &.copy  { background: url(/images/copy.png) 4px center no-repeat; }
+            &.copy  { background: url(/images/copy.png) 6px center no-repeat; }
+            &.publish  { background: url(/images/publish.png) 6px center no-repeat; }
             &.delete  { background: url(/images/delete.png) 4px center no-repeat; }
           }
         }
