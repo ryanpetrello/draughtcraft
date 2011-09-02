@@ -11,7 +11,7 @@
 }
 
 nav.user, #topnav, #content  {
-  width: 800px;
+  width: 900px;
 }
 
 #content  {
@@ -54,6 +54,9 @@ nav.user, #topnav, #content  {
 
   dl.profile  {
     padding: 15px;
+    padding-right: 0;
+    width: 225px;
+    max-width: 225px;
     display: block;
     float: left;
     dt, dd  {
@@ -62,8 +65,12 @@ nav.user, #topnav, #content  {
     }
     dt  {
       color: #999;
-      width: 125px;
+      width: 100px;
       clear: left;
+      &.edit  {
+        width: inherit;
+        max-width: inherit;
+      }
     }
   }
 
@@ -76,7 +83,7 @@ nav.user, #topnav, #content  {
 
     dt  {
       &.recipe  {
-        min-width: 535px;
+        width: 625px;
         margin-bottom: 15px;
         position: relative;
         span.srm  {
