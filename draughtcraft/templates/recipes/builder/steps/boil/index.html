@@ -1,8 +1,8 @@
 <%
-  def sort(additions):
+  def sort(additions, key='percentage'):
     return sorted(
       additions,
-      lambda a,b: cmp(b.percentage, a.percentage)
+      lambda a,b: cmp(getattr(b, key), getattr(a, key))
     )
 %>
 
@@ -71,7 +71,7 @@
               <th class="close" />
             </tr>
 
-            % for addition in sort(recipe.boil.get(h.model.Hop)):
+            % for addition in sort(recipe.boil.get(h.model.Hop), 'minutes'):
               <%include file="../additions/hop.html" args="i=i, addition=addition" />
               <% i += 1 %>
             % endfor
