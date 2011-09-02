@@ -7,6 +7,7 @@ from draughtcraft.lib.units         import UnitConvert
 from draughtcraft.model.deepcopy    import DeepCopyMixin, ShallowCopyMixin
 from datetime                       import datetime
 from copy                           import deepcopy
+from sys                            import maxint
 
 
 class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
@@ -295,6 +296,16 @@ class RecipeAddition(Entity, DeepCopyMixin):
         if self.duration is None:
             return 0
         return self.duration.seconds / 60
+
+    @property
+    def sortable_minutes(self):
+        if self.use == 'FIRST WORT':
+            return maxint
+
+        if self.use in ('POST BOIL', 'FLAME-OUT'):
+            return -1
+
+        return self.minutes
 
     @property
     def step(self):

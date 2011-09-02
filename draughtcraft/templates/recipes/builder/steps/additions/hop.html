@@ -35,10 +35,10 @@ ${h.hidden(
           ('FLAME OUT', 'Flame Out')
         ]
       )}
-      % if not editable:
-        <p class="instruction">for</p> 
-      % endif
       % if addition.use == 'BOIL':
+        % if not editable:
+          <p class="instruction">for</p> 
+        % endif
         ${h.select(
           '%s_additions-%d.duration' % (addition.step, i),
           addition.minutes,

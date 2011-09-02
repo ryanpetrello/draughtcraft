@@ -71,7 +71,7 @@
               <th class="close" />
             </tr>
 
-            % for addition in sort(recipe.boil.get(h.model.Hop), 'minutes'):
+            % for addition in sort(recipe.boil.get(h.model.Hop), 'sortable_minutes'):
               <%include file="../additions/hop.html" args="i=i, addition=addition" />
               <% i += 1 %>
             % endfor
