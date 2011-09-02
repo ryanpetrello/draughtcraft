@@ -56,7 +56,15 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
     style               = ManyToOne('Style', inverse='recipes')
     author              = ManyToOne('User', inverse='recipes')
 
-    __ignored_properties__ = ('current_draft', 'published_version', 'views', 'creation_date', 'state')
+    __ignored_properties__ = (
+        'current_draft',
+        'published_version',
+        'copies',
+        'copied_from',
+        'views',
+        'creation_date',
+        'state'
+    )
 
     def __init__(self, **kwargs):
         super(Recipe, self).__init__(**kwargs)
