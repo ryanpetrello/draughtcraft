@@ -66,10 +66,16 @@ class SlugController(object):
         if source.author is None:
             abort(401)
 
-        source.duplicate({
-            'name'      : "%s (Duplicate)" % source.name if request.context['user'] == source.author else source.name,
+        different_user = source.author != request.context['user']
+
+        copy = source.duplicate({
+            'name'      : source.name if different_user else "%s (Duplicate)" % source.name,
             'author'    : request.context['user']    
         })
+
+        if different_user:
+            copy.copied_from = source
+
         redirect("/")
 
     @expose(generic=True)

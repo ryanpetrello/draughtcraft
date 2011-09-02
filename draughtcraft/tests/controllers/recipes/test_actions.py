@@ -86,6 +86,7 @@ class TestRecipeCopyAuthenticated(TestAuthenticatedApp):
 
         for r in model.Recipe.query.all():
             assert r.author == model.User.query.first()
+            assert r.copied_from == None
 
         assert model.Recipe.get_by(name = 'Rocky Mountain River IPA (Duplicate)') is not None
 
@@ -110,10 +111,12 @@ class TestRecipeCopyAuthenticated(TestAuthenticatedApp):
         for r in model.Recipe.query.all():
             assert r.name == 'Rocky Mountain River IPA'
 
-        recipes = model.Recipe.query.all()
+        recipes = model.Recipe.query.order_by('id').all()
         assert recipes[0].author
         assert recipes[1].author
         assert recipes[0].author != recipes[1].author
+        assert recipes[0].copies == [recipes[1]]
+        assert recipes[1].copied_from == recipes[0]
 
 
 class TestRecipeCopyUnauthenticated(TestApp):

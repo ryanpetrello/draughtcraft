@@ -46,6 +46,9 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
     current_draft       = ManyToOne('Recipe', inverse='published_version')
     published_version   = OneToOne('Recipe', inverse='current_draft', order_by='creation_date')
 
+    copied_from         = ManyToOne('Recipe', inverse='copies')
+    copies              = OneToMany('Recipe', inverse='copied_from', order_by='creation_date')
+
     views               = OneToMany('RecipeView', inverse='recipe', cascade='all, delete-orphan')
     additions           = OneToMany('RecipeAddition', inverse='recipe', cascade='all, delete-orphan')
     fermentation_steps  = OneToMany('FermentationStep', inverse='recipe', cascade='all, delete-orphan')
