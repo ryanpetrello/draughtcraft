@@ -131,6 +131,9 @@ $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
     // Register fancybox popups for ingredient links
     $("a[href^='/ingredients/']").fancybox();
 
+    // Force the sidebar to scroll down with the page
+    $('.inventory:visible').scrollToFixed({ marginTop: 10 });
+
     // Hide unnecessary verbiage helpers
     $('h3 span.step-help').remove();
 };
@@ -251,6 +254,9 @@ $.draughtcraft.recipes.builder.selectTab = function(index){
 
     // Store the "current" step index for reference
     $.draughtcraft.recipes.builder.currentTab = index;
+
+    // Force the sidebar to scroll down with the page
+    $('.inventory:visible').scrollToFixed({ marginTop: 10 });
 }; 
 
 /*
