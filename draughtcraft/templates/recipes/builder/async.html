@@ -3,4 +3,14 @@
 % endif
 <%include file="steps/boil/index.html" />
 <%include file="steps/ferment/index.html" />
+
+<div class="step active notes">
+  % if not editable:
+    <h3 class="ribbon">Other Notes</h3>
+    <p> 
+      ${'<br />'.join(recipe.notes.split('\n')) if recipe.notes else ''}
+    </p>
+  % endif
+</div>
+
 <%include file="results.html" />

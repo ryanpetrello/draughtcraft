@@ -19,9 +19,11 @@
       <th colspan="2">
         <label>Targets for Style</label>
       </th>
-      <th class="notes">
-        <label>Other Notes</label>
-      </th>
+      % if editable:
+        <th class="notes">
+          <label>Other Notes</label>
+        </th>
+      % endif
     </tr>
 
     <tr>
@@ -46,11 +48,13 @@
       <td>
         ${matches(recipe, 'og')}
       </td>
-      <td rowspan="5" class="notes">
-        ${h.form('async/settings/notes')}
-          <textarea name="notes">${recipe.notes or ''}</textarea>
-        ${h.end_form()}
-      </td>
+      % if editable:
+        <td rowspan="5" class="notes">
+          ${h.form('async/settings/notes')}
+            <textarea name="notes">${recipe.notes or ''}</textarea>
+          ${h.end_form()}
+        </td>
+      % endif
     </tr>
 
     <tr>

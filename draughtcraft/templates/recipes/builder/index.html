@@ -70,7 +70,7 @@
     </fieldset>
 
     % if recipe.author:
-      <p class="author">By: ${recipe.author.full_name or recipe.author.username}</p>
+      <p class="author">By: ${recipe.author.full_name.strip() or recipe.author.username}</p>
       <a href="/profile/${recipe.author.username}" class="author">
         <img 
           src="${recipe.author.gravatar}&s=45" 
@@ -78,6 +78,11 @@
           title="${recipe.author.username}"
         />
       </a>
+      <img 
+        src="${recipe.author.gravatar}" 
+        class="gravatar fullsize"
+        title="${recipe.author.username}"
+      />
     % endif
   </div>
 
