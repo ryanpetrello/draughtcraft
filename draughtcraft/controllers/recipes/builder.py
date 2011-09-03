@@ -41,7 +41,7 @@ class FermentationStepsController(RestController):
             )
         )
         self.recipe.touch()
-        return dict(recipe = self.recipe)
+        return dict(recipe = self.recipe, editable=True)
 
     @expose(
         'recipes/builder/async.html',
@@ -55,7 +55,7 @@ class FermentationStepsController(RestController):
         step.days = kw['days']
         step.fahrenheit = kw['temperature']
         self.recipe.touch()
-        return dict(recipe = self.recipe)
+        return dict(recipe = self.recipe, editable=True)
 
     @expose('recipes/builder/async.html')
     def delete(self):
@@ -63,7 +63,7 @@ class FermentationStepsController(RestController):
             step = self.recipe.fermentation_steps[-1]
             self.recipe.fermentation_steps.remove(step)
             step.delete()
-        return dict(recipe = self.recipe)
+        return dict(recipe = self.recipe, editable=True)
 
 
 class RecipeSettingsController(object):
@@ -90,7 +90,7 @@ class RecipeSettingsController(object):
     def _style(self, target):
         self.recipe.style = target
         self.recipe.touch()
-        return dict(recipe = self.recipe)
+        return dict(recipe = self.recipe, editable=True)
 
     #
     # Recipe Batch/Volume
@@ -106,7 +106,7 @@ class RecipeSettingsController(object):
     def _volume(self, volume, unit):
         self.recipe.gallons = volume
         self.recipe.touch()
-        return dict(recipe = self.recipe)
+        return dict(recipe = self.recipe, editable=True)
 
     #
     # Mash Method and Instructions
@@ -125,7 +125,7 @@ class RecipeSettingsController(object):
         self.recipe.mash_method = method
         self.recipe.mash_instructions = instructions
         self.recipe.touch()
-        return dict(recipe = self.recipe)
+        return dict(recipe = self.recipe, editable=True)
 
     #
     # Boil Duration
@@ -148,7 +148,7 @@ class RecipeSettingsController(object):
     def _boil_minutes(self, minutes):
         self.recipe.boil_minutes = minutes
         self.recipe.touch()
-        return dict(recipe = self.recipe)
+        return dict(recipe = self.recipe, editable=True)
 
     #
     # Recipe Notes and Remarks
@@ -164,7 +164,7 @@ class RecipeSettingsController(object):
     def _notes(self, notes):
         self.recipe.notes = notes
         self.recipe.touch()
-        return dict(recipe = self.recipe)
+        return dict(recipe = self.recipe, editable=True)
 
 
 class IngredientsController(RestController):
