@@ -14,6 +14,7 @@ Bugs
 --------------
 * Browser testing and support
 * Fix potential bug related to input re-focus after AJAX sync
+* After changing notes, the page scrolls to the top.
 * Missing Ingredients:
     - Additional popular malt extracts (namely, Muntons)
 

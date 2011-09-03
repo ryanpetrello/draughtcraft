@@ -9,7 +9,11 @@
 </%def>
 
 <h1 class="clearfix">
-  <a href="/settings/profile"><img src="${user.gravatar}&s=60" class="gravatar" /></a>
+  % if h.request.context['user'] == user:
+    <a href="/settings/profile"><img src="${user.gravatar}&s=60" class="gravatar" /></a>
+  % else:
+    <img src="${user.gravatar}&s=60" class="gravatar" />
+  % endif
   ${user.username}
 </h1> 
 
