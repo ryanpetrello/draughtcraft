@@ -5,7 +5,11 @@ $.draughtcraft.profile.initToolTips = function(){
     })
     // Register a JS tooltip on recipe view counts
     $('.recipe ul.badge li').each(function(){
-        $(this).tipTip({'delay': 50});
+        $(this).tipTip({
+            'delay': 50, 
+            'defaultPosition': 'top', 
+            'edgeOffset': -5
+        });
     })
 };
 
