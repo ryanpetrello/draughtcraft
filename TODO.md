@@ -14,7 +14,7 @@ Bugs
 --------------
 * Browser testing and support
 * Missing Ingredients:
-    - Popular malt extracts
+    - Additional popular malt extracts (namely, Muntons)
 
 0.1
 ====
