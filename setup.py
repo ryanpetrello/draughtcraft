@@ -11,9 +11,9 @@ from draughtcraft import __version__
 setup(
     name = 'draughtcraft',
     version = __version__,
-    description = '',
-    author = '',
-    author_email = '',
+    description = 'Recipe builder and community app for homebrewing enthusiasts.',
+    author = 'Ryan Petrello',
+    author_email = 'ryan (at) draughtcraft.com',
     install_requires = [
         "pecan",
         "elixir",
