@@ -23,11 +23,28 @@
       'ingredient', 
       None, 
       [
-        ('', 'Add Fermentables...')] + sorted(
+        ('', 'Add Malt/Fermentables...')] + sorted(
           [
             (f.id, f.printed_name) for f in h.model.Fermentable.excluding(
               *[a.ingredient for a in h.request.context['recipe'].mash.get(h.model.Fermentable, [])]
-            )
+            ) if f.type in ('MALT', 'GRAIN', 'ADJUNCT', 'SUGAR')
+          ], key = lambda f: f[1]
+        )
+    )}
+  ${h.end_form()}
+</fieldset>
+
+<fieldset>
+  ${h.form('async/ingredients', hidden_fields = hidden())}
+    ${h.select(
+      'ingredient', 
+      None, 
+      [
+        ('', 'Add Malt Extract...')] + sorted(
+          [
+            (f.id, f.printed_name) for f in h.model.Fermentable.excluding(
+              *[a.ingredient for a in h.request.context['recipe'].mash.get(h.model.Fermentable, [])]
+            ) if f.type == 'EXTRACT'
           ], key = lambda f: f[1]
         )
     )}
