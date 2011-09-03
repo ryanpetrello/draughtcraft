@@ -257,6 +257,11 @@ $.draughtcraft.recipes.builder.selectTab = function(index){
 
     // Force the sidebar to scroll down with the page
     $('.inventory:visible').scrollToFixed({ marginTop: 10 });
+
+    // Safari bug: force the browser window to repaint by quickly scrolling
+    var pos = $('body').scrollTop();
+    window.scrollTo(0, pos+1);
+    window.scrollTo(0, pos);
 }; 
 
 /*
