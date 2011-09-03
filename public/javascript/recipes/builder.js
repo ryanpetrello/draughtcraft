@@ -1,3 +1,11 @@
+$.draughtcraft.recipes.builder._delay = (function(){
+  var timer = 0;
+  return function(callback, ms){
+    clearTimeout (timer);
+    timer = setTimeout(callback, ms);
+  };
+})();
+
 $.draughtcraft.recipes.builder._first_focus = true;
 
 /*
@@ -89,9 +97,11 @@ $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
     //
     $('#builder form:not(.name)').ajaxForm({
         'success' : function(responseText){
+            $.draughtcraft.recipes.builder._delay($.noop, 0);
             $.draughtcraft.recipes.builder.__injectRecipeContent__(responseText);
         },
         'error' : function(jqXHR, textStatus, errorThrown){
+            $.draughtcraft.recipes.builder._delay($.noop, 0);
             $.draughtcraft.recipes.builder.__injectRecipeContent__(jqXHR.responseText);
         }
     });
@@ -178,20 +188,68 @@ $.draughtcraft.recipes.builder.initFocusListeners = function(){
  * for recipe components.
  */
 $.draughtcraft.recipes.builder.initUpdateListeners = function(){
-    // For each input field, monitor changes...
-    $('.step input, .step select, .step textarea, .results textarea').change(function(){
-        // When a change occurs: 
-        // 1. Submit the containing form asynchronously.
 
+    //
+    // For each text input, monitor the keyup event.
+    //
+    // If more than 2s passes since the last keyup, submit the changed
+    // form value asynchronously.
+    //
+    var save = function(){
+        // Stop listening for mouse movements...
+        $('body').unbind('mousemove');
+
+        // Clear any previously queued form submissions
+        $.draughtcraft.recipes.builder._delay($.noop, 0);
+        
+        // Remove any input field `blur` listeners
+        $(this).unbind('blur');
+
+        // Find the closest form to submit
         var form = $(this).closest('form');
+
+        // Actually submit the form.
         form.submit();
 
-        // 2. Find any adjacent input fields (for the row) and temporarily
-        //    disable them (disallow edits while saving) for the duration
-        //    of the Ajax save.
-
+        //
+        // Find any adjacent input fields (for the form) and temporarily
+        // disable them (disallow edits while saving) for the duration
+        // of the Ajax save.
+        //
         $(form).find('input, select').attr('disabled', 'disabled');
+    };
+
+    // Any time an <input> or <textarea> triggers a `keyup`...
+    $('.step input, .step textarea, .results textarea').keyup(function(e){
+        // Ignore Tab or Shift-Tab keypresses...
+        if(e.keyCode == 9 || e.keyCode == 16) return;
+
+        // Start a timer to auto-save 2 seconds from now.
+        $.draughtcraft.recipes.builder._delay($.proxy(save, this), 2000);
+
+        //
+        // Listen for any mouse movement. If movement occurs, go ahead and save.
+        // This usually signals that the user is moving their mouse to add
+        // another ingredient or change some setting.
+        //
+        $('body').mousemove($.proxy(function(){
+            // Stop listening for mouse movements...
+            $('body').unbind('mousemove');
+            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 0);
+        }, this));
+
+        //
+        // If the object loses keyboard focus early (generally via the tab key),
+        // submit the form
+        //
+        $(this).blur($.proxy(function(){
+            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 0);
+        }, this));
+        
     });
+
+    // Any time a <select>'s value changes, save immediately.
+    $('.step select').change(save);
 };
 
 /*

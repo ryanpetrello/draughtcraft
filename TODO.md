@@ -14,7 +14,6 @@ Bugs
 --------------
 * Browser testing and support
 * Fix potential bug related to input re-focus after AJAX sync
-* While interacting with a form element, AJAX responses shouldn't overwrite the DOM
 * Missing Ingredients:
     - Additional popular malt extracts (namely, Muntons)
 
