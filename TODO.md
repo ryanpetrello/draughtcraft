@@ -15,8 +15,6 @@ Bugs
 * Browser testing and support
 * Missing Ingredients:
     - Popular malt extracts
-    - Roasted Barley (300 SRM)
-    - Magnum Hops
 
 0.1
 ====
