@@ -21,7 +21,7 @@ class User(Entity, ShallowCopyMixin):
 
     location    = Field(Unicode(256))
 
-    recipes         = OneToMany('Recipe', inverse='author')
+    recipes         = OneToMany('Recipe', inverse='author', order_by='-last_updated')
     user_settings   = OneToMany('UserSetting', cascade='all, delete-orphan',
                                    collection_class=attribute_mapped_collection('name'))
     settings        = AssociationProxy('user_settings', 'value', 

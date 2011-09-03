@@ -316,6 +316,7 @@ class RecipeBuilderAsyncController(object):
             )
 
         recipe.name = name
+        recipe.touch()
         return dict()
 
 class RecipeBuilderController(SecureController):
