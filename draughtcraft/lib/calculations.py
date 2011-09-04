@@ -33,7 +33,7 @@ class Calculations(object):
                 if a.fermentable.type == 'EXTRACT':
                     efficiency = 1
 
-                points += (a.amount * a.fermentable.ppg * efficiency) / volume
+                points += (a.pounds * a.fermentable.ppg * efficiency) / volume
 
         return round(points / 1000 + 1, 3)
 
@@ -75,7 +75,7 @@ class Calculations(object):
         fermentables = [a for a in self.recipe.additions if a.fermentable]
         gallons = float(self.recipe.gallons)
         for f in fermentables:
-            mcu = (f.amount * f.ingredient.lovibond) / gallons
+            mcu = (f.pounds * f.ingredient.lovibond) / gallons
             total += mcu
 
         srm = 1.4922 * (total ** 0.6859)
@@ -135,8 +135,7 @@ class Calculations(object):
                 utilization *= 1.15
 
             # Convert pounds to ounces
-            assert h.unit == 'POUND'
-            ounces = h.amount * 16.0
+            ounces = h.pounds * 16.0
 
             # IBU = Utilization * ((Ounces * AAU * 7490) / Gallons)
             alpha_acid = h.alpha_acid / 100
@@ -176,8 +175,7 @@ class Calculations(object):
                 gravity_adjustment += ((self.og - 1.050) / 0.2)
 
             # Convert pounds to ounces
-            assert h.unit == 'POUND'
-            ounces = h.amount * 16.0
+            ounces = h.pounds * 16.0
 
             # Convert AA rating to a decimal
             alpha_acid = h.alpha_acid / 100
@@ -240,8 +238,7 @@ class Calculations(object):
                     break
 
             # Convert pounds to ounces
-            assert h.unit == 'POUND'
-            ounces = h.amount * 16.0
+            ounces = h.pounds * 16.0
 
             # Convert AA rating to a decimal
             alpha_acid = h.alpha_acid / 100

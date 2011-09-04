@@ -3,7 +3,7 @@ from elixir import (
     DateTime, using_options, OneToMany, ManyToOne, OneToOne, entities
 )
 from draughtcraft.lib.calculations  import Calculations
-from draughtcraft.lib.units         import UnitConvert
+from draughtcraft.lib.units         import UnitConvert, InvalidUnitException
 from draughtcraft.model.deepcopy    import DeepCopyMixin, ShallowCopyMixin
 from datetime                       import datetime
 from copy                           import deepcopy
@@ -277,6 +277,7 @@ class RecipeAddition(Entity, DeepCopyMixin):
     #
     unit                = Field(Enum(*[
                                 'POUND',
+                                'OUNCE',
                                 'TEASPOON',
                                 'TABLESPOON',
                                 'GALLON'
@@ -301,6 +302,14 @@ class RecipeAddition(Entity, DeepCopyMixin):
             match = getattr(self, ingredient, None)
             if match is not None:
                 return match
+
+    @property
+    def pounds(self):
+        if self.unit == 'POUND':
+            return self.amount
+        if self.unit == 'OUNCE':
+            return self.amount / 16.0
+        raise InvalidUnitException('Could not convert `%s` to pounds.' % self.unit)
 
     @property
     def minutes(self):
