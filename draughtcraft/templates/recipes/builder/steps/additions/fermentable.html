@@ -35,13 +35,15 @@ ${h.hidden(
           ('FIRST WORT', 'First Wort'),
           ('BOIL', 'Boil'),
           ('FLAME OUT', 'Flame Out')
-        ]
+        ],
+        id = 'addition-%s-use' % addition.id
       )}
       % if addition.use == 'BOIL':
         ${h.select(
           '%s_additions-%d.duration' % (addition.step, i),
           addition.minutes,
-          [(value, '%d min' % value) for value in range(addition.recipe.boil_minutes, 0, -5)]
+          [(value, '%d min' % value) for value in range(addition.recipe.boil_minutes, 0, -5)],
+          id = 'addition-%s-duration' % addition.id
         )}
       % endif
     </td>
@@ -50,7 +52,7 @@ ${h.hidden(
     ${h.text(
       '%s_additions-%d.amount' % (addition.step, i),
       addition.printable_amount,
-      id = 'additions-%d' % addition.id
+      id = 'additions-%d-amount' % addition.id
     )}
   </td>
   <td>

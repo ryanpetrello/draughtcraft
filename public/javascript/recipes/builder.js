@@ -117,7 +117,7 @@ $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
     //
     if($.draughtcraft.recipes.builder.lastFocus){
         var n = $.draughtcraft.recipes.builder.lastFocus;
-        $('input#'+n+', select#'+n+'').focus();
+        $('input#'+n+', select#'+n+', textarea#'+n).focus();
     }
 
     //
@@ -169,7 +169,7 @@ $.draughtcraft.recipes.builder.lastFocus;
  */
 $.draughtcraft.recipes.builder.initFocusListeners = function(){
     // When a field gains focus, store its id.
-    var fields = $('.step tr.addition input, .step tr.addition select'); 
+    var fields = $('input, select, textarea'); 
     fields.focus(function(){
         $.draughtcraft.recipes.builder.lastFocus = $(this).attr('id');
     });

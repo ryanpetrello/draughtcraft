@@ -33,7 +33,8 @@ ${h.hidden(
           ('FIRST WORT', 'First Wort'),
           ('BOIL', 'Boil'),
           ('FLAME OUT', 'Flame Out')
-        ]
+        ],
+        id = 'addition-%s-use' % addition.id
       )}
       % if addition.use == 'BOIL':
         % if not editable:
@@ -42,7 +43,8 @@ ${h.hidden(
         ${h.select(
           '%s_additions-%d.duration' % (addition.step, i),
           addition.minutes,
-          [(value, '%d min' % value) for value in range(addition.recipe.boil_minutes, 0, -5)]
+          [(value, '%d min' % value) for value in range(addition.recipe.boil_minutes, 0, -5)],
+          id = 'addition-%s-duration' % addition.id
         )}
         % if not editable:
           <p class="instruction">
@@ -57,7 +59,8 @@ ${h.hidden(
       ${h.select(
         '%s_additions-%d.use' % (addition.step, i),
         addition.use,
-        [('PRIMARY', 'Primary'), ('SECONDARY', 'Secondary')]
+        [('PRIMARY', 'Primary'), ('SECONDARY', 'Secondary')],
+        id = 'addition-%s-use' % addition.id
       )}
     </td>
   % endif
@@ -65,7 +68,7 @@ ${h.hidden(
     ${h.text(
       '%s_additions-%d.amount' % (addition.step, i),
       addition.printable_amount,
-      id = 'additions-%d' % addition.id
+      id = 'additions-%d-amount' % addition.id
     )}
   </td>
   <td>
@@ -75,14 +78,16 @@ ${h.hidden(
     ${h.select(
       '%s_additions-%d.form' % (addition.step, i), 
       addition.form.upper(), 
-      sorted([(f.upper(), f.title()) for f in h.model.HopAddition.FORMS])
+      sorted([(f.upper(), f.title()) for f in h.model.HopAddition.FORMS]),
+      id = 'addition-%s-form' % addition.id
     )}
   </td>
   <td class="unit">
     ${h.text(
       '%s_additions-%d.alpha_acid' % (addition.step, i),
       addition.alpha_acid,
-      class_='unit'
+      class_='unit',
+      id = 'addition-%s-alpha-acid' % addition.id
     )}
   </td>
   <td class="close">

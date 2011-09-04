@@ -51,7 +51,7 @@
       % if editable:
         <td rowspan="5" class="notes">
           ${h.form('async/settings/notes')}
-            <textarea name="notes">${recipe.notes or ''}</textarea>
+            <textarea id="notes" name="notes">${recipe.notes or ''}</textarea>
           ${h.end_form()}
         </td>
       % endif

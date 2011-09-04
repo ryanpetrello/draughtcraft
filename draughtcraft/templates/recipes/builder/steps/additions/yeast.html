@@ -29,7 +29,8 @@ ${h.hidden(
     ${h.select(
       '%s_additions-%d.use' % (addition.step, i),
       addition.use,
-      [('PRIMARY', 'Primary'), ('SECONDARY', 'Secondary'), ('TERTIARY', 'Tertiary')]
+      [('PRIMARY', 'Primary'), ('SECONDARY', 'Secondary'), ('TERTIARY', 'Tertiary')],
+      id = 'addition-%s-use' % addition.id
     )}
   </td>
   <td />
