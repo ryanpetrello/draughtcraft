@@ -141,14 +141,6 @@ $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
     // Register fancybox popups for ingredient links
     $("a[href^='/ingredients/']").fancybox();
 
-    // Force the sidebar to scroll down with the page
-    $('.inventory:visible').scrollToFixed({ marginTop: 10 });
-
-    // Safari bug: force the browser window to repaint by quickly scrolling
-    var pos = $('body').scrollTop();
-    window.scrollTo(0, pos+1);
-    window.scrollTo(0, pos);
-
     // Hide unnecessary verbiage helpers
     $('h3 span.step-help').remove();
 };
