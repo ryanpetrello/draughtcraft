@@ -81,7 +81,7 @@
       <th>Name</th>
       <th>Author</th>
       <th>Style</th>
-      <th>Last Changed</th>
+      <th class="lastchanged">Last Changed</th>
       <th class="views"># Views</th>
     </tr>
     % for r in recipes:
@@ -98,7 +98,7 @@
           </a>
         </td>
         <td>${r.style.name}</td>
-        <td>${h.format_age(r.last_updated)}</td>
+        <td class="lastchanged">${h.format_age(r.last_updated)}</td>
         <td class="views">${len(r.views)}</td>
       </tr>
     % endfor
