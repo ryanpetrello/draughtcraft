@@ -97,17 +97,15 @@ nav.user, #topnav, #content  {
 
       ul.secondary  {
         top: 44px;
-        left: -15px;
+        left: -18px;
         position: absolute;
         list-style-type: none;
         background: #EEE;
-        width: 150px;
-        max-height: 200px;
-        overflow-x: scroll;
+        width: 250px;
+        max-height: 250px;
+        overflow-y: auto;
         opacity: 0;
-        -transition: opacity .75s;
-        -webkit-transition: opacity .75s;
-        -moz-transition: opacity .75s;
+        height: 0;
         li  {
           float: none;
           color: #000;
@@ -115,12 +113,18 @@ nav.user, #topnav, #content  {
           border: 0;
           border-top: 1px solid #CCC;
           border-bottom: 1px solid #FFF;
+          border-right: 1px solid #E8E8E8;
+          border-left: 1px solid #E8E8E8;
+          &:hover  {
+            background: #DDD; 
+          }
         }
         &.visible  {
           -transition: opacity .75s;
           -webkit-transition: opacity .75s;
           -moz-transition: opacity .75s;
           opacity: 1;
+          height: auto;
         }
         &.srm  {
           width: 57px;

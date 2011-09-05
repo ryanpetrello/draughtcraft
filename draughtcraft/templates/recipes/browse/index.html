@@ -15,6 +15,7 @@
 </%def>
 
 <%def name="javascript()">
+    <script type="text/javascript" src="/javascript/recipes/browse.js"></script>
 </%def>
 
 <br />
@@ -24,14 +25,14 @@
     <li class="first">
       <a href="#">Any Style<span class="down"></span></a>
       <ul class="secondary">
-        <li>American IPA</li>
-        <li>Brown Ale</li>
-        <li>Robust Porter</li>
+        % for style in styles:
+          <li>${style.name}</li>
+        % endfor
       </ul>
     </li>
     <li class="enabled"><a href="#">All Grain</a></li>
     <li class="enabled"><a href="#">Mini-Mash</a></li>
-    <li class="disabled"><a href="#">Extract</a></li>
+    <li class="enabled"><a href="#">Extract</a></li>
     <li class="srm">
       <span class="srm srm-12">
         <img src="/images/glass-search.png" height="40" class="glass" />

@@ -116,6 +116,7 @@ class RecipesController(object):
     @expose('recipes/browse/index.html')
     def index(self):
         return dict(
+            styles  = model.Style.query.order_by(model.Style.name).all(),
             recipes = model.Recipe.query.filter(model.Recipe.state == 'PUBLISHED').all()
         )
 
