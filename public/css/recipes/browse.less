@@ -1,0 +1,96 @@
+.border-radius (@radius) {
+  border-radius: @radius;
+  -moz-border-radius: @radius;
+  -webkit-border-radius: @radius;
+  -webkit-background-clip: padding;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+}
+
+nav.user, #topnav, #content  {
+  width: 800px;
+}
+
+#content  {
+
+  #content-inner  {
+
+    #searchbar  {
+
+      ul  {
+        .border-radius(10px);
+        background: #337383;
+        background-image: -webkit-gradient(linear,50% 100%,50% 0,color-stop(0%,#084858),color-stop(50%,#266676),color-stop(52%,#337383),color-stop(100%,#4F8F9F));
+        background-image: -moz-linear-gradient(bottom,#084858 0,#266676 50%,#337383 52%,#4F8F9F 100%);
+        background-image: linear-gradient(bottom,#084858 0,#266676 50%,#337383 52%,#4F8F9F 100%);
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        color: #FFF;
+        li  {
+          padding: 14px;
+          float: left;
+          border-right: 1px solid rgba(0,0,0,.20);
+          border-left: 1px solid rgba(255,255,255,.20);
+          cursor: pointer;
+          a  {
+            color: #FFF;
+            text-decoration: none;
+          }
+          &.enabled {
+            background: #5090A0;
+            background-image: -webkit-gradient(linear,50% 100%,50% 0,color-stop(0%,#286878),color-stop(50%,#489),color-stop(52%,#5393A3),color-stop(100%,#6FAFBF));
+            background-image: -moz-linear-gradient(bottom,#286878 0,#489 50%,#5393A3 52%,#6FAFBF 100%);
+            background-image: linear-gradient(bottom,#286878 0,#489 50%,#5393A3 52%,#6FAFBF 100%);
+          }
+          span.down  {
+            padding-left: 5px;
+            float: right;
+            background: url(/images/downgrey.png) right 1px no-repeat;
+            width: 10px;
+            height: 11px;
+          }
+          &.srm  {
+            padding: 5px 8px;
+            span.down  {
+              background-position: 4px 11px;
+              height: 20px;
+            }
+          }
+          &:hover  {
+            span.down  {
+              background-image: url(/images/down.png);
+            }
+          }
+          span.srm  {
+            float: left;
+          }
+          img.glass  {
+            width: 25px !important;
+            height: 34px !important;
+          }
+        }
+        li.disabled  {
+          background: transparent;
+          background-image: 0;
+          a  {
+            opacity: .33;
+          }
+        }
+      }
+    }
+
+    table.results  {
+      width: 100%;
+      th, th  {
+        padding: 4px 8px;
+      }
+      th  {
+        text-align: left;
+        text-decoration: underline;
+      }
+    }
+
+  }
+
+}

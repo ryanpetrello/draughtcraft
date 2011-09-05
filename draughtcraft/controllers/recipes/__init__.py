@@ -113,4 +113,8 @@ class RecipesController(object):
     def _lookup(self, recipeID, *remainder):
         return RecipeController(recipeID), remainder
 
+    @expose('recipes/browse/index.html')
+    def index(self):
+        return dict()
+
     create = RecipeCreationController()

@@ -1,0 +1,37 @@
+<%inherit file="../../layout.html" />
+
+<%def name="style()">
+    <link rel="stylesheet/less" type="text/css" media="screen" href="/css/recipes/browse.less" />
+</%def>
+
+<%def name="javascript()">
+</%def>
+
+<br />
+
+<div id="searchbar">
+  <ul class="clearfix">
+    <li class="first">Any Style<span class="down"></span></li>
+    <li class="enabled"><a href="#">All Grain</a></li>
+    <li class="enabled"><a href="#">Mini-Mash</a></li>
+    <li class="disabled"><a href="#">Extract</a></li>
+    <li class="srm">
+      <span class="srm srm-12">
+        <img src="/images/glass-search.png" height="40" class="glass" />
+      </span>
+      <span class="down"></span>
+    </li>
+  </ul>
+</div>
+
+<div>
+  <table class="results">
+    <tr>
+      <th>Type</th>
+      <th>Name</th>
+      <th>Author</th>
+      <th>Style</th>
+      <th># Views</th>
+    </tr>
+  </table>
+</div>

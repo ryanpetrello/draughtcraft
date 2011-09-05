@@ -23,7 +23,7 @@ Bugs
 
 Settings
 --------
-* Ability to provide customized SRM and L for fermentables (at a global level)
+* Ability to provide customized PPG and L for fermentables (at a global level)
 * Forgot Password
 
 Additional
