@@ -68,24 +68,13 @@
           </li>
         % endif
         <li>
-          <a href="/recipes">Browse Recipes</a>
+          <a href="/recipes">Find Recipes</a>
         </li>
         % if h.request.context['user'] is None:
           <li>
             <a href="/signup" class='signup'>Sign Up</a>
           </li>
         % endif
-        <li>
-          <input
-            name="search"
-            type="search"
-            placeholder="Search People, Recipes..."
-            value="${static('search', '')}"
-            autosave="com.draughtcraft.search"
-            incremental="true" 
-            results="5"
-          />
-        </li>
       </ul>
     </nav>
 

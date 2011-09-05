@@ -115,6 +115,8 @@ class RecipesController(object):
 
     @expose('recipes/browse/index.html')
     def index(self):
-        return dict()
+        return dict(
+            recipes = model.Recipe.query.filter(model.Recipe.state == 'PUBLISHED').all()
+        )
 
     create = RecipeCreationController()

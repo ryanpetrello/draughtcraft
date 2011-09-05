@@ -15,6 +15,7 @@ Bugs
 * Browser testing and support
 * Missing Ingredients:
     - Additional popular malt extracts (namely, Muntons)
+* Refactor `printable_types` hash
 
 0.1
 ====

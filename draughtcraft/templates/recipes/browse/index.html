@@ -1,3 +1,13 @@
+<%
+  def printable_type(type):
+    return ({
+      'MASH'          : 'All-Grain',
+      'MINIMASH'      : 'Extract w/ Mini-Mash',
+      'EXTRACTSTEEP'  : 'Extract w/ Steeped Grains',
+      'EXTRACT'       : 'Extract'
+    })[type] 
+%>
+
 <%inherit file="../../layout.html" />
 
 <%def name="style()">
@@ -21,6 +31,17 @@
       </span>
       <span class="down"></span>
     </li>
+    <li class="search">
+      <input
+        name="search"
+        type="search"
+        placeholder="Search Recipes..."
+        value="${static('search', '')}"
+        autosave="com.draughtcraft.search"
+        incremental="true" 
+        results="5"
+      />
+    </li>
   </ul>
 </div>
 
@@ -31,7 +52,26 @@
       <th>Name</th>
       <th>Author</th>
       <th>Style</th>
-      <th># Views</th>
+      <th>Last Changed</th>
+      <th class="views"># Views</th>
     </tr>
+    % for r in recipes:
+      <tr>
+        <td>${printable_type(r.type)}</td>
+        <td>
+          <a href="${r.url()}">
+            ${r.name}
+          </a>
+        </td>
+        <td>
+          <a href="/profile/${r.author.username}">
+            ${r.author.full_name.strip() or r.author.username}
+          </a>
+        </td>
+        <td>${r.style.name}</td>
+        <td>${h.format_age(r.last_updated)}</td>
+        <td class="views">${len(r.views)}</td>
+      </tr>
+    % endfor
   </table>
 </div>
