@@ -5,7 +5,7 @@ $.draughtcraft.recipes.browse.restoreLastFormValues = function(){
      */
     var values = $.cookie('searchbar');
     if(values){
-        $('#searchbar > form').deserialize(values);
+        $('#searchbar > form').deserialize(decodeURIComponent(values).replace(/\+/g, ' '));
 
         // Store the "last state" for on/off toggle buttons
         $('#searchbar > form li.btn input').each(function(){
@@ -115,6 +115,9 @@ $.draughtcraft.recipes.browse.initMenuListeners = function(){
         );
         $.draughtcraft.recipes.browse.prepareFormValues();
     });
+
+    // When the search bar changes, save its value
+    $('#searchbar .search input').change($.draughtcraft.recipes.browse.prepareFormValues);
 
 };
 
