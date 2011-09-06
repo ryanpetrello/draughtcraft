@@ -4,11 +4,11 @@
 Search
 --------------
 * Ability to look for other recipes by style
-    * Filter by Style
+    * Filter by Style (TEST)
     * Filter by SRM Range
-    * Filter by Batch Size
-    * Filter by Type (Mash, Extract, etc...)
-    * "Most Viewed" Recipe
+    * Filter by Type (Mash, Extract, etc...) (TEST)
+    * Sort Columns
+    * Paging Support
 
 Bugs
 --------------
@@ -21,6 +21,7 @@ Bugs
 ====
 
 * Mobile Browser/Viewer
+* Simple Recipe Search API
 
 Settings
 --------
