@@ -1,3 +1,10 @@
+$.draughtcraft.recipes.browse.__injectRecipes__ = function(html){
+    /*
+     * Inject search results into the page.
+     */
+    $('#results').html(html);
+};
+
 $.draughtcraft.recipes.browse.restoreLastFormValues = function(){
     /*
      * Load a cookie representing the "last form values", and reconfigure
@@ -34,6 +41,7 @@ $.draughtcraft.recipes.browse.saveFormValues = function(){
     */
     var values = $('#searchbar > form').serialize();
     $.cookie('searchbar', values, {expires: 7});
+    $('#searchbar > form').submit();
 };
 
 $.draughtcraft.recipes.browse.prepareFormValues = function(){
@@ -122,6 +130,12 @@ $.draughtcraft.recipes.browse.initMenuListeners = function(){
 };
 
 $(document).ready(function(){
+    $('#searchbar > form').ajaxForm({
+        'success' : function(responseText){
+            $.draughtcraft.recipes.browse.__injectRecipes__(responseText);
+        }
+    });
+
     $.draughtcraft.recipes.browse.restoreLastFormValues();
     $.draughtcraft.recipes.browse.initMenuListeners();
     $.draughtcraft.recipes.browse.prepareFormValues();

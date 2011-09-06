@@ -1,13 +1,3 @@
-<%
-  def printable_type(type):
-    return ({
-      'MASH'          : 'All-Grain',
-      'MINIMASH'      : 'Extract w/ Mini-Mash',
-      'EXTRACTSTEEP'  : 'Extract w/ Steeped Grains',
-      'EXTRACT'       : 'Extract'
-    })[type] 
-%>
-
 <%inherit file="../../layout.html" />
 
 <%def name="style()">
@@ -15,11 +5,12 @@
 </%def>
 
 <%def name="javascript()">
+    <script type="text/javascript" src="/javascript/jquery.form.min.js"></script>
     <script type="text/javascript" src="/javascript/recipes/browse.js"></script>
 </%def>
 
 <div id="searchbar">
-  <form method="POST">
+  <form method="GET" action="recipes">
     <ul class="primary clearfix">
       <li class="first">
         <span class="placeholder">
@@ -113,33 +104,4 @@
   </form>
 </div>
 
-<div>
-  <table class="results">
-    <tr>
-      <th>Type</th>
-      <th>Name</th>
-      <th>Author</th>
-      <th>Style</th>
-      <th class="lastchanged">Last Changed</th>
-      <th class="views"># Views</th>
-    </tr>
-    % for r in recipes:
-      <tr>
-        <td>${printable_type(r.type)}</td>
-        <td>
-          <a href="${r.url()}">
-            ${r.name}
-          </a>
-        </td>
-        <td>
-          <a href="/profile/${r.author.username}">
-            ${r.author.full_name.strip() or r.author.username}
-          </a>
-        </td>
-        <td>${r.style.name}</td>
-        <td class="lastchanged">${h.format_age(r.last_updated)}</td>
-        <td class="views">${len(r.views)}</td>
-      </tr>
-    % endfor
-  </table>
-</div>
+<div id="results"></div>
