@@ -17,6 +17,11 @@ nav.user, #topnav, #content  {
 
     #searchbar  {
 
+      input  {
+        position: absolute;
+        top: -50px;
+      }
+
       ul.primary  {
         .border-radius(10px);
         background: #337383;
@@ -50,6 +55,9 @@ nav.user, #topnav, #content  {
             background: url(/images/downgrey.png) right 1px no-repeat;
             width: 10px;
             height: 11px;
+          }
+          span.placeholder  {
+            float: left;
           }
           &.first  {
             border-left: 0;
@@ -117,6 +125,9 @@ nav.user, #topnav, #content  {
           border-left: 1px solid #E8E8E8;
           &:hover  {
             background: #DDD; 
+          }
+          a  {
+            color: #000 !important;
           }
         }
         &.visible  {

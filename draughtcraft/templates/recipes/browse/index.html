@@ -21,58 +21,91 @@
 <br />
 
 <div id="searchbar">
-  <ul class="primary clearfix">
-    <li class="first">
-      <a href="#">Any Style<span class="down"></span></a>
-      <ul class="secondary">
-        % for style in styles:
-          <li>${style.name}</li>
-        % endfor
-      </ul>
-    </li>
-    <li class="btn enabled"><a href="#">All Grain</a></li>
-    <li class="btn enabled"><a href="#">Mini-Mash</a></li>
-    <li class="btn enabled"><a href="#">Extract</a></li>
-    <li class="srm">
-      <span class="srm srm-12">
-        <img src="/images/glass-search.png" height="40" class="glass" />
-      </span>
-      <span class="down"></span>
-      <ul class="secondary srm">
-        <li>
-          <span class="srm srm-7">
-            <img src="/images/glass-search.png" height="40" class="glass" title="Light" />
-          </span>
-        </li>
-        <li>
+  <form method="POST">
+    <ul class="primary clearfix">
+      <li class="first">
+        <span class="placeholder">
+          <a href="#">Any Style</a>
+        </span>
+        <span class="down"></span>
+        <ul class="secondary">
+          <li class="selected">
+            <a rel="">Any Style</a>
+          </li>
+          % for style in styles:
+          <li>
+            <a rel="${style.id}">${style.name}</a>
+          </li>
+          % endfor
+        </ul>
+        <input type="text" name="style" />
+      </li>
+      <li class="btn enabled">
+        <a href="#">All Grain</a>
+        <input type="text" name="mash" />
+      </li>
+      <li class="btn enabled">
+        <a href="#">Mini-Mash</a>
+        <input type="text" name="minimash" />
+      </li>
+      <li class="btn enabled">
+        <a href="#">Extract</a>
+        <input type="text" name="extract" />
+      </li>
+      <li class="srm">
+        <span class="placeholder">
           <span class="srm srm-10">
-            <img src="/images/glass-search.png" height="40" class="glass" title="Amber" />
+            <a rel="amber">
+              <img src="/images/glass-search.png" height="40" class="glass" title="Amber" />
+            </a>
           </span>
-        </li>
-        <li>
-          <span class="srm srm-18">
-            <img src="/images/glass-search.png" height="40" class="glass" title="Brown" />
-          </span>
-        </li>
-        <li>
-          <span class="srm srm-25">
-            <img src="/images/glass-search.png" height="40" class="glass" title="Dark" />
-          </span>
-        </li>
-      </ul>
-    </li>
-    <li class="search">
-      <input
-        name="search"
-        type="search"
-        placeholder="Search Recipes..."
-        value="${static('search', '')}"
-        autosave="com.draughtcraft.search"
-        incremental="true" 
-        results="5"
-      />
-    </li>
-  </ul>
+        </span>
+        <span class="down"></span>
+        <ul class="secondary srm">
+          <li>
+            <span class="srm srm-7">
+              <a rel="light">
+                <img src="/images/glass-search.png" height="40" class="glass" title="Light" />
+              </a>
+            </span>
+          </li>
+          <li class="selected">
+            <span class="srm srm-10">
+              <a rel="amber">
+                <img src="/images/glass-search.png" height="40" class="glass" title="Amber" />
+              </a>
+            </span>
+          </li>
+          <li>
+            <span class="srm srm-18">
+              <a rel="brown">
+                <img src="/images/glass-search.png" height="40" class="glass" title="Brown" />
+              </a>
+            </span>
+          </li>
+          <li>
+            <span class="srm srm-25">
+              <a rel="dark">
+                <img src="/images/glass-search.png" height="40" class="glass" title="Dark" />
+              </a>
+            </span>
+          </li>
+        </ul>
+        <input type="text" name="color" />
+      </li>
+      <li class="search">
+        <input
+          name="search"
+          type="search"
+          placeholder="Search Recipes..."
+          value="${static('search', '')}"
+          autosave="com.draughtcraft.search"
+          incremental="true" 
+          results="5"
+        />
+      </li>
+    </ul>
+  </form>
 </div>
 
 <div>

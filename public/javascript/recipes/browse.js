@@ -1,4 +1,24 @@
-$.draughtcraft.recipes.browse.initMenuBars = function(){
+$.draughtcraft.recipes.browse.prepareFormValues = function(){
+    /*
+     * Used to duplicate the current state of the search bar settings
+     * to the underlying form fields.
+     */
+
+    // For each "toggle" button...
+    $('#searchbar ul.primary li.btn').each(function(){
+        // Store true/false in the hidden input field
+        $(this).children('input').val($(this).hasClass('enabled'));
+    });
+
+    // For each "dropdown"
+    $('#searchbar ul.secondary li.selected a').each(function(){
+        // Store the value in the hidden input field
+        $(this).closest('ul.primary > li').children('input').val($(this).attr('rel'));
+    });
+
+};
+
+$.draughtcraft.recipes.browse.initMenuListeners = function(){
 
     /*
      * If the user clicks on an on/off button, toggle it.
@@ -7,6 +27,8 @@ $.draughtcraft.recipes.browse.initMenuBars = function(){
         var enabled = $(this).hasClass('enabled');
         $(this).removeClass(enabled ? 'enabled' : 'disabled');
         $(this).addClass(enabled ? 'disabled' : 'enabled');
+
+        $.draughtcraft.recipes.browse.prepareFormValues();
     });
 
     /*
@@ -39,10 +61,21 @@ $.draughtcraft.recipes.browse.initMenuBars = function(){
         }
     });
 
+    // When a secondary menu option is chosen, mark it as `selected`.
+    $('#searchbar ul.secondary li').click(function(){
+        $(this).siblings('li').removeClass('selected');
+        $(this).addClass('selected');
+
+        $(this).closest('ul.primary > li').children('span.placeholder').html(
+            $(this).html()
+        );
+        $.draughtcraft.recipes.browse.prepareFormValues();
+    });
+
 };
 
 $(document).ready(function(){
-    $.draughtcraft.recipes.browse.initMenuBars();
+    $.draughtcraft.recipes.browse.initMenuListeners();
 
     $('ul.primary li ul.secondary img.glass').each(function(){
         $(this).closest('li').tipTip({
@@ -53,4 +86,7 @@ $(document).ready(function(){
             'cssClass'          : 'srmTip'
         });
     });
+
+    $.draughtcraft.recipes.browse.prepareFormValues();
+
 });
