@@ -1,9 +1,23 @@
 $.draughtcraft.recipes.browse.initMenuBars = function(){
+
+    /*
+     * If the user clicks on an on/off button, toggle it.
+     */
+    $('#searchbar ul.primary li.btn').click(function(){
+        var enabled = $(this).hasClass('enabled');
+        $(this).removeClass(enabled ? 'enabled' : 'disabled');
+        $(this).addClass(enabled ? 'disabled' : 'enabled');
+    });
+
     /*
      * Initializes the "search bar" dropdowns for style, srm, etc...
      */
-    $('#searchbar ul.primary li').click(function(){
-        $(this).children('ul.secondary').addClass('visible'); 
+    $('#searchbar ul.primary > li').click(function(){
+        var li = this;
+        $('ul.secondary').filter(function(){
+            return $(this).closest('li')[0] != li;
+        }).removeClass('visible'); 
+        $(li).children('ul.secondary').toggleClass('visible'); 
     });
 
     /*
@@ -29,4 +43,14 @@ $.draughtcraft.recipes.browse.initMenuBars = function(){
 
 $(document).ready(function(){
     $.draughtcraft.recipes.browse.initMenuBars();
+
+    $('ul.primary li ul.secondary img.glass').each(function(){
+        $(this).closest('li').tipTip({
+            'content'           : $(this).attr('title'),
+            'offset'            : 0,
+            'defaultPosition'   : 'right', 
+            'delay'             : 25,
+            'cssClass'          : 'srmTip'
+        });
+    });
 });
