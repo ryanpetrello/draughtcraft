@@ -11,6 +11,13 @@ Search
     * Paging Support
 * Cached Statistics (cached on publish)
 
+New Recipe Verbiage
+--------------
+* "Which Should I Choose?"
+* Sidebar content when already authenticated
+
+* Browser Lockout
+
 Bugs
 --------------
 * Browser testing and support
