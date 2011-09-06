@@ -1,3 +1,41 @@
+$.draughtcraft.recipes.browse.restoreLastFormValues = function(){
+    /*
+     * Load a cookie representing the "last form values", and reconfigure
+     * the form to match.
+     */
+    var values = $.cookie('searchbar');
+    if(values){
+        $('#searchbar > form').deserialize(values);
+
+        // Store the "last state" for on/off toggle buttons
+        $('#searchbar > form li.btn input').each(function(){
+            var li = $(this).closest('li');
+            var enabled = $(this).val() == 'true';
+            li.addClass(enabled ? 'enabled' : 'disabled');
+            li.removeClass(enabled ? 'disabled' : 'enabled');
+        });
+
+        // Store the "last chosen value" for dropdowns
+        $('#searchbar > form ul.primary > li input').each(function(){
+            var value = $(this).val();
+            var li = $(this).closest('li');
+            var selected = li.find('ul.secondary li a[rel="'+value+'"]').closest('li');
+            selected.addClass('selected');
+            li.closest('ul.primary > li').children('span.placeholder').html(selected.html());
+        });
+
+    }
+};
+
+$.draughtcraft.recipes.browse.saveFormValues = function(){
+    /*
+     * Store the most recent form values in a cookie so that they're
+     * automatically used on page load.
+    */
+    var values = $('#searchbar > form').serialize();
+    $.cookie('searchbar', values, {expires: 7});
+};
+
 $.draughtcraft.recipes.browse.prepareFormValues = function(){
     /*
      * Used to duplicate the current state of the search bar settings
@@ -16,9 +54,15 @@ $.draughtcraft.recipes.browse.prepareFormValues = function(){
         $(this).closest('ul.primary > li').children('input').val($(this).attr('rel'));
     });
 
+    $.draughtcraft.recipes.browse.saveFormValues();
 };
 
 $.draughtcraft.recipes.browse.initMenuListeners = function(){
+
+    /*
+     * If any <a href="#"> is clicked on, silence the event.
+     */
+    $('#searchbar ul li a').click(function(e){ e.preventDefault(); });
 
     /*
      * If the user clicks on an on/off button, toggle it.
@@ -75,7 +119,9 @@ $.draughtcraft.recipes.browse.initMenuListeners = function(){
 };
 
 $(document).ready(function(){
+    $.draughtcraft.recipes.browse.restoreLastFormValues();
     $.draughtcraft.recipes.browse.initMenuListeners();
+    $.draughtcraft.recipes.browse.prepareFormValues();
 
     $('ul.primary li ul.secondary img.glass').each(function(){
         $(this).closest('li').tipTip({
@@ -86,7 +132,4 @@ $(document).ready(function(){
             'cssClass'          : 'srmTip'
         });
     });
-
-    $.draughtcraft.recipes.browse.prepareFormValues();
-
 });

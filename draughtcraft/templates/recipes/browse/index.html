@@ -29,7 +29,7 @@
         </span>
         <span class="down"></span>
         <ul class="secondary">
-          <li class="selected">
+          <li>
             <a rel="">Any Style</a>
           </li>
           % for style in styles:
@@ -38,30 +38,37 @@
           </li>
           % endfor
         </ul>
-        <input type="text" name="style" />
+        <input type="hidden" name="style" />
       </li>
       <li class="btn enabled">
         <a href="#">All Grain</a>
-        <input type="text" name="mash" />
+        <input type="hidden" name="mash" />
       </li>
       <li class="btn enabled">
         <a href="#">Mini-Mash</a>
-        <input type="text" name="minimash" />
+        <input type="hidden" name="minimash" />
       </li>
       <li class="btn enabled">
         <a href="#">Extract</a>
-        <input type="text" name="extract" />
+        <input type="hidden" name="extract" />
       </li>
       <li class="srm">
         <span class="placeholder">
-          <span class="srm srm-10">
-            <a rel="amber">
-              <img src="/images/glass-search.png" height="40" class="glass" title="Amber" />
+          <span class="srm">
+            <a rel="">
+              <img src="/images/glass-search.png" height="40" class="glass" title="Any Color" />
             </a>
           </span>
         </span>
         <span class="down"></span>
         <ul class="secondary srm">
+          <li>
+            <span class="srm">
+              <a rel="">
+                <img src="/images/glass-search.png" height="40" class="glass" title="Any Color" />
+              </a>
+            </span>
+          </li>
           <li>
             <span class="srm srm-7">
               <a rel="light">
@@ -69,7 +76,7 @@
               </a>
             </span>
           </li>
-          <li class="selected">
+          <li>
             <span class="srm srm-10">
               <a rel="amber">
                 <img src="/images/glass-search.png" height="40" class="glass" title="Amber" />
@@ -91,7 +98,7 @@
             </span>
           </li>
         </ul>
-        <input type="text" name="color" />
+        <input type="hidden" name="color" />
       </li>
       <li class="search">
         <input
