@@ -9,6 +9,7 @@ Search
     * Filter by Type (Mash, Extract, etc...) (TEST)
     * Sort Columns
     * Paging Support
+* Cached Statistics (cached on publish)
 
 Bugs
 --------------

@@ -26,8 +26,13 @@
             ${r.name}
           </a>
         </td>
-        <td>
+        <td class="author">
           <a href="/profile/${r.author.username}">
+            <img 
+              src="${r.author.gravatar}&s=16" 
+              class="gravatar"
+              title="${r.author.username}"
+            />
             ${r.author.full_name.strip() or r.author.username}
           </a>
         </td>
