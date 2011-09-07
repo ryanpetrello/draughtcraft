@@ -138,6 +138,7 @@ class RecipesController(object):
         # map of columns
         column_map = dict(
             type            = (model.Recipe.type,),
+            srm             = (model.Recipe._srm,),
             name            = (model.Recipe.name,),
             author          = (model.User.last_name, model.User.first_name, model.User.username),
             style           = (model.Style.name,),
@@ -167,6 +168,20 @@ class RecipesController(object):
             model.Recipe.type == 'MINIMASH' if kw['minimash'] else None, 
             model.Recipe.type.in_(('EXTRACTSTEEP', 'EXTRACT')) if kw['extract'] else None, 
         ))
+
+        # If applicable, filter by color
+        if kw['color']:
+            start, end = {
+                'light' : (0, 8),
+                'amber' : (8, 18),
+                'brown' : (16, 25),
+                'dark'  : (25, 5000)
+            }.get(kw['color'])
+
+            where.append(and_(
+                model.Recipe._srm >= start,
+                model.Recipe._srm <= end,
+            ))
 
         # Join the `recipe`, `recipeview`, `user`, and `style` tables
         from_obj = model.Recipe.table.outerjoin(

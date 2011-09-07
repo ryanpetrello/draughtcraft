@@ -33,6 +33,7 @@
 % if recipes:
   <table class="results">
     <tr>
+      ${heading('srm', 'Color')}
       ${heading('type', 'Type')}
       ${heading('name', 'Name')}
       ${heading('author', 'Author')}
@@ -42,6 +43,9 @@
     </tr>
     % for i, r in enumerate(recipes):
       <tr class="${'' if i % 2 == 0 else 'odd'}">
+        <td class="srm srm-${int(r.srm)}">
+          <span class="block"></a>
+        </td>
         <td>${printable_type(r.type)}</td>
         <td>
           <a href="${r.url()}">
