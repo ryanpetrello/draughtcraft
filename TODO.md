@@ -4,11 +4,7 @@
 Search
 --------------
 * Ability to look for other recipes by style
-    * Filter by Style (TEST)
     * Filter by SRM Range
-    * Filter by Type (Mash, Extract, etc...) (TEST)
-    * Sort Columns
-    * Paging Support
 * Cached Statistics (cached on publish)
 
 New Recipe Verbiage
