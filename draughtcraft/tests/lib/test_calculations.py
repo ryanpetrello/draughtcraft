@@ -1,5 +1,6 @@
 from draughtcraft           import model
 from datetime               import timedelta
+from pytest                 import raises
 
 import unittest
 
@@ -77,3 +78,61 @@ class TestCalculations(unittest.TestCase):
         )
 
         assert recipe.calculations.ibu == recipe.calculations.tinseth
+
+
+class TestCachedCalcuations(unittest.TestCase):
+
+    def test_og_cache(self):
+        recipe = model.Recipe(
+            name        = 'Rocky Mountain River IPA', 
+            gallons     = 5,
+            _og         = 1.050
+        )
+        assert recipe.og == 1.050
+        with raises(AttributeError):
+            recipe.og = 1.080
+        assert recipe.og == 1.050
+
+    def test_fg_cache(self):
+        recipe = model.Recipe(
+            name        = 'Rocky Mountain River IPA', 
+            gallons     = 5,
+            _fg         = 1.050
+        )
+        assert recipe.fg == 1.050
+        with raises(AttributeError):
+            recipe.fg = 1.080
+        assert recipe.fg == 1.050
+
+    def test_abv_cache(self):
+        recipe = model.Recipe(
+            name        = 'Rocky Mountain River IPA', 
+            gallons     = 5,
+            _abv        = 8.0
+        )
+        assert recipe.abv == 8.0
+        with raises(AttributeError):
+            recipe.abv = 6.0
+        assert recipe.abv == 8.0
+
+    def test_srm_cache(self):
+        recipe = model.Recipe(
+            name        = 'Rocky Mountain River IPA', 
+            gallons     = 5,
+            _srm        = 10
+        )
+        assert recipe.srm == 10
+        with raises(AttributeError):
+            recipe.srm = 20
+        assert recipe.srm == 10
+
+    def test_ibu_cache(self):
+        recipe = model.Recipe(
+            name        = 'Rocky Mountain River IPA', 
+            gallons     = 5,
+            _ibu        = 30
+        )
+        assert recipe.ibu == 30
+        with raises(AttributeError):
+            recipe.ibu = 40
+        assert recipe.ibu == 30

@@ -39,6 +39,13 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
     creation_date       = Field(DateTime, default=datetime.utcnow)
     last_updated        = Field(DateTime, default=datetime.utcnow, index=True)
 
+    # Cached statistics
+    _og                 = Field(Float, colname='og')
+    _fg                 = Field(Float, colname='fg')
+    _abv                = Field(Float, colname='abv')
+    _srm                = Field(Integer, colname='srm')
+    _ibu                = Field(Integer, colname='ibu')
+
     mash_method         = Field(Enum(*MASH_METHODS), default='SINGLESTEP')
     mash_instructions   = Field(UnicodeText) 
 
@@ -63,7 +70,12 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         'copied_from',
         'views',
         'creation_date',
-        'state'
+        'state',
+        '_og',
+        '_fg',
+        '_abv',
+        '_srm',
+        '_ibu'
     )
 
     def __init__(self, **kwargs):
@@ -128,6 +140,13 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
 
         # Otherwise, just set the state to PUBLISHED
         self.state = 'PUBLISHED'
+
+        # Store cached values
+        self._og = self.calculations.og
+        self._fg = self.calculations.fg
+        self._abv = self.calculations.abv
+        self._srm = self.calculations.srm
+        self._ibu = self.calculations.ibu
 
     def merge(self):
         """
@@ -252,6 +271,26 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
 
     def touch(self):
         self.last_updated = datetime.utcnow()
+
+    @property
+    def og(self):
+        return self._og
+
+    @property
+    def fg(self):
+        return self._fg
+
+    @property
+    def abv(self):
+        return self._abv
+
+    @property
+    def srm(self):
+        return self._srm
+
+    @property
+    def ibu(self):
+        return self._ibu
 
 
 class RecipeAddition(Entity, DeepCopyMixin):

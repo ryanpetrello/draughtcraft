@@ -20,6 +20,7 @@ Bugs
 * Missing Ingredients:
     - Additional popular malt extracts (namely, Muntons)
 * Refactor `printable_types` hash
+* Fix sorting on the `Type` column
 
 0.1
 ====

@@ -1099,6 +1099,32 @@ class TestDrafts(TestModel):
         assert model.Recipe.query.first().id == primary_key
         assert model.Recipe.query.first().state == "PUBLISHED"
 
+    def test_statistic_caching(self):
+        """
+        When a recipe is published, certain statistics (like SRM) should be
+        stored on a cached column so the values can be queried.
+        """
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            state           = u'DRAFT'
+        )
+        model.commit()
+
+        # Make a new draft of the recipe
+        recipe = model.Recipe.query.first()
+        recipe.publish()
+        model.commit()
+
+        assert model.Recipe.query.first().og == 1.0
+        assert model.Recipe.query.first().fg == 1.0
+        assert model.Recipe.query.first().abv == 0
+        assert model.Recipe.query.first().srm == 0
+        assert model.Recipe.query.first().ibu == 0
+
 
 class TestRecipeViews(TestModel):
 
