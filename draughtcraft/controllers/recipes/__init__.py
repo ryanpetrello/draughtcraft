@@ -4,6 +4,7 @@ from draughtcraft                               import model
 from draughtcraft.lib.schemas.recipes.browse    import RecipeSearchSchema
 from create                                     import RecipeCreationController
 from builder                                    import RecipeBuilderController
+from math                                       import ceil
 
 
 class SlugController(object):
@@ -126,7 +127,11 @@ class RecipesController(object):
         template    = 'recipes/browse/list.html',
         schema      = RecipeSearchSchema()
     )
-    def recipes(self, **kw):
+    def recipes(self, page, **kw):
+
+        perpage = 10.0
+        offset = int(perpage * (page - 1))
+
         query = model.Recipe.query.filter(model.Recipe.state == 'PUBLISHED')
 
         # If applicable, filter by style
@@ -141,6 +146,12 @@ class RecipesController(object):
             model.Recipe.type.in_(('EXTRACTSTEEP', 'EXTRACT')) if kw['extract'] else None, 
         ))
 
-        return dict(recipes = query.all())
+        results = query.offset(offset).limit(perpage).all()
+
+        return dict(
+            pages           = int(ceil(query.count() / perpage)),
+            current_page    = page,
+            recipes         = results
+        )
 
     create = RecipeCreationController()

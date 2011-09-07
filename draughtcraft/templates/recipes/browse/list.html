@@ -18,8 +18,8 @@
       <th class="lastchanged">Last Changed</th>
       <th class="views"># Views</th>
     </tr>
-    % for r in recipes:
-      <tr>
+    % for i, r in enumerate(recipes):
+      <tr class="${'' if i % 2 == 0 else 'odd'}">
         <td>${printable_type(r.type)}</td>
         <td>
           <a href="${r.url()}">
@@ -42,6 +42,20 @@
       </tr>
     % endfor
   </table>
+
+  % if pages > 1:
+    <div class="pages">
+      Page: 
+      % for i in range(pages):
+        % if current_page == i+1:
+          <span class="selected">${i+1}</span>
+        % else:
+          <a href="#">${i+1}</a>
+        % endif
+      % endfor
+    </div>
+  % endif
+
 % else:
   <div class="empty">
     <p>Sorry, no matching recipes were found.</p>

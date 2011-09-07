@@ -7,6 +7,7 @@ class RecipeSearchSchema(FilteredSchema):
     """
     This schema is for recipe search queries
     """
+    page        = validators.Int(if_empty=1, if_missing=1)
     search      = validators.String(if_empty=None)
     color       = validators.OneOf(['light', 'amber', 'brown', 'dark'], if_empty=None)
     style       = ModelObject(model.Style, if_empty=None)

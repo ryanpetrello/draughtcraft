@@ -3,6 +3,7 @@ $.draughtcraft.recipes.browse.__injectRecipes__ = function(html){
      * Inject search results into the page.
      */
     $('#results').html(html);
+    $.draughtcraft.recipes.browse.initPageCount();
 };
 
 $.draughtcraft.recipes.browse.restoreLastFormValues = function(){
@@ -80,6 +81,9 @@ $.draughtcraft.recipes.browse.initMenuListeners = function(){
         $(this).removeClass(enabled ? 'enabled' : 'disabled');
         $(this).addClass(enabled ? 'disabled' : 'enabled');
 
+        // Reset to the first page of results
+        $('#searchbar > form input[name="page"]').val(1);
+
         $.draughtcraft.recipes.browse.prepareFormValues();
     });
 
@@ -121,12 +125,26 @@ $.draughtcraft.recipes.browse.initMenuListeners = function(){
         $(this).closest('ul.primary > li').children('span.placeholder').html(
             $(this).html()
         );
+        // Reset to the first page of results
+        $('#searchbar > form input[name="page"]').val(1);
+
         $.draughtcraft.recipes.browse.prepareFormValues();
     });
 
     // When the search bar changes, save its value
     $('#searchbar .search input').change($.draughtcraft.recipes.browse.prepareFormValues);
 
+};
+
+$.draughtcraft.recipes.browse.initPageCount = function(){
+    $('.pages a').click(function(e){
+        e.preventDefault();
+        $('#searchbar > form input[name="page"]').val($(this).text());
+        $.draughtcraft.recipes.browse.saveFormValues();
+    });
+    $('.pages span.selected').each(function(){
+        $('#searchbar > form input[name="page"]').val($(this).text());
+    });
 };
 
 $(document).ready(function(){
