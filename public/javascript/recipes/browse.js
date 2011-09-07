@@ -43,6 +43,15 @@ $.draughtcraft.recipes.browse.saveFormValues = function(){
     */
     var values = $('#searchbar > form').serialize();
     $.cookie('searchbar', values, {expires: 7});
+
+    // Show a loading bar...
+    $('#results').html([
+        '<div class="loading-bar">',
+        '   <img src="/images/loading.gif" />',
+        '</div>'
+    ].join(''));
+
+    // Submit (asynchonously) the search form
     $('#searchbar > form').submit();
 };
 
