@@ -1,6 +1,8 @@
 0.1b
 ====
 
+* Test Coverage
+
 New Recipe Verbiage
 --------------
 * "Which Should I Choose?"
@@ -13,7 +15,6 @@ Bugs
 * Browser testing and support
 * Missing Ingredients:
     - Additional popular malt extracts (namely, Muntons)
-* Refactor `printable_types` hash
 * Fix sorting on the `Type` column
 
 0.1

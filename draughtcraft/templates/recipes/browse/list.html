@@ -1,13 +1,3 @@
-<%
-  def printable_type(type):
-    return ({
-      'MASH'          : 'All-Grain',
-      'MINIMASH'      : 'Extract w/ Mini-Mash',
-      'EXTRACTSTEEP'  : 'Extract w/ Steeped Grains',
-      'EXTRACT'       : 'Extract'
-    })[type] 
-%>
-
 <%def name="heading(key, label)">
   % if order_by == key and direction == 'DESC':
     <th rel="${key}" class="${key} desc">
@@ -46,7 +36,7 @@
         <td class="srm srm-${min(30, int(r.srm))}">
           <span class="block" title="${int(r.srm)} SRM"></a>
         </td>
-        <td>${printable_type(r.type)}</td>
+        <td>${r.printable_type}</td>
         <td>
           <a href="${r.url()}">
             ${r.name}
