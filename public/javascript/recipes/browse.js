@@ -3,8 +3,13 @@ $.draughtcraft.recipes.browse.__injectRecipes__ = function(html){
      * Inject search results into the page.
      */
     $('#results').html(html);
+
     $.draughtcraft.recipes.browse.initPageCount();
     $.draughtcraft.recipes.browse.initColumnOrdering();
+
+    // Register fancybox popups for ingredient links
+    $("a[href^='/styles/']").fancybox();
+
 };
 
 $.draughtcraft.recipes.browse.restoreLastFormValues = function(){
