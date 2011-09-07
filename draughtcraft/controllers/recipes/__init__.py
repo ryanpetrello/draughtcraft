@@ -161,7 +161,7 @@ class RecipesController(object):
             query = where.append(model.Recipe.style == kw['style'])
 
         # If applicable, filter by type (MASH, etc...)
-        query = where.append(or_(
+        where.append(or_(
             model.Recipe.id == None,
             model.Recipe.type == 'MASH' if kw['mash'] else None, 
             model.Recipe.type == 'MINIMASH' if kw['minimash'] else None, 

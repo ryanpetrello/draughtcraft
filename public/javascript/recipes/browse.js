@@ -141,9 +141,6 @@ $.draughtcraft.recipes.browse.initMenuListeners = function(){
         $.draughtcraft.recipes.browse.prepareFormValues();
     });
 
-    // When the search bar changes, save its value
-    $('#searchbar .search input').change($.draughtcraft.recipes.browse.prepareFormValues);
-
 };
 
 $.draughtcraft.recipes.browse.initPageCount = function(){
