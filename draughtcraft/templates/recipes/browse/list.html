@@ -58,7 +58,7 @@
             ${r.author.full_name.strip() or r.author.username}
           </a>
         </td>
-        <td>${r.style.name}</td>
+        <td>${r.style.name if r.style else 'No Style Chosen'}</td>
         <td class="last_updated">${h.format_age(r.last_updated)}</td>
         <td class="views">${len(r.views)}</td>
       </tr>
