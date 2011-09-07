@@ -1,12 +1,6 @@
 0.1b
 ====
 
-Search
---------------
-* Ability to look for other recipes by style
-    * Filter by SRM Range
-* Cached Statistics (cached on publish)
-
 New Recipe Verbiage
 --------------
 * "Which Should I Choose?"
