@@ -205,6 +205,9 @@ class RecipesController(object):
         return dict(
             pages           = int(ceil(total / perpage)),
             current_page    = page,
+            offset          = offset,
+            perpage         = perpage,
+            total           = total,
             order_by        = order_by,
             direction       = direction,
             recipes         = recipes
