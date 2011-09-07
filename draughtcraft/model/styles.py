@@ -1,5 +1,4 @@
-from elixir import (Entity, OneToMany, Field, Unicode, Integer, Float, 
-                    UnicodeText)
+from elixir import (Entity, OneToMany, Field, Unicode, Integer, Float)
 from draughtcraft.model.deepcopy        import ShallowCopyMixin
 
 
@@ -11,7 +10,7 @@ class Style(Entity, ShallowCopyMixin):
 
     uid             = Field(Unicode(32), unique=True)
     name            = Field(Unicode(256), index=True)
-    description     = Field(UnicodeText)
+    url             = Field(Unicode(256))
 
     # Gravities
     min_og          = Field(Float)
