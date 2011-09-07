@@ -7,8 +7,16 @@ $.draughtcraft.recipes.browse.__injectRecipes__ = function(html){
     $.draughtcraft.recipes.browse.initPageCount();
     $.draughtcraft.recipes.browse.initColumnOrdering();
 
-    // Register fancybox popups for ingredient links
-    $("a[href^='/styles/']").fancybox();
+    // Register tooltips for the SRM colors
+    $('td.srm').each(function(){
+        $(this).tipTip({
+            'delay'             : 25,
+            'defaultPosition'   : 'left',
+            'edgeOffset'        : 0,
+            'cssClass'          : 'srmTip',
+            'content'           : $(this).children('.block').attr('title')
+        });
+    })
 
 };
 

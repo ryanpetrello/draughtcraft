@@ -43,8 +43,8 @@
     </tr>
     % for i, r in enumerate(recipes):
       <tr class="${'' if i % 2 == 0 else 'odd'}">
-        <td class="srm srm-${int(r.srm)}">
-          <span class="block"></a>
+        <td class="srm srm-${min(30, int(r.srm))}">
+          <span class="block" title="${int(r.srm)} SRM"></a>
         </td>
         <td>${printable_type(r.type)}</td>
         <td>
