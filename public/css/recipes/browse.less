@@ -85,7 +85,7 @@ nav.user, #topnav, #content  {
           }
           &:hover  {
             span.down  {
-              background-image: url(/images/down.png);
+              background-image: url(/images/downwhite.png);
             }
           }
           span.srm  {
@@ -109,6 +109,7 @@ nav.user, #topnav, #content  {
         top: 44px;
         left: -18px;
         position: absolute;
+        z-index: 999;
         list-style-type: none;
         background: #EEE;
         width: 270px;
@@ -173,6 +174,16 @@ nav.user, #topnav, #content  {
       th  {
         text-align: left;
         text-decoration: underline;
+        &.desc  {
+          background: url(/images/down.png) right center no-repeat;
+        }
+        &.asc  {
+          background: url(/images/up.png) right center no-repeat;
+        }
+        a  {
+          width: 100%;
+          display: inline-block;
+        }
         &.desc a, &.asc a  {
           color: #003366;
         }
