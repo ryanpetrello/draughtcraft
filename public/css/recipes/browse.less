@@ -173,6 +173,9 @@ nav.user, #topnav, #content  {
       th  {
         text-align: left;
         text-decoration: underline;
+        &.desc a, &.asc a  {
+          color: red;
+        }
       }
       td {
         a  {
@@ -189,7 +192,7 @@ nav.user, #topnav, #content  {
         position: relative;
         top: -2px;
       }
-      th.lastchanged, td.lastchanged  {
+      th.last_updated, td.last_updated  {
         text-align: right;
       }
       th.views, td.views  {

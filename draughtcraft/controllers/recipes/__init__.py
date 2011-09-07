@@ -1,5 +1,5 @@
 from pecan                                      import expose, request, abort, redirect
-from sqlalchemy                                 import or_
+from sqlalchemy                                 import or_, asc, desc
 from draughtcraft                               import model
 from draughtcraft.lib.schemas.recipes.browse    import RecipeSearchSchema
 from create                                     import RecipeCreationController
@@ -127,10 +127,25 @@ class RecipesController(object):
         template    = 'recipes/browse/list.html',
         schema      = RecipeSearchSchema()
     )
-    def recipes(self, page, **kw):
+    def recipes(self, page, order_by, direction, **kw):
+        if request.pecan['validation_errors']: abort(400)
 
         perpage = 10.0
         offset = int(perpage * (page - 1))
+
+        # map of columns
+        column_map = dict(
+            type            = model.Recipe.type,
+            name            = model.Recipe.name,
+            last_updated    = model.Recipe.last_updated
+        )
+        
+        # determine the sorting direction and column
+        order_column  = column_map.get(order_by)
+        order_direction = dict(
+            ASC  = asc,
+            DESC = desc
+        ).get(direction)
 
         query = model.Recipe.query.filter(model.Recipe.state == 'PUBLISHED')
 
@@ -146,11 +161,13 @@ class RecipesController(object):
             model.Recipe.type.in_(('EXTRACTSTEEP', 'EXTRACT')) if kw['extract'] else None, 
         ))
 
-        results = query.offset(offset).limit(perpage).all()
+        results = query.order_by(order_direction(order_column)).offset(offset).limit(perpage).all()
 
         return dict(
             pages           = int(ceil(query.count() / perpage)),
             current_page    = page,
+            order_by        = order_by,
+            direction       = direction,
             recipes         = results
         )
 

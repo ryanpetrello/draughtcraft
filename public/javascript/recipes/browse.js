@@ -4,6 +4,7 @@ $.draughtcraft.recipes.browse.__injectRecipes__ = function(html){
      */
     $('#results').html(html);
     $.draughtcraft.recipes.browse.initPageCount();
+    $.draughtcraft.recipes.browse.initColumnOrdering();
 };
 
 $.draughtcraft.recipes.browse.restoreLastFormValues = function(){
@@ -144,6 +145,28 @@ $.draughtcraft.recipes.browse.initPageCount = function(){
     });
     $('.pages span.selected').each(function(){
         $('#searchbar > form input[name="page"]').val($(this).text());
+    });
+};
+
+$.draughtcraft.recipes.browse.initColumnOrdering = function(){
+    $('th a').click(function(e){
+        e.preventDefault();
+        $('#searchbar > form input[name="order_by"]').val($(this).closest('th').attr('rel'));
+        if($(this).closest('th').hasClass('asc'))
+            $('#searchbar > form input[name="direction"]').val('DESC');
+        else if($(this).closest('th').hasClass('desc'))
+            $('#searchbar > form input[name="direction"]').val('ASC');
+        else
+            $('#searchbar > form input[name="direction"]').val('ASC');
+        $.draughtcraft.recipes.browse.saveFormValues();
+    });
+
+    $('th.asc, th.desc').each(function(){
+        $('#searchbar > form input[name="order_by"]').val($(this).attr('rel'));
+        if($(this).hasClass('asc'))
+            $('#searchbar > form input[name="direction"]').val('ASC');
+        if($(this).hasClass('desc'))
+            $('#searchbar > form input[name="direction"]').val('DESC');
     });
 };
 

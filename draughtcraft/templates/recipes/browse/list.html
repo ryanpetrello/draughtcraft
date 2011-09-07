@@ -8,15 +8,37 @@
     })[type] 
 %>
 
+<%def name="heading(key, label)">
+  % if order_by == key and direction == 'DESC':
+    <th rel="${key}" class="${key} desc">
+      <a href="#">
+        ${label}
+      </a>
+    </td>
+  % elif order_by == key and direction == 'ASC':
+    <th rel="${key}" class="${key} asc">
+      <a href="#">
+        ${label}
+      </a>
+    </td>
+  % else:
+    <th rel="${key}" class="${key}">
+      <a href="#">
+        ${label}
+      </a>
+    </td>
+  % endif
+</%def>
+
 % if recipes:
   <table class="results">
     <tr>
-      <th>Type</th>
-      <th>Name</th>
-      <th>Author</th>
-      <th>Style</th>
-      <th class="lastchanged">Last Changed</th>
-      <th class="views"># Views</th>
+      ${heading('type', 'Type')}
+      ${heading('name', 'Name')}
+      ${heading('author', 'Author')}
+      ${heading('style', 'Style')}
+      ${heading('last_updated', 'Last Updated')}
+      ${heading('views', '# Views')}
     </tr>
     % for i, r in enumerate(recipes):
       <tr class="${'' if i % 2 == 0 else 'odd'}">
@@ -37,7 +59,7 @@
           </a>
         </td>
         <td>${r.style.name}</td>
-        <td class="lastchanged">${h.format_age(r.last_updated)}</td>
+        <td class="last_updated">${h.format_age(r.last_updated)}</td>
         <td class="views">${len(r.views)}</td>
       </tr>
     % endfor

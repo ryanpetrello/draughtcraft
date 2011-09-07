@@ -9,6 +9,8 @@ class RecipeSearchSchema(FilteredSchema):
     """
     page        = validators.Int(if_empty=1, if_missing=1)
     search      = validators.String(if_empty=None)
+    order_by    = validators.String(if_empty='last_updated')
+    direction   = validators.String(if_empty='DESC')
     color       = validators.OneOf(['light', 'amber', 'brown', 'dark'], if_empty=None)
     style       = ModelObject(model.Style, if_empty=None)
 
