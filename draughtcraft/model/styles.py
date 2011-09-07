@@ -10,7 +10,7 @@ class InvalidStatistic(Exception):
 class Style(Entity, ShallowCopyMixin):
 
     uid             = Field(Unicode(32), unique=True)
-    name            = Field(Unicode(256))
+    name            = Field(Unicode(256), index=True)
     description     = Field(UnicodeText)
 
     # Gravities

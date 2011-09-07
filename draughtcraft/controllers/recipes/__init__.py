@@ -130,7 +130,7 @@ class RecipesController(object):
     def recipes(self, page, order_by, direction, **kw):
         if request.pecan['validation_errors']: abort(400)
 
-        perpage = 10.0
+        perpage = 15.0
         offset = int(perpage * (page - 1))
 
         views = func.count(model.RecipeView.id).label('views')
@@ -183,8 +183,6 @@ class RecipesController(object):
         query = select(
             [
                 model.Recipe.id,
-                model.User.username,
-                model.Style.name,
                 views 
             ],
             and_(*where),

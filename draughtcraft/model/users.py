@@ -11,10 +11,10 @@ from sqlalchemy.orm.collections         import attribute_mapped_collection
 
 class User(Entity, ShallowCopyMixin):
 
-    first_name  = Field(Unicode(64))
-    last_name   = Field(Unicode(64))
+    first_name  = Field(Unicode(64), index=True)
+    last_name   = Field(Unicode(64), index=True)
 
-    username    = Field(Unicode(64), unique=True)
+    username    = Field(Unicode(64), unique=True, index=True)
     _password   = Field(Unicode(64), colname='password', synonym='password')
     email       = Field(Unicode(64), index=True)
     signup_date = Field(DateTime, default=datetime.utcnow)

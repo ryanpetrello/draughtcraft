@@ -31,13 +31,13 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         'PUBLISHED'
     )
 
-    type                = Field(Enum(*TYPES), default='MASH')
-    name                = Field(Unicode(256))
+    type                = Field(Enum(*TYPES), default='MASH', index=True)
+    name                = Field(Unicode(256), index=True)
     gallons             = Field(Float, default=5)
     boil_minutes        = Field(Integer, default=60)
     notes               = Field(UnicodeText)
     creation_date       = Field(DateTime, default=datetime.utcnow)
-    last_updated        = Field(DateTime, default=datetime.utcnow)
+    last_updated        = Field(DateTime, default=datetime.utcnow, index=True)
 
     mash_method         = Field(Enum(*MASH_METHODS), default='SINGLESTEP')
     mash_instructions   = Field(UnicodeText) 
