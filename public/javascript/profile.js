@@ -17,7 +17,7 @@ $.draughtcraft.profile.initRecipeButtons = function(){
     // Register submit events on form submission buttons
     $('.recipe a.submit, .recipe li.submit').click(function(e){
         e.preventDefault();
-        if($(this).hasClass('confirm') && !confirm("Are you sure you want to delete this recipe?"))
+        if($(this).hasClass('confirm') && !confirm("Are you sure you want to delete this recipe?  This can't be reversed!"))
             return;
         $(this).closest('form').submit();
     });

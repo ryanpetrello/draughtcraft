@@ -1,0 +1,60 @@
+<%inherit file="layout.html" />
+
+<%def name="style()">
+    <link rel="stylesheet/less" type="text/css" media="screen" href="/css/thin.less" />
+    <link rel="stylesheet/less" type="text/css" media="screen" href="/css/home.less" />
+
+    <style type="text/css">
+      .browsers  {
+        padding: 2em 0;
+        padding-right: 15px;
+        text-align: center;
+      }
+      .browsers a  {
+        text-decoration: none;
+      }
+      .browsers .firefox  {
+        padding-left: 10px;
+      }
+    </style>
+</%def>
+
+<%def name="javascript()">
+  <script type="text/javascript">
+    $(function(){
+      $('.browsers a').each(function(){
+        $(this).tipTip({
+          'delay': 25  
+        });
+      });
+    });
+  </script>
+</%def>
+
+<h1>
+  You Appreciate a Quality Brew
+  <span class="sub">Why Not Try a Quality Browser?</span>
+</h1>
+
+<div>
+  <p>
+    The program you're using to browse the web is a bit...<em>stale</em>.
+  </p>
+  <p>
+    While we work to add support for your browser, we recommended any of these
+    (free) alternatives:
+  </p>
+
+  <div class="browsers">
+    <a href="http://www.apple.com/safari/" title="Apple Safari">
+      <img src="/images/browsers/safari.png" height="145" />
+    </a>
+    <a href="http://getfirefox.com/" title="Google Chrome">
+      <img src="/images/browsers/chrome.jpg" height="135" />
+    </a>
+    <a href="http://www.google.com/chrome" title="Mozilla Firefox">
+      <img src="/images/browsers/firefox.png" height="130" class="firefox" />
+    </a>
+  </div>
+
+</div>

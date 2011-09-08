@@ -2,7 +2,6 @@
 ====
 
 * Test Coverage
-* Browser Lockout
 * About/Contact/Donate Links
 * "Learn More" link on the homepage
 

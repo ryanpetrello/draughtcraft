@@ -49,6 +49,10 @@ class RootController(object):
         remove_user_session()
         redirect('/')
 
+    @expose('browser.html')
+    def browser(self):
+        return dict()
+
     error       = ErrorController()
     ingredients = IngredientsController()
     profile     = ProfilesController()

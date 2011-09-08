@@ -28,6 +28,12 @@ $.draughtcraft.apply_gravatar = function(){
 };
 $($.draughtcraft.apply_gravatar);
 
+/*
+ * Lock out IE users.
+ */
+if($.browser.msie && window.location.pathname != '/browser')
+    window.location = '/browser';
+
 /**
  * jQuery Cookie plugin
  *
