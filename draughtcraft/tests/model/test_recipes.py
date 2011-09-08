@@ -400,7 +400,7 @@ class TestRecipe(unittest.TestCase):
         ).printable_type == 'Extract with Steeped Grains'
         assert model.Recipe(
             type = u'MINIMASH'
-        ).printable_type == 'Extract with Mini-Mash'
+        ).printable_type == 'Mini-Mash'
 
 
 class TestFermentationStep(unittest.TestCase):

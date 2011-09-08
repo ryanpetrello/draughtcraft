@@ -1,5 +1,8 @@
-from pecan                                      import expose, request, abort, redirect
-from sqlalchemy                                 import select, and_, or_, asc, desc, func
+from pecan                                      import (expose, request, abort,
+                                                        redirect)
+from sqlalchemy                                 import (select, and_, or_, asc,
+                                                        desc, func, case,
+                                                        literal)
 from draughtcraft                               import model
 from draughtcraft.lib.schemas.recipes.browse    import RecipeSearchSchema
 from create                                     import RecipeCreationController
@@ -127,17 +130,24 @@ class RecipesController(object):
         template    = 'recipes/browse/list.html',
         schema      = RecipeSearchSchema()
     )
-    def recipes(self, page, order_by, direction, **kw):
+    def recipes(self, **kw):
         if request.pecan['validation_errors']: abort(400)
 
         perpage = 15.0
-        offset = int(perpage * (page - 1))
+        offset = int(perpage * (kw['page'] - 1))
 
         views = func.count(model.RecipeView.id).label('views')
 
+        sortable_type = case([
+            (model.Recipe.type == 'MASH', literal('All Grain')),
+            (model.Recipe.type == 'EXTRACT', literal('Extract')),
+            (model.Recipe.type == 'EXTRACTSTEEP', literal('Extract with Steeped Grains')),
+            (model.Recipe.type == 'MINIMASH', literal('Mini-Mash')),
+        ]).label('type')
+        
         # map of columns
         column_map = dict(
-            type            = (model.Recipe.type,),
+            type            = (sortable_type,),
             srm             = (model.Recipe._srm,),
             name            = (model.Recipe.name,),
             author          = (model.User.last_name, model.User.first_name, model.User.username),
@@ -147,11 +157,11 @@ class RecipesController(object):
         )
         
         # determine the sorting direction and column
-        order_column  = column_map.get(order_by)
+        order_column  = column_map.get(kw['order_by'])
         order_direction = dict(
             ASC  = asc,
             DESC = desc
-        ).get(direction)
+        ).get(kw['direction'])
 
         where = [
             model.Recipe.state == 'PUBLISHED'
@@ -218,13 +228,13 @@ class RecipesController(object):
         )).all()
 
         return dict(
-            pages           = int(ceil(total / perpage)),
-            current_page    = page,
+            pages           = max(1, int(ceil(total / perpage))),
+            current_page    = kw['page'],
             offset          = offset,
             perpage         = perpage,
             total           = total,
-            order_by        = order_by,
-            direction       = direction,
+            order_by        = kw['order_by'],
+            direction       = kw['direction'],
             recipes         = recipes
         )
 

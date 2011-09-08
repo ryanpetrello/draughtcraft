@@ -15,7 +15,6 @@ Bugs
 * Browser testing and support
 * Missing Ingredients:
     - Additional popular malt extracts (namely, Muntons)
-* Fix sorting on the `Type` column
 
 0.1
 ====

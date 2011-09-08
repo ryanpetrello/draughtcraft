@@ -266,7 +266,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
             'MASH'          : 'All Grain',
             'EXTRACT'       : 'Extract',
             'EXTRACTSTEEP'  : 'Extract with Steeped Grains',
-            'MINIMASH'      : 'Extract with Mini-Mash'
+            'MINIMASH'      : 'Mini-Mash'
         }[self.type]
 
     def touch(self):
