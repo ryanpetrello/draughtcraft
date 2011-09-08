@@ -17,6 +17,48 @@
 
 <div class="clearfix">
 
+  <div style="display: none">
+    <div id="recipe-types">
+
+      <h2>Extract - <span class="difficulty">Simple</span></h2>
+      <p>
+        Brewing with 
+        <a href="http://www.homebrewtalk.com/wiki/index.php/Malt_extract" target="window">malt extract</a> 
+        is the typical entry point for beginning homebrewers, as it generally
+        requires the least amount of space, time, and equipment.
+      </p>
+      <p>
+        While some insist that extract brewing gives you less control over certain
+        aspects of your beer, the number of award-winning extract recipes
+        illustrates that brewing with malt extract can yield fantastic results.
+      </p>
+
+      <h2>Extract with Steeped Grains - <span class="difficulty">Simple</span></h2>
+      <p>
+        Brewing with 
+        <a href="http://www.homebrewtalk.com/wiki/index.php/Steeping_grains" target="window">specialty steeping grains</a> 
+        in addition to malt extract can give the brewer more control over
+        color, flavor, and fermentable sugars.
+      </p>
+
+      <h2>Partial/Mini-Mash - <span class="difficulty">Intermediate</span></h2>
+      <p>
+        Partial, or mini-mashing, is a marriage of <b>Extract</b> and 
+        <b>All Grain</b> brewing. A small amount of grain is 
+        <a href="http://www.homebrewtalk.com/wiki/index.php/Mash" target="window">mashed</a>
+        to obtain fermentable sugars, and malt extract is used to provide the
+        remainder of the fermentables.
+      </p>
+
+      <h2>All Grain - <span class="difficulty">Intermediate/Advanced</span></h2>
+      <p>
+        All Grain brewing is a process in which a brewer creates wort from crushed
+        grain through a process known as 
+        <a href="http://www.homebrewtalk.com/wiki/index.php/Mash" target="window">mashing</a>.
+      </p>
+
+    </div>
+  </div>
   ${h.form('')}
     <fieldset>
       <dl class="clearfix">
@@ -33,15 +75,15 @@
         </dd>
         <dt>
           <label for="type">Recipe Type</label>
-          <a href="#" class="question">Which should I choose?</a>
+          <a href="#recipe-types" class="question">Which should I choose?</a>
         </dt>
         <dd>
             ${h.select('type', 
             h.request.context['user'].settings['default_recipe_type'] if h.request.context['user'] else None, [
-                ('MASH', 'All Grain'),
                 ('EXTRACT', 'Extract'),
                 ('EXTRACTSTEEP', 'Extract with Steeped Grains'),
-                ('MINIMASH', 'Extract with Mini-Mash')
+                ('MINIMASH', 'Partial/Mini-Mash'),
+                ('MASH', 'All Grain')
             ], tabindex='2')}
         </dd>
         <dt><label for="gallons">Final Volume</label></dt>
@@ -78,6 +120,19 @@
       </p>
       <p>
         <a href="/signup" tabindex="6">Sign Up Now</a>
+      </p>
+    </div>
+  % else:
+    <div class="info">
+      <h4>It Starts with a Draft...</h4>
+      <p>
+        On the next screen, you'll start building a private recipe by choosing
+        ingredients, specifying procedures and techniques, and outlining the
+        ideal fermentation process.
+      </p>
+      <p>
+        When you're satisfied, click <b>Publish</b> to share your creation with
+        the world!
       </p>
     </div>
   % endif

@@ -2,12 +2,6 @@
 ====
 
 * Test Coverage
-
-New Recipe Verbiage
---------------
-* "Which Should I Choose?"
-* Sidebar content when already authenticated
-
 * Browser Lockout
 
 Bugs

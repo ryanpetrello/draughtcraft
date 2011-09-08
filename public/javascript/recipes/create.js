@@ -18,4 +18,9 @@ $.draughtcraft.recipes.create.initFormListeners = function(){
 
 $(document).ready(function(){
     $.draughtcraft.recipes.create.initFormListeners();
+    $("a.question").fancybox({
+        'autoDimensions'    : false,
+        'width'             : 600,
+        'height'            : 425
+    });
 });
