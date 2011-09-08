@@ -7,6 +7,17 @@
     <link rel="stylesheet/less" type="text/css" media="screen" href="/css/settings/shared.less" />
 </%def>
 
+<%def name="javascript()">
+    <script type="text/javascript">
+      $(function(){
+        $('h1 a').tipTip({
+          'delay'       : 25,
+          'edgeOffset'  : 40  
+        });
+      });
+    </script>
+</%def>
+
 <%include file="nav.html" args="current='profile'" />
 
 <div class="clearfix">
