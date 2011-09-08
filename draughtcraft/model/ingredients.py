@@ -73,6 +73,14 @@ class Fermentable(Ingredient):
             origin = origin.title()
         return '%s (%s)' % (self.name, origin)
 
+    @property
+    def printed_type(self):
+        if self.type is None:
+            return 'Grain'
+        value = self.type.capitalize()
+        if value == 'Malt': value = 'Grain'
+        return value
+
 
 class Hop(Ingredient):
 
