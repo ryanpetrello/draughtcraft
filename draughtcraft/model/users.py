@@ -56,7 +56,7 @@ class User(Entity, ShallowCopyMixin):
 
     @property
     def gravatar(self):
-        return 'http://www.gravatar.com/avatar/%s?d=mm' % (
+        return 'http://www.gravatar.com/avatar/%s?d=404' % (
             md5(self.email.strip().lower()).hexdigest()
         )
 

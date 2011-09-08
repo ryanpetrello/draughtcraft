@@ -16,7 +16,9 @@ $.draughtcraft.recipes.browse.__injectRecipes__ = function(html){
             'cssClass'          : 'srmTip',
             'content'           : $(this).children('.block').attr('title')
         });
-    })
+    });
+
+    $.draughtcraft.apply_gravatar();
 
 };
 
