@@ -1,0 +1,60 @@
+<%inherit file="../layout.html" />
+
+<%def name="title()">Reset Your Password</%def>
+
+<%def name="style()">
+    <link rel="stylesheet/less" type="text/css" media="screen" href="/css/thin.less" />
+    <link rel="stylesheet/less" type="text/css" media="screen" href="/css/login.less" />
+</%def>
+
+<%def name="javascript()">
+    
+    <script type="text/javascript">
+        $(function(){
+            $('input[name="email"]').focus();
+        });
+    </script>
+
+</%def>
+
+<h1>
+  Forget Your Password?
+</h1>
+
+<div class="clearfix">
+
+  ${h.form('')}
+    <fieldset>
+      <dl class="clearfix">
+        <dt><label for="name">Email Address</label></dt>
+        <dd>
+          ${h.text(
+            'email', 
+            tabindex = '1', 
+            size = '256'
+          )}
+        </dd>
+      </dl>
+    </fieldset>
+
+    <div class="buttons">
+      <button class="ribbon" tabindex="4">
+        Continue
+      </button>
+      <a href="/" tabindex="5">Go back to login</a>
+    </div>
+
+  ${h.end_form()}
+
+  <div class="info">
+    <p>
+      Enter your email address and we'll send you password reset instructions.
+    </p>
+    <p>
+      If you don't get an email from us within a few minutes please be sure to
+      check your spam filter. The email will be coming from
+      <a href="#" class="email rev" rel="moc.tfarcthguard@yfiton">moc.tfarcthguard@yfiton</a>
+    </p>
+  </div>
+
+</div>

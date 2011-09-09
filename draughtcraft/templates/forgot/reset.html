@@ -1,0 +1,69 @@
+<%inherit file="../layout.html" />
+
+<%def name="title()">Reset Your Password</%def>
+
+<%def name="style()">
+    <link rel="stylesheet/less" type="text/css" media="screen" href="/css/thin.less" />
+    <link rel="stylesheet/less" type="text/css" media="screen" href="/css/login.less" />
+</%def>
+
+<%def name="javascript()">
+    
+    <script type="text/javascript">
+        $(function(){
+            $('input[name="email"]').focus();
+        });
+    </script>
+
+</%def>
+
+<h1>
+  Hi, ${password_request.user.first_name.strip() or password_request.user.username},
+</h1>
+
+<div class="clearfix">
+
+  <p style="padding: 15px 15px 0;">Use the form below to choose a new password.</p>
+
+  ${h.form('')}
+    <fieldset style="border:0;">
+      <dl class="clearfix">
+        <dt><label for="name">Email Address</label></dt>
+        <dd>
+          ${h.text(
+            'email', 
+            tabindex = '1', 
+            size = '256'
+          )}
+        </dd>
+        <dt><label for="name">New Password</label></dt>
+        <dd>
+          ${h.password(
+            'password', 
+            tabindex = '2',
+            value = static('password', '')
+          )}
+        </dd>
+        <dd>
+          ${h.password(
+            'password_confirm', 
+            tabindex = '3',
+            value = static('password_confirm', '')
+          )}
+          <div>
+            <small>Please confirm your new password.</small>
+          </div>
+        </dd>
+      </dl>
+    </fieldset>
+
+    <div class="buttons">
+      <button class="ribbon" tabindex="4">
+        Reset My Password
+      </button>
+      <a href="/" tabindex="5">Go back to login</a>
+    </div>
+
+  ${h.end_form()}
+
+</div>

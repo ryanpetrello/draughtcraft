@@ -1,0 +1,11 @@
+Hi ${name},
+
+Can't remember your password? Don't worry about it - it happens.
+
+Just click this link to reset your password:
+http://draughtcraft.com/forgot/reset/${code}
+
+Didn't ask to reset your password?
+If you didn't ask for your password, it's likely that another user entered your username or email address
+by mistake while trying to reset their password. If that's the case, you don't need to take any further
+action and can disregard this email.

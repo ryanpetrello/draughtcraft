@@ -98,3 +98,10 @@ class UserSetting(Entity):
     @value.setter
     def value(self, v):
         self._value = dumps(v)
+
+
+class PasswordResetRequest(Entity):
+    code            = Field(Unicode(64), primary_key=True)
+    datetime        = Field(DateTime)
+    
+    user            = ManyToOne('User')

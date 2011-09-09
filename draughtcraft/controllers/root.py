@@ -6,6 +6,7 @@ from draughtcraft.lib.auth              import (save_user_session,
 from draughtcraft.lib.schemas.login     import LoginSchema
 
 from error          import ErrorController
+from forgot         import ForgotPasswordController
 from ingredients    import IngredientsController
 from profile        import ProfilesController
 from recipes        import RecipesController
@@ -54,6 +55,7 @@ class RootController(object):
         return dict()
 
     error       = ErrorController()
+    forgot      = ForgotPasswordController()
     ingredients = IngredientsController()
     profile     = ProfilesController()
     recipes     = RecipesController()

@@ -2,7 +2,6 @@
 ====
 
 * Test Coverage
-* Forgot Password
 
 0.1
 ====
@@ -13,7 +12,6 @@
 Missing Ingredients
 --------------------
 * Additional popular malt extracts (namely, Muntons)
-
 
 Settings
 --------
