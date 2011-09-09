@@ -98,11 +98,44 @@
 
 <%def name="footer()">
   <footer>
-  <p>
-    <a href="#">About</a> 
-    <a href="#">Contact</a> 
-    <a href="#">Donate</a> 
-    <a href="http://github.com/ryanpetrello/draughtcraft" target="window">Open Source</a>
-  </p>
+    <div style="display:none;">
+      <div id="about-box">
+        <div class="logo">
+          <img src="/images/logo.png" width="200" />
+        </div>
+        <p>
+          Brewing isn't complicated.  Making your own recipes doesn't have to
+          be, either.  Draughtcraft is hassle-free software built for
+          hobbyists, not professional breweries.
+        </p>
+        <p class="question">
+          <b>How much does this cost?</b><br />
+          Draughtcraft is totally free during its beta period.  Pricing for
+          optional premium accounts will be announced soon.
+        </p>
+        <p class="question">
+          <b>Do I need to sign up for an account to build recipes?</b><br />
+          No, but it's free to sign up at any time and take advantage of
+          additional tools available to members only.
+        </p>
+        <p class="question">
+          <b>But Draughtcraft doesn't let me __________!</b><br />
+          Sometimes less is more.  Draughtcraft strives to provide an effortless
+          platform for tinkering with, building, and sharing your favorite
+          recipes.
+        </p>
+        <p class="question nobg">
+          If you've got an interesting idea for a feature not currently offered,
+          send your suggestion to 
+          <a href="#" class="email rev" rel="moc.tfarcthguard@pleh">moc.tfarcthguard@pleh</a>.
+        </p>
+      </div>
+    </div>
+
+    <p>
+      <a href="#about-box">About</a> 
+      <a href="#" class="email" rel="moc.tfarcthguard@pleh">Contact</a> 
+      <a href="http://github.com/ryanpetrello/draughtcraft" target="window">Open Source</a>
+    </p>
   </footer>
 </%def>

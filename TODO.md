@@ -2,14 +2,7 @@
 ====
 
 * Test Coverage
-* About/Contact/Donate Links
-* "Learn More" link on the homepage
-
-Bugs
---------------
-* Browser testing and support
-* Missing Ingredients:
-    - Additional popular malt extracts (namely, Muntons)
+* Forgot Password
 
 0.1
 ====
@@ -17,10 +10,14 @@ Bugs
 * Mobile Browser/Viewer
 * Simple Recipe Search API
 
+Missing Ingredients
+--------------------
+* Additional popular malt extracts (namely, Muntons)
+
+
 Settings
 --------
 * Ability to provide customized PPG and L for fermentables (at a global level)
-* Forgot Password
 
 Additional
 ----------

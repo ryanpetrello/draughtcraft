@@ -28,6 +28,27 @@ $.draughtcraft.apply_gravatar = function(){
 };
 $($.draughtcraft.apply_gravatar);
 
+$(function(){
+    /*
+     * Fancybox popup for "About" links
+     */
+    $("a[href^='#about-box']").fancybox({
+        'autoDimensions'    : false,
+        'width'             : 425,
+        'height'            : 415
+    });
+
+    /*
+     * Handle obfuscated mailto: links
+     */
+    $('a.email').click(function(e){
+        e.preventDefault();
+        var html = $(this).attr('rel');
+        var reversed = html.split("").reverse().join("");
+        window.location = 'mailto:'+reversed;
+    });
+});
+
 /*
  * Lock out IE users.
  */

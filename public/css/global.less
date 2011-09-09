@@ -35,6 +35,10 @@ a, a:visited  {
 a:hover  {
   color: #304860;
 }
+a.email.rev  {
+  unicode-bidi: bidi-override;
+  direction: rtl;
+}
 nav  {
   color: #FFF;
   width: 1000px;
@@ -299,7 +303,28 @@ footer  {
   a  {
     color: #FFF !important;
   }
+}
 
+div#about-box  {
+  div.logo  {
+    background: #4C9EBE;
+    padding: 8px;
+    padding-left: 0;
+    text-align: center;
+  }
+  p  {
+    padding-top: 15px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+    &.question  {
+      padding-left: 42px;
+      padding-bottom: 0;
+      background: url(/images/question.png) 0 14px no-repeat;
+      &.nobg  {
+        background: 0;
+      }
+    }      
+  }
 }
 
 /* SRM Colors */
