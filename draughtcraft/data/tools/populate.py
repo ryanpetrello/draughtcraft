@@ -117,16 +117,16 @@ def populate():
 
             if new is True:
                 print "%s (%s)" % (
-                    ingredient.printed_name,
+                    ingredient.printed_name.encode('utf-8', 'ignore'),
                     '%s New %s' % (GREEN, ENDS)
                 )
             elif changed is True:
                 print "%s (%s)" % (
-                    ingredient.printed_name,
+                    ingredient.printed_name.encode('utf-8', 'ignore'),
                     '%s Updated %s' % (YELLOW, ENDS)
                 )
             else:
-                print "%s (No Changes)" % ingredient.printed_name
+                print "%s (No Changes)" % ingredient.printed_name.encode('utf-8', 'ignore')
 
     print "="*80
     print BLUE + "GENERATING STYLES" + ENDS
@@ -165,16 +165,16 @@ def populate():
 
         if new is True:
             print "%s (%s)" % (
-                style.name,
+                style.name.encode('utf-8', 'ignore'),
                 '%s New %s' % (GREEN, ENDS)
             )
         elif changed is True:
             print "%s (%s)" % (
-                style.name,
+                style.name.encode('utf-8', 'ignore'),
                 '%s Updated %s' % (YELLOW, ENDS)
             )
         else:
-            print "%s (No Changes)" % style.name
+            print "%s (No Changes)" % style.name.encode('utf-8', 'ignore')
 
     model.commit()
 
