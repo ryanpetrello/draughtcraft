@@ -1,4 +1,4 @@
-from pecan                              import expose, request
+from pecan                              import expose, request, conf
 from pecan.decorators                   import after_commit
 from draughtcraft                       import model
 from draughtcraft.lib.auth              import remove_trial_recipe
@@ -13,7 +13,8 @@ def send_signup_email():
             request.context['__signup_email__'],
             'signup',
             'Welcome to DraughtCraft',
-            {'username': request.context['__signup_username__']}
+            {'username': request.context['__signup_username__']},
+            bcc = [conf.signups.bcc]
         )
 
 

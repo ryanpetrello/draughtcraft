@@ -1,4 +1,4 @@
-from pecan                  import abort
+from pecan                  import conf, abort
 from draughtcraft.tests     import TestApp
 from draughtcraft           import model
 
@@ -35,7 +35,8 @@ class TestSignup(TestApp):
             'ryan@example.com',
             'signup',
             'Welcome to DraughtCraft',
-            {'username':'test'}
+            {'username':'test'},
+            bcc = [conf.signups.bcc]
         ))
 
         params = {

@@ -27,6 +27,10 @@ sqlalchemy = {
     'encoding'      : 'utf-8'
 }
 
+signups = {
+    'bcc'           : 'ryan@example.com'
+}
+
 session = {
     'key'               : 'draughtcraft',
     'type'              : 'cookie',
