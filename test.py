@@ -14,6 +14,7 @@ app = {
     'modules'       : [draughtcraft],
     'static_root'   : '%(confdir)s/public', 
     'template_path' : '%(confdir)s/draughtcraft/templates',
+    'stamp'         : 'XYZ',
     'reload'        : True,
     'debug'         : True,
     'logging'       : False

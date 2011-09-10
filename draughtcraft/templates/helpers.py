@@ -5,6 +5,15 @@ from webhelpers.html.tags               import *
 from webhelpers.text                    import *
 from draughtcraft.lib.csrf              import secure_form as form
 
+def stamp(uri):
+    """
+    Used to stamp the URI of a static resource with a revision-specific
+    identifier so that when updates are deployed, browser caches are broken,
+    and users are forced to re-download the latest static resources.
+    """
+    from pecan import conf
+    return "%s?%s" % (uri, conf.app.stamp)
+
 def format_percentage(decimal, digits=2, symbol=True):
     value = decimal * 100.00
 
