@@ -57,14 +57,6 @@ $.draughtcraft.recipes.builder.__injectRecipeContent__ = function(html){
     });
 
     //
-    // If a new row exists, focus on its first form element.
-    //
-    if($.draughtcraft.recipes.builder._first_focus)
-        $.draughtcraft.recipes.builder._first_focus = false;
-    else if(difference.length)
-        $('#'+difference[0]).find('input, select').eq(0).focus();
-
-    //
     // Visually stripe the recipe ingredients
     // 
     $('tr.addition').each(function(index){
@@ -73,6 +65,17 @@ $.draughtcraft.recipes.builder.__injectRecipeContent__ = function(html){
     });
 
     $.draughtcraft.recipes.builder.__afterRecipeInject();
+
+    //
+    // If a new row exists, focus on its first form element.
+    //
+    if($.draughtcraft.recipes.builder._first_focus)
+        $.draughtcraft.recipes.builder._first_focus = false;
+    else if(difference.length){
+        debugger;
+        $('#'+difference[0]).find('input, select').eq(0).focus();
+    }
+
 };
 
 /*
@@ -213,7 +216,7 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
         // disable them (disallow edits while saving) for the duration
         // of the Ajax save.
         //
-        $(form).find('input, select').attr('disabled', 'disabled');
+        $(form).find('input, select').prop('disabled', true);
     };
 
     // Any time an <input> or <textarea> triggers a `keyup`...
@@ -235,14 +238,21 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
             $.draughtcraft.recipes.builder._delay($.proxy(save, this), 0);
         }, this));
 
-        //
-        // If the object loses keyboard focus early (generally via the tab key),
-        // submit the form
-        //
-        $(this).blur($.proxy(function(){
-            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 0);
-        }, this));
-        
+    });
+
+    //
+    // If any field receives focus, cancel any queued saves and let the changes
+    // get rolled into the next save attempt.
+    //
+    // In this way, if a user tabs from field to field, editing along the way,
+    // the changes will be saved in bulk once:
+    //
+    // 1.  They Move their mouse.
+    //          - or -
+    // 2.  They change a value and wait past the 2 second auto-save threshold.
+    //
+    $('.step input, .step select').focus(function(){
+        $.draughtcraft.recipes.builder._delay($.noop, 0)
     });
 
     // Any time a <select>'s value changes, save immediately.

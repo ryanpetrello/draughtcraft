@@ -2,6 +2,7 @@
 ====
 
 * Test Coverage
+* Can the async call be made faster?
 
 0.1
 ====
