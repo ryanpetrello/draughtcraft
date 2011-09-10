@@ -3,6 +3,7 @@
 
 * Test Coverage
 * Can the async call be made faster?
+* Implement a cache breaker for static resources
 
 0.1
 ====

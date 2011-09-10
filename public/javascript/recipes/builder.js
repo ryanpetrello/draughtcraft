@@ -4,9 +4,11 @@ $.draughtcraft.recipes.builder._delay = (function(){
     clearTimeout (timer);
     timer = setTimeout(callback, ms);
   };
+  $.draughtcraft.recipes.builder._changes_in_queue = true;
 })();
 
 $.draughtcraft.recipes.builder._first_focus = true;
+$.draughtcraft.recipes.builder._changes_in_queue = false;
 
 /*
  * Used to fetch and redraw the current recipe via AJAX.
@@ -235,7 +237,7 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
         $('body').mousemove($.proxy(function(){
             // Stop listening for mouse movements...
             $('body').unbind('mousemove');
-            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 0);
+            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 2000);
         }, this));
 
     });
@@ -254,6 +256,17 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
     $('.step input, .step select').focus(function(){
         $.draughtcraft.recipes.builder._delay($.noop, 0)
     });
+
+    //
+    // If we're *about* to save, and any field is *hovered over*, prolong
+    // the save for an additional 2 seconds.  In this way, if the user
+    // is moving the mouse around after changing a field value, it won't
+    // save (and disable some field they're about to potentially focus on).
+    //
+    $('.step input, .step select').mouseenter($.proxy(function(){
+        if($.draughtcraft.recipes.builder._changes_in_queue)
+            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 2000);
+    }, this));
 
     // Any time a <select>'s value changes, save immediately.
     $('.step select').change(save);
