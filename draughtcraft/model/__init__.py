@@ -5,7 +5,8 @@ from sqlalchemy.orm     import scoped_session, sessionmaker
 import elixir
 
 elixir.options_defaults.update({
-    'shortnames': True
+    'shortnames': True,
+    'tablename': lambda cls: "dc_%s" % cls.__name__.lower()
 })
 
 Session = scoped_session(sessionmaker())
