@@ -1,12 +1,9 @@
-0.1b
+0.2
 ====
 
 * Test Coverage
 * Can the async call be made faster?
-* Implement a cache breaker for static resources
-
-0.1
-====
+* Add a link/icon to duplicate a recipe while viewing it
 
 * Mobile Browser/Viewer
 * Simple Recipe Search API
