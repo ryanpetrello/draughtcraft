@@ -19,12 +19,12 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         'MINIMASH'
     )
 
-    MASH_METHODS = {
+    MASH_METHODS = (
         'SINGLESTEP',
         'TEMPERATURE',
         'DECOCTION',
         'MULTISTEP'
-    }
+    )
 
     STATES = (
         'DRAFT',
