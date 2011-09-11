@@ -28,9 +28,8 @@
       [
         ('', 'Add Malt/Fermentables...')] + sorted(
           [
-            (f.id, f.printed_name) for f in h.model.Fermentable.excluding(
-              *[a.ingredient for a in h.request.context['recipe'].boil.get(h.model.Fermentable, [])]
-            ) if f.type in ('MALT', 'GRAIN', 'ADJUNCT', 'SUGAR')
+            (f.id, f.printed_name) for f in h.model.Fermentable.query.all()
+            if f.type in ('MALT', 'GRAIN', 'ADJUNCT', 'SUGAR')
           ], key = lambda f: f[1]
         )
     )}
@@ -45,9 +44,8 @@
       [
         ('', 'Add Malt Extract...')] + sorted(
           [
-            (f.id, f.printed_name) for f in h.model.Fermentable.excluding(
-              *[a.ingredient for a in h.request.context['recipe'].boil.get(h.model.Fermentable, [])]
-            ) if f.type == 'EXTRACT'
+            (f.id, f.printed_name) for f in h.model.Fermentable.query.all()
+            if f.type == 'EXTRACT'
           ], key = lambda f: f[1]
         )
     )}
@@ -77,9 +75,7 @@
       [
         ('', 'Add Misc...')] + sorted(
           [
-            (extra.id, extra.printed_name) for extra in h.model.Extra.excluding(
-              *[a.ingredient for a in h.request.context['recipe'].boil.get(h.model.Extra, [])]
-            )
+            (extra.id, extra.printed_name) for extra in h.model.Extra.query.all()
           ], key = lambda f: f[1]
         )
     )}

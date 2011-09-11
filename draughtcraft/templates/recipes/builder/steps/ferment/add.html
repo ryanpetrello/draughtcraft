@@ -22,9 +22,7 @@
       (
         [('', 'Add Yeast...')] + sorted(
           [
-            (yeast.id, yeast.printed_name) for yeast in h.model.Yeast.excluding(
-              *[a.ingredient for a in h.request.context['recipe'].fermentation.get(h.model.Yeast, [])]
-            )
+            (yeast.id, yeast.printed_name) for yeast in h.model.Yeast.query.all()
           ], key = lambda f: f[1]
         )
       )
@@ -40,9 +38,7 @@
       [
         ('', 'Add Dry Hops...')] + sorted(
           [
-            (hop.id, hop.printed_name) for hop in h.model.Hop.excluding(
-              *[a.ingredient for a in h.request.context['recipe'].fermentation.get(h.model.Hop, [])]
-            )
+            (hop.id, hop.printed_name) for hop in h.model.Hop.query.all()
           ], key = lambda f: f[1]
         )
     )}
@@ -57,9 +53,7 @@
       [
         ('', 'Add Misc...')] + sorted(
           [
-            (extra.id, extra.printed_name) for extra in h.model.Extra.excluding(
-              *[a.ingredient for a in h.request.context['recipe'].fermentation.get(h.model.Extra, [])]
-            )
+            (extra.id, extra.printed_name) for extra in h.model.Extra.query.all()
           ], key = lambda f: f[1]
         )
     )}
