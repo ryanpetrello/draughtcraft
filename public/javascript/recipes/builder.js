@@ -1,7 +1,7 @@
 $.draughtcraft.recipes.builder._delay = (function(){
   var timer = 0;
   return function(callback, ms){
-    $.draughtcraft.recipes.builder._changes_in_queue = true;
+    $.draughtcraft.recipes.builder._changes_in_queue = ms != 0;
     clearTimeout (timer);
     timer = setTimeout(callback, ms);
   };
@@ -74,7 +74,6 @@ $.draughtcraft.recipes.builder.__injectRecipeContent__ = function(html){
     if($.draughtcraft.recipes.builder._first_focus)
         $.draughtcraft.recipes.builder._first_focus = false;
     else if(difference.length){
-        debugger;
         $('#'+difference[0]).find('input, select').eq(0).focus();
     }
 
@@ -229,6 +228,7 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
         // of the Ajax save.
         //
         $(form).find('input, select').prop('disabled', true);
+        $(".step fieldset select").selectBox('disable');
     };
 
     // Any time an <input> or <textarea> triggers a `keyup`...
@@ -247,7 +247,7 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
         $('body').mousemove($.proxy(function(){
             // Stop listening for mouse movements...
             $('body').unbind('mousemove');
-            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 1000);
+            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 333);
         }, this));
 
     });
@@ -264,7 +264,9 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
     // 2.  They change a value and wait past the 2 second auto-save threshold.
     //
     $('.step input, .step select').focus(function(){
-        $.draughtcraft.recipes.builder._delay($.noop, 0)
+        if(!$.draughtcraft.recipes.builder._changes_in_queue) return;
+        if($(this).hasClass('selectBox')) return;
+        $.draughtcraft.recipes.builder._delay($.noop, 0);
     });
 
     //
