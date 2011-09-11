@@ -1,10 +1,10 @@
 $.draughtcraft.recipes.builder._delay = (function(){
   var timer = 0;
   return function(callback, ms){
+    $.draughtcraft.recipes.builder._changes_in_queue = true;
     clearTimeout (timer);
     timer = setTimeout(callback, ms);
   };
-  $.draughtcraft.recipes.builder._changes_in_queue = true;
 })();
 
 $.draughtcraft.recipes.builder._first_focus = true;
@@ -102,12 +102,18 @@ $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
     //
     $('#builder form:not(.name)').ajaxForm({
         'success' : function(responseText){
+            $('.publish-btn').prop('disabled', false);
+            $('.publish-btn').text('Publish Changes');
             $.draughtcraft.recipes.builder._delay($.noop, 0);
             $.draughtcraft.recipes.builder.__injectRecipeContent__(responseText);
+            $.draughtcraft.recipes.builder._changes_in_queue = false;
         },
         'error' : function(jqXHR, textStatus, errorThrown){
+            $('.publish-btn').prop('disabled', false);
+            $('.publish-btn').text('Publish Changes');
             $.draughtcraft.recipes.builder._delay($.noop, 0);
             $.draughtcraft.recipes.builder.__injectRecipeContent__(jqXHR.responseText);
+            $.draughtcraft.recipes.builder._changes_in_queue = false;
         }
     });
 
@@ -213,6 +219,10 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
         // Actually submit the form.
         form.submit();
 
+        // Temporarily disable the publish button
+        $('.publish-btn').prop('disabled', true);
+        $('.publish-btn').text('Saving Changes...');
+
         //
         // Find any adjacent input fields (for the form) and temporarily
         // disable them (disallow edits while saving) for the duration
@@ -227,7 +237,7 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
         if(e.keyCode == 9 || e.keyCode == 16) return;
 
         // Start a timer to auto-save 2 seconds from now.
-        $.draughtcraft.recipes.builder._delay($.proxy(save, this), 2000);
+        $.draughtcraft.recipes.builder._delay($.proxy(save, this), 1000);
 
         //
         // Listen for any mouse movement. If movement occurs, go ahead and save.
@@ -237,7 +247,7 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
         $('body').mousemove($.proxy(function(){
             // Stop listening for mouse movements...
             $('body').unbind('mousemove');
-            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 2000);
+            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 1000);
         }, this));
 
     });
@@ -249,8 +259,8 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
     // In this way, if a user tabs from field to field, editing along the way,
     // the changes will be saved in bulk once:
     //
-    // 1.  They Move their mouse.
-    //          - or -
+    // 1.  They move their mouse.
+    //            - or -
     // 2.  They change a value and wait past the 2 second auto-save threshold.
     //
     $('.step input, .step select').focus(function(){
@@ -263,10 +273,11 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
     // is moving the mouse around after changing a field value, it won't
     // save (and disable some field they're about to potentially focus on).
     //
-    $('.step input, .step select').mouseenter($.proxy(function(){
-        if($.draughtcraft.recipes.builder._changes_in_queue)
+    $('.step input, .step select').mouseenter(function(){
+        if($.draughtcraft.recipes.builder._changes_in_queue){
             $.draughtcraft.recipes.builder._delay($.proxy(save, this), 2000);
-    }, this));
+        }
+    });
 
     // Any time a <select>'s value changes, save immediately.
     $('.step select').change(save);
