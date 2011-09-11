@@ -40,7 +40,25 @@ $.draughtcraft.recipes.viewer.__injectRecipeContent__ = function(html){
 
     // Remove editing components from the DOM
     $('td.close img, img.close, li.add-step').remove();
-    $('#builder form').attr('method', 'GET').removeAttr('action');
+    $('#inventories form, #builder form').filter(function(){
+        return !$(this).parents('div#actions').length;
+    }).attr('method', 'GET').removeAttr('action');
+
+    // Cause the recipe actions (print, copy, etc...) to move down the page.
+    $('div#actions').scrollToFixed({ marginTop: 10 });
+
+    // Register tooltips for the recipe actions
+    $('div#actions li').each(function(){
+        $(this).tipTip({
+            'delay'     : 25,
+            'edgeOffset': 20
+        });
+    });
+
+    // Register click listeners for the recipe actions
+    $('div#actions li.submit').click(function(e){
+        $(this).closest('form').submit();
+    });
     
     // Register fancybox popups for ingredient links
     $("a[href^='/ingredients/']").fancybox();

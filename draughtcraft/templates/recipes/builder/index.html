@@ -21,10 +21,10 @@
 
 <%def name="javascript()">
   <script type="text/javascript" src="${h.stamp('/javascript/jquery.form.min.js')}"></script>
+  <script type="text/javascript" src="${h.stamp('/javascript/jquery-scrolltofixed-min.js')}"></script>
     % if editable:
       <script type="text/javascript" src="${h.stamp('/javascript/recipes/builder.js')}"></script>
       <script type="text/javascript" src="${h.stamp('/javascript/jquery.selectbox.min.js')}"></script>
-      <script type="text/javascript" src="${h.stamp('/javascript/jquery-scrolltofixed-min.js')}"></script>
     % else:
       <script type="text/javascript" src="${h.stamp('/javascript/recipes/viewer.js')}"></script>
     % endif

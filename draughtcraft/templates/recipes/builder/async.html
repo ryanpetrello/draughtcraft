@@ -1,3 +1,12 @@
+<div id="actions">
+  <ul>
+    <li class="print" title="Print this Recipe" onclick="window.print();"></li>
+    ${h.form("%scopy" % recipe.url())}
+      <li class="copy submit last" title="Copy this Recipe"></li>
+    ${h.end_form()}
+  </ul>
+</div>
+
 % if recipe.type in ('MASH', 'MINIMASH'):
   <%include file="steps/mash/index.html" />
 % endif

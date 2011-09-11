@@ -2,7 +2,6 @@
 ====
 
 * Test Coverage
-* Add a link/icon to duplicate a recipe while viewing it
 
 * Mobile Browser/Viewer
 * Simple Recipe Search API
