@@ -97,6 +97,7 @@ $.draughtcraft.recipes.builder.__injectRecipeContent__ = function(html){
 $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
 
     // Re-initialize all event listeners
+    $.draughtcraft.recipes.builder.injectInventories();
     $.draughtcraft.recipes.builder.initListeners();
 
     // Re-choose the "last chosen" tab
@@ -151,8 +152,6 @@ $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
     });
 
     $("#tiptip_holder").fadeOut();
-
-    $.draughtcraft.recipes.builder.injectInventories();
 
     // Draw jQuery-powered replacements for native <select>'s.
     $(".step fieldset select").selectBox({
