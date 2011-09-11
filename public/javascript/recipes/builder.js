@@ -331,8 +331,9 @@ $.draughtcraft.recipes.builder.initListeners = function(){
  * Used to remove an addition/ingredient from a recipe.
  * @param {Integer} model.RecipeAddition.id
  */
-$.draughtcraft.recipes.builder.removeAddition = function(addition){
-    if(confirm('Are you sure you want to remove this?'))
+$.draughtcraft.recipes.builder.removeAddition = function(addition, el){
+    if(confirm('Are you sure you want to remove this?')){
+        $(el).closest('tr').remove();
         $.ajax({
             url: window.location.pathname+'/async/ingredients/'+addition,
             type: 'DELETE',
@@ -341,6 +342,7 @@ $.draughtcraft.recipes.builder.removeAddition = function(addition){
                 $.draughtcraft.recipes.builder.__injectRecipeContent__(html);
             }
         });
+    }
 };
 
 /*
