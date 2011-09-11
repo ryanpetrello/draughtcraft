@@ -4,9 +4,12 @@
   
   <div class="ingredient-list">
 
-    <% i = 0 %>
+    ${h.form('')}${h.end_form()}
 
     ${h.form('async/ingredients?_method=put')}
+
+      <% i = 0 %>
+
       <h3 class="ribbon">
           <span class="step-help">Fermentation </span>Ingredients
       </h3>
