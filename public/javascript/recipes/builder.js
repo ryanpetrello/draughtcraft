@@ -24,6 +24,16 @@ $.draughtcraft.recipes.builder.fetchRecipe = function(){
 };
 
 /*
+ * Copies the inventory lists into the injected AJAX builder content.
+ */
+$.draughtcraft.recipes.builder.injectInventories = function(){
+    $('#inventories > div').each(function(){
+        var type = this.className;
+        $('.inventory.'+type).html($(this).html());
+    });
+};
+
+/*
  * After builder content is fetched, inject it into the appropriate
  * container.
  * @param {String} html - The HTML content to inject
@@ -141,6 +151,8 @@ $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
     });
 
     $("#tiptip_holder").fadeOut();
+
+    $.draughtcraft.recipes.builder.injectInventories();
 
     // Draw jQuery-powered replacements for native <select>'s.
     $(".step fieldset select").selectBox({

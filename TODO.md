@@ -2,7 +2,6 @@
 ====
 
 * Test Coverage
-* Can the async call be made faster?
 * Add a link/icon to duplicate a recipe while viewing it
 
 * Mobile Browser/Viewer
