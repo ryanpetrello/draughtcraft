@@ -30,5 +30,8 @@ setup(
     zip_safe = False,
     paster_plugins = ['Pecan'],
     include_package_data = True,
+    package_data = {
+        'draughtcraft': ['*.db'],
+    },
     packages = find_packages(exclude=['ez_setup'])
 )
