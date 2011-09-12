@@ -1,1 +1,3 @@
 recursive-include public *
+include draughtcraft/data/ingredients.db
+include draughtcraft/data/styles.db
