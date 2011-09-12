@@ -29,6 +29,7 @@ def setup_app(config):
         logging         = config.app.logging,
         template_path   = config.app.template_path,
         force_canonical = config.app.force_canonical,
+        errorcfg        = getattr(config, 'error', {}),
         hooks           = [
             TransactionHook(
                 model.start,
