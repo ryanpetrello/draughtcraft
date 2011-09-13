@@ -1,7 +1,9 @@
 0.2
 ====
+* International Unit Support
 * BeerXML import/export
-* Ability to "favorite" recipes
+* Ability to comment on (others') recipes
+* Profile Bio
 
 Missing Ingredients
 --------------------
@@ -10,10 +12,11 @@ Missing Ingredients
 Settings
 --------
 * Ability to provide customized PPG and L for fermentables (at a global level)
-* International Unit Support
 
-0.3
+Future
 ====
+* Ability to "favorite" recipes
 * Support for scheduling and tracking recipe batches
 * Mobile Browser/Viewer
 * Simple Recipe Search API
+* SSO (perhaps through Facebook?)

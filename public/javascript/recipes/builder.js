@@ -31,14 +31,6 @@ $.draughtcraft.recipes.builder.injectInventories = function(){
         var type = this.className;
         $('.inventory.'+type).html($(this).html());
     });
-
-    // Force the sidebar to scroll down with the page
-    $('.inventory:visible').scrollToFixed({ marginTop: 10 });
-
-    // Safari bug: force the browser window to repaint by quickly scrolling
-    var pos = $('body').scrollTop();
-    window.scrollTo(0, pos+1);
-    window.scrollTo(0, pos);
 };
 
 /*
@@ -366,6 +358,14 @@ $.draughtcraft.recipes.builder.selectTab = function(index){
 
     // Store the "current" step index for reference
     $.draughtcraft.recipes.builder.currentTab = index;
+
+    // Force the sidebar to scroll down with the page
+    $('.inventory:visible').scrollToFixed({ marginTop: 10 });
+
+    // Safari bug: force the browser window to repaint by quickly scrolling
+    var pos = $('body').scrollTop();
+    window.scrollTo(0, pos+1);
+    window.scrollTo(0, pos);
 }; 
 
 /*
