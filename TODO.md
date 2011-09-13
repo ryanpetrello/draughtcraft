@@ -1,6 +1,7 @@
 0.2
 ====
 * BeerXML import/export
+* Ability to "favorite" recipes
 
 Missing Ingredients
 --------------------
@@ -13,5 +14,6 @@ Settings
 
 0.3
 ====
+* Support for scheduling and tracking recipe batches
 * Mobile Browser/Viewer
 * Simple Recipe Search API
