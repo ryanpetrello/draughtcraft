@@ -17,6 +17,7 @@ class User(Entity, ShallowCopyMixin):
     username    = Field(Unicode(64), unique=True, index=True)
     _password   = Field(Unicode(64), colname='password', synonym='password')
     email       = Field(Unicode(64), index=True)
+    bio         = Field(Unicode(512))
     signup_date = Field(DateTime, default=datetime.utcnow)
 
     location    = Field(Unicode(256))

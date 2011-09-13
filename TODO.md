@@ -3,7 +3,6 @@
 * International Unit Support
 * BeerXML import/export
 * Ability to comment on (others') recipes
-* Profile Bio
 
 Missing Ingredients
 --------------------

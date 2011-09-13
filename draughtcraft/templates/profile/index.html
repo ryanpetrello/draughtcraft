@@ -30,6 +30,13 @@
     % endif
     <dt>Member Since</dt>
       <dd>${h.format_date(user.signup_date)}</dd>
+    % if user.bio:
+      <dt class="bio">
+        % for line in user.bio.strip().splitlines():
+          ${line}<br />
+        % endfor
+      </dt>
+    % endif
     % if user == h.request.context['user']:
       <dt class="edit">
         <a href="/settings/profile">

@@ -18,7 +18,8 @@ class TestProfileSettings(TestAuthenticatedApp):
             'first_name'    : '',
             'last_name'     : '',
             'email'         : 'ryantesting123@example.com',
-            'location'      : ''
+            'location'      : '',
+            'bio'           : ''
         }
         self.post('/settings/profile/', params=params)
 
@@ -29,7 +30,8 @@ class TestProfileSettings(TestAuthenticatedApp):
             'first_name'    : '',
             'last_name'     : '',
             'email'         : '',
-            'location'      : ''
+            'location'      : '',
+            'bio'           : ''
         }
 
         assert model.User.get(1).email == 'ryan@example.com'
@@ -39,12 +41,13 @@ class TestProfileSettings(TestAuthenticatedApp):
 
         assert model.User.get(1).email == 'ryan@example.com'
 
-    def test_invalid(self):
+    def test_invalid_email(self):
         params = {
             'first_name'    : '',
             'last_name'     : '',
             'email'         : 'ryan@invalid',
-            'location'      : ''
+            'location'      : '',
+            'bio'           : ''
         }
 
         assert model.User.get(1).email == 'ryan@example.com'
@@ -59,10 +62,13 @@ class TestProfileSettings(TestAuthenticatedApp):
             'first_name'    : 'Ryan',
             'last_name'     : 'Petrello',
             'email'         : 'ryantesting123@example.com',
-            'location'      : ''
+            'location'      : 'Atlanta, GA',
+            'bio'           : 'I am Ryan.'
         }
         self.post('/settings/profile/', params=params)
 
         assert model.User.get(1).first_name == 'Ryan'
         assert model.User.get(1).last_name == 'Petrello'
         assert model.User.get(1).email == 'ryantesting123@example.com'
+        assert model.User.get(1).location == 'Atlanta, GA'
+        assert model.User.get(1).bio == 'I am Ryan.'

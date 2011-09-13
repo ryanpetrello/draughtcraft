@@ -9,5 +9,6 @@ class UserProfileSchema(FilteredSchema):
     first_name      = validators.String()
     last_name       = validators.String()
     email           = validators.Email(not_empty=True)
+    bio             = validators.String(max=512)
 
     location        = validators.String()

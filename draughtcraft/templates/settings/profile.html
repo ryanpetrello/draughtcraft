@@ -28,7 +28,7 @@
     <fieldset>
       <dl class="clearfix">
 
-        <dt><label for="name">Full Name</label></dt>
+        <dt><label for="first_name">Full Name</label></dt>
         <dd>
           ${h.text(
             'first_name', 
@@ -48,7 +48,7 @@
           </div>
         </dd>
 
-        <dt><label for="name">Email</label></dt>
+        <dt><label for="email">Email</label></dt>
         <dd>
           ${h.text(
             'email', 
@@ -58,7 +58,7 @@
           )}
         </dd>
 
-        <dt><label for="name">Location</label></dt>
+        <dt><label for="location">Location</label></dt>
         <dd>
           ${h.text(
             'location', 
@@ -70,6 +70,18 @@
             <small>e.g., Atlanta, GA</small>
           </div>
         </dd>
+
+        <dt><label for="bio">Bio</label></dt>
+        <dd>
+          ${h.textarea(
+            'bio', 
+            user.bio,
+            tabindex = '5',
+            rows = 8,
+            cols = 33
+          )}
+        </dd>
+        
 
       </dl>
     </fieldset>
