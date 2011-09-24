@@ -271,6 +271,19 @@ class TestRecipeSettings(TestAuthenticatedApp):
         
         assert model.Recipe.get(1).gallons == 10.0
 
+    def test_international_volume_change(self):
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
+        model.commit()
+
+        assert model.Recipe.get(1).gallons == 5.0
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/settings/volume', params={
+            'volume'    : 10.0,
+            'unit'      : 'LITER' 
+        })
+        
+        assert model.Recipe.get(1).gallons == 2.6417205199999998
+        assert model.Recipe.get(1).liters == 10.0
+
     def test_mash_settings_change(self):
         model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.commit()

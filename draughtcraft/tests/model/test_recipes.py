@@ -217,6 +217,28 @@ class TestRecipe(unittest.TestCase):
         assert len(recipe.boil[model.Hop]) == 4
         assert len(recipe.fermentation[model.Yeast]) == 2
 
+    def test_metric(self):
+        recipe = model.Recipe()
+        assert recipe.metric == False
+
+        user = model.User()
+        recipe.author = user
+        assert recipe.metric == False
+
+        user.unit_system = 'METRIC'
+        assert recipe.metric == True
+
+    def test_recipe_international_volume(self):
+        recipe = model.Recipe(gallons = 5)
+        recipe.liters = 10
+        assert recipe.gallons == 2.6417205199999998
+        assert recipe.liters == 10
+
+        # 0, 0.25, 0.50, ... 99.50, 99.75, 100.00
+        for i in [x * 0.25 for x in range(0, 401)]:
+            recipe.liters = i
+            assert recipe.liters == i
+
     def test_ingredient_partition(self):
         recipe = model.Recipe()
         recipe.additions = [

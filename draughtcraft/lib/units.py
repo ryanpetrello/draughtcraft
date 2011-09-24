@@ -333,6 +333,20 @@ class UnitConvert(object):
         return result
 
 
+def to_us(amount, unit):
+    """
+    Used to convert metric (amount, unit) pairs to U.S. versions, e.g.,
+    (18.9270589, 'LITER') -> (5, 'GALLON')
+    """
+    if unit == 'KILOGRAM':
+        return (amount * 2.20462262, 'POUND')
+    if unit == 'GRAM':
+        return (amount * 0.0352739619, 'OUNCE')
+    if unit == 'LITER':
+        return (amount * 0.264172052, 'GALLON')
+    return (amount, unit)
+
+
 def to_metric(amount, unit):
     """
     Used to convert common (amount, unit) pairs to metric versions, e.g.,

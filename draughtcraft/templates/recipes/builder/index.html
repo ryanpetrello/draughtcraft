@@ -51,20 +51,39 @@
         )}
       ${h.end_form()}
     </fieldset>
-    <fieldset>
-      ${h.form('async/settings/volume', class_='volume')}
-        ${h.text(
-          'volume', 
-          int(recipe.gallons) if int(recipe.gallons) == float(recipe.gallons) else recipe.gallons,
-          class_ = 'unit'
-        )}
-        ${h.hidden(
-          'unit',
-          'GALLON'
-        )}
-        Gallon(s)
-      ${h.end_form()}
-    </fieldset>
+
+    % if recipe.metric:
+        <fieldset>
+          ${h.form('async/settings/volume', class_='volume')}
+            ${h.text(
+              'volume', 
+              int(recipe.liters) if int(recipe.liters) == float(recipe.liters) else recipe.liters,
+              class_ = 'unit'
+            )}
+            ${h.hidden(
+              'unit',
+              'LITER'
+            )}
+            Liter(s)
+          ${h.end_form()}
+        </fieldset>
+    % else:
+        <fieldset>
+          ${h.form('async/settings/volume', class_='volume')}
+            ${h.text(
+              'volume', 
+              int(recipe.gallons) if int(recipe.gallons) == float(recipe.gallons) else recipe.gallons,
+              class_ = 'unit'
+            )}
+            ${h.hidden(
+              'unit',
+              'GALLON'
+            )}
+            Gallon(s)
+          ${h.end_form()}
+        </fieldset>
+    % endif
+
     <fieldset class="type">
       <span>${printable_type(recipe.type)}</span>
     </fieldset>

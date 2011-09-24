@@ -4,7 +4,7 @@ from elixir import (
 )
 from draughtcraft.lib.calculations  import Calculations
 from draughtcraft.lib.units         import (UnitConvert, InvalidUnitException,
-                                            to_metric)
+                                            to_us, to_metric)
 from draughtcraft.model.deepcopy    import DeepCopyMixin, ShallowCopyMixin
 from datetime                       import datetime
 from copy                           import deepcopy
@@ -181,6 +181,20 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         if self.author:
             return self.author.unit_system
         return 'US'
+
+    @property
+    def metric(self):
+        return self.unit_system == 'METRIC'
+
+    @property
+    def liters(self):
+        liters = to_metric(*(self.gallons, "GALLON"))[0]
+        return round(liters, 3)
+
+    @liters.setter
+    def liters(self, v):
+        gallons = to_us(*(v, "LITER"))[0]
+        self.gallons = gallons
 
     def _partition(self, additions):
         """

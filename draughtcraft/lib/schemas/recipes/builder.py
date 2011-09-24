@@ -136,7 +136,7 @@ class RecipeVolume(FilteredSchema):
     This schema is for modifying the volume/batch size of a recipe.
     """
     volume  = validators.Number()
-    unit    = validators.OneOf(['GALLON'])
+    unit    = validators.OneOf(['GALLON', 'LITER'])
 
 
 class RecipeMashSettings(FilteredSchema):

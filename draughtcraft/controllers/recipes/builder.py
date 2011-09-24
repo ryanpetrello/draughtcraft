@@ -111,7 +111,10 @@ class RecipeSettingsController(object):
         )
     )
     def _volume(self, volume, unit):
-        self.recipe.gallons = volume
+        if unit == 'GALLON':
+            self.recipe.gallons = volume
+        elif unit == 'LITER':
+            self.recipe.liters = volume
         self.recipe.touch()
         return dict(recipe = self.recipe, editable=True)
 
