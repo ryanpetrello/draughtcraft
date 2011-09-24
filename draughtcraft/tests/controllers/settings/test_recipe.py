@@ -18,6 +18,7 @@ class TestRecipeSettings(TestAuthenticatedApp):
             'default_recipe_type'       : 'EXTRACT',
             'default_recipe_volume'     : '2.5',
             'default_ibu_formula'       : 'daniels',
+            'unit_system'               : 'METRIC',
             'brewhouse_efficiency'      : 75
         }
         response = self.post('/settings/recipe/', params=params)
@@ -27,4 +28,5 @@ class TestRecipeSettings(TestAuthenticatedApp):
         assert user.settings['default_recipe_type'] == 'EXTRACT'
         assert user.settings['default_recipe_volume'] == 2.5
         assert user.settings['default_ibu_formula'] == 'daniels'
+        assert user.settings['unit_system'] == 'METRIC'
         assert user.settings['brewhouse_efficiency'] == .75

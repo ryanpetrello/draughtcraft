@@ -179,7 +179,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
     @property
     def unit_system(self):
         if self.author:
-            return self.author.unit_system
+            return self.author.settings.get('unit_system', 'US')
         return 'US'
 
     @property

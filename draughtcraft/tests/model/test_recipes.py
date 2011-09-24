@@ -40,9 +40,8 @@ class TestRecipeAddition(unittest.TestCase):
         assert addition.printable_amount == '5 lb'
 
     def test_international_printable_pound_conversion(self):
-        r = model.Recipe(author = model.User(
-            unit_system = 'METRIC'    
-        ))
+        r = model.Recipe(author = model.User())
+        r.author.settings['unit_system'] = 'METRIC'
         addition = model.RecipeAddition(
             amount  = 5,
             unit    = 'POUND',
@@ -52,9 +51,8 @@ class TestRecipeAddition(unittest.TestCase):
         assert addition.printable_amount == '2.268 kg'
 
     def test_international_printable_ounce_conversion(self):
-        r = model.Recipe(author = model.User(
-            unit_system = 'METRIC'    
-        ))
+        r = model.Recipe(author = model.User())
+        r.author.settings['unit_system'] = 'METRIC'
         addition = model.RecipeAddition(
             amount  = 5,
             unit    = 'OUNCE',
@@ -64,9 +62,8 @@ class TestRecipeAddition(unittest.TestCase):
         assert addition.printable_amount == '141.748 g'
 
     def test_international_printable_gallon_conversion(self):
-        r = model.Recipe(author = model.User(
-            unit_system = 'METRIC'    
-        ))
+        r = model.Recipe(author = model.User())
+        r.author.settings['unit_system'] = 'METRIC'
         addition = model.RecipeAddition(
             amount  = 5,
             unit    = 'GALLON',
@@ -91,9 +88,8 @@ class TestRecipeAddition(unittest.TestCase):
         assert addition.printable_amount == '0 oz'
 
     def test_printable_metric_hop_amount(self):
-        r = model.Recipe(author = model.User(
-            unit_system = 'METRIC'    
-        ))
+        r = model.Recipe(author = model.User())
+        r.author.settings['unit_system'] = 'METRIC'
         addition = model.HopAddition(
             amount  = 0.0625, # 1 oz
             unit    = 'POUND',
@@ -225,7 +221,7 @@ class TestRecipe(unittest.TestCase):
         recipe.author = user
         assert recipe.metric == False
 
-        user.unit_system = 'METRIC'
+        user.settings['unit_system'] = 'METRIC'
         assert recipe.metric == True
 
     def test_recipe_international_volume(self):

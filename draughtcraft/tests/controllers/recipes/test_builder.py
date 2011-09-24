@@ -376,7 +376,7 @@ class TestFermentationStepChange(TestAuthenticatedApp):
 
     def test_fermentation_step_metric_update(self):
         author = model.User.get(1)
-        author.unit_system = 'METRIC'
+        author.settings['unit_system'] = 'METRIC'
         recipe = model.Recipe(name='Rocky Mountain River IPA', author=author)
         recipe.fermentation_steps.append(
             model.FermentationStep(

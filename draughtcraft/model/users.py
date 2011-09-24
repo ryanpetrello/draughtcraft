@@ -23,8 +23,6 @@ class User(Entity, ShallowCopyMixin):
 
     location        = Field(Unicode(256))
 
-    unit_system     = Field(Enum('US', 'METRIC'), default='US')
-
     recipes         = OneToMany('Recipe', inverse='author', order_by='-last_updated')
     user_settings   = OneToMany('UserSetting', cascade='all, delete-orphan',
                                    collection_class=attribute_mapped_collection('name'))
@@ -83,6 +81,7 @@ class UserSetting(Entity):
         'default_ibu_formula'   : 'tinseth',
         'default_recipe_volume' : 5,
         'default_recipe_type'   : 'MASH',
+        'unit_system'           : 'US',
         'brewhouse_efficiency'  : .75
     }
 

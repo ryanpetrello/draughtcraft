@@ -46,13 +46,21 @@
           ], tabindex='3')}
         </dd>
 
+        <dt><label for="name">Preferred Units</label></dt>
+        <dd>
+          ${h.select('unit_system', user.settings.get('unit_system', 'US'), [
+            ('US', 'U.S. (lb, oz, gallon)'),
+            ('METRIC', 'Metric (kg, g, liter)'),
+          ], tabindex='4')}
+        </dd>
+
         <dt><label for="name">Brewhouse Efficiency</label></dt>
         <dd>
           ${h.text(
             'brewhouse_efficiency', 
             int(user.settings['brewhouse_efficiency'] * 100),
             class_="unit",
-            tabindex='4'
+            tabindex='5'
           )} %
         </dd>
 
