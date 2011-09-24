@@ -3,7 +3,8 @@ from elixir import (
     DateTime, using_options, OneToMany, ManyToOne, OneToOne, entities
 )
 from draughtcraft.lib.calculations  import Calculations
-from draughtcraft.lib.units         import UnitConvert, InvalidUnitException
+from draughtcraft.lib.units         import (UnitConvert, InvalidUnitException,
+                                            to_metric)
 from draughtcraft.model.deepcopy    import DeepCopyMixin, ShallowCopyMixin
 from datetime                       import datetime
 from copy                           import deepcopy
@@ -175,6 +176,12 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
             return self.author.settings['brewhouse_efficiency']
         return .75
 
+    @property
+    def unit_system(self):
+        if self.author:
+            return self.author.unit_system
+        return 'US'
+
     def _partition(self, additions):
         """
         Partition a set of recipe additions
@@ -333,6 +340,9 @@ class RecipeAddition(Entity, DeepCopyMixin):
 
     @property
     def printable_amount(self):
+        if getattr(self.recipe, 'unit_system', None) == 'METRIC':
+            return UnitConvert.to_str(*to_metric(self.amount, self.unit))
+
         return UnitConvert.to_str(self.amount, self.unit)
 
     @property
@@ -403,6 +413,8 @@ class HopAddition(RecipeAddition):
         unit = self.unit
         if self.amount == 0:
             unit = 'OUNCE'
+        if getattr(self.recipe, 'unit_system', None) == 'METRIC':
+            return UnitConvert.to_str(*to_metric(self.amount, unit))
         return UnitConvert.to_str(self.amount, unit)
 
     @property

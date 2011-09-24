@@ -1,5 +1,6 @@
 from elixir                             import (Entity, Field, Unicode, DateTime,
-                                                UnicodeText, OneToMany, ManyToOne)
+                                                Enum, UnicodeText, OneToMany,
+                                                ManyToOne)
 from draughtcraft.model.deepcopy        import ShallowCopyMixin
 from pecan                              import conf
 from simplejson                         import loads, dumps
@@ -11,16 +12,18 @@ from sqlalchemy.orm.collections         import attribute_mapped_collection
 
 class User(Entity, ShallowCopyMixin):
 
-    first_name  = Field(Unicode(64), index=True)
-    last_name   = Field(Unicode(64), index=True)
+    first_name      = Field(Unicode(64), index=True)
+    last_name       = Field(Unicode(64), index=True)
 
-    username    = Field(Unicode(64), unique=True, index=True)
-    _password   = Field(Unicode(64), colname='password', synonym='password')
-    email       = Field(Unicode(64), index=True)
-    bio         = Field(Unicode(512))
-    signup_date = Field(DateTime, default=datetime.utcnow)
+    username        = Field(Unicode(64), unique=True, index=True)
+    _password       = Field(Unicode(64), colname='password', synonym='password')
+    email           = Field(Unicode(64), index=True)
+    bio             = Field(Unicode(512))
+    signup_date     = Field(DateTime, default=datetime.utcnow)
 
-    location    = Field(Unicode(256))
+    location        = Field(Unicode(256))
+
+    unit_system     = Field(Enum('US', 'METRIC'), default='US')
 
     recipes         = OneToMany('Recipe', inverse='author', order_by='-last_updated')
     user_settings   = OneToMany('UserSetting', cascade='all, delete-orphan',

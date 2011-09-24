@@ -266,6 +266,7 @@ class UnitConvert(object):
         unit = str(unit)
         _map = {
             'GRAM'          : 'g',
+            'KILOGRAM'      : 'kg',
             'OUNCE'         : 'oz',
             'POUND'         : 'lb',
             'TEASPOON'      : 't',
@@ -283,7 +284,17 @@ class UnitConvert(object):
         """
         if amount == int(amount):
             amount = int(amount)
-        return str(amount)
+        amount = '%.3f' % amount
+
+        # Remove padded zeroes
+        while amount.endswith('0'):
+            amount = amount[:-1]
+
+        # Remove trailing decimal points
+        if amount.endswith('.'):
+            amount = amount[:-1]      
+        
+        return amount
 
     @classmethod
     def to_str(cls, amount, unit):
@@ -320,3 +331,21 @@ class UnitConvert(object):
             return '0 %s' % cls.__str_abbr__(unit)
 
         return result
+
+
+def to_metric(amount, unit):
+    """
+    Used to convert common (amount, unit) pairs to metric versions, e.g.,
+    (5, 'GALLON') -> (18.9270589, 'LITER')
+    """
+    if unit == 'POUND':
+        kgs = (amount * 0.45359237, 'KILOGRAM')
+        print kgs
+        if kgs[0] < 1.0:
+            return (kgs[0] * 1000, 'GRAM')
+        return kgs
+    if unit == 'OUNCE':
+        return (amount * 28.3495231, 'GRAM')
+    if unit == 'GALLON':
+        return (amount * 3.78541178, 'LITER')
+    return (amount, unit)

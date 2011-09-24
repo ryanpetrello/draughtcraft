@@ -39,6 +39,42 @@ class TestRecipeAddition(unittest.TestCase):
 
         assert addition.printable_amount == '5 lb'
 
+    def test_international_printable_pound_conversion(self):
+        r = model.Recipe(author = model.User(
+            unit_system = 'METRIC'    
+        ))
+        addition = model.RecipeAddition(
+            amount  = 5,
+            unit    = 'POUND',
+            recipe  = r
+        )
+
+        assert addition.printable_amount == '2.268 kg'
+
+    def test_international_printable_ounce_conversion(self):
+        r = model.Recipe(author = model.User(
+            unit_system = 'METRIC'    
+        ))
+        addition = model.RecipeAddition(
+            amount  = 5,
+            unit    = 'OUNCE',
+            recipe  = r
+        )
+
+        assert addition.printable_amount == '141.748 g'
+
+    def test_international_printable_gallon_conversion(self):
+        r = model.Recipe(author = model.User(
+            unit_system = 'METRIC'    
+        ))
+        addition = model.RecipeAddition(
+            amount  = 5,
+            unit    = 'GALLON',
+            recipe  = r
+        )
+
+        assert addition.printable_amount == '18.927 L'
+
     def test_printable_hop_amount(self):
         addition = model.HopAddition(
             amount  = 0.0625, # 1 oz
@@ -53,6 +89,26 @@ class TestRecipeAddition(unittest.TestCase):
         )
 
         assert addition.printable_amount == '0 oz'
+
+    def test_printable_metric_hop_amount(self):
+        r = model.Recipe(author = model.User(
+            unit_system = 'METRIC'    
+        ))
+        addition = model.HopAddition(
+            amount  = 0.0625, # 1 oz
+            unit    = 'POUND',
+            recipe  = r
+        )
+
+        assert addition.printable_amount == '28.35 g'
+
+        addition = model.HopAddition(
+            amount  = 0,
+            unit    = 'POUND',
+            recipe  = r
+        )
+
+        assert addition.printable_amount == '0 g'
 
     def test_percentage(self):
         recipe = model.Recipe()
