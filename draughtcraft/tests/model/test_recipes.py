@@ -519,6 +519,28 @@ class TestFermentationStep(unittest.TestCase):
         assert steps[2].fahrenheit == 35
         assert steps[2].recipe == recipe
 
+    def test_celcius(self):
+        recipe = model.Recipe()
+        recipe.fermentation_steps.extend([
+            model.FermentationStep(
+                step = 'PRIMARY',
+                days = 7,
+                fahrenheit = 50
+            )
+        ])
+        
+        steps = recipe.fermentation_steps
+        s = steps[0]
+        assert s.celsius == 10
+
+        s.celsius = 20
+        assert s.fahrenheit == 68
+
+        s.fahrenheit = 32
+        assert s.celsius == 0
+
+        s.celcius = 0
+        assert s.fahrenheit == 32
 
 class TestRecipeCopy(TestModel):
 

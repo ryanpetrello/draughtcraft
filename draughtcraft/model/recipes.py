@@ -458,6 +458,14 @@ class FermentationStep(Entity, DeepCopyMixin):
 
     recipe          = ManyToOne('Recipe', inverse='fermentation_steps')
 
+    @property
+    def celsius(self):
+        return (5/9.0) * (self.fahrenheit - 32)
+
+    @celsius.setter
+    def celsius(self, v):
+        self.fahrenheit = ((9/5.0) * v) + 32
+
 
 class RecipeView(Entity):
 

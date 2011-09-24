@@ -115,12 +115,22 @@
                 class_ = 'unit'
               )}
               day(s) at 
-              ${h.select(
-                'temperature',
-                [int(s.fahrenheit)],
-                range(100, 31, -1),
-                class_ = 'unit'
-              )} &#186;F
+
+              % if recipe.metric:
+                ${h.select(
+                  'temperature',
+                  [int(s.celsius)],
+                  range(35, -1, -1),
+                  class_ = 'unit'
+                )} &#186;C
+              % else:
+                ${h.select(
+                  'temperature',
+                  [int(s.fahrenheit)],
+                  range(100, 31, -1),
+                  class_ = 'unit'
+                )} &#186;F
+              % endif
             ${h.end_form()}
 
             % if s == recipe.fermentation_steps[-1] and s.step != 'PRIMARY':

@@ -53,7 +53,11 @@ class FermentationStepsController(RestController):
         duration, temperature).
         """
         step.days = kw['days']
-        step.fahrenheit = kw['temperature']
+
+        if self.recipe.metric:
+            step.celsius = kw['temperature']
+        else:
+            step.fahrenheit = kw['temperature']
         self.recipe.touch()
         return dict(recipe = self.recipe, editable=True)
 

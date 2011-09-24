@@ -374,6 +374,33 @@ class TestFermentationStepChange(TestAuthenticatedApp):
         assert recipe.fermentation_steps[0].days == 14
         assert recipe.fermentation_steps[0].fahrenheit == 68
 
+    def test_fermentation_step_metric_update(self):
+        author = model.User.get(1)
+        author.unit_system = 'METRIC'
+        recipe = model.Recipe(name='Rocky Mountain River IPA', author=author)
+        recipe.fermentation_steps.append(
+            model.FermentationStep(
+                step = 'PRIMARY',
+                days = 7,
+                fahrenheit = 65
+            )
+        )
+        assert recipe.metric
+        model.commit()
+
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/fermentation_steps?_method=put', params={
+            'step'          : 1,
+            'days'          : 14,
+            'temperature'   : 0
+        })
+
+        recipe = model.Recipe.get(1)
+        assert model.FermentationStep.query.count() == 1
+        assert len(recipe.fermentation_steps) == 1
+        assert recipe.fermentation_steps[0].step == 'PRIMARY'
+        assert recipe.fermentation_steps[0].days == 14
+        assert recipe.fermentation_steps[0].fahrenheit == 32
+
     def test_fermentation_step_delete(self):
         recipe = model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         recipe.fermentation_steps.extend([
