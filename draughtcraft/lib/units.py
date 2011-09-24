@@ -340,7 +340,6 @@ def to_metric(amount, unit):
     """
     if unit == 'POUND':
         kgs = (amount * 0.45359237, 'KILOGRAM')
-        print kgs
         if kgs[0] < 1.0:
             return (kgs[0] * 1000, 'GRAM')
         return kgs

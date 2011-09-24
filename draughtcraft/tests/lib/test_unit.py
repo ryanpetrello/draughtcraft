@@ -1,6 +1,6 @@
 from draughtcraft.lib.units         import (UnitConvert, InvalidUnitException, PoundOunceMerge, 
                                             OunceMerge, GramMerge, KilogramMerge, PoundExpansion,
-                                            UNIT_MAP)
+                                            to_metric, UNIT_MAP)
 from pytest                         import raises
 
 import unittest
@@ -302,3 +302,22 @@ class TestConversionInteroperability(unittest.TestCase):
         original = (5.25, 'POUND')
         string = UnitConvert.to_str(*original)
         assert original == UnitConvert.from_str(string)
+
+
+class TestMetricConversion(unittest.TestCase):
+
+    def test_pound_to_kg(self):
+        """Convert pounds to kg"""
+        assert to_metric(*(5, 'POUND')) == (2.2679618500000003, 'KILOGRAM')
+
+    def test_pound_to_g(self):
+        """If the pound -> kg conversion is < 1kg, use grams instead"""
+        assert to_metric(*(1, 'POUND')) == (453.59237000000002, 'GRAM')
+
+    def test_ounce_to_gram(self):
+        """Convert oz to g"""
+        assert to_metric(*(1, 'OUNCE')) == (28.3495231, 'GRAM')
+
+    def test_gallon_to_liter(self):
+        """Convert gallons to liters"""
+        assert to_metric(*(10, 'GALLON')) == (37.854117799999997, 'LITER')
