@@ -460,7 +460,7 @@ class FermentationStep(Entity, DeepCopyMixin):
 
     @property
     def celsius(self):
-        return (5/9.0) * (self.fahrenheit - 32)
+        return round((5/9.0) * (self.fahrenheit - 32))
 
     @celsius.setter
     def celsius(self, v):

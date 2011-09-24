@@ -542,6 +542,10 @@ class TestFermentationStep(unittest.TestCase):
         s.celcius = 0
         assert s.fahrenheit == 32
 
+        for i in range(0, 40):
+            s.celsius = i
+            assert s.celsius == i
+
 class TestRecipeCopy(TestModel):
 
     def test_simple_copy(self):
