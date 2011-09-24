@@ -425,7 +425,50 @@ $.draughtcraft.recipes.builder.handleNameField = function(){
     /*
      * When the name field is changed, submit its containing form via ajax.
      */
-    $('#builder div.header > form.name').ajaxForm();
+    $('#builder div.header > form.name').ajaxForm({
+        'success' : function(responseText){
+            $('.publish-btn').prop('disabled', false);
+            $('.publish-btn').text('Publish Changes');
+            $.draughtcraft.recipes.builder._delay($.noop, 0);
+            $.draughtcraft.recipes.builder.__injectRecipeContent__(responseText);
+            $.draughtcraft.recipes.builder._changes_in_queue = false;
+        },
+        'error' : function(jqXHR, textStatus, errorThrown){
+            $('.publish-btn').prop('disabled', false);
+            $('.publish-btn').text('Publish Changes');
+            $.draughtcraft.recipes.builder._delay($.noop, 0);
+            $.draughtcraft.recipes.builder.__injectRecipeContent__(jqXHR.responseText);
+            $.draughtcraft.recipes.builder._changes_in_queue = false;
+        }
+    });
+};
+
+/*
+ * Register form listeners on the volume field
+ */
+$.draughtcraft.recipes.builder.handleVolumeField = function(){
+    /*
+     * When the volume field is changed, submit its containing form via ajax.
+     */
+    $('#builder div.header form.volume input').keyup(function(){
+        // Start a timer to auto-save 2 seconds from now.
+        $.draughtcraft.recipes.builder._delay($.proxy(function(){
+
+            var value = $(this).val();
+            if(!parseFloat(value) || isNaN(parseFloat(value))){
+                $(this).val(this.defaultValue);
+                return;
+            }
+            this.defaultValue = value;
+
+            // Temporarily disable the publish button
+            $('.publish-btn').prop('disabled', true);
+            $('.publish-btn').text('Saving Changes...');
+
+            $(this).closest('form').submit();  
+            
+        }, this), 1000);
+    });
 };
 
 (function($){
@@ -493,6 +536,7 @@ $(document).ready(function(){
     $.draughtcraft.recipes.builder.initRecipeSettings();
     $.draughtcraft.recipes.builder.fetchRecipe();
     $.draughtcraft.recipes.builder.handleNameField();
+    $.draughtcraft.recipes.builder.handleVolumeField();
 
     // Register a JS tooltip on the author's thumbnail (if there is one).
     $('img.gravatar').tipTip({'delay': 50});

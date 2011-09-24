@@ -52,17 +52,17 @@
       ${h.end_form()}
     </fieldset>
     <fieldset>
-      ${h.form('async/settings/volume')}
-        ${h.select(
+      ${h.form('async/settings/volume', class_='volume')}
+        ${h.text(
           'volume', 
-          [recipe.gallons],
-          [(float(v), '%s Gallon(s)' % v) for v in [1, 2, 2.5, 3, 4, 5, 8, 10, 15, 20, 25]],
-          class_ = 'gallons'
+          int(recipe.gallons) if int(recipe.gallons) == float(recipe.gallons) else recipe.gallons,
+          class_ = 'unit'
         )}
         ${h.hidden(
           'unit',
           'GALLON'
         )}
+        Gallon(s)
       ${h.end_form()}
     </fieldset>
     <fieldset class="type">

@@ -99,9 +99,16 @@ class RecipeSettingsController(object):
     def volume(self): pass
 
     @volume.when(
-        method      = 'POST',
-        template    = 'recipes/builder/async.html',
-        schema      = RecipeVolume()
+        method          = 'POST',
+        template        = 'recipes/builder/async.html',
+        schema          = RecipeVolume(),
+        error_handler   = lambda: '%sasync/ingredients' % request.context['recipe'].url(public=False),
+        htmlfill        = dict(
+            auto_insert_errors  = True, 
+            prefix_error        = False,
+            encoding            = u'utf-8',
+            force_defaults      = False
+        )
     )
     def _volume(self, volume, unit):
         self.recipe.gallons = volume

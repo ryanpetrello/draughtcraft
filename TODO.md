@@ -1,6 +1,5 @@
 0.2
 ====
-* Increased configurability for recipe volume
 * International Unit Support
 * BeerXML import/export
 * Ability to comment on (others') recipes

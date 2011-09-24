@@ -1,6 +1,5 @@
 from pecan                      import conf
 from draughtcraft.lib           import email
-from fudge.inspector            import arg
 
 import os
 import fudge
@@ -14,27 +13,30 @@ def _gen_template_path():
         'fixtures',
         'emails'
     )
-template_path = _gen_template_path()
 
 
 class TestEmailTemplate(unittest.TestCase):
 
+    @property
+    def template_path(self):
+        return _gen_template_path()
+
     def test_text_rendering(self):
-        template = email.EmailTemplate('sample', template_path)
+        template = email.EmailTemplate('sample', self.template_path)
         body = template.text({'name': 'Ryan'})
         assert body == 'Hello, Ryan!'
 
     def test_text_rendering_with_missing_template(self):
-        template = email.EmailTemplate('missing', template_path)
+        template = email.EmailTemplate('missing', self.template_path)
         assert template.text({'name': 'Ryan'}) == None
 
     def test_html_rendering(self):
-        template = email.EmailTemplate('sample', template_path)
+        template = email.EmailTemplate('sample', self.template_path)
         body = template.html({'name': 'Ryan'})
         assert body == email.EmailTemplate.__html_wrap__ % '<p>Hello, Ryan!</p>'
 
     def test_html_rendering_with_missing_template(self):
-        template = email.EmailTemplate('missing', template_path)
+        template = email.EmailTemplate('missing', self.template_path)
         assert template.html({'name': 'Ryan'}) == None
 
 
