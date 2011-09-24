@@ -20,10 +20,19 @@ class AuthenticationHook(PecanHook):
         else:
             return None
 
+    def _get_metric(self, session):
+        user = self._get_current_user(session)
+        if user is not None:
+            return user.settings.get('unit_system', 'US') == 'METRIC'
+        elif 'metric' in session:
+            return session['metric']
+        return False
+
     def on_route(self, state):
         session = state.request.environ['beaker.session']
         request.context['user'] = self._get_current_user(session)
         request.context['trial_recipe'] = self._get_trial_recipe(session)
+        request.context['metric'] = self._get_metric(session)
 
 def save_user_session(user):
     session = request.environ['beaker.session']

@@ -1,5 +1,7 @@
+import pecan    
 from draughtcraft.tests     import TestApp, TestAuthenticatedApp
 from draughtcraft           import model
+from webob                  import Request
 from datetime               import timedelta
 
 
@@ -385,7 +387,6 @@ class TestFermentationStepChange(TestAuthenticatedApp):
                 fahrenheit = 65
             )
         )
-        assert recipe.metric
         model.commit()
 
         self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/fermentation_steps?_method=put', params={

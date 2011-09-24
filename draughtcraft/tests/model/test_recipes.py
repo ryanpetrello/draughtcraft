@@ -1,6 +1,9 @@
+import pecan
 from draughtcraft       import model
 from draughtcraft.tests import TestModel
 from datetime           import timedelta
+from webob              import Request
+from fudge              import Fake
 
 import unittest
 
@@ -40,8 +43,10 @@ class TestRecipeAddition(unittest.TestCase):
         assert addition.printable_amount == '5 lb'
 
     def test_international_printable_pound_conversion(self):
-        r = model.Recipe(author = model.User())
-        r.author.settings['unit_system'] = 'METRIC'
+        pecan.core.state.request = Request.blank('/')
+        pecan.request.context = {'metric':True}
+
+        r = model.Recipe()
         addition = model.RecipeAddition(
             amount  = 5,
             unit    = 'POUND',
@@ -51,8 +56,10 @@ class TestRecipeAddition(unittest.TestCase):
         assert addition.printable_amount == '2.268 kg'
 
     def test_international_printable_ounce_conversion(self):
-        r = model.Recipe(author = model.User())
-        r.author.settings['unit_system'] = 'METRIC'
+        pecan.core.state.request = Request.blank('/')
+        pecan.request.context = {'metric':True}
+
+        r = model.Recipe()
         addition = model.RecipeAddition(
             amount  = 5,
             unit    = 'OUNCE',
@@ -62,8 +69,10 @@ class TestRecipeAddition(unittest.TestCase):
         assert addition.printable_amount == '141.748 g'
 
     def test_international_printable_gallon_conversion(self):
-        r = model.Recipe(author = model.User())
-        r.author.settings['unit_system'] = 'METRIC'
+        pecan.core.state.request = Request.blank('/')
+        pecan.request.context = {'metric':True}
+
+        r = model.Recipe()
         addition = model.RecipeAddition(
             amount  = 5,
             unit    = 'GALLON',
@@ -88,8 +97,10 @@ class TestRecipeAddition(unittest.TestCase):
         assert addition.printable_amount == '0 oz'
 
     def test_printable_metric_hop_amount(self):
-        r = model.Recipe(author = model.User())
-        r.author.settings['unit_system'] = 'METRIC'
+        pecan.core.state.request = Request.blank('/')
+        pecan.request.context = {'metric':True}
+
+        r = model.Recipe()
         addition = model.HopAddition(
             amount  = 0.0625, # 1 oz
             unit    = 'POUND',
@@ -213,16 +224,27 @@ class TestRecipe(unittest.TestCase):
         assert len(recipe.boil[model.Hop]) == 4
         assert len(recipe.fermentation[model.Yeast]) == 2
 
-    def test_metric(self):
+    def test_metric_true(self):
+        """
+        When request.context['metric'] == True,
+        model.Recipe.metric == True
+        """
+        pecan.core.state.request = Request.blank('/')
+        pecan.request.context = {'metric':True}
+
+        recipe = model.Recipe()
+        assert recipe.metric == True
+
+    def test_metric_false(self):
+        """
+        When request.context['metric'] == False,
+        model.Recipe.metric == False
+        """
+        pecan.core.state.request = Request.blank('/')
+        pecan.request.context = {'metric':False}
+
         recipe = model.Recipe()
         assert recipe.metric == False
-
-        user = model.User()
-        recipe.author = user
-        assert recipe.metric == False
-
-        user.settings['unit_system'] = 'METRIC'
-        assert recipe.metric == True
 
     def test_recipe_international_volume(self):
         recipe = model.Recipe(gallons = 5)

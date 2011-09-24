@@ -1,3 +1,4 @@
+from pecan                          import request
 from elixir import (
     Entity, Field, Unicode, UnicodeText, Integer, Interval, Float, Enum,
     DateTime, using_options, OneToMany, ManyToOne, OneToOne, entities
@@ -178,8 +179,8 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
 
     @property
     def unit_system(self):
-        if self.author:
-            return self.author.settings.get('unit_system', 'US')
+        if request.context['metric'] == True:
+            return 'METRIC'
         return 'US'
 
     @property
