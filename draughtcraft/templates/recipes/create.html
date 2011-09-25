@@ -1,5 +1,7 @@
 <%
   from draughtcraft.lib.units import to_metric
+  from draughtcraft.lib.csrf import auth_token_pair
+  key, token = auth_token_pair()
   
   def pretty_num(n):
     return int(n) if int(n) == float(n) else n
@@ -98,7 +100,7 @@
           % if h.request.context['metric'] == True:
             ${h.text(
               'volume', 
-              pretty_num(round(to_metric(*(h.request.context['user'].settings['default_recipe_volume'], "GALLON"))[0], 3)) if h.request.context['user'] else 18,
+              pretty_num(round(to_metric(*(h.request.context['user'].settings['default_recipe_volume'], "GALLON"))[0], 3)) if h.request.context['user'] else 20,
               tabindex='3',
               class_='unit'
             )}
@@ -119,6 +121,9 @@
               'GALLON'
             )}
             Gallon(s)
+            % if h.request.context['user'] is None:
+              <small><a href="#" onclick="$.draughtcraft.toggleUnits('${key}', '${token}');">Want Metric Units?</a></small>
+            % endif
           % endif
         </dd>
       </dl>
