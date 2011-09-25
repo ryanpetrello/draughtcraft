@@ -25,6 +25,7 @@ setup(
         "python-postmark",
         "pytest-xdist",
         "pytest-cov",
+        "lesspy",
         "fudge"
     ],
     zip_safe = False,

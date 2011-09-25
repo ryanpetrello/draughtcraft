@@ -4,7 +4,10 @@ from draughtcraft           import model
 from draughtcraft.lib.auth  import AuthenticationHook
 from draughtcraft.lib.csrf  import CSRFPreventionHook 
 from draughtcraft.templates import helpers
+from lesspy                 import Less
 from beaker.middleware      import SessionMiddleware
+
+import os
 
 def setup_app(config):
 
@@ -20,6 +23,12 @@ def setup_app(config):
         '403': '/error/403',
         '500': '/error/500'
     }
+
+    # Compile .less resources
+    Less(
+        os.path.join(config.app.static_root, 'less'), 
+        os.path.join(config.app.static_root, 'css')
+    ).compile()
     
     return make_app(
         config.app.root,
