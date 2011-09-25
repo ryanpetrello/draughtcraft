@@ -1,7 +1,5 @@
-0.2
+0.3
 ====
-* International Unit Support
-    - UI conversion for SRM/EBC
 * BeerXML import/export
 * Ability to comment on (others') recipes
 
