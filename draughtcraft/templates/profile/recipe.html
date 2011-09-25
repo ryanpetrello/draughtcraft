@@ -57,6 +57,10 @@
   <h4>
     <b>${recipe.printable_type}</b>,
     ${recipe.style.name if recipe.style else 'No Target Style Chosen'},
-    ${h.plural(int(recipe.gallons), 'Gallon', 'Gallons', True)} 
+    % if recipe.metric:
+      ${round(recipe.liters, 2)} ${h.plural(int(recipe.liters), 'Liter', 'Liters', False)} 
+    % else:
+      ${h.plural(int(recipe.gallons), 'Gallon', 'Gallons', True)} 
+    % endif
   </h4>
 </dt>

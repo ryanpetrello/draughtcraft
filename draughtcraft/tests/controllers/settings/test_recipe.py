@@ -31,6 +31,28 @@ class TestRecipeSettings(TestAuthenticatedApp):
         assert user.settings['unit_system'] == 'METRIC'
         assert user.settings['brewhouse_efficiency'] == .75
 
+    def test_metric_volume_default(self):
+        user = model.User.get(1)
+        user.settings['unit_system'] = 'METRIC'
+        model.commit()
+
+        params = {
+            'default_recipe_type'       : 'EXTRACT',
+            'default_recipe_volume'     : '10', # (in liters)
+            'default_ibu_formula'       : 'daniels',
+            'unit_system'               : 'METRIC',
+            'brewhouse_efficiency'      : 75
+        }
+        response = self.post('/settings/recipe/', params=params)
+        assert response.status_int == 302
+
+        user = model.User.get(1)
+        assert user.settings['default_recipe_type'] == 'EXTRACT'
+        assert user.settings['default_recipe_volume'] == 2.64172052
+        assert user.settings['default_ibu_formula'] == 'daniels'
+        assert user.settings['unit_system'] == 'METRIC'
+        assert user.settings['brewhouse_efficiency'] == .75
+
 
 class TestAnonymousVisitorSettings(TestApp):
 

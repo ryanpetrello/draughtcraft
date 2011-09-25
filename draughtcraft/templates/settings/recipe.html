@@ -1,3 +1,10 @@
+<%
+  from draughtcraft.lib.units import to_metric
+  
+  def pretty_num(n):
+    return int(n) if int(n) == float(n) else n
+%>
+
 <%inherit file="../layout.html" />
 
 <%def name="title()">Edit Your Recipe Settings</%def>
@@ -29,12 +36,23 @@
 
         <dt><label for="name">Default Batch Size</label></dt>
         <dd>
-          ${h.select(
-            'default_recipe_volume', 
-            user.settings['default_recipe_volume'],
-            [(v, '%s Gallon(s)' % v) for v in [1, 2, 2.5, 3, 4, 5, 8, 10, 15, 20, 25]],
-            tabindex='2'
-          )}
+          % if h.request.context['metric'] == True:
+            ${h.text(
+              'default_recipe_volume', 
+              pretty_num(round(to_metric(*(user.settings['default_recipe_volume'], "GALLON"))[0], 3)),
+              tabindex='2',
+              class_='unit'
+            )}
+            Liter(s)
+          % else:
+            ${h.text(
+              'default_recipe_volume', 
+              pretty_num(user.settings['default_recipe_volume']),
+              tabindex='2',
+              class_='unit'
+            )}
+            Gallon(s)
+          % endif
         </dd>
 
         <dt><label for="name">Preferred IBU Calculation</label></dt>

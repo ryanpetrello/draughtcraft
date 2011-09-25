@@ -1,8 +1,6 @@
 0.2
 ====
 * International Unit Support
-    - Ability to have units respected on *all* recipes you view.
-    - Ability for non-registered users to specify US/Metric
     - UI conversion for SRM/EBC
     - Replace all "Gallon(s)" form elements with "Liter(s)"
 * BeerXML import/export
