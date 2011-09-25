@@ -1,3 +1,7 @@
+0.2a2
+====
+* favicon
+
 0.3
 ====
 * BeerXML import/export
