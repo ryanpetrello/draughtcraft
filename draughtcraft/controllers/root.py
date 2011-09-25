@@ -1,4 +1,4 @@
-from pecan                              import expose, request, redirect
+from pecan                              import expose, request, redirect, abort
 from draughtcraft                       import model
 from draughtcraft.lib.auth              import (save_user_session, 
                                                 remove_user_session, 
