@@ -1,3 +1,10 @@
+<%
+  from draughtcraft.lib.units import to_metric
+  
+  def pretty_num(n):
+    return int(n) if int(n) == float(n) else n
+%>
+
 <%inherit file="../layout.html" />
 
 <%def name="title()">Create a New Recipe</%def>
@@ -88,16 +95,31 @@
         </dd>
         <dt><label for="gallons">Final Volume</label></dt>
         <dd>
-          ${h.select(
-            'volume', 
-            h.request.context['user'].settings['default_recipe_volume'] if h.request.context['user'] else 5,
-            [(v, '%s Gallon(s)' % v) for v in [1, 2, 2.5, 3, 4, 5, 8, 10, 15, 20, 25]],
-            tabindex='3'
-          )}
-          ${h.hidden(
-            'unit',
-            'GALLON'
-          )}
+          % if h.request.context['metric'] == True:
+            ${h.text(
+              'volume', 
+              pretty_num(round(to_metric(*(h.request.context['user'].settings['default_recipe_volume'], "GALLON"))[0], 3)) if h.request.context['user'] else 18,
+              tabindex='3',
+              class_='unit'
+            )}
+            ${h.hidden(
+              'unit',
+              'LITER'
+            )}
+            Liter(s)
+          % else:
+            ${h.text(
+              'volume', 
+              pretty_num(h.request.context['user'].settings['default_recipe_volume']) if h.request.context['user'] else 5,
+              tabindex='3',
+              class_='unit'
+            )}
+            ${h.hidden(
+              'unit',
+              'GALLON'
+            )}
+            Gallon(s)
+          % endif
         </dd>
       </dl>
     </fieldset>

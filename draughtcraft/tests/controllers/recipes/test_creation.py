@@ -99,6 +99,24 @@ class TestUserRecipeCreation(TestAuthenticatedApp):
         r = model.Recipe.get(1)
         assert r.author.id == 1
 
+    def test_metric_recipe(self):
+        user = model.User.get(1)
+        user.settings['unit_system'] = 'METRIC'
+        model.commit()
+
+        params = {
+            'name'      : 'Rocky Mountain River IPA',
+            'type'      : 'MASH',
+            'volume'    : 10,
+            'unit'      : 'LITER'
+        }
+
+        self.post('/recipes/create', params=params)
+
+        assert model.Recipe.query.count() == 1
+        r = model.Recipe.get(1)
+        assert r.gallons == 2.64172052
+
     def test_recipe_author_no_trial_recipe(self):
         """
         If the recipe is created by an authenticated user, a `trial_recipe_id`

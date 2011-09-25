@@ -2,6 +2,7 @@ from pecan                                          import expose, request, redi
 from pecan.rest                                     import RestController
 from draughtcraft                                   import model
 from draughtcraft.lib.auth                          import save_trial_recipe
+from draughtcraft.lib.units                         import to_us
 from draughtcraft.lib.schemas.recipes.create        import RecipeCreation
 
 class RecipeCreationController(RestController):
@@ -27,10 +28,15 @@ class RecipeCreationController(RestController):
     def post(self, **kw):
         recipe = model.Recipe(
             name        = kw.get('name'),
-            gallons     = kw.get('volume'),
             type        = kw.get('type'),
             author      = request.context['user']
         )
+
+        if recipe.metric:
+            recipe.gallons = to_us(*(kw.get('volume'), 'LITER'))[0]
+        else:
+            recipe.gallons = kw.get('volume')
+
         recipe.fermentation_steps.append(
             model.FermentationStep(
                 step = 'PRIMARY',

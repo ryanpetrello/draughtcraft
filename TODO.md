@@ -2,7 +2,6 @@
 ====
 * International Unit Support
     - UI conversion for SRM/EBC
-    - Replace all "Gallon(s)" form elements with "Liter(s)"
 * BeerXML import/export
 * Ability to comment on (others') recipes
 

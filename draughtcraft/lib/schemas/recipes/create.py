@@ -11,4 +11,4 @@ class RecipeCreation(FilteredSchema):
     type        = validators.OneOf(model.Recipe.TYPES)
 
     volume      = validators.Number()
-    unit        = validators.OneOf(['GALLON'])
+    unit        = validators.OneOf(['GALLON', 'LITER'])
