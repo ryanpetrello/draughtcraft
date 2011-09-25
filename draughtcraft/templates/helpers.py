@@ -35,8 +35,6 @@ def format_percentage(decimal, digits=2, symbol=True):
     return p
 
 def format_date(value, format='%b %d, %Y'):
-    if not value:
-        value = date.today()
     return value.strftime(format).replace(' 0', ' ')
 
 def format_age(value):

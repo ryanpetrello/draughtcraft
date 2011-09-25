@@ -29,10 +29,7 @@ def authentication_token():
     """
     session = request.environ['beaker.session']
     if not token_key in session:
-        try:
-            token = str(random.getrandbits(128))
-        except AttributeError: # Python < 2.4
-            token = str(random.randrange(2**128))
+        token = str(random.getrandbits(128))
         session[token_key] = token
         session.save()
     return session[token_key]
