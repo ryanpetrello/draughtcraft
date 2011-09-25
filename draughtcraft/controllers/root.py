@@ -54,6 +54,21 @@ class RootController(object):
     def browser(self):
         return dict()
 
+    """
+    Anonymous shortcut for toggling US/Metric units (usable by visitors).
+    """
+    @expose(generic=True)
+    def units(self):
+        abort(405)
+
+    @units.when(method="POST", template='json')
+    def _toggle_units(self, **kw):
+        if request.context['user'] is None:
+            session = request.environ['beaker.session']
+            session['metric'] = not session.get('metric', False)
+            session.save()
+        return dict()
+
     error       = ErrorController()
     forgot      = ForgotPasswordController()
     ingredients = IngredientsController()

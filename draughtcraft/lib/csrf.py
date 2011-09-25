@@ -41,6 +41,9 @@ def auth_token_hidden_field():
     token = hidden(token_key, authentication_token())
     return HTML.div(token, style="display: none;")
 
+def auth_token_pair():
+    return (token_key, authentication_token())
+
 def secure_form(url, method="POST", multipart=False, **attrs):
     """Start a form tag that points the action to an url. This
     form tag will also include the hidden field containing

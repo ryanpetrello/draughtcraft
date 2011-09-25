@@ -1,10 +1,17 @@
+<%
+  from draughtcraft.lib.csrf import auth_token_pair
+  key, token = auth_token_pair()
+%>
+
 % if recipe.author is None or not editable:
   <div id="actions">
     <ul>
       % if not editable:
         <li class="print" title="Print this Recipe" onclick="window.print();"></li>
       % endif
-      <li class="intl submit" title="Switch to ${'U.S.' if recipe.metric else 'Metric'} Units"></li>
+      % if h.request.context['user'] is None:
+        <li class="intl submit ${'last' if editable else ''}" onclick="$.draughtcraft.toggleUnits('${key}', '${token}');" title="Switch to ${'U.S.' if recipe.metric else 'Metric'} Units"></li>
+      % endif
       % if not editable:
         ${h.form("%scopy" % recipe.url())}
           <li class="copy submit last" title="Copy this Recipe"></li>

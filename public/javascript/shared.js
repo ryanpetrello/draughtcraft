@@ -55,6 +55,23 @@ $(function(){
 if($.browser.msie && window.location.pathname != '/browser')
     window.location = '/browser';
 
+/*
+ * Used to toggle US/metric units
+ */
+$.draughtcraft.toggleUnits = function(key, token){
+    var data = {};
+    data[key] = token;
+    $.ajax({
+        url: '/units',
+        type: 'POST',
+        cache: false,
+        data: data,
+        success: function(){
+            window.location.reload();
+        }
+    });
+};
+
 /**
  * jQuery Cookie plugin
  *
