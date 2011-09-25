@@ -26,7 +26,7 @@ def setup_app(config):
 
     # Compile .less resources
     Less(
-        os.path.join(config.app.static_root, 'less'), 
+        os.path.join(config.app.static_root, '_precompile'), 
         os.path.join(config.app.static_root, 'css')
     ).compile()
     
