@@ -11,11 +11,11 @@
 <%inherit file="../../layout.html" />
 
 <%def name="style()">
-    <link rel="stylesheet/less" type="text/css" media="screen" href="${h.stamp('/css/recipes/builder.less')}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/recipes/builder.less.css')}" />
     % if not editable:
-      <link rel="stylesheet/less" type="text/css" media="screen" href="${h.stamp('/css/recipes/viewer.less')}" />
+      <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/recipes/viewer.less.css')}" />
     % endif
-    <link rel="stylesheet/less" type="text/css" media="print" href="${h.stamp('/css/recipes/builder.print.less')}" />
+    <link rel="stylesheet" type="text/css" media="print" href="${h.stamp('/css/recipes/builder.print.less.css')}" />
     <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/jquery.selectbox.css')}" />
 </%def>
 
