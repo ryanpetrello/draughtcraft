@@ -159,6 +159,14 @@ $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
         'menuSpeed'         : 'fast'
     });
 
+    // Register tooltips for the recipe actions
+    $('div#actions li').each(function(){
+        $(this).tipTip({
+            'delay'     : 25,
+            'edgeOffset': 20
+        });
+    });
+
     // Register fancybox popups for ingredient links
     $("a[href^='/ingredients/']").fancybox();
 

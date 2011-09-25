@@ -102,6 +102,13 @@
         class="gravatar fullsize"
         title="${recipe.author.username}"
       />
+    %else:
+      
+    <div id="actions">
+      <ul>
+        <li class="intl submit" title="Switch to ${'U.S.' if recipe.metric else 'Metric'} Units"></li>
+      </ul>
+    </div>
     % endif
   </div>
 

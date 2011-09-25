@@ -39,7 +39,33 @@
   }
 
   div#actions  {
-    display: none;
+    display: block;
+    ul  {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      list-style-type: none;
+      border: 1px solid #DDD;
+      .border-radius(6px);
+      background: #FFF;
+      form  {
+        display: inline;
+      }
+      li  {
+        cursor: pointer;
+        min-width: 16px;
+        min-height: 16px;
+        padding: 4px 6px;
+        float: right;
+        border-left: 1px solid #DDD;
+        &.last  {
+          border-left: 0;
+        }
+        &.copy  { background: url(/images/copy.png) 6px center no-repeat; }
+        &.print  { background: url(/images/print.png) 6px center no-repeat; }
+        &.intl  { background: url(/images/ruler.png) 6px center no-repeat; }
+      }
+    }
   }
 
   #inventories  {
