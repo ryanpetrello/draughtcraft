@@ -33,9 +33,15 @@
     </tr>
     % for i, r in enumerate(recipes):
       <tr class="${'' if i % 2 == 0 else 'odd'}">
-        <td class="srm srm-${min(30, int(r.calculations.srm))}">
-          <span class="block" title="${int(r.calculations.srm)} SRM"></a>
-        </td>
+        % if r.metric:
+          <td class="srm srm-${min(30, int(r.calculations.srm))}">
+            <span class="block" title="${int(round(r.calculations.ebc))} EBC"></a>
+          </td>
+        % else:
+          <td class="srm srm-${min(30, int(r.calculations.srm))}">
+            <span class="block" title="${int(round(r.calculations.srm))} SRM"></a>
+          </td>
+        % endif
         <td>${r.printable_type}</td>
         <td>
           <a href="${r.url()}">

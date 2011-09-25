@@ -3,10 +3,17 @@
 <dt class="recipe clearfix">
   <%
     srm = int(round(recipe.calculations.srm))
+    ebc = int(round(recipe.calculations.ebc))
   %>
-  <span class="srm srm-${min(srm, 30)}" title="${srm} SRM">
-    <img src="/images/glass-plain.png" width="38" class="glass" />
-  </span>
+  % if recipe.metric:
+    <span class="srm srm-${min(srm, 30)}" title="${ebc} EBC">
+      <img src="/images/glass-plain.png" width="38" class="glass" />
+    </span>
+  % else:
+    <span class="srm srm-${min(srm, 30)}" title="${srm} SRM">
+      <img src="/images/glass-plain.png" width="38" class="glass" />
+    </span>
+  % endif
 
   <div class="heading">
     <h3>

@@ -138,7 +138,11 @@
           <label class="control srm srm-${min(int(round(recipe.calculations.srm)), 30)}">
             <img class="glass" src="/images/glass.png" />
             <span>
-              ${recipe.calculations.srm} <span class="unit">&#186; SRM</span>
+              % if recipe.metric:
+                ${recipe.calculations.ebc} <span class="unit">EBC</span>
+              % else:
+                ${recipe.calculations.srm} <span class="unit">&#186; SRM</span>
+              % endif
             </span>
           </label>
         % else:
@@ -147,8 +151,13 @@
       </td>
       <td>
         % if recipe.style and recipe.style.defined('srm'):
-          ${recipe.style.min_srm} - 
-          ${recipe.style.max_srm} <span class="unit">&#186; SRM</span>
+          % if recipe.metric:
+            ${round(recipe.style.min_srm * 1.97, 1)} - 
+            ${round(recipe.style.max_srm * 1.97, 1)} <span class="unit">EBC</span>
+          % else:
+            ${recipe.style.min_srm} - 
+            ${recipe.style.max_srm} <span class="unit">&#186; SRM</span>
+          % endif
         % else:
           -
         % endif

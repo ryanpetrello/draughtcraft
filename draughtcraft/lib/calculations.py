@@ -82,6 +82,10 @@ class Calculations(object):
 
         return round(srm, 1)
 
+    @property
+    def ebc(self):
+        return round(self.srm * 1.97, 1)
+
     #
     # International Bittering Units Calculations
     # 

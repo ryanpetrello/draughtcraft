@@ -14,7 +14,7 @@
     <link rel="stylesheet/less" type="text/css" media="screen" href="${h.stamp('/css/settings/shared.less')}" />
 </%def>
 
-<%include file="nav.html" args="current='recipe building'" />
+<%include file="nav.html" args="current='recipes'" />
 
 <div class="clearfix">
 
@@ -23,6 +23,14 @@
   ${h.form('')}
     <fieldset>
       <dl class="clearfix">
+
+        <dt><label for="name">Display Recipes Using</label></dt>
+        <dd>
+          ${h.select('unit_system', user.settings.get('unit_system', 'US'), [
+            ('US', 'U.S. units (lb, oz, gallon)'),
+            ('METRIC', 'Metric units (kg, g, liter)'),
+          ], tabindex='4')}
+        </dd>
 
         <dt><label for="name">Default Recipe Type</label></dt>
         <dd>
@@ -62,14 +70,6 @@
             ('rager', 'Rager Formula'),
             ('daniels', 'Daniels Formula')
           ], tabindex='3')}
-        </dd>
-
-        <dt><label for="name">Preferred Units</label></dt>
-        <dd>
-          ${h.select('unit_system', user.settings.get('unit_system', 'US'), [
-            ('US', 'U.S. (lb, oz, gallon)'),
-            ('METRIC', 'Metric (kg, g, liter)'),
-          ], tabindex='4')}
         </dd>
 
         <dt><label for="name">Brewhouse Efficiency</label></dt>
