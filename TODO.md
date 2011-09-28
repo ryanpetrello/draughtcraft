@@ -1,9 +1,7 @@
-0.2a2
+next
 ====
 * favicon
 
-0.3
-====
 * BeerXML import/export
 * Ability to comment on (others') recipes
 

@@ -6,3 +6,6 @@ Tweak: Make <textarea> updates *silently* save in the background.  The UI should
 Ingredients: Dehusked Carafa I-III
 Tweak: Ability to show the mash efficiency and IBU calculation in the builder UI, so that it's clear it can be changed.
 Bug: Investigate 304 errors.
+Feature: auto-login feature
+Bug: FF3.6 issues (adding misc. ingredients)
+Ingredients: Chocolate nibs, etc...

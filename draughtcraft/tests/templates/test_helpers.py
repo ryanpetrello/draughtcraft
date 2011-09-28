@@ -1,5 +1,6 @@
 from draughtcraft.templates.helpers     import (stamp, format_date, format_age,
-                                                format_percentage)
+                                                format_percentage, 
+                                                format_volume, alphanum_key)
 from unittest                           import TestCase
 from datetime                           import datetime, timedelta
 
@@ -46,3 +47,14 @@ class TestHelpers(TestCase):
 
         last_month = datetime.utcnow() - timedelta(days=28)
         assert format_age(last_month) == format_date(last_month)
+
+    def test_format_volume(self):
+        assert format_volume(2) == 2
+        assert format_volume(2.5) == 2.5
+        assert format_volume(2.54) == 2.54
+        assert format_volume(2.55) == 2.55
+        assert format_volume(2.554) == 2.55
+        assert format_volume(2.555) == 2.56
+
+    def test_alphanum_key(self):
+        assert alphanum_key('z23a1b0') == ['z', 23, 'a', 1, 'b', 0, '']
