@@ -1,3 +1,11 @@
+/*
+ * Mixins
+ */
+.box-shadow () {
+  box-shadow: @arguments;
+  -moz-box-shadow: @arguments;
+  -webkit-box-shadow: @arguments;
+}
 em  {
   font-style: italic;
 }
@@ -13,9 +21,21 @@ h3.ribbon  {
   margin-top: 20px;
   font-size: 18px;
   padding: 0 42px;
+  z-index: 99;
+  .box-shadow(2px, 2px, 0, rgba(0, 0, 0, .25));
+
+  &.right  {
+    .box-shadow(-2px, 2px, 0, rgba(0, 0, 0, .15));
+  }
+}
+img.banner  {
+  position: relative;
+  left: 25px;
+  top: -15px;
+  z-index: 0;
 }
 #content-inner ul  {
-  padding: 25px 0; 
+  padding: 10px 0 30px;
 
   li  {
     list-style-type: none;
