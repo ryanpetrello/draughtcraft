@@ -5,3 +5,4 @@ Feature: Maybe add a section for recommended priming solution for bottling?
 Tweak: Make <textarea> updates *silently* save in the background.  The UI shouldn't reload/jump as you type.
 Ingredients: Dehusked Carafa I-III
 Tweak: Ability to show the mash efficiency and IBU calculation in the builder UI, so that it's clear it can be changed.
+Bug: Investigate 304 errors.

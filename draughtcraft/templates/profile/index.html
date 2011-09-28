@@ -1,5 +1,9 @@
 <%inherit file="../layout.html" />
 
+<%def name="title()">
+  ${user.printed_name}
+</%def>
+
 <%def name="style()">
   <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/profile.less.css')}" />
 </%def>

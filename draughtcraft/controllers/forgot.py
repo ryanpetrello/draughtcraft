@@ -82,7 +82,7 @@ class ForgotPasswordController(object):
             'forgot',
             'Reset Your Draughtcraft Password',
             {
-                'name': u.full_name.strip() or u.username,
+                'name': u.printed_name,
                 'code': code
             }
         )

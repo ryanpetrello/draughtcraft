@@ -13,7 +13,7 @@
 <%def name="title()">
   ${recipe.name}
   % if recipe.author:
-    - ${recipe.author.full_name if recipe.author.full_name else recipe.author.username}
+    - ${recipe.author.printed_name}
   % endif
 </%def>
 

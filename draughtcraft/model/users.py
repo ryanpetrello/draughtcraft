@@ -41,6 +41,12 @@ class User(Entity, ShallowCopyMixin):
         )
 
     @property
+    def printed_name(self):
+        if self.full_name.strip():
+            return self.full_name.strip()
+        return self.username
+
+    @property
     def password(self):
         return self._password
 
