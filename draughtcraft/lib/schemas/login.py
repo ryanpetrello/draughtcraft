@@ -22,7 +22,7 @@ class ValidUsernameAndPassword(validators.FormValidator):
     def validate_partial(self, field_dict, state):
             for name in self.field_names:
                 if name not in field_dict:
-                    return
+                    return # pragma: no cover
             self.validate_python(field_dict, state)
     
     def validate_python(self, field_dict, state):

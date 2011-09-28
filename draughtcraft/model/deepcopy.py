@@ -75,15 +75,9 @@ class DeepCopyMixin(object):
                         #
                         copies = []
                         for r in rel:
-                            #
-                            # If we're already copied this item, just use
-                            # the reference in the memo.
-                            #
-                            if r in memo:
-                                copies.append(memo[r])
-                            else:
-                                # Otherwise, copy it
-                                copies.append(deepcopy(r, memo))
+                            assert r not in memo # avoid circular references
+                            # Otherwise, copy it
+                            copies.append(deepcopy(r, memo))
                         
                         #
                         # Once we've built the new list of copies,

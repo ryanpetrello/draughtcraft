@@ -1,11 +1,30 @@
 import pecan    
-from draughtcraft.tests     import TestApp, TestAuthenticatedApp
-from draughtcraft           import model
-from webob                  import Request
-from datetime               import timedelta
+from draughtcraft.tests                         import TestApp, TestAuthenticatedApp
+from draughtcraft                               import model
+from draughtcraft.lib.schemas.recipes.builder   import (AmountValidator,
+                                                        TimeDeltaValidator,
+                                                        HopValidator)
+from formencode                                 import Invalid
+from webob                                      import Request
+from datetime                                   import timedelta
+from unittest                                   import TestCase
 
 
 class TestMashAdditions(TestAuthenticatedApp):
+
+    def test_index(self):
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
+        model.Fermentable(
+            name        = '2-Row',
+            origin      = 'US',
+            ppg         = 36,
+            lovibond    = 2
+        )
+        model.commit()
+
+        assert self.get(
+            '/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients'
+        ).status_int == 200
 
     def test_fermentable(self):
         model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
@@ -73,6 +92,46 @@ class TestMashAdditions(TestAuthenticatedApp):
 
         assert model.RecipeAddition.query.count() == 0
 
+
+class TestRecipeValidators(TestCase):
+
+    def test_timedelta_validation(self):
+        try:
+            TimeDeltaValidator.to_python('dog')
+        except Invalid: pass
+        else: raise AssertionError('`dog` is not a valid timedelta')
+
+        assert TimeDeltaValidator.from_python(timedelta(seconds=60)) == 1
+
+    def test_amount_validation(self):
+        try:
+            AmountValidator.to_python('1 rb')
+        except Invalid: pass
+        else: raise AssertionError('`rb` is not a valid unit')
+
+        try:
+            AmountValidator.to_python('1.24.2')
+        except Invalid: pass
+        else: raise AssertionError('`stanley-dollar` is not a valid unit')
+
+        AmountValidator.from_python((5, 'POUND')) == '5 lb'
+
+    def test_hop_form_alph_acid_validation(self):
+        try:
+            HopValidator().validate_python({
+                'type'  : 'HopAddition'
+            }, {})
+        except Invalid: pass
+        else: raise AssertionError('A hop form must be specified.')
+
+        try:
+            HopValidator().validate_python({
+                'type'          : 'HopAddition',
+                'form'          : 'PELLET',
+                'alpha_acid'    : 'dog'
+            }, {})
+        except Invalid: pass
+        else: raise AssertionError('A hop form must be specified.')
 
 class TestBoilAdditions(TestAuthenticatedApp):
 
@@ -226,6 +285,15 @@ class TestFermentationAdditions(TestAuthenticatedApp):
 
 class TestRecipeSettings(TestAuthenticatedApp):
 
+    def test_style_get(self):
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
+        model.commit()
+
+        self.get(
+            '/recipes/1/rocky-mountain-river-ipa/builder/async/settings/style',
+            status = 405
+        ).status_int == 405
+
     def test_style_change(self):
         model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.Style(name = u'American Ale')
@@ -250,6 +318,15 @@ class TestRecipeSettings(TestAuthenticatedApp):
         
         assert model.Recipe.get(1).style is None
 
+    def test_boil_duration_get(self):
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
+        model.commit()
+
+        self.get(
+            '/recipes/1/rocky-mountain-river-ipa/builder/async/settings/boil_minutes',
+            status = 405
+        ).status_int == 405
+
     def test_boil_duration_change(self):
         model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.commit()
@@ -260,6 +337,15 @@ class TestRecipeSettings(TestAuthenticatedApp):
         })
         
         assert model.Recipe.get(1).boil_minutes == 90
+
+    def test_volume_get(self):
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
+        model.commit()
+
+        self.get(
+            '/recipes/1/rocky-mountain-river-ipa/builder/async/settings/volume',
+            status = 405
+        ).status_int == 405
 
     def test_volume_change(self):
         model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
@@ -285,6 +371,15 @@ class TestRecipeSettings(TestAuthenticatedApp):
         
         assert model.Recipe.get(1).gallons == 2.6417205199999998
         assert model.Recipe.get(1).liters == 10.0
+
+    def test_mash_settings_get(self):
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
+        model.commit()
+
+        self.get(
+            '/recipes/1/rocky-mountain-river-ipa/builder/async/settings/mash',
+            status = 405
+        ).status_int == 405
 
     def test_mash_settings_change(self):
         model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
@@ -315,6 +410,15 @@ class TestRecipeSettings(TestAuthenticatedApp):
         
         assert model.Recipe.query.first().mash_method == 'SINGLESTEP'
         assert model.Recipe.query.first().mash_instructions == None
+
+    def test_notes_get(self):
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
+        model.commit()
+
+        self.get(
+            '/recipes/1/rocky-mountain-river-ipa/builder/async/settings/notes',
+            status = 405
+        ).status_int == 405
 
     def test_notes_update(self):
         model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
@@ -807,6 +911,24 @@ class TestAuthenticatedUserRecipeLookup(TestAuthenticatedApp):
         response = self.get('/recipes/1/american-ipa/builder/', status=401)
         assert response.status_int == 401
 
+    def test_unauthorized_lookup_draft(self):
+        """
+        If the recipe is published, and we're logged in as the author,
+        we should *not* have access to edit the recipe in published form.
+        """
+        model.Recipe(
+            name    = 'American IPA',
+            slugs   = [
+                model.RecipeSlug(name = 'American IPA')
+            ],
+            author  = model.User.get(1),
+            state   = 'PUBLISHED'
+        )
+        model.commit()
+
+        response = self.get('/recipes/1/american-ipa/builder/', status=401)
+        assert response.status_int == 401
+
     def test_unauthorized_lookup_other_user(self):
         """
         If the recipe has an author, and we're logged in as another user,
@@ -863,6 +985,15 @@ class TestTrialRecipeLookup(TestApp):
 
 class TestRecipePublish(TestAuthenticatedApp):
 
+    def test_publish_get(self):
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
+        model.commit()
+
+        self.get(
+            '/recipes/1/rocky-mountain-river-ipa/builder/publish',
+            status = 405
+        ).status_int == 405
+
     def test_simple_publish(self):
         model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.Fermentable(
@@ -879,6 +1010,15 @@ class TestRecipePublish(TestAuthenticatedApp):
 
 
 class TestRecipeNameChange(TestAuthenticatedApp):
+
+    def test_name_get(self):
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
+        model.commit()
+
+        self.get(
+            '/recipes/1/rocky-mountain-river-ipa/builder/async/name',
+            status = 405
+        ).status_int == 405
 
     def test_simple_name_change(self):
         model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))

@@ -99,14 +99,10 @@ class CSRFPreventionHook(PecanHook):
             if not self.same_origin(referer, origin):
                 abort(403, empty_body=True)
 
-            # If a CSRF token isn't available in the session
-            token = authentication_token()
-            if token is None:
-                abort(403, empty_body=True)
-
             #
             # If the CSRF token in the session doesn't match the value
             # included in the request...
             #
+            token = authentication_token()
             if token != request.params.get(token_key):
                 abort(403, empty_body=True)
