@@ -438,14 +438,12 @@ $.draughtcraft.recipes.builder.handleNameField = function(){
             $('.publish-btn').prop('disabled', false);
             $('.publish-btn').text('Publish Changes');
             $.draughtcraft.recipes.builder._delay($.noop, 0);
-            $.draughtcraft.recipes.builder.__injectRecipeContent__(responseText);
             $.draughtcraft.recipes.builder._changes_in_queue = false;
         },
         'error' : function(jqXHR, textStatus, errorThrown){
             $('.publish-btn').prop('disabled', false);
             $('.publish-btn').text('Publish Changes');
             $.draughtcraft.recipes.builder._delay($.noop, 0);
-            $.draughtcraft.recipes.builder.__injectRecipeContent__(jqXHR.responseText);
             $.draughtcraft.recipes.builder._changes_in_queue = false;
         }
     });
