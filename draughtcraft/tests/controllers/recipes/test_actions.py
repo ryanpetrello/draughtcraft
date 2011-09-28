@@ -4,6 +4,14 @@ from draughtcraft           import model
 
 class TestRecipeDeleteAuthenticated(TestAuthenticatedApp):
 
+    def test_delete_get(self):
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
+        model.commit()
+        assert self.get(
+            '/recipes/1/rocky-mountain-river-ipa/delete',
+            status = 405
+        ).status_int == 405
+
     def test_recipe_delete(self):
         model.Recipe(
             name    = 'Rocky Mountain River IPA',
@@ -66,6 +74,14 @@ class TestRecipeDeleteUnauthenticated(TestApp):
 
 class TestRecipeCopyAuthenticated(TestAuthenticatedApp):
 
+    def test_copy_get(self):
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
+        model.commit()
+        assert self.get(
+            '/recipes/1/rocky-mountain-river-ipa/copy',
+            status = 405
+        ).status_int == 405
+
     def test_recipe_copy(self):
         model.Recipe(
             name    = 'Rocky Mountain River IPA',
@@ -118,6 +134,24 @@ class TestRecipeCopyAuthenticated(TestAuthenticatedApp):
         assert recipes[0].copies == [recipes[1]]
         assert recipes[1].copied_from == recipes[0]
 
+    def test_recipe_copy_anonymous_recipe(self):
+        model.Recipe(
+            name    = 'Rocky Mountain River IPA',
+            state   = "PUBLISHED"
+        )
+        model.Fermentable(
+            name        = '2-Row',
+            origin      = 'US',
+            ppg         = 36,
+            lovibond    = 2
+        )
+        model.commit()
+
+        assert model.Recipe.query.count() == 1
+        resp = self.post('/recipes/1/rocky-mountain-river-ipa/copy', status=401)
+        assert resp.status_int == 401
+        assert model.Recipe.query.count() == 1
+
 
 class TestRecipeCopyUnauthenticated(TestApp):
 
@@ -143,6 +177,14 @@ class TestRecipeCopyUnauthenticated(TestApp):
 
 
 class TestRecipePublish(TestAuthenticatedApp):
+
+    def test_draft_get(self):
+        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
+        model.commit()
+        assert self.get(
+            '/recipes/1/rocky-mountain-river-ipa/draft',
+            status = 405
+        ).status_int == 405
 
     def test_simple_draft(self):
         model.Recipe(

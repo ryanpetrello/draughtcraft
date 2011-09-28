@@ -29,10 +29,7 @@ def authentication_token():
     """
     session = request.environ['beaker.session']
     if not token_key in session:
-        try:
-            token = str(random.getrandbits(128))
-        except AttributeError: # Python < 2.4
-            token = str(random.randrange(2**128))
+        token = str(random.getrandbits(128))
         session[token_key] = token
         session.save()
     return session[token_key]
@@ -102,14 +99,10 @@ class CSRFPreventionHook(PecanHook):
             if not self.same_origin(referer, origin):
                 abort(403, empty_body=True)
 
-            # If a CSRF token isn't available in the session
-            token = authentication_token()
-            if token is None:
-                abort(403, empty_body=True)
-
             #
             # If the CSRF token in the session doesn't match the value
             # included in the request...
             #
+            token = authentication_token()
             if token != request.params.get(token_key):
                 abort(403, empty_body=True)

@@ -67,9 +67,9 @@ class HopValidator(validators.FormValidator):
                 errors['form'] = self.message('empty', state)
             if not field_dict.get('alpha_acid'):
                 errors['alpha_acid'] = self.message('empty', state)
-
-            # Attempt to validate alpha_acid as a valid number/float
-            validators.Number.to_python(field_dict['alpha_acid'])
+            else:
+                # Attempt to validate alpha_acid as a valid number/float
+                validators.Number.to_python(field_dict['alpha_acid'])
     
         # raise the errors, if any
         if errors:

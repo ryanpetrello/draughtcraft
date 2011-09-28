@@ -40,6 +40,17 @@ class TestRecipeBrowser(TestApp):
         assert self._ns[key] == value
 
 
+class TestRecipeBrowse(TestRecipeBrowser):
+
+    def test_browse_index(self):
+        model.Style(name = 'American IPA')
+        model.commit()
+
+        response = self.get('/recipes/')
+        assert response.status_int == 200
+        assert len(response.namespace.get('styles')) == 1
+
+
 class TestRecipeBase(TestRecipeBrowser):
     """
     Make sure non-published recipes are filtered out.

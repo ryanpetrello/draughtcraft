@@ -30,7 +30,7 @@ class SlugController(object):
         )
 
     @expose(generic=True)
-    def async(self): pass
+    def async(self): abort(405)
 
     @async.when(
         method      = 'POST',
@@ -47,7 +47,7 @@ class SlugController(object):
         return dict(recipe = recipe)
 
     @expose(generic=True)
-    def draft(self): pass
+    def draft(self): abort(405)
 
     @draft.when(method="POST")
     def do_draft(self):
@@ -62,7 +62,7 @@ class SlugController(object):
         redirect("%sbuilder" % draft.url())
 
     @expose(generic=True)
-    def copy(self): pass
+    def copy(self): abort(405)
 
     @copy.when(method="POST")
     def do_copy(self):
@@ -85,7 +85,7 @@ class SlugController(object):
         redirect("/")
 
     @expose(generic=True)
-    def delete(self): pass
+    def delete(self): abort(405)
 
     @delete.when(method="POST")
     def do_delete(self):
@@ -122,8 +122,7 @@ class RecipesController(object):
     @expose('recipes/browse/index.html')
     def index(self):
         return dict(
-            styles  = model.Style.query.order_by(model.Style.name).all(),
-            recipes = model.Recipe.query.filter(model.Recipe.state == 'PUBLISHED').all()
+            styles  = model.Style.query.order_by(model.Style.name).all()
         )
 
     @expose(

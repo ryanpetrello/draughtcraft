@@ -3,8 +3,6 @@ from pecan                              import (expose, request, response,
 from pecan.rest                         import RestController
 from draughtcraft                       import model
 from draughtcraft.lib                   import email as emaillib
-from draughtcraft.lib.auth              import (save_user_session,
-                                                remove_user_session) 
 from draughtcraft.lib.notice            import notify
 from draughtcraft.lib.schemas.forgot    import (ForgotPasswordSchema,
                                                 ResetPasswordSchema)
@@ -51,7 +49,7 @@ class ForgotPasswordController(object):
     
     @expose(generic=True)
     def index(self):
-        pass
+        pass # pragma: no cover
             
     @index.when(
         method              = 'POST',

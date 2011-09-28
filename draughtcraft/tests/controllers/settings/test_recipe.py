@@ -56,6 +56,9 @@ class TestRecipeSettings(TestAuthenticatedApp):
 
 class TestAnonymousVisitorSettings(TestApp):
 
+    def test_unit_get(self):
+        assert self.get('/units', status=405).status_int == 405
+
     def test_unit_system_toggle(self):
         resp = self.get('/')
         session = resp.environ['beaker.session']
