@@ -7,11 +7,16 @@
   background-clip: padding-box;
 }
 nav.user, #topnav, #content  {
-  width: 800px;
+  width: 900px;
 }
 #content  {
   h1  {
     padding-right: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    width: 475px;
   }
   .header  {
     fieldset  {
@@ -36,9 +41,9 @@ nav.user, #topnav, #content  {
       display: none;
     }
     div.ingredient-list  {
-      width: 760px !important;
+      width: 860px !important;
       table  {
-        width: 760px;
+        width: 860px;
       }
       p.instruction  {
         display: block !important;

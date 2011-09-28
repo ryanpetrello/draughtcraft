@@ -10,6 +10,13 @@
 
 <%inherit file="../../layout.html" />
 
+<%def name="title()">
+  ${recipe.name}
+  % if recipe.author:
+    - ${recipe.author.full_name if recipe.author.full_name else recipe.author.username}
+  % endif
+</%def>
+
 <%def name="style()">
     <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/recipes/builder.less.css')}" />
     % if not editable:
@@ -57,7 +64,7 @@
           ${h.form('async/settings/volume', class_='volume')}
             ${h.text(
               'volume', 
-              int(recipe.liters) if int(recipe.liters) == float(recipe.liters) else recipe.liters,
+              h.format_volume(recipe.liters),
               class_ = 'unit'
             )}
             ${h.hidden(
@@ -72,7 +79,7 @@
           ${h.form('async/settings/volume', class_='volume')}
             ${h.text(
               'volume', 
-              int(recipe.gallons) if int(recipe.gallons) == float(recipe.gallons) else recipe.gallons,
+              h.format_volume(recipe.gallons),
               class_ = 'unit'
             )}
             ${h.hidden(

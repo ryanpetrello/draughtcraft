@@ -1,8 +1,5 @@
 <%
   from draughtcraft.lib.units import to_metric
-  
-  def pretty_num(n):
-    return int(n) if int(n) == float(n) else n
 %>
 
 <%inherit file="../layout.html" />
@@ -47,7 +44,7 @@
           % if h.request.context['metric'] == True:
             ${h.text(
               'default_recipe_volume', 
-              pretty_num(round(to_metric(*(user.settings['default_recipe_volume'], "GALLON"))[0], 3)),
+              h.format_volume(round(to_metric(*(user.settings['default_recipe_volume'], "GALLON"))[0], 3)),
               tabindex='2',
               class_='unit'
             )}
@@ -55,7 +52,7 @@
           % else:
             ${h.text(
               'default_recipe_volume', 
-              pretty_num(user.settings['default_recipe_volume']),
+              h.format_volume(user.settings['default_recipe_volume']),
               tabindex='2',
               class_='unit'
             )}

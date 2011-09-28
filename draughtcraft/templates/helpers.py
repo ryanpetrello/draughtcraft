@@ -67,3 +67,9 @@ def format_age(value):
         return '%s days ago' % difference.days
     else:
         return format_date(value)
+
+def format_volume(amount):
+    amount = round(amount, 2)
+    if float(amount) == int(amount):
+        return int(amount)
+    return amount

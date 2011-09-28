@@ -8,7 +8,7 @@
 }
 
 nav.user, #topnav, #content  {
-  width: 800px;
+  width: 950px;
 }
 
 #content  {
@@ -180,6 +180,14 @@ nav.user, #topnav, #content  {
       td {
         a  {
           text-decoration: none;
+        }
+        &.name a  {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          -o-text-overflow: ellipsis;
+          display: inline-block;
+          max-width: 300px;
         }
       }
       td.author img  {
