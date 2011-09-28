@@ -23,7 +23,7 @@
         [('', 'Add Yeast...')] + sorted(
           [
             (yeast.id, yeast.printed_name) for yeast in h.model.Yeast.query.all()
-          ], key = lambda f: f[1]
+          ], key = lambda f: h.alphanum_key(f[1])
         )
       )
     )}
@@ -39,7 +39,7 @@
         ('', 'Add Dry Hops...')] + sorted(
           [
             (hop.id, hop.printed_name) for hop in h.model.Hop.query.all()
-          ], key = lambda f: f[1]
+          ], key = lambda f: h.alphanum_key(f[1])
         )
     )}
   ${h.end_form()}
@@ -54,7 +54,7 @@
         ('', 'Add Misc...')] + sorted(
           [
             (extra.id, extra.printed_name) for extra in h.model.Extra.query.all()
-          ], key = lambda f: f[1]
+          ], key = lambda f: h.alphanum_key(f[1])
         )
     )}
   ${h.end_form()}
