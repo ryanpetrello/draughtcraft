@@ -130,7 +130,7 @@ class RecipeSettingsController(object):
 
     @mash.when(
         method      = 'POST',
-        template    = 'recipes/builder/async.html',
+        template    = 'json',
         schema      = RecipeMashSettings()
     )
     def _mash(self, method, instructions):
@@ -139,7 +139,7 @@ class RecipeSettingsController(object):
         self.recipe.mash_method = method
         self.recipe.mash_instructions = instructions
         self.recipe.touch()
-        return dict(recipe = self.recipe, editable=True)
+        return dict()
 
     #
     # Boil Duration
@@ -172,13 +172,13 @@ class RecipeSettingsController(object):
 
     @notes.when(
         method      = 'POST',
-        template    = 'recipes/builder/async.html',
+        template    = 'json',
         schema      = RecipeNotes()
     )
     def _notes(self, notes):
         self.recipe.notes = notes
         self.recipe.touch()
-        return dict(recipe = self.recipe, editable=True)
+        return dict()
 
 
 class IngredientsController(RestController):

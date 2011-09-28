@@ -110,21 +110,25 @@ $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
     // On successful Ajax submission, we inject the response body into
     // the DOM.
     //
-    $('#builder form:not(.name)').ajaxForm({
-        'success' : function(responseText){
-            $('.publish-btn').prop('disabled', false);
-            $('.publish-btn').text('Publish Changes');
-            $.draughtcraft.recipes.builder._delay($.noop, 0);
-            $.draughtcraft.recipes.builder.__injectRecipeContent__(responseText);
-            $.draughtcraft.recipes.builder._changes_in_queue = false;
-        },
-        'error' : function(jqXHR, textStatus, errorThrown){
-            $('.publish-btn').prop('disabled', false);
-            $('.publish-btn').text('Publish Changes');
-            $.draughtcraft.recipes.builder._delay($.noop, 0);
-            $.draughtcraft.recipes.builder.__injectRecipeContent__(jqXHR.responseText);
-            $.draughtcraft.recipes.builder._changes_in_queue = false;
-        }
+    $('#builder form:not(.name)').each(function(){
+        $(this).ajaxForm({
+            'success' : $.proxy(function(responseText){
+                $('.publish-btn').prop('disabled', false);
+                $('.publish-btn').text('Publish Changes');
+                $.draughtcraft.recipes.builder._delay($.noop, 0);
+                if(!$(this).hasClass('no-inject'))
+                    $.draughtcraft.recipes.builder.__injectRecipeContent__(responseText);
+                $.draughtcraft.recipes.builder._changes_in_queue = false;
+            }, this),
+            'error' : $.proxy(function(jqXHR, textStatus, errorThrown){
+                $('.publish-btn').prop('disabled', false);
+                $('.publish-btn').text('Publish Changes');
+                $.draughtcraft.recipes.builder._delay($.noop, 0);
+                if(!$(this).hasClass('no-inject'))
+                    $.draughtcraft.recipes.builder.__injectRecipeContent__(jqXHR.responseText);
+                $.draughtcraft.recipes.builder._changes_in_queue = false;
+            }, this)
+        });
     });
 
     //
@@ -246,8 +250,10 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
         // disable them (disallow edits while saving) for the duration
         // of the Ajax save.
         //
-        $(form).find('input, select').prop('disabled', true);
-        $(".step fieldset select").selectBox('disable');
+        if(!$(form).hasClass('no-inject')){
+            $(form).find('input, select').prop('disabled', true);
+            $(".step fieldset select").selectBox('disable');
+        }
     };
 
     // Any time an <input> or <textarea> triggers a `keyup`...
@@ -547,3 +553,6 @@ $(document).ready(function(){
     // Register a JS tooltip on the author's thumbnail (if there is one).
     $('img.gravatar').tipTip({'delay': 50});
 });
+
+// Disabling Safari's annoying form warning - the builder auto-saves for you.
+window.onbeforeunload=function(e){}
