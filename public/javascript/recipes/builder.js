@@ -171,6 +171,16 @@ $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
         });
     });
 
+    // Register tooltips for each of the `results` settings buttons
+    $('div.results a.recipe-setting img').each(function(){
+        $(this).tipTip({
+            'delay'     : 25,
+            'edgeOffset': 20,
+            'content'   : $(this).closest('a').attr('title')
+        });
+        $(this).closest('a').removeAttr('title');
+    });
+
     // Register fancybox popups for ingredient links
     $("a[href^='/ingredients/']").fancybox();
 

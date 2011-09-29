@@ -34,6 +34,13 @@
         <label>
           ${'%.3f' % recipe.calculations.og}
         </label>
+        % if editable:
+          <p class="efficiency">
+            <a href="/settings/recipe" class="recipe-setting" title="Specify a custom brewhouse efficiency.">
+              <img src="/images/cog.png" />
+            </a>
+          </p>
+        % endif
       </td>
       <td>
         <label>
@@ -113,6 +120,13 @@
         <label>
           ${recipe.calculations.ibu} <span class="unit">IBU</span>
         </label>
+        % if editable:
+          <p class="ibu-formula">
+            <a href="/settings/recipe" class="recipe-setting" title="Specify an IBU formula.">
+              <img src="/images/cog.png" />
+            </a>
+          </p>
+        % endif
       </td>
       <td>
         <label>

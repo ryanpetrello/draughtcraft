@@ -5,7 +5,9 @@ from draughtcraft.tests     import TestApp, TestAuthenticatedApp
 class TestUnauthenticatedProfileSettings(TestApp):
 
     def test_profile_render(self):
-        assert self.get('/settings/profile/', status=401).status_int == 401
+        resp = self.get('/settings/profile/', status=302)
+        assert resp.status_int == 302
+        assert resp.headers['Location'].endswith('/signup')
 
 
 class TestProfileSettings(TestAuthenticatedApp):
