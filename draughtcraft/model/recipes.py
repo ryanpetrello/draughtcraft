@@ -277,7 +277,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         The URL for a recipe.
         """
         return '/recipes/%s/%s/%s' % (
-            self.id,
+            ('%x' % self.id).lower(),
             self.slugs[-1].slug,
             '' if public else 'builder/'
         )
