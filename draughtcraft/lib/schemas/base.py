@@ -46,6 +46,3 @@ class ModelObject(validators.FancyValidator):
             else:
                 instance = self.model.get_by(**{self.attr : self._if_empty})
             return instance
-        else:
-            return None
-
