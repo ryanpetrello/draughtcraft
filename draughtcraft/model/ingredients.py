@@ -51,7 +51,7 @@ class Fermentable(Ingredient):
     
     type                = Field(Enum(*TYPES))
     ppg                 = Field(Integer)
-    lovibond            = Field(Integer)
+    lovibond            = Field(Float)
     origin              = Field(Enum(*ORIGINS))
 
     additions           = OneToMany('RecipeAddition', inverse='fermentable')

@@ -6,7 +6,6 @@ from draughtcraft                   import model, data
 
 import os
 import sys
-import json
 
 BLUE = '\033[94m'
 DARKBLUE = '\033[90m'
@@ -14,6 +13,11 @@ GREEN = '\033[92m'
 YELLOW = '\033[93m'
 RED = '\033[91m'
 ENDS = '\033[0m'
+
+def ne(x, y, tolerance=0.01):
+    if type(x) is float and type(y) is float:
+        return abs(x-y) <= 0.5 * tolerance * (x + y)
+    return x == y
 
 class EnvCommand(Command):
     """
@@ -111,7 +115,7 @@ def populate():
 
             # Update necessary columns
             for k,v in kwargs.items():
-                if getattr(ingredient, k) != v:
+                if not ne(getattr(ingredient, k), v):
                     changed = True
                 setattr(ingredient, k, v)
 
@@ -159,7 +163,7 @@ def populate():
 
         # Update necessary columns
         for k,v in kwargs.items():
-            if getattr(style, k) != v:
+            if not ne(getattr(style, k), v):
                 changed = True
             setattr(style, k, v)
 
