@@ -34,7 +34,7 @@
         <label>
           ${'%.3f' % recipe.calculations.og}
         </label>
-        % if editable:
+        % if editable and recipe.type in ('MASH', 'MINIMASH'):
           <p class="efficiency">
             <a href="/settings/recipe" class="recipe-setting" title="Specify a custom brewhouse efficiency.">
               <img src="/images/cog.png" />
