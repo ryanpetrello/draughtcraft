@@ -12,7 +12,6 @@ from profile        import ProfilesController
 from recipes        import RecipesController
 from settings       import SettingsController
 from signup         import SignupController
-from styles         import StylesController
 
 class RootController(object):
 
@@ -76,4 +75,3 @@ class RootController(object):
     recipes     = RecipesController()
     settings    = SettingsController()
     signup      = SignupController()
-    styles      = StylesController()
