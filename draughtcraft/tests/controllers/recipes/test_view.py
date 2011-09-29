@@ -29,6 +29,14 @@ class TestRecipePublish(TestAuthenticatedApp):
         response = self.get('/recipes/1/rocky-mountain-river-ipa/', status=404)
         assert response.status_int == 404
 
+    def test_invalid_primary_key(self):
+        """
+        If the URL contains a hex part that isn't valid hex, fail gracefully.
+        /recipes/foo/<slug>
+        """
+        resp = self.get('/recipes/xyz/rocky-mountain-river-ipa', status=404)
+        assert resp.status_int == 404
+
     def test_hex_lookup(self):
         """
         Make sure that the hex lookup functionality works properly with 

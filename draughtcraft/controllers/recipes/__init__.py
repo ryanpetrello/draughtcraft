@@ -106,7 +106,10 @@ class RecipeController(object):
         return SlugController(slug), remainder
 
     def __init__(self, recipeID):
-        primary_key = int(str(recipeID), 16)
+        try:
+            primary_key = int(str(recipeID), 16)
+        except ValueError:
+            abort(404)
         recipe = model.Recipe.get(primary_key)
         if recipe is None:
             abort(404)

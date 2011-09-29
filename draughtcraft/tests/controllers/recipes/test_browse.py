@@ -50,6 +50,10 @@ class TestRecipeBrowse(TestRecipeBrowser):
         assert response.status_int == 200
         assert len(response.namespace.get('styles')) == 1
 
+    def test_browse_ajax(self):
+        response = self.get('/recipes/recipes', status=400)
+        assert response.status_int == 400
+
 
 class TestRecipeBase(TestRecipeBrowser):
     """

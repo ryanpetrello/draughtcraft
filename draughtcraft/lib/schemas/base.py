@@ -3,7 +3,6 @@ from formencode                 import Schema, Invalid, NoDefault, validators
 class FilteredSchema(Schema):
 
     if_missing = None
-    if_empty = None
     allow_extra_fields = True
     filter_extra_fields = True
 
