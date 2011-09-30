@@ -47,6 +47,12 @@ class User(Entity, ShallowCopyMixin):
         return self.username
 
     @property
+    def printed_first_name(self):
+        if self.first_name and self.first_name.strip():
+            return self.first_name.strip()
+        return self.username
+
+    @property
     def abbreviated_name(self):
         if self.first_name and self.last_name:
             return "%s %s." % (self.first_name, self.last_name[0])

@@ -29,6 +29,23 @@ class TestUser(unittest.TestCase):
             username = 'ryanpetrello'
         ).printed_name == 'ryanpetrello'
 
+    def test_printed_first_name(self):
+        assert model.User(
+            first_name = 'Ryan', 
+            last_name = 'Petrello',
+            username = 'ryanpetrello'
+        ).printed_first_name == 'Ryan'
+
+        assert model.User(
+            first_name = '', 
+            last_name = 'Petrello',
+            username = 'ryanpetrello'
+        ).printed_first_name == 'ryanpetrello'
+
+        assert model.User(
+            username = 'ryanpetrello'
+        ).printed_first_name == 'ryanpetrello'
+
     def test_password_conversion(self):
         user = model.User(
             username    = u'ryanpetrello',
