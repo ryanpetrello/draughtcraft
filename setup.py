@@ -19,6 +19,7 @@ setup(
         "elixir",
         "beaker",
         "formencode",
+        "genshi",
         "webhelpers",
         "webflash",
         "simplejson",
