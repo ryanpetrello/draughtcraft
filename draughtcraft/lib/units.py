@@ -274,7 +274,7 @@ class UnitConvert(object):
             'GALLON'        : 'Gal',
             'LITER'         : 'L'
         }
-        return _map[unit]
+        return _map.get(unit, '')
 
     @classmethod
     def __str_amount__(cls, amount):

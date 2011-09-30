@@ -1,3 +1,4 @@
+from draughtcraft.lib.units import InvalidUnitException
 import math
 
 class Calculations(object):
@@ -33,7 +34,15 @@ class Calculations(object):
                 if a.fermentable.type == 'EXTRACT':
                     efficiency = 1
 
-                points += (a.pounds * a.fermentable.ppg * efficiency) / volume
+                try:
+                    pounds = a.pounds
+                    points += (pounds * a.fermentable.ppg * efficiency) / volume
+                except InvalidUnitException:
+                    #
+                    # If we can't convert the addition to pounds,
+                    # don't include it in the gravity calculations.
+                    #
+                    pass
 
         return round(points / 1000 + 1, 3)
 
@@ -75,8 +84,16 @@ class Calculations(object):
         fermentables = [a for a in self.recipe.additions if a.fermentable]
         gallons = float(self.recipe.gallons)
         for f in fermentables:
-            mcu = (f.pounds * f.ingredient.lovibond) / gallons
-            total += mcu
+            try:
+                pounds = f.pounds
+                mcu = (f.pounds * f.ingredient.lovibond) / gallons
+                total += mcu
+            except InvalidUnitException:
+                #
+                # If we can't convert the addition to pounds,
+                # don't include it in the gravity calculations.
+                #
+                pass
 
         srm = 1.4922 * (total ** 0.6859)
 

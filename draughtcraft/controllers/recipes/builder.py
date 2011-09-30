@@ -222,7 +222,6 @@ class IngredientsController(RestController):
         Contains a list of `additions` for which updated information is
         available.
         """
-        
         keys = ('mash_additions', 'boil_additions', 'fermentation_additions')
         for addition_class in keys:
             additions = kw.get(addition_class)
