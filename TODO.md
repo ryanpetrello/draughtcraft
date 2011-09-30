@@ -6,10 +6,6 @@ next
 * Ability to comment on (others') recipes
 * Improved recipe slugs when you change the name and publish
 
-Missing Ingredients
---------------------
-* Additional popular malt extracts (namely, Muntons)
-
 Settings
 --------
 * Ability to provide customized PPG and L for fermentables (at a global level)

@@ -1,4 +1,3 @@
-Support for custom "Extra" ingredients (not accounted for in calculations).
 Feature: (Extract) Add a place to enter steeping length
 Feature: Add a section for recommended priming solution for bottling
 Bug: Investigate 304 errors.
