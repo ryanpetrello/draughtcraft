@@ -9,9 +9,7 @@ class Field(object):
         self.transform = transform
     
     def get_value(self, value):
-        if self.transform:
-            return self.transform(value)
-        return {self.name: value}
+        return {self.name: self.transform(value) if self.transform else value}
 
 
 class NodeSet(object):
