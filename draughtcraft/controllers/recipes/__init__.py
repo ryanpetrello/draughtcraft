@@ -144,7 +144,7 @@ class RecipesController(object):
         sortable_type = case([
             (model.Recipe.type == 'MASH', literal('All Grain')),
             (model.Recipe.type == 'EXTRACT', literal('Extract')),
-            (model.Recipe.type == 'EXTRACTSTEEP', literal('Extract with Steeped Grains')),
+            (model.Recipe.type == 'EXTRACTSTEEP', literal('Extract w/ Steeped Grains')),
             (model.Recipe.type == 'MINIMASH', literal('Mini-Mash')),
         ]).label('type')
         

@@ -541,7 +541,7 @@ class TestRecipe(unittest.TestCase):
         ).printable_type == 'Extract'
         assert model.Recipe(
             type = u'EXTRACTSTEEP'
-        ).printable_type == 'Extract with Steeped Grains'
+        ).printable_type == 'Extract w/ Steeped Grains'
         assert model.Recipe(
             type = u'MINIMASH'
         ).printable_type == 'Mini-Mash'

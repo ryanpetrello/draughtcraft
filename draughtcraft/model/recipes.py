@@ -287,7 +287,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         return {
             'MASH'          : 'All Grain',
             'EXTRACT'       : 'Extract',
-            'EXTRACTSTEEP'  : 'Extract with Steeped Grains',
+            'EXTRACTSTEEP'  : 'Extract w/ Steeped Grains',
             'MINIMASH'      : 'Mini-Mash'
         }[self.type]
 

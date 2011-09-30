@@ -326,7 +326,7 @@ class TestSorting(TestRecipeBrowser):
         # Sort alphabetically (DESC) based on:
         #   'MASH'          : 'All Grain',
         #   'EXTRACT'       : 'Extract',
-        #   'EXTRACTSTEEP'  : 'Extract with Steeped Grains',
+        #   'EXTRACTSTEEP'  : 'Extract w/ Steeped Grains',
         #   'MINIMASH'      : 'Mini-Mash'
         # 
         self._get({'order_by': 'type'})
@@ -347,7 +347,7 @@ class TestSorting(TestRecipeBrowser):
         # Sort alphabetically (ASC) based on:
         #   'MASH'          : 'All Grain',
         #   'EXTRACT'       : 'Extract',
-        #   'EXTRACTSTEEP'  : 'Extract with Steeped Grains',
+        #   'EXTRACTSTEEP'  : 'Extract w/ Steeped Grains',
         #   'MINIMASH'      : 'Mini-Mash'
         # 
         self._get({'order_by': 'type', 'direction': 'ASC'})
