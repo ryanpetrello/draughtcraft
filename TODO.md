@@ -4,6 +4,7 @@ next
 
 * BeerXML import/export
 * Ability to comment on (others') recipes
+* Improved recipe slugs when you change the name and publish
 
 Missing Ingredients
 --------------------
