@@ -5,14 +5,32 @@ from webhelpers.html.tags               import *
 from webhelpers.text                    import *
 from draughtcraft.lib.csrf              import secure_form as form
 
-def stamp(uri):
-    """
-    Used to stamp the URI of a static resource with a revision-specific
-    identifier so that when updates are deployed, browser caches are broken,
-    and users are forced to re-download the latest static resources.
-    """
-    from pecan import conf
-    return "%s?%s" % (uri, conf.app.stamp)
+def css(url):
+    if 'css_sources' not in request.context:
+        request.context['css_sources'] = []
+    request.context['css_sources'].append(url)
+    return ''
+
+def js(url):
+    if 'js_sources' not in request.context:
+        request.context['js_sources'] = []
+    request.context['js_sources'].append(url)
+    return ''
+
+def compiled_css():
+    from draughtcraft.lib.minify import stylesheet_link
+    return stylesheet_link(
+        *request.context.get('css_sources', []),
+        combined = True
+    )
+
+def compiled_javascript():
+    from draughtcraft.lib.minify import javascript_link
+    return javascript_link(
+        *request.context.get('js_sources', []),
+        minified = True,
+        combined = True
+    )
 
 def format_percentage(decimal, digits=2, symbol=True):
     value = decimal * 100.00
