@@ -39,6 +39,11 @@ session = {
     '__force_dict__'    : True
 }
 
+cache = {
+    'key'               : 'resources_to_compile',
+    '__force_dict__'    : True
+}
+
 postmark = {
     'api_key'       : 'POSTMARK_API_TEST'
 }

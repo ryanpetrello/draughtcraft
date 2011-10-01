@@ -113,6 +113,7 @@ log = logging.getLogger(__name__)
 
 def base_link(ext, *sources, **options):
     from pecan import conf, request
+    from draughtcraft.templates.helpers import stamp
 
     combined = options.pop('combined', False)
     minified = options.pop('minified', False)
@@ -196,7 +197,7 @@ def base_link(ext, *sources, **options):
         sources = minify_sources(list(sources), '.min.' + ext, fs_root)
 
     # append a version stamp
-    sources = ['%s?%s' % (s, conf.app.stamp) for s in sources]
+    sources = [stamp(s) for s in sources]
 
     if 'js' in ext:
         return __javascript_link(*sources, **options)
