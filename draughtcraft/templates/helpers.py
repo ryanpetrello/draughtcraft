@@ -5,6 +5,9 @@ from webhelpers.html.tags               import *
 from webhelpers.text                    import *
 from draughtcraft.lib.csrf              import secure_form as form
 
+#
+# Resources, minification, and automatic resource file merging
+#
 def stamp(uri):
     """
     Used to stamp the URI of a static resource with a revision-specific
@@ -15,18 +18,31 @@ def stamp(uri):
     return "%s?%s" % (uri, conf.app.stamp)
 
 def css(url):
+    """
+    Called from a template to add a CSS resource to the page.
+    """
     if 'css_sources' not in request.context:
         request.context['css_sources'] = []
     request.context['css_sources'].append(url)
     return ''
 
 def js(url):
+    """
+    Called from a template to add a JS resource to the page.
+    """
     if 'js_sources' not in request.context:
         request.context['js_sources'] = []
     request.context['js_sources'].append(url)
     return ''
 
 def compiled_css():
+    """
+    Returns the URL to an auto-merged CSS resource.
+
+    If h.css() is called 3 times in a template, those 3 CSS files will
+    be merged into a single file by h.compile_css(), stored in a Beaker
+    memory cache, and the resulting <style> embedded into the template via
+    this function."""
     from draughtcraft.lib.minify import stylesheet_link
     return stylesheet_link(
         *request.context.get('css_sources', []),
@@ -34,6 +50,14 @@ def compiled_css():
     )
 
 def compiled_javascript():
+    """
+    Returns the URL to an auto-merged JS resource.
+
+    If h.js() is called 3 times in a template, those 3 JS files will
+    be merged into a single file by h.compile_javascript(), stored in a Beaker
+    memory cache, and the resulting <script> embedded into the template via
+    this function.
+    """
     from draughtcraft.lib.minify import javascript_link
     return javascript_link(
         *request.context.get('js_sources', []),
@@ -41,6 +65,9 @@ def compiled_javascript():
         combined = True
     )
 
+#
+# Various formatting helpers
+#
 def format_percentage(decimal, digits=2, symbol=True):
     value = decimal * 100.00
 

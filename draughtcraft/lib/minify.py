@@ -62,14 +62,18 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
+
 """Minification helpers.
 
 This module provides enhanced versions of the ``javascript_link`` and
 ``stylesheet_link`` helpers in ``webhelpers.html.tags``.  These versions add
 two additional arguments:
 
+javascript_link(url, minified=False, combined=False)
+stylesheet_link(url, combined=False)
+
 * **minified**: If true, reduce the file size by squeezing out
-  whitespace and other characters insignificant to the Javascript or CSS syntax.
+  whitespace and other characters insignificant to the Javascript syntax.
 * **combined**: If true, concatenate the specified files into one file to
   reduce page load time.
 
