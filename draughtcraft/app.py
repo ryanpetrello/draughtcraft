@@ -29,8 +29,7 @@ def setup_app(config):
     # Compile .less resources
     Less(
         os.path.join(config.app.static_root, '_precompile'), 
-        os.path.join(config.app.static_root, 'css'),
-        compiled_extension = 'less.css'
+        os.path.join(config.app.static_root, 'css')
     ).compile()
     
     return make_app(

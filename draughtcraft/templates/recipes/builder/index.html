@@ -18,11 +18,11 @@
 </%def>
 
 <%def name="style()">
-    ${h.css('/css/recipes/builder.less.css')}
+    ${h.css('/css/recipes/builder.css')}
     % if not editable:
-      ${h.css('/css/recipes/viewer.less.css')}
+      ${h.css('/css/recipes/viewer.css')}
     % endif
-    <link rel="stylesheet" type="text/css" media="print" href="${h.stamp('/css/recipes/builder.print.less.css')}" />
+    <link rel="stylesheet" type="text/css" media="print" href="${h.stamp('/css/recipes/builder.print.css')}" />
     ${h.css('/css/jquery.selectbox.css')}
 </%def>
 
