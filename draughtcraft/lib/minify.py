@@ -66,16 +66,12 @@
 
 This module provides enhanced versions of the ``javascript_link`` and
 ``stylesheet_link`` helpers in ``webhelpers.html.tags``.  These versions add
-three additional arguments:
+two additional arguments:
 
 * **minified**: If true, reduce the file size by squeezing out
   whitespace and other characters insignificant to the Javascript or CSS syntax.
 * **combined**: If true, concatenate the specified files into one file to
   reduce page load time.
-
-Dependencies: ``jsmin``, and ``cssutils`` (all
-available in PyPI). If "jsmin" is not installed, the helper issues a warning
-and passes Javascript through unchanged.
 
 Adapted from code by Pedro Algarvio and Domen Kozar <ufs@ufsoft.org>.
 URL: http://docs.fubar.si/minwebhelpers/
@@ -85,26 +81,11 @@ import re
 import os
 import logging
 import StringIO
-import warnings
 
 from webhelpers.html.tags import javascript_link as __javascript_link
 from webhelpers.html.tags import stylesheet_link as __stylesheet_link
 
-try:
-    from jsmin import JavascriptMinify
-except ImportError:
-    class JavascriptMinify(object):
-        def minify(self, instream, outstream):
-            warnings.warn(JSMIN_MISSING_MESSAGE, UserWarning)
-            data = instream.read()
-            outstream.write(data)
-            instream.close()
-
-JSMIN_MISSING_MESSAGE = """\
-_jsmin has been removed from WebHelpers due to licensing issues
-Your Javascript code has been passed through unchanged.
-You can install the "jsmin" package from PyPI, and this helper will use it.
-"""
+from jsmin import JavascriptMinify
 
 
 __all__ = ['javascript_link', 'stylesheet_link']
