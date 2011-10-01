@@ -28,7 +28,6 @@ setup(
         "pytest-cov",
         "lesspy",
         "jsmin",
-        "cssutils",
         "fudge"
     ],
     zip_safe = False,

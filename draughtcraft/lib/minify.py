@@ -77,7 +77,6 @@ Adapted from code by Pedro Algarvio and Domen Kozar <ufs@ufsoft.org>.
 URL: http://docs.fubar.si/minwebhelpers/
 """
 
-import re
 import os
 import logging
 import StringIO
@@ -137,7 +136,6 @@ def base_link(ext, *sources, **options):
 
     @cache.cache(conf.cache['key'])
     def minify_sources(sources, ext, fs_root=''):
-        import cssutils 
 
         if 'js' in ext:
             js_minify = JavascriptMinify()
@@ -158,13 +156,6 @@ def base_link(ext, *sources, **options):
             # minify js source (read stream is auto-closed inside)
             if 'js' in ext:
                 js_minify.minify(open(full_source, 'r'), f_minified_source)
-            # minify css source
-            if 'css' in ext:
-                serializer = get_serializer()
-                sheet = cssutils.parseFile(full_source)
-                sheet.setSerializer(serializer)
-                cssutils.ser.prefs.useMinified()
-                f_minified_source.write(sheet.cssText)
 
             f_minified_source.close()
             minified_sources.append(no_ext_source + ext)
@@ -190,59 +181,3 @@ def javascript_link(*sources, **options):
 
 def stylesheet_link(*sources, **options):
     return base_link('css', *sources, **options)
-
-
-_serializer_class = None
-
-def get_serializer():
-    # This is in a function to prevent a global import of ``cssutils``,
-    # which is not a WebHelpers dependency.
-    # The class is cached in a global variable so that it will be 
-    # compiled only once.
-
-    import cssutils
-
-    global _serializer_class
-    if not _serializer_class:
-        class CSSUtilsMinificationSerializer(cssutils.CSSSerializer):
-            def __init__(self, prefs=None):
-                cssutils.CSSSerializer.__init__(self, prefs)
-
-            def do_css_CSSStyleDeclaration(self, style, separator=None):
-                try:
-                    color = style.getPropertyValue('color')
-                    if color and color is not u'':
-                        color = self.change_colors(color)
-                        style.setProperty('color', color)
-                except:
-                    pass
-                return re.sub(r'0\.([\d])+', r'.\1',
-                              re.sub(r'(([^\d][0])+(px|em)+)+', r'\2',
-                              cssutils.CSSSerializer.do_css_CSSStyleDeclaration(
-                                  self, style, separator)))
-
-            def change_colors(self, color):
-                colours = {
-                    'black': '#000000',
-                    'fuchia': '#ff00ff',
-                    'yellow': '#ffff00',
-                    '#808080': 'gray',
-                    '#008000': 'green',
-                    '#800000': 'maroon',
-                    '#000800': 'navy',
-                    '#808000': 'olive',
-                    '#800080': 'purple',
-                    '#ff0000': 'red',
-                    '#c0c0c0': 'silver',
-                    '#008080': 'teal'
-                }
-                if color.lower() in colours:
-                    color = colours[color.lower()]
-
-                if color.startswith('#') and len(color) == 7:
-                    if color[1]==color[2] and color[3]==color[4] and color[5]==color[6]:
-                        color = '#%s%s%s' % (color[1], color[3], color[5])
-                return color
-        # End of class CSSUtilsMinificationSerializer
-        _serializer_class = CSSUtilsMinificationSerializer
-    return _serializer_class()
