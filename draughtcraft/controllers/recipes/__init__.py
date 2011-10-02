@@ -223,6 +223,9 @@ class RecipesController(object):
             and_(*where)
         ).execute().fetchone()[0]
 
+        if views not in order_column:
+            query = query.group_by(*order_column)
+
         recipes = model.Recipe.query.from_statement(query.order_by(
             *[order_direction(column) for column in order_column]
         ).offset(
