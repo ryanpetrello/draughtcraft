@@ -9,12 +9,12 @@
 <%def name="title()">Create a New Recipe</%def>
 
 <%def name="style()">
-  <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/thin.less.css')}" />
-  <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/recipes/create.less.css')}" />
+  ${h.css('/css/thin.css')}
+  ${h.css('/css/recipes/create.css')}
 </%def>
 
 <%def name="javascript()">
-  <script type="text/javascript" src="${h.stamp('/javascript/recipes/create.js')}"></script>
+  ${h.js('/javascript/recipes/create.js')}
 </%def>
 
 <h1>

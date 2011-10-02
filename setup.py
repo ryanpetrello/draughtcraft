@@ -19,6 +19,7 @@ setup(
         "elixir",
         "beaker",
         "formencode",
+        "genshi",
         "webhelpers",
         "webflash",
         "simplejson",
@@ -26,6 +27,7 @@ setup(
         "pytest-xdist",
         "pytest-cov",
         "lesspy",
+        "jsmin",
         "fudge"
     ],
     zip_safe = False,
