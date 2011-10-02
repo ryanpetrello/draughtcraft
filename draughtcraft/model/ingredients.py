@@ -5,7 +5,6 @@ from elixir import (
 )
 from draughtcraft.model.deepcopy    import ShallowCopyMixin
 from draughtcraft.lib.units         import UNITS
-from sqlalchemy                     import not_
 
 ORIGINS = [
     'AUSTRALIAN',
@@ -30,7 +29,7 @@ class Ingredient(Entity, ShallowCopyMixin):
     uid                 = Field(Unicode(32), unique=True)
     name                = Field(Unicode(256))
     description         = Field(UnicodeText)
-    default_unit        = Field(Enum(*UNITS), default='POUND', nullable=True)
+    default_unit        = Field(Enum(*UNITS, native_enum=False), default='POUND', nullable=True)
 
     @property
     def printed_name(self):
@@ -49,10 +48,10 @@ class Fermentable(Ingredient):
         'SUGAR'
     ]
     
-    type                = Field(Enum(*TYPES))
+    type                = Field(Enum(*TYPES, native_enum=False))
     ppg                 = Field(Integer)
     lovibond            = Field(Float)
-    origin              = Field(Enum(*ORIGINS))
+    origin              = Field(Enum(*ORIGINS, native_enum=False))
 
     additions           = OneToMany('RecipeAddition', inverse='fermentable')
 
@@ -77,7 +76,7 @@ class Hop(Ingredient):
     using_options(inheritance='multi', polymorphic=True)
 
     alpha_acid          = Field(Float())
-    origin              = Field(Enum(*ORIGINS))
+    origin              = Field(Enum(*ORIGINS, native_enum=False))
 
     additions           = OneToMany('RecipeAddition', inverse='hop')
 
@@ -115,10 +114,10 @@ class Yeast(Ingredient):
         'HIGH'
     ]
 
-    type                = Field(Enum(*TYPES))
-    form                = Field(Enum(*FORMS))
+    type                = Field(Enum(*TYPES, native_enum=False))
+    form                = Field(Enum(*FORMS, native_enum=False))
     attenuation         = Field(Float())
-    flocculation        = Field(Enum(*FLOCCULATION_VALUES))
+    flocculation        = Field(Enum(*FLOCCULATION_VALUES, native_enum=False))
 
     additions           = OneToMany('RecipeAddition', inverse='yeast')
 

@@ -204,7 +204,7 @@ class TestRecipePublish(TestAuthenticatedApp):
         self.post('/recipes/1/rocky-mountain-river-ipa/draft')
         assert model.Recipe.query.count() == 2
 
-        r1, r2 = model.Recipe.query.all()
+        r1, r2 = model.Recipe.query.order_by(model.Recipe.id).all()
         assert r1.state == "PUBLISHED"
         assert r2.state == "DRAFT"
         assert r1.current_draft == r2
@@ -228,7 +228,7 @@ class TestRecipePublish(TestAuthenticatedApp):
         self.post('/recipes/1/rocky-mountain-river-ipa/draft')
         assert model.Recipe.query.count() == 2
 
-        r1, r2 = model.Recipe.query.all()
+        r1, r2 = model.Recipe.query.order_by(model.Recipe.id).all()
         assert r1.state == "PUBLISHED"
         assert r2.state == "DRAFT"
         assert r1.current_draft == r2

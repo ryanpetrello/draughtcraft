@@ -1,3 +1,4 @@
+from pecan              import conf
 from draughtcraft       import model as dcmodel
 from webtest            import TestApp as WebTestApp
 from unittest           import TestCase
@@ -11,14 +12,63 @@ class TestModel(TestCase):
         self.app = WebTestApp(py.test.wsgi_app)
         
         # Create the database tables
+        dcmodel.clear()
         dcmodel.start()
         dcmodel.metadata.create_all()
+        dcmodel.commit()
         dcmodel.clear()
 
     def tearDown(self):
+        from sqlalchemy.engine import reflection
+        from sqlalchemy import create_engine
+        from sqlalchemy.schema import (
+            MetaData,
+            Table,
+            DropTable,
+            ForeignKeyConstraint,
+            DropConstraint,
+        )
+        
         # Tear down and dispose the DB binding
-        dcmodel.metadata.bind.dispose()
-        dcmodel.Session.expunge_all()
+        dcmodel.clear()
+
+        engine = conf.sqlalchemy.sa_engine
+        conn = engine.connect()
+
+        # start at transaction
+        trans = conn.begin()
+
+        inspector = reflection.Inspector.from_engine(engine)
+
+        # gather all data first before dropping anything.
+        # some DBs lock after things have been dropped in 
+        # a transaction.
+
+        metadata = MetaData()
+
+        tbs = []
+        all_fks = []
+
+        for table_name in inspector.get_table_names():
+            fks = []
+            for fk in inspector.get_foreign_keys(table_name):
+                if not fk['name']:
+                    continue
+                fks.append(
+                    ForeignKeyConstraint((),(),name=fk['name'])
+                    )
+            t = Table(table_name,metadata,*fks)
+            tbs.append(t)
+            all_fks.extend(fks)
+
+        for fkc in all_fks:
+            conn.execute(DropConstraint(fkc))
+
+        for table in tbs:
+            conn.execute(DropTable(table))
+
+        trans.commit()
+        conn.close()
 
 
 class TestApp(TestModel):
