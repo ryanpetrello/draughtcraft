@@ -141,6 +141,7 @@ class RecipesController(object):
         offset = int(perpage * (kw['page'] - 1))
 
         views = func.count(model.RecipeView.id).label('views')
+        username = func.lower(model.User.username).label('username')
 
         sortable_type = case([
             (model.Recipe.type == 'MASH', literal('All Grain')),
@@ -154,7 +155,7 @@ class RecipesController(object):
             type            = (sortable_type,),
             srm             = (model.Recipe._srm,),
             name            = (model.Recipe.name,),
-            author          = (model.User.last_name, model.User.first_name, model.User.username),
+            author          = (username,),
             style           = (model.Style.name,),
             last_updated    = (model.Recipe.last_updated,),
             views           = (views,)
