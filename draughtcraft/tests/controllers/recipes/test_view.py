@@ -1,4 +1,4 @@
-from draughtcraft.tests     import TestAuthenticatedApp
+from draughtcraft.tests     import TestAuthenticatedApp, TestApp
 from draughtcraft           import model
 
 
@@ -72,4 +72,22 @@ class TestRecipePublish(TestAuthenticatedApp):
         response = self.post('/recipes/1/rocky-mountain-river-ipa/async', status=404)
         assert response.status_int == 404
 
+        # The authenticate user is the owner, so the view count shouldn't go up.
+        assert len(model.Recipe.query.first().views) == 0
+
+
+class TestRecipeView(TestApp):
+
+    def test_view_published_recipe_async(self):
+        model.Recipe(
+            name    = 'Rocky Mountain River IPA',
+            author  = model.User(first_name = 'Ryan', last_name='Petrello'),
+            state   = "PUBLISHED"
+        )
+        model.commit()
+
+        response = self.post('/recipes/1/rocky-mountain-river-ipa/async')
+        assert response.status_int == 200
+
+        # The visitor isn't the owner, so the view count should go up.
         assert len(model.Recipe.query.first().views) == 1
