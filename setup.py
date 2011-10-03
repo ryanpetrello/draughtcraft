@@ -28,6 +28,7 @@ setup(
         "pytest-cov",
         "lesspy",
         "jsmin",
+        "psycopg2",
         "fudge"
     ],
     zip_safe = False,
