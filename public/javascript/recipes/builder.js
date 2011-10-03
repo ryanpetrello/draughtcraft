@@ -239,6 +239,8 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
         // Stop listening for mouse movements...
         $('body').unbind('mousemove');
 
+        if($.draughtcraft.recipes.builder._changes_in_queue == true) return;
+
         // Clear any previously queued form submissions
         $.draughtcraft.recipes.builder._delay($.noop, 0);
         
@@ -271,8 +273,8 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
         // Ignore Tab or Shift-Tab keypresses...
         if(e.keyCode == 9 || e.keyCode == 16) return;
 
-        // Start a timer to auto-save 2 seconds from now.
-        $.draughtcraft.recipes.builder._delay($.proxy(save, this), 1000);
+        // Start a timer to auto-save soon.
+        $.draughtcraft.recipes.builder._delay($.proxy(save, this), 500);
 
         //
         // Listen for any mouse movement. If movement occurs, go ahead and save.
@@ -282,7 +284,7 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
         $('body').mousemove($.proxy(function(){
             // Stop listening for mouse movements...
             $('body').unbind('mousemove');
-            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 333);
+            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 250);
         }, this));
 
     });
@@ -296,7 +298,7 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
     //
     // 1.  They move their mouse.
     //            - or -
-    // 2.  They change a value and wait past the 2 second auto-save threshold.
+    // 2.  They change a value and wait past the auto-save threshold.
     //
     $('.step input, .step select').focus(function(){
         if(!$.draughtcraft.recipes.builder._changes_in_queue) return;
@@ -306,13 +308,13 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
 
     //
     // If we're *about* to save, and any field is *hovered over*, prolong
-    // the save for an additional 2 seconds.  In this way, if the user
+    // the save for an additional second.  In this way, if the user
     // is moving the mouse around after changing a field value, it won't
     // save (and disable some field they're about to potentially focus on).
     //
     $('.step input, .step select').mouseenter(function(){
         if($.draughtcraft.recipes.builder._changes_in_queue){
-            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 2000);
+            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 1000);
         }
     });
 
