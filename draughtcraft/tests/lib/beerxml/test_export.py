@@ -47,6 +47,69 @@ class TestNode(TestCase):
         ])
 
 
+class NodeSet(TestCase):
+
+    def test_simple_nodeset(self):
+        class Hop(export.Node):
+            name = export.Field()
+
+        class Recipe(export.Node):
+            name = export.Field()
+            hops = export.NodeSet(Hop)
+
+        n = Recipe(
+            name    = 'Rocky Mountain River IPA',
+            hops    = [
+                Hop(name = 'Cascade')
+            ]
+        )
+        
+        assert 'version' in n.__fields__
+        assert 'name' in n.__fields__
+        assert n.__fields__['version'].__class__ == export.Field
+        assert n.__values__['version'] == 1
+        assert n.render() == prepare_xml([
+            '<RECIPE>',
+            '   <HOPS>',
+            '       <HOP>',
+            '           <NAME>Cascade</NAME>',
+            '           <VERSION>1</VERSION>',
+            '       </HOP>',
+            '   </HOPS>',
+            '   <NAME>Rocky Mountain River IPA</NAME>',
+            '   <VERSION>1</VERSION>',
+            '</RECIPE>'
+        ])
+
+    def test_singular_node_reference(self):
+        class Style(export.Node):
+            name = export.Field()
+
+        class Recipe(export.Node):
+            name    = export.Field()
+            style   = export.Field()
+
+        n = Recipe(
+            name    = 'Rocky Mountain River IPA',
+            style   = Style(name = 'American IPA')
+        )
+        
+        assert 'version' in n.__fields__
+        assert 'name' in n.__fields__
+        assert n.__fields__['version'].__class__ == export.Field
+        assert n.__values__['version'] == 1
+        assert n.render() == prepare_xml([
+            '<RECIPE>',
+            '   <NAME>Rocky Mountain River IPA</NAME>',
+            '   <STYLE>',
+            '       <NAME>American IPA</NAME>',
+            '       <VERSION>1</VERSION>',
+            '   </STYLE>',
+            '   <VERSION>1</VERSION>',
+            '</RECIPE>'
+        ])
+
+
 class TestHop(TestCase):
 
     def test_hop_export(self):
