@@ -341,7 +341,8 @@ class RecipeAddition(Entity, DeepCopyMixin):
                                 'OUNCE',
                                 'TEASPOON',
                                 'TABLESPOON',
-                                'GALLON'
+                                'GALLON',
+                                'LITER'
                             ], native_enum=False), nullable=True)
 
     use                 = Field(Enum(*USES, native_enum=False))
