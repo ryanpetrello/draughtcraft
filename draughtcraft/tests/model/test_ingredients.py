@@ -18,12 +18,12 @@ class TestIngredients(TestApp):
         assert model.Hop(
             name    = 'Cascade',
             origin  = 'US'
-        ).printed_name == u'(US) Cascade'
+        ).printed_name == u'Cascade (US)'
 
         assert model.Hop(
             name    = 'Cascade',
             origin  = 'BELGIAN'
-        ).printed_name == u'(Belgian) Cascade'
+        ).printed_name == u'Cascade (Belgian)'
 
         assert model.Yeast(
             name    = 'Wyeast 1056 - American Ale'
