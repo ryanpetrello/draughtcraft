@@ -63,7 +63,7 @@ class Calculations(object):
                     for a in self.recipe.additions
                     if a.yeast]
         if yeast:
-            attenuation = max(yeast)
+            attenuation = max(yeast) or attenuation
 
         points = (self.og - 1) * 1000
         final = points - (points * attenuation)
