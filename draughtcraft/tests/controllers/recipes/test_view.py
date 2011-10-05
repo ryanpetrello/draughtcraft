@@ -26,8 +26,8 @@ class TestRecipePublish(TestAuthenticatedApp):
         model.Recipe.query.first().state = "DRAFT"
         model.commit()
 
-        response = self.get('/recipes/1/rocky-mountain-river-ipa/', status=404)
-        assert response.status_int == 404
+        response = self.get('/recipes/1/rocky-mountain-river-ipa/', status=200)
+        assert response.status_int == 200
 
     def test_invalid_primary_key(self):
         """
@@ -69,10 +69,10 @@ class TestRecipePublish(TestAuthenticatedApp):
         model.Recipe.query.first().state = "DRAFT"
         model.commit()
 
-        response = self.post('/recipes/1/rocky-mountain-river-ipa/async', status=404)
-        assert response.status_int == 404
+        response = self.post('/recipes/1/rocky-mountain-river-ipa/async', status=200)
+        assert response.status_int == 200
 
-        # The authenticate user is the owner, so the view count shouldn't go up.
+        # The authenticated user is the owner, so the view count shouldn't go up.
         assert len(model.Recipe.query.first().views) == 0
 
 
@@ -91,3 +91,14 @@ class TestRecipeView(TestApp):
 
         # The visitor isn't the owner, so the view count should go up.
         assert len(model.Recipe.query.first().views) == 1
+
+    def test_view_draft_recipe_async(self):
+        model.Recipe(
+            name    = 'Rocky Mountain River IPA',
+            author  = model.User(first_name = 'Ryan', last_name='Petrello'),
+            state   = "DRAFT"
+        )
+        model.commit()
+
+        response = self.get('/recipes/1/rocky-mountain-river-ipa/', status=404)
+        assert response.status_int == 404

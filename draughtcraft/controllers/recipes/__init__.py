@@ -22,8 +22,10 @@ class SlugController(object):
     @expose('recipes/builder/index.html')
     def index(self):
         recipe = request.context['recipe']
-        if recipe.state != "PUBLISHED":
-            abort(404)
+        if recipe.state == "DRAFT":
+            if recipe.author and recipe.author != request.context['user']:
+                abort(404)
+
         return dict(
             recipe      = recipe,
             editable    = False
@@ -38,8 +40,9 @@ class SlugController(object):
     )
     def do_async(self):
         recipe = request.context['recipe']
-        if recipe.state != "PUBLISHED":
-            abort(404)
+        if recipe.state == "DRAFT":
+            if recipe.author and recipe.author != request.context['user']:
+                abort(404)
 
         # Log a view for the recipe (if the viewer *is not* the author)
         if recipe.author != request.context['user']:
