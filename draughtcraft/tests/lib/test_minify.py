@@ -68,10 +68,12 @@ from tempfile                   import mkdtemp
 from shutil                     import rmtree
 from unittest                   import TestCase
 
-from draughtcraft.lib.minify    import javascript_link, stylesheet_link
+from draughtcraft.lib.minify    import javascript_link, stylesheet_link, RedisResourceCache
 from beaker.cache               import CacheManager
 from webob                      import Request
+
 import pecan
+import fudge
 
 
 class MinificationTestCase(TestCase):
@@ -182,3 +184,31 @@ class MinificationTestCase(TestCase):
         assert os.path.isfile(os.path.join(self.fixture_path, 'deep/a.d.COMBINED.min.js'))
         assert self.in_cache('/deep/a.d.COMBINED.css')
         assert self.in_cache('/deep/a.d.COMBINED.min.js')
+
+    @fudge.patch('redis.Redis')
+    def test_redis(self, FakeRedis):
+
+        class SimpleRedis(object):
+            __dict__ = {}
+            def get(self, k):
+                return self.__dict__.get(k)
+            def set(self, k, v):
+                self.__dict__[k] = v
+            def __iter__(self):
+                for k in self.__dict__: yield k
+
+        sub = SimpleRedis()
+        (FakeRedis.expects_call().returns(sub))
+
+        """Testing if paths are constructed correctly"""
+        # minify and combine
+        js_source = javascript_link('/deep/a.js', '/b.js', combined=True, minified=True, data_backend=RedisResourceCache)
+        css_source = stylesheet_link('/deep/a.css', '/b.css', combined=True, data_backend=RedisResourceCache)
+        assert '"/a.b.COMBINED.css?XYZ"' in css_source
+        assert '"/a.b.COMBINED.min.js?XYZ"' in js_source
+        assert not os.path.isfile(os.path.join(self.fixture_path, 'a.b.COMBINED.css'))
+        assert not os.path.isfile(os.path.join(self.fixture_path, 'a.b.COMBINED.min.js'))
+        assert '/a.b.COMBINED.css' in sub
+        assert '/a.b.COMBINED.min.js' in sub
+        assert self.in_cache('/a.b.COMBINED.css')
+        assert self.in_cache('/a.b.COMBINED.min.js')

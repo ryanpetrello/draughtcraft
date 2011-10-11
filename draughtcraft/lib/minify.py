@@ -208,15 +208,15 @@ class ResourceCache(object):
 
     @classmethod
     def write_combine(cls, buff, dest):
-        raise NotImplementedError()
+        raise NotImplementedError() # pragma: no cover
 
     @classmethod
     def write_minify(cls, source, dest):
-        raise NotImplementedError()
+        raise NotImplementedError() # pragma: no cover
 
     @classmethod
     def retrieve_readable(cls, filepath):
-        raise NotImplementedError()
+        raise NotImplementedError() # pragma: no cover
 
     @classmethod
     def javascript_link(cls, *sources, **options):
@@ -289,10 +289,16 @@ class RedisResourceCache(ResourceCache):
 
 def javascript_link(*sources, **options):
     from pecan import conf
-    impl = conf.cache.get('data_backend', FileSystemResourceCache)
+    impl = options.get(
+        'data_backend',
+        conf.cache.get('data_backend', FileSystemResourceCache)
+    )
     return impl.javascript_link(*sources, **options)
 
 def stylesheet_link(*sources, **options):
     from pecan import conf
-    impl = conf.cache.get('data_backend', FileSystemResourceCache)
+    impl = options.get(
+        'data_backend',
+        conf.cache.get('data_backend', FileSystemResourceCache)
+    )
     return impl.stylesheet_link(*sources, **options)
