@@ -60,7 +60,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
 
     views               = OneToMany('RecipeView', inverse='recipe', cascade='all, delete-orphan')
     additions           = OneToMany('RecipeAddition', inverse='recipe', cascade='all, delete-orphan')
-    fermentation_steps  = OneToMany('FermentationStep', inverse='recipe', cascade='all, delete-orphan')
+    fermentation_steps  = OneToMany('FermentationStep', inverse='recipe', order_by='step', cascade='all, delete-orphan')
     slugs               = OneToMany('RecipeSlug', inverse='recipe', order_by='id', cascade='all, delete-orphan')
     style               = ManyToOne('Style', inverse='recipes')
     author              = ManyToOne('User', inverse='recipes')
