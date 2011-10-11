@@ -92,7 +92,7 @@ from webhelpers.html.tags import stylesheet_link as native_stylesheet_link
 from jsmin import JavascriptMinify
 
 
-__all__ = ['javascript_link', 'stylesheet_link']
+__all__ = ['javascript_link', 'stylesheet_link', 'ResourceLookupMiddleware']
 log = logging.getLogger(__name__)
 
 def redis_connector():
