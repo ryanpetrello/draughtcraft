@@ -240,6 +240,20 @@ class RedisResourceCache(ResourceCache):
 
     @classmethod
     def retrieve_readable(cls, filepath):
+        #
+        # If the file already exists on disk (meaning it's a source file),
+        # just use it.
+        # 
+        if os.path.isfile(filepath):
+            return FileSystemResourceCache.retrieve_readable(filepath)
+
+        #
+        # Otherwise, the file is likely a combined/minified file that has been
+        # saved in Redis.
+        #
+        from pecan import conf
+        from redis import Redis
+        redis = Redis(**conf.redis)
         buff = StringIO.StringIO()
         buff.write(redis.get(filepath))
         return buff
