@@ -24,8 +24,6 @@ setup(
         "webflash",
         "simplejson",
         "python-postmark",
-        "pytest-xdist",
-        "pytest-cov",
         "redis",
         "hiredis",
         "lesspy",
