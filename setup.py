@@ -26,6 +26,8 @@ setup(
         "python-postmark",
         "pytest-xdist",
         "pytest-cov",
+        "redis",
+        "hiredis",
         "lesspy",
         "jsmin",
         "psycopg2",

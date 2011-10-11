@@ -135,7 +135,7 @@ class ResourceCache(object):
             fpath = os.path.join(fs_root, base.strip('/'), fname)
 
             # write the combined file
-            cls.write_combine(js_buffer, open(fpath, 'w'))
+            cls.write_combine(js_buffer, fpath)
 
             return [os.path.join(base, fname)]
 
@@ -154,15 +154,12 @@ class ResourceCache(object):
                 no_ext_full_source = os.path.splitext(full_source)[0]
                 minified = no_ext_full_source + ext
 
-
                 if 'js' in ext:
-                    f_minified_source = open(minified, 'w')
                     # minify js source (read stream is auto-closed inside)
                     cls.write_minify(
                         open(full_source, 'r'),
-                        f_minified_source
+                        minified
                     )
-                    f_minified_source.close()
 
                 minified_sources.append(no_ext_source + ext)
 
@@ -183,6 +180,14 @@ class ResourceCache(object):
             return native_stylesheet_link(*sources, **options)
 
     @classmethod
+    def write_combine(cls, buff, dest):
+        raise NotImplementedError()
+
+    @classmethod
+    def write_minify(cls, source, dest):
+        raise NotImplementedError()
+
+    @classmethod
     def javascript_link(cls, *sources, **options):
         return cls.base_link('js', *sources, **options)
 
@@ -198,24 +203,33 @@ class FileSystemResourceCache(ResourceCache):
 
     @classmethod
     def write_combine(cls, buff, dest):
+        dest = open(dest, 'w')
         dest.write(buff.getvalue())
         dest.close()
 
     @classmethod
     def write_minify(cls, source, dest):
+        dest = open(dest, 'w')
         JavascriptMinify().minify(source, dest)
+        dest.close()
 
 
-class RedisResourceCache(FileSystemResourceCache):
-    pass
+class RedisResourceCache(ResourceCache):
+
+    @classmethod
+    def write_combine(cls, buff, dest):
+        from pecan import conf
+        from redis import Redis
+        redis = Redis(**conf.redis)
+        redis.set(dest, buff.getvalue())
 
 
 def javascript_link(*sources, **options):
     from pecan import conf
-    impl = conf.cache.get('cache_cls', FileSystemResourceCache)
+    impl = conf.cache.get('data_backend', FileSystemResourceCache)
     return impl.javascript_link(*sources, **options)
 
 def stylesheet_link(*sources, **options):
     from pecan import conf
-    impl = conf.cache.get('cache_cls', FileSystemResourceCache)
+    impl = conf.cache.get('data_backend', FileSystemResourceCache)
     return impl.stylesheet_link(*sources, **options)

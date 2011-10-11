@@ -42,7 +42,14 @@ session = {
 
 cache = {
     'key'               : 'resources_to_compile',
-    'cache_cls'         : RedisResourceCache,
+    'data_backend'      : RedisResourceCache,
+    '__force_dict__'    : True
+}
+
+redis = {
+    'host'              : 'localhost',
+    'port'              : 6379,
+    'db'                : 0,
     '__force_dict__'    : True
 }
 
