@@ -68,7 +68,8 @@ from tempfile                   import mkdtemp
 from shutil                     import rmtree
 from unittest                   import TestCase
 
-from draughtcraft.lib.minify    import javascript_link, stylesheet_link, RedisResourceCache
+from draughtcraft.lib.minify    import (javascript_link, stylesheet_link, 
+                                    RedisResourceCache, ResourceLookupMiddleware)
 from beaker.cache               import CacheManager
 from webob                      import Request
 
@@ -212,3 +213,84 @@ class MinificationTestCase(TestCase):
         assert '/a.b.COMBINED.min.js' in sub
         assert self.in_cache('/a.b.COMBINED.css')
         assert self.in_cache('/a.b.COMBINED.min.js')
+
+
+class TestRedisLookupMiddleware(TestCase):
+
+    @fudge.patch('redis.Redis')
+    def test_cache_hit(self, FakeRedis):
+
+        # Fake redis as a simple in-memory key-value hash
+        class SimpleRedis(object):
+            __dict__ = {}
+            def get(self, k):
+                return self.__dict__.get(k)
+            def set(self, k, v):
+                self.__dict__[k] = v
+            def __iter__(self):
+                for k in self.__dict__: yield k
+
+        sub = SimpleRedis()
+        sub.set('/javascript/foo.js', 'RAW JS')
+        (FakeRedis.expects_call().returns(sub))
+
+        #
+        # Set up a request for /javascript/foo.js, and configure the
+        # resource cache backend as Redis
+        #
+        import pecan
+        pecan.conf.cache['data_backend'] = RedisResourceCache
+        environ = {
+            'PATH_INFO' : '/javascript/foo.js'
+        }
+
+        def app(environ, start_response):
+            raise AssertionError('The WSGI middleware should return raw JS.')
+
+        def start_response(status, headers):
+            assert status == '200 OK'
+            assert headers == [('Content-Type', 'application/javascript')]
+        
+        # Make sure the WSGI middleware returns a 200 OK with the raw JS
+        resp = ResourceLookupMiddleware(app)(environ, start_response)
+        assert resp == ['RAW JS']
+
+    @fudge.patch('redis.Redis')
+    def test_cache_miss(self, FakeRedis):
+
+        # Fake redis as a simple in-memory key-value hash
+        class SimpleRedis(object):
+            __dict__ = {}
+            def get(self, k):
+                return self.__dict__.get(k)
+            def set(self, k, v):
+                self.__dict__[k] = v
+            def __iter__(self):
+                for k in self.__dict__: yield k
+
+        sub = SimpleRedis()
+        (FakeRedis.expects_call().returns(sub))
+
+        #
+        # Set up a request for /javascript/foo.js, and configure the
+        # resource cache backend as Redis
+        #
+        import pecan
+        pecan.conf.cache['data_backend'] = RedisResourceCache
+        environ = {
+            'PATH_INFO' : '/javascript/foo.js'
+        }
+
+        start_response = lambda status, headers: None
+
+        passed = [False]
+        def app(e, s):
+            assert e == environ
+            assert s == start_response
+            passed[0] = True
+        
+        # Make sure the WSGI middleware returns a 200 OK with the raw JS
+        resp = ResourceLookupMiddleware(app)(environ, start_response)
+
+        assert passed[0] == True
+        assert resp == None

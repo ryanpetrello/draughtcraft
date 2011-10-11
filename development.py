@@ -42,7 +42,7 @@ session = {
 
 cache = {
     'key'               : 'resources_to_compile',
-    'data_backend'      : RedisResourceCache,
+    'data_backend'      : RedisResourceCache, # Remove line to disable redis caching
     '__force_dict__'    : True
 }
 

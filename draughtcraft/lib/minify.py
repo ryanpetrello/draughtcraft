@@ -116,7 +116,7 @@ class ResourceLookupMiddleware(object):
             (path.startswith('/javascript') or path.startswith('/css')):
                 cached = redis_connector().get(path)
                 if cached:
-                    start_response('200 OK', [('Content-Type', mimetypes.guess_type(path))])
+                    start_response('200 OK', [('Content-Type', mimetypes.guess_type(path)[0])])
                     return [cached]
 
         return self.app(environ, start_response)
