@@ -83,6 +83,7 @@ URL: http://docs.fubar.si/minwebhelpers/
 
 import os
 import logging
+import mimetypes
 import cStringIO as StringIO
 
 from webhelpers.html.tags import javascript_link as native_javascript_link
@@ -93,6 +94,32 @@ from jsmin import JavascriptMinify
 
 __all__ = ['javascript_link', 'stylesheet_link']
 log = logging.getLogger(__name__)
+
+def redis_connector():
+    from pecan import conf
+    from redis import Redis
+    return Redis(**conf.redis)
+
+
+class ResourceLookupMiddleware(object):
+    """
+    Used to serve resource lookups for minified and compiled JS and CSS files.
+    """
+
+    def __init__(self, app):
+        self.app = app
+
+    def __call__(self, environ, start_response):
+        from pecan import conf
+        path = environ.get('PATH_INFO', '')
+        if conf.cache.get('data_backend') == RedisResourceCache and \
+            (path.startswith('/javascript') or path.startswith('/css')):
+                cached = redis_connector().get(path)
+                if cached:
+                    start_response('200 OK', [('Content-Type', mimetypes.guess_type(path))])
+                    return [cached]
+
+        return self.app(environ, start_response)
 
 
 class ResourceCache(object):
@@ -227,17 +254,16 @@ class RedisResourceCache(ResourceCache):
     @classmethod
     def write_combine(cls, buff, dest):
         from pecan import conf
-        from redis import Redis
-        redis = Redis(**conf.redis)
+        redis = redis_connector()
         redis.set(dest.replace(conf.app.static_root, ''), buff.getvalue())
 
     @classmethod
     def write_minify(cls, source, dest):
         from pecan import conf
-        from redis import Redis
+        redis = redis_connector()
         buff = StringIO.StringIO()
         JavascriptMinify().minify(source, buff)
-        redis = Redis(**conf.redis)
+        redis = redis_connector()
         redis.set(dest.replace(conf.app.static_root, ''), buff.getvalue())
 
     @classmethod
@@ -254,8 +280,7 @@ class RedisResourceCache(ResourceCache):
         # saved in Redis.
         #
         from pecan import conf
-        from redis import Redis
-        redis = Redis(**conf.redis)
+        redis = redis_connector()
         buff = StringIO.StringIO()
         buff.write(redis.get(filepath.replace(conf.app.static_root, '')))
         buff.seek(0)
