@@ -83,7 +83,7 @@ URL: http://docs.fubar.si/minwebhelpers/
 
 import os
 import logging
-import StringIO
+import cStringIO as StringIO
 
 from webhelpers.html.tags import javascript_link as native_javascript_link
 from webhelpers.html.tags import stylesheet_link as native_stylesheet_link
@@ -125,7 +125,7 @@ class ResourceCache(object):
 
                 # build a master file with all contents
                 full_source = os.path.join(fs_root, source.lstrip('/'))
-                f = open(full_source, 'r')
+                f = cls.retrieve_readable(full_source)
                 js_buffer.write(f.read())
                 js_buffer.write('\n')
                 f.close()
@@ -157,7 +157,7 @@ class ResourceCache(object):
                 if 'js' in ext:
                     # minify js source (read stream is auto-closed inside)
                     cls.write_minify(
-                        open(full_source, 'r'),
+                        cls.retrieve_readable(full_source),
                         minified
                     )
 
@@ -188,6 +188,10 @@ class ResourceCache(object):
         raise NotImplementedError()
 
     @classmethod
+    def retrieve_readable(cls, filepath):
+        raise NotImplementedError()
+
+    @classmethod
     def javascript_link(cls, *sources, **options):
         return cls.base_link('js', *sources, **options)
 
@@ -213,6 +217,10 @@ class FileSystemResourceCache(ResourceCache):
         JavascriptMinify().minify(source, dest)
         dest.close()
 
+    @classmethod
+    def retrieve_readable(cls, filepath):
+        return open(filepath, 'r')
+
 
 class RedisResourceCache(ResourceCache):
 
@@ -222,6 +230,19 @@ class RedisResourceCache(ResourceCache):
         from redis import Redis
         redis = Redis(**conf.redis)
         redis.set(dest, buff.getvalue())
+
+    @classmethod
+    def write_minify(cls, source, dest):
+        from pecan import conf
+        from redis import Redis
+        redis = Redis(**conf.redis)
+        redis.set(dest, source.read())
+
+    @classmethod
+    def retrieve_readable(cls, filepath):
+        buff = StringIO.StringIO()
+        buff.write(redis.get(filepath))
+        return buff
 
 
 def javascript_link(*sources, **options):
