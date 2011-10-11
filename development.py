@@ -1,4 +1,5 @@
 from draughtcraft.controllers.root  import RootController
+from draughtcraft.lib.minify        import RedisResourceCache
 
 import draughtcraft
 
@@ -41,6 +42,7 @@ session = {
 
 cache = {
     'key'               : 'resources_to_compile',
+    'cache_cls'         : RedisResourceCache,
     '__force_dict__'    : True
 }
 
