@@ -229,14 +229,16 @@ class RedisResourceCache(ResourceCache):
         from pecan import conf
         from redis import Redis
         redis = Redis(**conf.redis)
-        redis.set(dest, buff.getvalue())
+        redis.set(dest.replace(conf.app.static_root, ''), buff.getvalue())
 
     @classmethod
     def write_minify(cls, source, dest):
         from pecan import conf
         from redis import Redis
+        buff = StringIO.StringIO()
+        JavascriptMinify().minify(source, buff)
         redis = Redis(**conf.redis)
-        redis.set(dest, source.read())
+        redis.set(dest.replace(conf.app.static_root, ''), buff.getvalue())
 
     @classmethod
     def retrieve_readable(cls, filepath):
@@ -255,7 +257,8 @@ class RedisResourceCache(ResourceCache):
         from redis import Redis
         redis = Redis(**conf.redis)
         buff = StringIO.StringIO()
-        buff.write(redis.get(filepath))
+        buff.write(redis.get(filepath.replace(conf.app.static_root, '')))
+        buff.seek(0)
         return buff
 
 
