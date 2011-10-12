@@ -4,7 +4,6 @@ from draughtcraft.lib.units     import InvalidUnitException
 from draughtcraft.tests         import TestModel
 from datetime                   import timedelta
 from webob                      import Request
-from fudge                      import Fake
 from sys                        import maxint
 
 import unittest
@@ -1300,6 +1299,62 @@ class TestDrafts(TestModel):
         assert model.Recipe.query.count() == 1
         assert model.Recipe.query.first().id == primary_key
         assert model.Recipe.query.first().state == "PUBLISHED"
+
+    def test_primary_slug(self):
+        source = model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            state           = u'DRAFT'
+        )
+        source.flush()
+        primary_key = source.id
+        model.commit()
+
+        assert len(model.Recipe.query.first().slugs) == 1
+
+        # Make a new draft of the recipe
+        model.Recipe.query.first().publish()
+        model.commit()
+
+        assert model.Recipe.query.count() == 1
+        assert model.Recipe.query.first().id == primary_key
+        assert model.Recipe.query.first().state == "PUBLISHED"
+
+        assert len(model.Recipe.query.first().slugs) == 1
+
+    def test_secondary_slug(self):
+        source = model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            state           = u'DRAFT'
+        )
+        source.flush()
+        primary_key = source.id
+        model.commit()
+
+        assert len(model.Recipe.query.first().slugs) == 1
+
+        model.Recipe.query.first().name = 'Cascade IPA'
+        model.commit()
+
+        model.Recipe.query.first().publish()
+        model.commit()
+
+        assert model.Recipe.query.count() == 1
+        assert model.Recipe.query.first().id == primary_key
+        assert model.Recipe.query.first().state == "PUBLISHED"
+
+        assert len(model.Recipe.query.first().slugs) == 2
+        recipe = model.Recipe.query.first()
+        assert recipe.slugs[0].slug == 'rocky-mountain-river-ipa'
+        assert recipe.slugs[1].slug == 'cascade-ipa'
+        assert 'cascade-ipa' in recipe.url()
 
     def test_statistic_caching(self):
         """

@@ -150,6 +150,11 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         self._srm = self.calculations.srm
         self._ibu = self.calculations.ibu
 
+        # Generate a new slug if the existing one hasn't changed.
+        existing = [slug.slug for slug in self.slugs]
+        if entities.RecipeSlug.to_slug(self.name) not in existing:
+            self.slugs.append(entities.RecipeSlug(name = self.name))
+
     def merge(self):
         """
         Used to merge a drafted recipe's changes back into its source.
