@@ -1,4 +1,5 @@
 from draughtcraft.controllers.root  import RootController
+from draughtcraft.lib.minify        import RedisResourceCache
 
 import draughtcraft
 
@@ -41,6 +42,14 @@ session = {
 
 cache = {
     'key'               : 'resources_to_compile',
+    'data_backend'      : RedisResourceCache, # Remove line to disable redis caching
+    '__force_dict__'    : True
+}
+
+redis = {
+    'host'              : 'localhost',
+    'port'              : 6379,
+    'db'                : 0,
     '__force_dict__'    : True
 }
 

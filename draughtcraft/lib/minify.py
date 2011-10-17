@@ -83,105 +83,222 @@ URL: http://docs.fubar.si/minwebhelpers/
 
 import os
 import logging
-import StringIO
+import mimetypes
+import cStringIO as StringIO
 
-from webhelpers.html.tags import javascript_link as __javascript_link
-from webhelpers.html.tags import stylesheet_link as __stylesheet_link
+from webhelpers.html.tags import javascript_link as native_javascript_link
+from webhelpers.html.tags import stylesheet_link as native_stylesheet_link
 
 from jsmin import JavascriptMinify
 
 
-__all__ = ['javascript_link', 'stylesheet_link']
+__all__ = ['javascript_link', 'stylesheet_link', 'ResourceLookupMiddleware']
 log = logging.getLogger(__name__)
 
+def redis_connector():
+    from pecan import conf
+    from redis import Redis
+    return Redis(**conf.redis)
 
-def base_link(ext, *sources, **options):
-    from pecan import conf, request
-    from draughtcraft.templates.helpers import stamp
 
-    combined = options.pop('combined', False)
-    minified = options.pop('minified', False)
+class ResourceLookupMiddleware(object):
+    """
+    Used to serve resource lookups for minified and compiled JS and CSS files.
+    """
 
-    fs_root = conf.app.static_root
+    def __init__(self, app):
+        self.app = app
 
-    cache = request.environ['beaker.cache']
-    @cache.cache(conf.cache['key'])
-    def combine_sources(sources, ext, fs_root):
-        if len(sources) < 2:
-            return sources
+    def __call__(self, environ, start_response):
+        from pecan import conf
+        path = environ.get('PATH_INFO', '')
+        if conf.cache.get('data_backend') == RedisResourceCache and \
+            (path.startswith('/javascript') or path.startswith('/css')):
+                cached = redis_connector().get(path)
+                if cached:
+                    start_response('200 OK', [('Content-Type', mimetypes.guess_type(path)[0])])
+                    return [cached]
 
-        names = list()
-        js_buffer = StringIO.StringIO()
-        base = os.path.commonprefix([os.path.dirname(s) for s in sources])
+        return self.app(environ, start_response)
 
-        for source in sources:
-            # get a list of all filenames without extensions
-            js_file = os.path.basename(source)
-            js_file_name = os.path.splitext(js_file)[0]
-            names.append(js_file_name)
 
-            # build a master file with all contents
-            full_source = os.path.join(fs_root, source.lstrip('/'))
-            f = open(full_source, 'r')
-            js_buffer.write(f.read())
-            js_buffer.write('\n')
-            f.close()
+class ResourceCache(object):
 
-        # glue a new name and generate path to it
-        fname = '.'.join(names + ['COMBINED', ext])
-        fpath = os.path.join(fs_root, base.strip('/'), fname)
+    @classmethod
+    def base_link(cls, ext, *sources, **options):
+        from pecan import conf, request
+        from draughtcraft.templates.helpers import stamp
 
-        # write the combined file
-        f = open(fpath, 'w')
-        f.write(js_buffer.getvalue())
-        f.close()
+        combined = options.pop('combined', False)
+        minified = options.pop('minified', False)
 
-        return [os.path.join(base, fname)]
+        fs_root = conf.app.static_root
 
-    @cache.cache(conf.cache['key'])
-    def minify_sources(sources, ext, fs_root=''):
+        cache = request.environ['beaker.cache']
+        @cache.cache(conf.cache['key'])
+        def combine_sources(sources, ext, fs_root):
+            if len(sources) < 2:
+                return sources
+
+            names = list()
+            js_buffer = StringIO.StringIO()
+            base = os.path.commonprefix([os.path.dirname(s) for s in sources])
+
+            for source in sources:
+                # get a list of all filenames without extensions
+                js_file = os.path.basename(source)
+                js_file_name = os.path.splitext(js_file)[0]
+                names.append(js_file_name)
+
+                # build a master file with all contents
+                full_source = os.path.join(fs_root, source.lstrip('/'))
+                f = cls.retrieve_readable(full_source)
+                js_buffer.write(f.read())
+                js_buffer.write('\n')
+                f.close()
+
+            # glue a new name and generate path to it
+            fname = '.'.join(names + ['COMBINED', ext])
+            fpath = os.path.join(fs_root, base.strip('/'), fname)
+
+            # write the combined file
+            cls.write_combine(js_buffer, fpath)
+
+            return [os.path.join(base, fname)]
+
+        @cache.cache(conf.cache['key'])
+        def minify_sources(sources, ext, fs_root=''):
+
+            minified_sources = []
+
+            for source in sources:
+                # generate full path to source
+                no_ext_source = os.path.splitext(source)[0]
+                full_source = os.path.join(fs_root, (no_ext_source + ext).lstrip('/'))
+
+                # generate minified source path
+                full_source = os.path.join(fs_root, (source).lstrip('/'))
+                no_ext_full_source = os.path.splitext(full_source)[0]
+                minified = no_ext_full_source + ext
+
+                if 'js' in ext:
+                    # minify js source (read stream is auto-closed inside)
+                    cls.write_minify(
+                        cls.retrieve_readable(full_source),
+                        minified
+                    )
+
+                minified_sources.append(no_ext_source + ext)
+
+            return minified_sources
+
+        if combined:
+            sources = combine_sources(list(sources), ext, fs_root)
+
+        if minified:
+            sources = minify_sources(list(sources), '.min.' + ext, fs_root)
+
+        # append a version stamp
+        sources = [stamp(s) for s in sources]
 
         if 'js' in ext:
-            js_minify = JavascriptMinify()
-        minified_sources = []
+            return native_javascript_link(*sources, **options)
+        if 'css' in ext:
+            return native_stylesheet_link(*sources, **options)
 
-        for source in sources:
-            # generate full path to source
-            no_ext_source = os.path.splitext(source)[0]
-            full_source = os.path.join(fs_root, (no_ext_source + ext).lstrip('/'))
+    @classmethod
+    def write_combine(cls, buff, dest):
+        raise NotImplementedError() # pragma: no cover
 
-            # generate minified source path
-            full_source = os.path.join(fs_root, (source).lstrip('/'))
-            no_ext_full_source = os.path.splitext(full_source)[0]
-            minified = no_ext_full_source + ext
+    @classmethod
+    def write_minify(cls, source, dest):
+        raise NotImplementedError() # pragma: no cover
 
-            f_minified_source = open(minified, 'w')
+    @classmethod
+    def retrieve_readable(cls, filepath):
+        raise NotImplementedError() # pragma: no cover
 
-            # minify js source (read stream is auto-closed inside)
-            if 'js' in ext:
-                js_minify.minify(open(full_source, 'r'), f_minified_source)
+    @classmethod
+    def javascript_link(cls, *sources, **options):
+        return cls.base_link('js', *sources, **options)
 
-            f_minified_source.close()
-            minified_sources.append(no_ext_source + ext)
+    @classmethod
+    def stylesheet_link(cls, *sources, **options):
+        return cls.base_link('css', *sources, **options)
 
-        return minified_sources
 
-    if combined:
-        sources = combine_sources(list(sources), ext, fs_root)
+class FileSystemResourceCache(ResourceCache):
+    """
+    A resource cache implemented at the file system level.
+    """
 
-    if minified:
-        sources = minify_sources(list(sources), '.min.' + ext, fs_root)
+    @classmethod
+    def write_combine(cls, buff, dest):
+        dest = open(dest, 'w')
+        dest.write(buff.getvalue())
+        dest.close()
 
-    # append a version stamp
-    sources = [stamp(s) for s in sources]
+    @classmethod
+    def write_minify(cls, source, dest):
+        dest = open(dest, 'w')
+        JavascriptMinify().minify(source, dest)
+        dest.close()
 
-    if 'js' in ext:
-        return __javascript_link(*sources, **options)
-    if 'css' in ext:
-        return __stylesheet_link(*sources, **options)
+    @classmethod
+    def retrieve_readable(cls, filepath):
+        return open(filepath, 'r')
+
+
+class RedisResourceCache(ResourceCache):
+
+    @classmethod
+    def write_combine(cls, buff, dest):
+        from pecan import conf
+        redis = redis_connector()
+        redis.set(dest.replace(conf.app.static_root, ''), buff.getvalue())
+
+    @classmethod
+    def write_minify(cls, source, dest):
+        from pecan import conf
+        redis = redis_connector()
+        buff = StringIO.StringIO()
+        JavascriptMinify().minify(source, buff)
+        redis = redis_connector()
+        redis.set(dest.replace(conf.app.static_root, ''), buff.getvalue())
+
+    @classmethod
+    def retrieve_readable(cls, filepath):
+        #
+        # If the file already exists on disk (meaning it's a source file),
+        # just use it.
+        # 
+        if os.path.isfile(filepath):
+            return FileSystemResourceCache.retrieve_readable(filepath)
+
+        #
+        # Otherwise, the file is likely a combined/minified file that has been
+        # saved in Redis.
+        #
+        from pecan import conf
+        redis = redis_connector()
+        buff = StringIO.StringIO()
+        buff.write(redis.get(filepath.replace(conf.app.static_root, '')))
+        buff.seek(0)
+        return buff
+
 
 def javascript_link(*sources, **options):
-    return base_link('js', *sources, **options)
+    from pecan import conf
+    impl = options.get(
+        'data_backend',
+        conf.cache.get('data_backend', FileSystemResourceCache)
+    )
+    return impl.javascript_link(*sources, **options)
 
 def stylesheet_link(*sources, **options):
-    return base_link('css', *sources, **options)
+    from pecan import conf
+    impl = options.get(
+        'data_backend',
+        conf.cache.get('data_backend', FileSystemResourceCache)
+    )
+    return impl.stylesheet_link(*sources, **options)

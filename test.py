@@ -44,6 +44,8 @@ cache = {
     '__force_dict__'    : True
 }
 
+redis = {'__force_dict__' : True}
+
 postmark = {
     'api_key'       : 'POSTMARK_API_TEST'
 }
