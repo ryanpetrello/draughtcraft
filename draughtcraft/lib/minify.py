@@ -116,7 +116,12 @@ class ResourceLookupMiddleware(object):
             (path.startswith('/javascript') or path.startswith('/css')):
                 cached = redis_connector().get(path)
                 if cached:
-                    start_response('200 OK', [('Content-Type', mimetypes.guess_type(path)[0])])
+                    headers = [
+                        ('Content-Type', mimetypes.guess_type(path)[0]),
+                        ('Expires', 'Thu, 31 Dec 2037 23:55:55 GMT'),
+                        ('Cache-Control', 'max-age=315360000')
+                    ]
+                    start_response('200 OK', headers)
                     return [cached]
 
         return self.app(environ, start_response)

@@ -249,7 +249,7 @@ class TestRedisLookupMiddleware(TestCase):
 
         def start_response(status, headers):
             assert status == '200 OK'
-            assert headers == [('Content-Type', 'application/javascript')]
+            assert ('Content-Type', 'application/javascript') in headers
         
         # Make sure the WSGI middleware returns a 200 OK with the raw JS
         resp = ResourceLookupMiddleware(app)(environ, start_response)
