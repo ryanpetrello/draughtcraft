@@ -239,8 +239,6 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
         // Stop listening for mouse movements...
         $('body').unbind('mousemove');
 
-        if($.draughtcraft.recipes.builder._changes_in_queue == true) return;
-
         // Clear any previously queued form submissions
         $.draughtcraft.recipes.builder._delay($.noop, 0);
         
