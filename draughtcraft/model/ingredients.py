@@ -126,4 +126,15 @@ class Extra(Ingredient):
 
     using_options(inheritance='multi', polymorphic=True)
 
+    TYPES = [
+        'SPICE',
+        'FINING',
+        'WATER AGENT',
+        'HERB',
+        'FLAVOR',
+        'OTHER'
+    ]
+
     additions           = OneToMany('RecipeAddition', inverse='extra')
+
+    type                = Field(Enum(*TYPES, native_enum=False))
