@@ -24,6 +24,7 @@ setup(
         "webflash",
         "simplejson",
         "python-postmark",
+        "BeautifulSoup",
         "pytest-xdist",
         "pytest-cov",
         "lesspy",

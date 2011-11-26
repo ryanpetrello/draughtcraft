@@ -1,4 +1,7 @@
 from genshi.builder     import Element
+from BeautifulSoup      import UnicodeDammit
+
+import unicodedata
 
 
 class Field(object):
@@ -27,7 +30,20 @@ class Field(object):
         # If a `transform` callable was passed into the constructor, it will
         # be used to modify the passed value.
         #
-        return {self.name: self.transform(value) if self.transform else value}
+        value = self.transform(value) if self.transform else value
+
+        #
+        # Ugh - BeerXMLv1 is ASCII (ISO-8859-1), so we need to coerce
+        # accented and other international characters to normalized ASCII
+        # equivalents as best we can.
+        #
+        if isinstance(value, basestring):
+            value = unicodedata.normalize(
+                'NFKD', 
+                UnicodeDammit(value).unicode
+            ).encode('ascii', 'ignore')
+
+        return {self.name: value}
 
 
 class NodeSet(object):
@@ -90,7 +106,11 @@ class Node(object):
                     cls.__nodesets__[key] = value
                     value.name = key
     
-    def __init__(self, **kw):
+    def __init__(self, entity=None, **kw):
+        # If an entity with an XML namespace is passed, use it
+        if entity is not None and hasattr(entity, 'xmlns'):
+            kw.update(entity.xmlns)
+
         # Every node must specify <VERSION>1</VERSION>.
         kw.update({'version':1})
 

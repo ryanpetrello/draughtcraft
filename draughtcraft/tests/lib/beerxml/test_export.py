@@ -17,6 +17,11 @@ class TestField(TestCase):
         f.name = 'name'
         assert f.get_value('Cascade') == {'name': 'CASCADE'}
 
+    def test_unicode_coercion(self):
+        f = export.Field()
+        f.name = 'name'
+        assert f.get_value('Wyeast 2565 - K\xf6lsch') == {'name': 'Wyeast 2565 - Kolsch'}
+
 
 class TestNode(TestCase):
 
@@ -110,7 +115,7 @@ class NodeSet(TestCase):
         ])
 
 
-class TestRecipeComponents(TestCase):
+class TestRecipeNodes(TestCase):
 
     def test_hop(self):
         assert export.Hop(
