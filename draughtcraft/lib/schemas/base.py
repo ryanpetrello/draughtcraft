@@ -3,7 +3,6 @@ from formencode                 import Schema, Invalid, NoDefault, validators
 class FilteredSchema(Schema):
 
     if_missing = None
-    if_empty = None
     allow_extra_fields = True
     filter_extra_fields = True
 
@@ -46,6 +45,3 @@ class ModelObject(validators.FancyValidator):
             else:
                 instance = self.model.get_by(**{self.attr : self._if_empty})
             return instance
-        else:
-            return None
-

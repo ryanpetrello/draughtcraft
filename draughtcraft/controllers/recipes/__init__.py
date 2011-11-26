@@ -22,15 +22,17 @@ class SlugController(object):
     @expose('recipes/builder/index.html')
     def index(self):
         recipe = request.context['recipe']
-        if recipe.state != "PUBLISHED":
-            abort(404)
+        if recipe.state == "DRAFT":
+            if recipe.author and recipe.author != request.context['user']:
+                abort(404)
+
         return dict(
             recipe      = recipe,
             editable    = False
         )
 
     @expose(generic=True)
-    def async(self): pass
+    def async(self): abort(405)
 
     @async.when(
         method      = 'POST',
@@ -38,16 +40,18 @@ class SlugController(object):
     )
     def do_async(self):
         recipe = request.context['recipe']
-        if recipe.state != "PUBLISHED":
-            abort(404)
+        if recipe.state == "DRAFT":
+            if recipe.author and recipe.author != request.context['user']:
+                abort(404)
 
-        # Log a view for the recipe
-        model.RecipeView(recipe = recipe)
+        # Log a view for the recipe (if the viewer *is not* the author)
+        if recipe.author != request.context['user']:
+            model.RecipeView(recipe = recipe)
 
         return dict(recipe = recipe)
 
     @expose(generic=True)
-    def draft(self): pass
+    def draft(self): abort(405)
 
     @draft.when(method="POST")
     def do_draft(self):
@@ -62,7 +66,7 @@ class SlugController(object):
         redirect("%sbuilder" % draft.url())
 
     @expose(generic=True)
-    def copy(self): pass
+    def copy(self): abort(405)
 
     @copy.when(method="POST")
     def do_copy(self):
@@ -85,7 +89,7 @@ class SlugController(object):
         redirect("/")
 
     @expose(generic=True)
-    def delete(self): pass
+    def delete(self): abort(405)
 
     @delete.when(method="POST")
     def do_delete(self):
@@ -106,7 +110,11 @@ class RecipeController(object):
         return SlugController(slug), remainder
 
     def __init__(self, recipeID):
-        recipe = model.Recipe.get(int(recipeID))
+        try:
+            primary_key = int(str(recipeID), 16)
+        except ValueError:
+            abort(404)
+        recipe = model.Recipe.get(primary_key)
         if recipe is None:
             abort(404)
 
@@ -122,8 +130,7 @@ class RecipesController(object):
     @expose('recipes/browse/index.html')
     def index(self):
         return dict(
-            styles  = model.Style.query.order_by(model.Style.name).all(),
-            recipes = model.Recipe.query.filter(model.Recipe.state == 'PUBLISHED').all()
+            styles  = model.Style.query.order_by(model.Style.name).all()
         )
 
     @expose(
@@ -137,11 +144,12 @@ class RecipesController(object):
         offset = int(perpage * (kw['page'] - 1))
 
         views = func.count(model.RecipeView.id).label('views')
+        username = func.lower(model.User.username).label('username')
 
         sortable_type = case([
             (model.Recipe.type == 'MASH', literal('All Grain')),
             (model.Recipe.type == 'EXTRACT', literal('Extract')),
-            (model.Recipe.type == 'EXTRACTSTEEP', literal('Extract with Steeped Grains')),
+            (model.Recipe.type == 'EXTRACTSTEEP', literal('Extract w/ Steeped Grains')),
             (model.Recipe.type == 'MINIMASH', literal('Mini-Mash')),
         ]).label('type')
         
@@ -150,7 +158,7 @@ class RecipesController(object):
             type            = (sortable_type,),
             srm             = (model.Recipe._srm,),
             name            = (model.Recipe.name,),
-            author          = (model.User.last_name, model.User.first_name, model.User.username),
+            author          = (username,),
             style           = (model.Style.name,),
             last_updated    = (model.Recipe.last_updated,),
             views           = (views,)
@@ -218,6 +226,9 @@ class RecipesController(object):
             [func.count(model.Recipe.id)],
             and_(*where)
         ).execute().fetchone()[0]
+
+        if views not in order_column:
+            query = query.group_by(*order_column)
 
         recipes = model.Recipe.query.from_statement(query.order_by(
             *[order_direction(column) for column in order_column]

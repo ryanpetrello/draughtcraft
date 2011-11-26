@@ -17,21 +17,25 @@ class RecipeSlug(Entity, DeepCopyMixin):
 
             # The name must be at least one character to generate a slug
             assert name
-        
-            # Lowercase and strip punctuation
-            stripped = re.sub('[^a-z0-9\s-]', '', name.lower())
 
-            # Split on spaces
-            parts = stripped.split(' ')
+            self.slug = RecipeSlug.to_slug(name)
 
-            # Filter out empty spaces
-            parts = filter(None, parts)
+    @classmethod
+    def to_slug(cls, name):
+        # Lowercase and strip punctuation
+        stripped = re.sub('[^a-z0-9\s-]', '', name.lower())
 
-            # Join together with dashes
-            slug = '-'.join(parts)
-    
-            # If a valid slug can't be built, just fallback to `custom-recipe`
-            if not slug:
-                slug = 'custom-recipe'
+        # Split on spaces
+        parts = stripped.split(' ')
 
-            self.slug = slug
+        # Filter out empty spaces
+        parts = filter(None, parts)
+
+        # Join together with dashes
+        slug = '-'.join(parts)
+
+        # If a valid slug can't be built, just fallback to `custom-recipe`
+        if not slug:
+            slug = 'custom-recipe'
+
+        return slug

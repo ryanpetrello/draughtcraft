@@ -27,7 +27,11 @@ setup(
         "BeautifulSoup",
         "pytest-xdist",
         "pytest-cov",
+        "redis",
+        "hiredis",
         "lesspy",
+        "jsmin",
+        "psycopg2",
         "fudge"
     ],
     zip_safe = False,

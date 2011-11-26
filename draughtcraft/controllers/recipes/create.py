@@ -62,4 +62,4 @@ class RecipeCreationController(RestController):
             recipe.author.settings['default_recipe_type'] = recipe.type
             recipe.author.settings['default_recipe_volume'] = recipe.gallons
 
-        redirect('/recipes/%d/%s/builder/' % (recipe.id, recipe.slugs[0].slug))
+        redirect('/recipes/%x/%s/builder/' % (recipe.id, recipe.slugs[0].slug))

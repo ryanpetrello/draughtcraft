@@ -1,11 +1,15 @@
 <%inherit file="../layout.html" />
 
+<%def name="title()">
+  ${user.username}
+</%def>
+
 <%def name="style()">
-  <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/profile.less.css')}" />
+  ${h.css('/css/profile.css')}
 </%def>
 
 <%def name="javascript()">
-  <script type="text/javascript" src="${h.stamp('/javascript/profile.js')}"></script>
+  ${h.js('/javascript/profile.js')}
 </%def>
 
 <h1 class="clearfix">

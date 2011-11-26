@@ -36,6 +36,7 @@ def rollback():
 
 def clear():
     Session.remove()
+    Session.close()
 
 from ingredients    import *
 from recipes        import *

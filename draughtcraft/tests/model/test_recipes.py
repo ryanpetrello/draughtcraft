@@ -1,9 +1,10 @@
 import pecan
-from draughtcraft       import model
-from draughtcraft.tests import TestModel
-from datetime           import timedelta
-from webob              import Request
-from fudge              import Fake
+from draughtcraft               import model
+from draughtcraft.lib.units     import InvalidUnitException
+from draughtcraft.tests         import TestModel
+from datetime                   import timedelta
+from webob                      import Request
+from sys                        import maxint
 
 import unittest
 
@@ -171,6 +172,19 @@ class TestRecipeAddition(unittest.TestCase):
         assert a1.percentage == 0
         assert a2.percentage == 0
 
+    def test_pounds(self):
+        a = model.RecipeAddition(amount = 1, unit = 'POUND')
+        assert a.pounds == 1
+
+        a = model.RecipeAddition(amount = 16, unit = 'OUNCE')
+        assert a.pounds == 1
+
+        a = model.RecipeAddition(amount = 2, unit = 'TEASPOON')
+        try:
+            assert a.pounds
+        except InvalidUnitException: pass
+        else: raise AssertionError('Teaspoons cannot be converted to pounds.')
+
     def test_minutes(self):
         a = model.RecipeAddition()
         assert a.minutes == 0
@@ -178,6 +192,30 @@ class TestRecipeAddition(unittest.TestCase):
         a.duration = timedelta(seconds=120)
         assert a.minutes == 2
 
+    def test_sortable_minutes(self):
+        a = model.RecipeAddition(use = 'FIRST WORT')
+        assert a.sortable_minutes == maxint
+
+        a = model.RecipeAddition(use = 'POST BOIL')
+        assert a.sortable_minutes == -1
+
+        a = model.RecipeAddition(use = 'FLAME-OUT')
+        assert a.sortable_minutes == -1
+
+        a = model.RecipeAddition(use = 'BOIL', duration=timedelta(seconds=3600))
+        assert a.sortable_minutes == 60
+
+    def test_eta(self):
+        r = model.Recipe(boil_minutes = 60)
+
+        a = model.HopAddition(recipe = r, duration=timedelta(seconds=3600))
+        assert a.eta == '0m'
+
+        a = model.HopAddition(recipe = r, duration=timedelta(seconds=1800))
+        assert a.eta == '30m'
+
+        a = model.HopAddition(recipe = r, duration=timedelta(seconds=0))
+        assert a.eta == '60m'
 
 class TestRecipe(unittest.TestCase):
 
@@ -484,6 +522,15 @@ class TestRecipe(unittest.TestCase):
         assert recipe.url() == '/recipes/1/rocky-mountain-river-ipa/'
         assert recipe.url(False) == '/recipes/1/rocky-mountain-river-ipa/builder/'
 
+    def test_url_is_hex(self):
+        for i in range(128):
+            recipe = model.Recipe(
+                id      = i,
+                name    = u'Rocky Mountain River IPA'
+            )
+            assert recipe.url() == '/recipes/%s/rocky-mountain-river-ipa/' % ('%x' % i)
+            assert recipe.url(False) == '/recipes/%s/rocky-mountain-river-ipa/builder/' % ('%x' % i)
+
     def test_printable_type(self):
         assert model.Recipe(
             type = u'MASH'
@@ -493,7 +540,7 @@ class TestRecipe(unittest.TestCase):
         ).printable_type == 'Extract'
         assert model.Recipe(
             type = u'EXTRACTSTEEP'
-        ).printable_type == 'Extract with Steeped Grains'
+        ).printable_type == 'Extract w/ Steeped Grains'
         assert model.Recipe(
             type = u'MINIMASH'
         ).printable_type == 'Mini-Mash'
@@ -594,6 +641,38 @@ class TestRecipeCopy(TestModel):
         assert len(r1.slugs) == len(r2.slugs) == 1
         assert r1.slugs[0] != r2.slugs[0]
         assert r1.slugs[0].slug == r2.slugs[0].slug == 'rocky-mountain-river-ipa'
+
+    def test_copy_multiple_slugs(self):
+        r = model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.'
+        )
+        model.RecipeSlug(slug='secondary-slug', recipe = r)
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        recipe.duplicate()
+        model.commit()
+
+        assert model.Recipe.query.count() == 2
+        assert model.RecipeSlug.query.count() == 4
+
+        r1, r2 = model.Recipe.get(1), model.Recipe.get(2)
+
+        assert r1.type == r2.type == 'MASH'
+        assert r1.name == r2.name == 'Rocky Mountain River IPA'
+        assert r1.gallons == r2.gallons == 5
+        assert r1.boil_minutes == r2.boil_minutes == 60
+        assert r1.notes == r2.notes == u'This is my favorite recipe.'
+
+        assert len(r1.slugs) == len(r2.slugs) == 2
+        assert r1.slugs[0] != r2.slugs[0]
+        assert r1.slugs[0].slug == r2.slugs[0].slug == 'rocky-mountain-river-ipa'
+        assert r1.slugs[1] != r2.slugs[1]
+        assert r1.slugs[1].slug == r2.slugs[1].slug == 'secondary-slug'
 
     def test_simple_copy_with_overrides(self):
         model.Recipe(
@@ -1220,6 +1299,62 @@ class TestDrafts(TestModel):
         assert model.Recipe.query.count() == 1
         assert model.Recipe.query.first().id == primary_key
         assert model.Recipe.query.first().state == "PUBLISHED"
+
+    def test_primary_slug(self):
+        source = model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            state           = u'DRAFT'
+        )
+        source.flush()
+        primary_key = source.id
+        model.commit()
+
+        assert len(model.Recipe.query.first().slugs) == 1
+
+        # Make a new draft of the recipe
+        model.Recipe.query.first().publish()
+        model.commit()
+
+        assert model.Recipe.query.count() == 1
+        assert model.Recipe.query.first().id == primary_key
+        assert model.Recipe.query.first().state == "PUBLISHED"
+
+        assert len(model.Recipe.query.first().slugs) == 1
+
+    def test_secondary_slug(self):
+        source = model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            state           = u'DRAFT'
+        )
+        source.flush()
+        primary_key = source.id
+        model.commit()
+
+        assert len(model.Recipe.query.first().slugs) == 1
+
+        model.Recipe.query.first().name = 'Cascade IPA'
+        model.commit()
+
+        model.Recipe.query.first().publish()
+        model.commit()
+
+        assert model.Recipe.query.count() == 1
+        assert model.Recipe.query.first().id == primary_key
+        assert model.Recipe.query.first().state == "PUBLISHED"
+
+        assert len(model.Recipe.query.first().slugs) == 2
+        recipe = model.Recipe.query.first()
+        assert recipe.slugs[0].slug == 'rocky-mountain-river-ipa'
+        assert recipe.slugs[1].slug == 'cascade-ipa'
+        assert 'cascade-ipa' in recipe.url()
 
     def test_statistic_caching(self):
         """

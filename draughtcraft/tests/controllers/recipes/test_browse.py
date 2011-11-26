@@ -40,6 +40,21 @@ class TestRecipeBrowser(TestApp):
         assert self._ns[key] == value
 
 
+class TestRecipeBrowse(TestRecipeBrowser):
+
+    def test_browse_index(self):
+        model.Style(name = 'American IPA')
+        model.commit()
+
+        response = self.get('/recipes/')
+        assert response.status_int == 200
+        assert len(response.namespace.get('styles')) == 1
+
+    def test_browse_ajax(self):
+        response = self.get('/recipes/recipes', status=400)
+        assert response.status_int == 400
+
+
 class TestRecipeBase(TestRecipeBrowser):
     """
     Make sure non-published recipes are filtered out.
@@ -311,7 +326,7 @@ class TestSorting(TestRecipeBrowser):
         # Sort alphabetically (DESC) based on:
         #   'MASH'          : 'All Grain',
         #   'EXTRACT'       : 'Extract',
-        #   'EXTRACTSTEEP'  : 'Extract with Steeped Grains',
+        #   'EXTRACTSTEEP'  : 'Extract w/ Steeped Grains',
         #   'MINIMASH'      : 'Mini-Mash'
         # 
         self._get({'order_by': 'type'})
@@ -332,7 +347,7 @@ class TestSorting(TestRecipeBrowser):
         # Sort alphabetically (ASC) based on:
         #   'MASH'          : 'All Grain',
         #   'EXTRACT'       : 'Extract',
-        #   'EXTRACTSTEEP'  : 'Extract with Steeped Grains',
+        #   'EXTRACTSTEEP'  : 'Extract w/ Steeped Grains',
         #   'MINIMASH'      : 'Mini-Mash'
         # 
         self._get({'order_by': 'type', 'direction': 'ASC'})
@@ -424,8 +439,7 @@ class TestSorting(TestRecipeBrowser):
             'name': 'Recipe 1', 
             'state': 'PUBLISHED', 
             'author': model.User(
-                first_name  = u'Ryan', 
-                last_name   = u'P',
+                username    = 'andy',
                 email       = 'one@example.com'
             )
         })
@@ -433,8 +447,7 @@ class TestSorting(TestRecipeBrowser):
             'name': 'Recipe 2', 
             'state': 'PUBLISHED', 
             'author': model.User(
-                first_name  = u'Randy', 
-                last_name   = u'J',
+                username    = 'tommy',
                 email       = 'two@example.com'
             )
         })
@@ -442,7 +455,7 @@ class TestSorting(TestRecipeBrowser):
             'name': 'Recipe 3', 
             'state': 'PUBLISHED', 
             'author': model.User(
-                first_name  = u'Tom',
+                username    = 'zeek',
                 email       = 'three@example.com'
             )
         })
@@ -450,8 +463,7 @@ class TestSorting(TestRecipeBrowser):
             'name': 'Recipe 4', 
             'state': 'PUBLISHED', 
             'author': model.User(
-                first_name  = u'Rob', 
-                last_name   = u'P',
+                username    = 'phil',
                 email       = 'four@example.com'
             )
         })
@@ -459,8 +471,7 @@ class TestSorting(TestRecipeBrowser):
             'name': 'Recipe 5', 
             'state': 'PUBLISHED', 
             'author': model.User(
-                last_name   = u'P', 
-                username    = 'robp',
+                username    = 'rob',
                 email       = 'five@example.com'
             )
         })
@@ -475,11 +486,11 @@ class TestSorting(TestRecipeBrowser):
         self._eq('order_by', 'author')
         self._eq('direction', 'DESC')
         assert len(self._ns['recipes']) == 5
-        assert self._ns['recipes'][0].name == 'Recipe 1'
-        assert self._ns['recipes'][1].name == 'Recipe 4'
+        assert self._ns['recipes'][0].name == 'Recipe 3'
+        assert self._ns['recipes'][1].name == 'Recipe 2'
         assert self._ns['recipes'][2].name == 'Recipe 5'
-        assert self._ns['recipes'][3].name == 'Recipe 2'
-        assert self._ns['recipes'][4].name == 'Recipe 3'
+        assert self._ns['recipes'][3].name == 'Recipe 4'
+        assert self._ns['recipes'][4].name == 'Recipe 1'
 
         self._get({'order_by': 'author', 'direction': 'ASC'})
         self._eq('pages', 1)
@@ -490,11 +501,11 @@ class TestSorting(TestRecipeBrowser):
         self._eq('order_by', 'author')
         self._eq('direction', 'ASC')
         assert len(self._ns['recipes']) == 5
-        assert self._ns['recipes'][0].name == 'Recipe 3'
-        assert self._ns['recipes'][1].name == 'Recipe 2'
+        assert self._ns['recipes'][0].name == 'Recipe 1'
+        assert self._ns['recipes'][1].name == 'Recipe 4'
         assert self._ns['recipes'][2].name == 'Recipe 5'
-        assert self._ns['recipes'][3].name == 'Recipe 4'
-        assert self._ns['recipes'][4].name == 'Recipe 1'
+        assert self._ns['recipes'][3].name == 'Recipe 2'
+        assert self._ns['recipes'][4].name == 'Recipe 3'
 
     def test_sort_by_style(self):
         R({'name': 'Recipe 1', 'state': 'PUBLISHED', 'style': model.Style(name='Baltic Porter')})

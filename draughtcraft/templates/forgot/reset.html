@@ -3,8 +3,8 @@
 <%def name="title()">Reset Your Password</%def>
 
 <%def name="style()">
-    <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/thin.less.css')}" />
-    <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/login.less.css')}" />
+    ${h.css('/css/thin.css')}
+    ${h.css('/css/login.css')}
 </%def>
 
 <%def name="javascript()">
@@ -18,7 +18,7 @@
 </%def>
 
 <h1>
-  Hi, ${password_request.user.first_name.strip() or password_request.user.username},
+  Hi, ${password_request.user.printed_first_name},
 </h1>
 
 <div class="clearfix">

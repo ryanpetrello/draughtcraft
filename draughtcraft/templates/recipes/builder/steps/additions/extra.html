@@ -40,7 +40,7 @@ ${h.hidden(
         ${h.select(
           '%s_additions-%d.duration' % (addition.step, i),
           addition.minutes,
-          [(value, '%d min' % value) for value in range(addition.recipe.boil_minutes, 0, -5)],
+          [(value, '%d min' % value) for value in (range(addition.recipe.boil_minutes, 0, -5) + [4,3,2,1,0])],
           id = 'addition-%s-use' % addition.id
         )}
       % endif

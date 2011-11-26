@@ -42,7 +42,7 @@ ${h.hidden(
         ${h.select(
           '%s_additions-%d.duration' % (addition.step, i),
           addition.minutes,
-          [(value, '%d min' % value) for value in range(addition.recipe.boil_minutes, 0, -5)],
+          [(value, '%d min' % value) for value in (range(addition.recipe.boil_minutes, 0, -5) + [4,3,2,1,0])],
           id = 'addition-%s-duration' % addition.id
         )}
       % endif
@@ -62,7 +62,7 @@ ${h.hidden(
     ${addition.ingredient.ppg}
   </td>
   <td class="unit">
-    ${addition.ingredient.lovibond}
+    ${h.format_volume(addition.ingredient.lovibond)}
   </td>
   <td class="close">
     <a href="#" onclick="$.draughtcraft.recipes.builder.removeAddition('${addition.id}?${token_key}=${authentication_token()}', this);return false;">

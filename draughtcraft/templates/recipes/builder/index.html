@@ -10,23 +10,30 @@
 
 <%inherit file="../../layout.html" />
 
+<%def name="title()">
+  ${recipe.name}
+  % if recipe.author:
+    - ${recipe.author.username}
+  % endif
+</%def>
+
 <%def name="style()">
-    <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/recipes/builder.less.css')}" />
+    ${h.css('/css/recipes/builder.css')}
     % if not editable:
-      <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/recipes/viewer.less.css')}" />
+      ${h.css('/css/recipes/viewer.css')}
     % endif
-    <link rel="stylesheet" type="text/css" media="print" href="${h.stamp('/css/recipes/builder.print.less.css')}" />
-    <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/jquery.selectbox.css')}" />
+    <link rel="stylesheet" type="text/css" media="print" href="${h.stamp('/css/recipes/builder.print.css')}" />
+    ${h.css('/css/jquery.selectbox.css')}
 </%def>
 
 <%def name="javascript()">
-  <script type="text/javascript" src="${h.stamp('/javascript/jquery.form.min.js')}"></script>
-  <script type="text/javascript" src="${h.stamp('/javascript/jquery-scrolltofixed-min.js')}"></script>
+  ${h.js('/javascript/jquery.form.min.js')}
+  ${h.js('/javascript/jquery-scrolltofixed-min.js')}
     % if editable:
-      <script type="text/javascript" src="${h.stamp('/javascript/recipes/builder.js')}"></script>
-      <script type="text/javascript" src="${h.stamp('/javascript/jquery.selectbox.min.js')}"></script>
+      ${h.js('/javascript/recipes/builder.js')}
+      ${h.js('/javascript/jquery.selectbox.min.js')}
     % else:
-      <script type="text/javascript" src="${h.stamp('/javascript/recipes/viewer.js')}"></script>
+      ${h.js('/javascript/recipes/viewer.js')}
     % endif
 </%def>
 
@@ -57,14 +64,14 @@
           ${h.form('async/settings/volume', class_='volume')}
             ${h.text(
               'volume', 
-              int(recipe.liters) if int(recipe.liters) == float(recipe.liters) else recipe.liters,
+              h.format_volume(recipe.liters),
               class_ = 'unit'
             )}
             ${h.hidden(
               'unit',
               'LITER'
             )}
-            Liter(s)
+            L.
           ${h.end_form()}
         </fieldset>
     % else:
@@ -72,14 +79,14 @@
           ${h.form('async/settings/volume', class_='volume')}
             ${h.text(
               'volume', 
-              int(recipe.gallons) if int(recipe.gallons) == float(recipe.gallons) else recipe.gallons,
+              h.format_volume(recipe.gallons),
               class_ = 'unit'
             )}
             ${h.hidden(
               'unit',
               'GALLON'
             )}
-            Gallon(s)
+            Gal.
           ${h.end_form()}
         </fieldset>
     % endif

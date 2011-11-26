@@ -110,21 +110,25 @@ $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
     // On successful Ajax submission, we inject the response body into
     // the DOM.
     //
-    $('#builder form:not(.name)').ajaxForm({
-        'success' : function(responseText){
-            $('.publish-btn').prop('disabled', false);
-            $('.publish-btn').text('Publish Changes');
-            $.draughtcraft.recipes.builder._delay($.noop, 0);
-            $.draughtcraft.recipes.builder.__injectRecipeContent__(responseText);
-            $.draughtcraft.recipes.builder._changes_in_queue = false;
-        },
-        'error' : function(jqXHR, textStatus, errorThrown){
-            $('.publish-btn').prop('disabled', false);
-            $('.publish-btn').text('Publish Changes');
-            $.draughtcraft.recipes.builder._delay($.noop, 0);
-            $.draughtcraft.recipes.builder.__injectRecipeContent__(jqXHR.responseText);
-            $.draughtcraft.recipes.builder._changes_in_queue = false;
-        }
+    $('#builder form:not(.name)').each(function(){
+        $(this).ajaxForm({
+            'success' : $.proxy(function(responseText){
+                $('.publish-btn').prop('disabled', false);
+                $('.publish-btn').text('Publish Changes');
+                $.draughtcraft.recipes.builder._delay($.noop, 0);
+                if(!$(this).hasClass('no-inject'))
+                    $.draughtcraft.recipes.builder.__injectRecipeContent__(responseText);
+                $.draughtcraft.recipes.builder._changes_in_queue = false;
+            }, this),
+            'error' : $.proxy(function(jqXHR, textStatus, errorThrown){
+                $('.publish-btn').prop('disabled', false);
+                $('.publish-btn').text('Publish Changes');
+                $.draughtcraft.recipes.builder._delay($.noop, 0);
+                if(!$(this).hasClass('no-inject'))
+                    $.draughtcraft.recipes.builder.__injectRecipeContent__(jqXHR.responseText);
+                $.draughtcraft.recipes.builder._changes_in_queue = false;
+            }, this)
+        });
     });
 
     //
@@ -165,6 +169,16 @@ $.draughtcraft.recipes.builder.__afterRecipeInject = function(){
             'delay'     : 25,
             'edgeOffset': 20
         });
+    });
+
+    // Register tooltips for each of the `results` settings buttons
+    $('div.results a.recipe-setting img').each(function(){
+        $(this).tipTip({
+            'delay'     : 25,
+            'edgeOffset': 20,
+            'content'   : $(this).closest('a').attr('title')
+        });
+        $(this).closest('a').removeAttr('title');
     });
 
     // Register fancybox popups for ingredient links
@@ -246,8 +260,10 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
         // disable them (disallow edits while saving) for the duration
         // of the Ajax save.
         //
-        $(form).find('input, select').prop('disabled', true);
-        $(".step fieldset select").selectBox('disable');
+        if(!$(form).hasClass('no-inject')){
+            $(form).find('input, select').prop('disabled', true);
+            $(".step fieldset select").selectBox('disable');
+        }
     };
 
     // Any time an <input> or <textarea> triggers a `keyup`...
@@ -255,8 +271,8 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
         // Ignore Tab or Shift-Tab keypresses...
         if(e.keyCode == 9 || e.keyCode == 16) return;
 
-        // Start a timer to auto-save 2 seconds from now.
-        $.draughtcraft.recipes.builder._delay($.proxy(save, this), 1000);
+        // Start a timer to auto-save soon.
+        $.draughtcraft.recipes.builder._delay($.proxy(save, this), 500);
 
         //
         // Listen for any mouse movement. If movement occurs, go ahead and save.
@@ -266,7 +282,7 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
         $('body').mousemove($.proxy(function(){
             // Stop listening for mouse movements...
             $('body').unbind('mousemove');
-            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 333);
+            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 250);
         }, this));
 
     });
@@ -280,7 +296,7 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
     //
     // 1.  They move their mouse.
     //            - or -
-    // 2.  They change a value and wait past the 2 second auto-save threshold.
+    // 2.  They change a value and wait past the auto-save threshold.
     //
     $('.step input, .step select').focus(function(){
         if(!$.draughtcraft.recipes.builder._changes_in_queue) return;
@@ -290,13 +306,13 @@ $.draughtcraft.recipes.builder.initUpdateListeners = function(){
 
     //
     // If we're *about* to save, and any field is *hovered over*, prolong
-    // the save for an additional 2 seconds.  In this way, if the user
+    // the save for an additional second.  In this way, if the user
     // is moving the mouse around after changing a field value, it won't
     // save (and disable some field they're about to potentially focus on).
     //
     $('.step input, .step select').mouseenter(function(){
         if($.draughtcraft.recipes.builder._changes_in_queue){
-            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 2000);
+            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 1000);
         }
     });
 
@@ -547,3 +563,6 @@ $(document).ready(function(){
     // Register a JS tooltip on the author's thumbnail (if there is one).
     $('img.gravatar').tipTip({'delay': 50});
 });
+
+// Disabling Safari's annoying form warning - the builder auto-saves for you.
+window.onbeforeunload=function(e){}

@@ -84,7 +84,7 @@ class RecipeSettingsController(object):
     # BJCP Recipe Style
     #
     @expose(generic=True)
-    def style(self): pass
+    def style(self): abort(405)
 
     @style.when(
         method      = 'POST',
@@ -100,7 +100,7 @@ class RecipeSettingsController(object):
     # Recipe Batch/Volume
     #
     @expose(generic=True)
-    def volume(self): pass
+    def volume(self): abort(405)
 
     @volume.when(
         method          = 'POST',
@@ -126,11 +126,11 @@ class RecipeSettingsController(object):
     # Mash Method and Instructions
     #
     @expose(generic=True)
-    def mash(self): pass
+    def mash(self): abort(405)
 
     @mash.when(
         method      = 'POST',
-        template    = 'recipes/builder/async.html',
+        template    = 'json',
         schema      = RecipeMashSettings()
     )
     def _mash(self, method, instructions):
@@ -139,13 +139,13 @@ class RecipeSettingsController(object):
         self.recipe.mash_method = method
         self.recipe.mash_instructions = instructions
         self.recipe.touch()
-        return dict(recipe = self.recipe, editable=True)
+        return dict()
 
     #
     # Boil Duration
     #
     @expose(generic=True)
-    def boil_minutes(self): pass
+    def boil_minutes(self): abort(405)
 
     @boil_minutes.when(
         method          = 'POST',
@@ -168,17 +168,17 @@ class RecipeSettingsController(object):
     # Recipe Notes and Remarks
     #
     @expose(generic=True)
-    def notes(self): return
+    def notes(self): abort(405)
 
     @notes.when(
         method      = 'POST',
-        template    = 'recipes/builder/async.html',
+        template    = 'json',
         schema      = RecipeNotes()
     )
     def _notes(self, notes):
         self.recipe.notes = notes
         self.recipe.touch()
-        return dict(recipe = self.recipe, editable=True)
+        return dict()
 
 
 class IngredientsController(RestController):
@@ -222,7 +222,6 @@ class IngredientsController(RestController):
         Contains a list of `additions` for which updated information is
         available.
         """
-        
         keys = ('mash_additions', 'boil_additions', 'fermentation_additions')
         for addition_class in keys:
             additions = kw.get(addition_class)
@@ -315,7 +314,7 @@ class RecipeBuilderAsyncController(object):
     settings            = RecipeSettingsController()
 
     @expose(generic=True)
-    def name(self): pass
+    def name(self): abort(405)
 
     @name.when(
         method      = 'POST',
@@ -355,7 +354,7 @@ class RecipeBuilderController(SecureController):
 
     @expose(generic=True)
     def publish(self):
-        pass
+        abort(405)
 
     @publish.when(method='POST')
     def do_publish(self):

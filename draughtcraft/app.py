@@ -1,17 +1,21 @@
-from pecan                  import make_app
-from pecan.hooks            import TransactionHook
-from draughtcraft           import model
-from draughtcraft.lib.auth  import AuthenticationHook
-from draughtcraft.lib.csrf  import CSRFPreventionHook 
-from draughtcraft.templates import helpers
-from lesspy                 import Less
-from beaker.middleware      import SessionMiddleware
+from pecan                      import make_app
+from pecan.hooks                import TransactionHook
+from draughtcraft               import model
+from draughtcraft.lib.auth      import AuthenticationHook
+from draughtcraft.lib.csrf      import CSRFPreventionHook 
+from draughtcraft.lib.minify    import ResourceLookupMiddleware
+from draughtcraft.templates     import helpers
+from lesspy                     import Less
+from beaker.middleware          import SessionMiddleware, CacheMiddleware
 
 import os
 
 def setup_app(config):
 
     def add_middleware(app):
+        app = ResourceLookupMiddleware(app)
+        options = getattr(config, 'cache', {})
+        app = CacheMiddleware(app, **options)
         options = getattr(config, 'session', {})
         return SessionMiddleware(app, **options)
     
@@ -27,8 +31,7 @@ def setup_app(config):
     # Compile .less resources
     Less(
         os.path.join(config.app.static_root, '_precompile'), 
-        os.path.join(config.app.static_root, 'css'),
-        compiled_extension = 'less.css'
+        os.path.join(config.app.static_root, 'css')
     ).compile()
     
     return make_app(

@@ -1,2 +1,2 @@
 [run]
-omit = draughtcraft/tests*
+omit = draughtcraft/tests*,draughtcraft/data/tools/*

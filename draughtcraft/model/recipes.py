@@ -33,7 +33,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         'PUBLISHED'
     )
 
-    type                = Field(Enum(*TYPES), default='MASH', index=True)
+    type                = Field(Enum(*TYPES, native_enum=False), default='MASH', index=True)
     name                = Field(Unicode(256), index=True)
     gallons             = Field(Float, default=5)
     boil_minutes        = Field(Integer, default=60)
@@ -48,10 +48,10 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
     _srm                = Field(Integer, colname='srm')
     _ibu                = Field(Integer, colname='ibu')
 
-    mash_method         = Field(Enum(*MASH_METHODS), default='SINGLESTEP')
+    mash_method         = Field(Enum(*MASH_METHODS, native_enum=False), default='SINGLESTEP')
     mash_instructions   = Field(UnicodeText) 
 
-    state               = Field(Enum(*STATES), default='DRAFT')
+    state               = Field(Enum(*STATES, native_enum=False), default='DRAFT')
     current_draft       = ManyToOne('Recipe', inverse='published_version')
     published_version   = OneToOne('Recipe', inverse='current_draft', order_by='creation_date')
 
@@ -60,7 +60,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
 
     views               = OneToMany('RecipeView', inverse='recipe', cascade='all, delete-orphan')
     additions           = OneToMany('RecipeAddition', inverse='recipe', cascade='all, delete-orphan')
-    fermentation_steps  = OneToMany('FermentationStep', inverse='recipe', cascade='all, delete-orphan')
+    fermentation_steps  = OneToMany('FermentationStep', inverse='recipe', order_by='step', cascade='all, delete-orphan')
     slugs               = OneToMany('RecipeSlug', inverse='recipe', order_by='id', cascade='all, delete-orphan')
     style               = ManyToOne('Style', inverse='recipes')
     author              = ManyToOne('User', inverse='recipes')
@@ -149,6 +149,11 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         self._abv = self.calculations.abv
         self._srm = self.calculations.srm
         self._ibu = self.calculations.ibu
+
+        # Generate a new slug if the existing one hasn't changed.
+        existing = [slug.slug for slug in self.slugs]
+        if entities.RecipeSlug.to_slug(self.name) not in existing:
+            self.slugs.append(entities.RecipeSlug(name = self.name))
 
     def merge(self):
         """
@@ -277,7 +282,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         The URL for a recipe.
         """
         return '/recipes/%s/%s/%s' % (
-            self.id,
+            ('%x' % self.id).lower(),
             self.slugs[-1].slug,
             '' if public else 'builder/'
         )
@@ -287,7 +292,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         return {
             'MASH'          : 'All Grain',
             'EXTRACT'       : 'Extract',
-            'EXTRACTSTEEP'  : 'Extract with Steeped Grains',
+            'EXTRACTSTEEP'  : 'Extract w/ Steeped Grains',
             'MINIMASH'      : 'Mini-Mash'
         }[self.type]
 
@@ -341,10 +346,11 @@ class RecipeAddition(Entity, DeepCopyMixin):
                                 'OUNCE',
                                 'TEASPOON',
                                 'TABLESPOON',
-                                'GALLON'
-                            ]), nullable=True)
+                                'GALLON',
+                                'LITER'
+                            ], native_enum=False), nullable=True)
 
-    use                 = Field(Enum(*USES))
+    use                 = Field(Enum(*USES, native_enum=False))
     duration            = Field(Interval)
 
     recipe              = ManyToOne('Recipe', inverse='additions')
@@ -418,7 +424,7 @@ class HopAddition(RecipeAddition):
         'PLUG'
     )
 
-    form                = Field(Enum(*FORMS), default='LEAF')
+    form                = Field(Enum(*FORMS, native_enum=False), default='LEAF')
     alpha_acid          = Field(Float())
 
     using_options(inheritance='multi', polymorphic=True)
@@ -453,7 +459,7 @@ class FermentationStep(Entity, DeepCopyMixin):
         'TERTIARY'
     )
 
-    step            = Field(Enum(*STEPS))
+    step            = Field(Enum(*STEPS, native_enum=False))
     days            = Field(Integer)
     fahrenheit      = Field(Float)
 

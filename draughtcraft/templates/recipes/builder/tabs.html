@@ -28,4 +28,7 @@
     ${tab('Boil', cls('boil'))}
     ${tab('Ferment', cls('ferment', last=True))}
   </ul>
+  % if editable and recipe.author == h.request.context['user']:
+    <a href="${recipe.url()}"><span class="preview">Preview</span></a>
+  % endif
 </h2>

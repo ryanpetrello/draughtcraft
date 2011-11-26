@@ -3,8 +3,8 @@
 <%def name="title()">Signup</%def>
 
 <%def name="style()">
-    <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/thin.less.css')}" />
-    <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/signup.less.css')}" />
+    ${h.css('/css/thin.css')}
+    ${h.css('/css/signup.css')}
 </%def>
 
 <%def name="javascript()">
@@ -22,6 +22,8 @@
 </h1>
 
 <div class="clearfix">
+
+  ${h.notices.render()}
 
   ${h.form('')}
     <fieldset>
@@ -83,6 +85,8 @@
     <p>
       DraughtCraft is totally free during its beta period.
     </p>
+    <h4>Already Have an Account?</h4>
+    <p><a href="/login">Log in</a> now.
   </div>
 
 </div>

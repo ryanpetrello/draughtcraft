@@ -5,7 +5,9 @@ from draughtcraft.tests     import TestApp, TestAuthenticatedApp
 class TestUnauthenticatedRecipeSettings(TestApp):
 
     def test_profile_render(self):
-        assert self.get('/settings/recipe/', status=401).status_int == 401
+        resp = self.get('/settings/recipe/', status=302)
+        assert resp.status_int == 302
+        assert resp.headers['Location'].endswith('/signup')
 
 
 class TestRecipeSettings(TestAuthenticatedApp):
@@ -55,6 +57,9 @@ class TestRecipeSettings(TestAuthenticatedApp):
 
 
 class TestAnonymousVisitorSettings(TestApp):
+
+    def test_unit_get(self):
+        assert self.get('/units', status=405).status_int == 405
 
     def test_unit_system_toggle(self):
         resp = self.get('/')

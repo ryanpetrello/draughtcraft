@@ -21,7 +21,7 @@ app = {
 }
 
 sqlalchemy = {
-    'url'           : 'sqlite://',
+    'url'           : 'postgresql+psycopg2://localhost/draughtcrafttest',
     'echo'          : False,
     'echo_pool'     : False,
     'pool_recycle'  : 3600,
@@ -38,6 +38,13 @@ session = {
     'validate_key'      : 'example',
     '__force_dict__'    : True
 }
+
+cache = {
+    'key'               : 'resources_to_compile',
+    '__force_dict__'    : True
+}
+
+redis = {'__force_dict__' : True}
 
 postmark = {
     'api_key'       : 'POSTMARK_API_TEST'

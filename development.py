@@ -1,4 +1,5 @@
 from draughtcraft.controllers.root  import RootController
+from draughtcraft.lib.minify        import RedisResourceCache
 
 import draughtcraft
 
@@ -21,7 +22,7 @@ app = {
 }
 
 sqlalchemy = {
-    'url'           : 'sqlite:///draughtcraft.db',
+    'url'           : 'postgresql+psycopg2://localhost/draughtcraftdev',
     'echo'          : False,
     'echo_pool'     : False,
     'pool_recycle'  : 3600,
@@ -36,6 +37,19 @@ session = {
     'key'               : 'draughtcraft',
     'type'              : 'cookie',
     'validate_key'      : 'example',
+    '__force_dict__'    : True
+}
+
+cache = {
+    'key'               : 'resources_to_compile',
+    'data_backend'      : RedisResourceCache, # Remove line to disable redis caching
+    '__force_dict__'    : True
+}
+
+redis = {
+    'host'              : 'localhost',
+    'port'              : 6379,
+    'db'                : 0,
     '__force_dict__'    : True
 }
 

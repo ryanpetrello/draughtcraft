@@ -1,8 +1,8 @@
 <%inherit file="layout.html" />
 
 <%def name="style()">
-    <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/thin.less.css')}" />
-    <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/home.less.css')}" />
+    ${h.css('/css/thin.css')}
+    ${h.css('/css/home.css')}
 
     <style type="text/css">
       #content-inner p  {
@@ -53,10 +53,10 @@
     <a href="http://www.apple.com/safari/" title="Apple Safari">
       <img src="/images/browsers/safari.png" height="145" />
     </a>
-    <a href="http://getfirefox.com/" title="Google Chrome">
+    <a href="http://www.google.com/chrome" title="Google Chrome">
       <img src="/images/browsers/chrome.jpg" height="135" />
     </a>
-    <a href="http://www.google.com/chrome" title="Mozilla Firefox">
+    <a href="http://getfirefox.com/" title="Mozilla Firefox">
       <img src="/images/browsers/firefox.png" height="130" class="firefox" />
     </a>
   </div>

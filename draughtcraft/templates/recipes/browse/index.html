@@ -1,12 +1,14 @@
 <%inherit file="../../layout.html" />
 
+<%def name="title()">Find Recipes</%def>
+
 <%def name="style()">
-  <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/recipes/browse.less.css')}" />
+  ${h.css('/css/recipes/browse.css')}
 </%def>
 
 <%def name="javascript()">
-  <script type="text/javascript" src="${h.stamp('/javascript/jquery.form.min.js')}"></script>
-  <script type="text/javascript" src="${h.stamp('/javascript/recipes/browse.js')}"></script>
+  ${h.js('/javascript/jquery.form.min.js')}
+  ${h.js('/javascript/recipes/browse.js')}
 </%def>
 
 <div id="searchbar">

@@ -318,6 +318,9 @@ class TestUsConversion(unittest.TestCase):
         """Convert liters to gallons"""
         assert to_us(*(20, 'LITER')) == (5.2834410399999996, 'GALLON')
 
+    def test_passthrough(self):
+        assert to_us(*(5, 'TSP')) == (5, 'TSP')
+
 
 class TestMetricConversion(unittest.TestCase):
 
@@ -336,3 +339,6 @@ class TestMetricConversion(unittest.TestCase):
     def test_gallon_to_liter(self):
         """Convert gallons to liters"""
         assert to_metric(*(10, 'GALLON')) == (37.854117799999997, 'LITER')
+
+    def test_passthrough(self):
+        assert to_metric(*(5, 'TSP')) == (5, 'TSP')

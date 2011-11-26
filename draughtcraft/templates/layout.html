@@ -5,17 +5,22 @@
     </title>
 
       <!-- page layout and style -->
-      <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/base.css')}" />
-      <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/global.less.css')}" />
-      <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/tiptip.css')}" />
-      <link rel="stylesheet" type="text/css" media="screen" href="${h.stamp('/css/jquery.fancybox-1.3.4.css')}" />
+      ${h.css('/css/base.css')}
+      ${h.css('/css/global.css')}
+      ${h.css('/css/tiptip.css')}
+      ${h.css('/css/jquery.fancybox-1.3.4.css')}
       ${self.style()}
+      ${h.compiled_css()}
+      <style type="text/css">
+        @-moz-document url-prefix() { button.ribbon:before  { left: -33px; } }
+      </style>
   
       <!-- page javascript -->
       <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" ></script>
-      <script type="text/javascript" src="${h.stamp('/javascript/shared.js')}"></script>
-      <script type="text/javascript" src="${h.stamp('/javascript/jquery.tiptip.js')}"></script>
-      <script type="text/javascript" src="${h.stamp('/javascript/jquery.fancybox-1.3.4.js')}"></script>
+      ${h.js('/javascript/shared.js')}
+      ${h.js('/javascript/jquery.tiptip.js')}
+      ${h.js('/javascript/jquery.fancybox-1.3.4.js')}
+      ${self.javascript()}
 
       <meta name="description" content="Draughtcraft is a simple online community and recipe builder for home brewing hobbyists.">
       <meta name="keywords" content="homebrew, home brew, beer making, brewing, recipe, software">
@@ -86,8 +91,16 @@
     </div>
 
     ${self.footer()}
-    ${self.javascript()}
+    ${h.compiled_javascript()}
 
+    <script type="text/javascript">
+      var uvOptions = {};
+      (function() {
+        var uv = document.createElement('script'); uv.type = 'text/javascript'; uv.async = true;
+        uv.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'widget.uservoice.com/ZOKcBStjQcuTNpYY3fDg.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(uv, s);
+      })();
+    </script>
   </body>
 </html>
 
@@ -127,16 +140,20 @@
         </p>
         <p class="question nobg">
           If you've got an interesting idea for a feature not currently offered,
-          send your suggestion to 
-          <a href="#" class="email rev" rel="moc.tfarcthguard@nayr">moc.tfarcthguard@nayr</a>.
+          submit it to our <a href="http://draughtcraft.uservoice.com/"
+            target="window">feedback forum</a>.
         </p>
       </div>
     </div>
 
     <p>
       <a href="#about-box">About</a> 
+      <a href="http://draughtcraft.uservoice.com/" target="window">Feedback</a>
+      <a href="http://blog.draughtcraft.com" target="window">Blog</a>
       <a href="#" class="email" rel="moc.tfarcthguard@nayr">Contact</a> 
-      <a href="http://twitter.com/draughtcraftapp" target="window">Twitter</a> 
+      <a href="http://twitter.com/draughtcraftapp" target="window">
+        <img src="/images/twitter.png" height="22" />
+      </a> 
     </p>
   </footer>
 </%def>

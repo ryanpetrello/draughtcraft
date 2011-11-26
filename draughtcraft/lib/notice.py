@@ -38,15 +38,6 @@ class Notify(Flash):
                                          request=request, 
                                          response=response)
     
-    def _render_static_version(self, container_id, request, response):
-        payload = self.pop_payload(request, response)
-        if not payload:
-            return ''
-        payload['message'] = payload.get('message','')
-        payload['container_id'] = container_id
-        return self.static_template % payload
-
-
 notify = notices = Notify(
     cookie_name    = 'draughtcraft-notify',
     default_status = 'notice-general',

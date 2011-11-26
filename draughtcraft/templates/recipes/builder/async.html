@@ -11,6 +11,14 @@
       % endif
       % if h.request.context['user'] is None:
         <li class="intl submit ${'last' if editable else ''}" onclick="$.draughtcraft.toggleUnits('${key}', '${token}');" title="Switch to ${'U.S.' if recipe.metric else 'Metric'} Units"></li>
+      % elif recipe.author and recipe.author == h.request.context['user'] and recipe.state == "PUBLISHED":
+        ${h.form("%sdraft" % recipe.url())}
+          <li class="edit submit ${'last' if editable else ''}" title="Make Changes"></li>
+        ${h.end_form()}
+      % elif recipe.author and recipe.author == h.request.context['user'] and recipe.state == "DRAFT":
+        <form method="GET" action="${recipe.url(false)}">
+          <li class="edit submit ${'last' if editable else ''}" title="Make Changes"></li>
+        </form>
       % endif
       % if not editable:
         ${h.form("%scopy" % recipe.url())}
