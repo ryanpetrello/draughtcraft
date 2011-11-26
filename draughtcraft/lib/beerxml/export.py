@@ -215,6 +215,8 @@ class Fermentable(Node):
                                   # (SRM for liquid extracts).
 
     origin              = Field()
+    notes               = Field()
+    add_after_boil      = Field()
 
 
 class Yeast(Node):

@@ -509,8 +509,26 @@ class RecipeAddition(Entity, DeepCopyMixin):
 
         if self.fermentable:
             kw = {
-
+                'name'           : self.fermentable.name,
+                'amount'         : to_kg(self.amount, self.unit),
+                'YIELD'          : self.fermentable.percent_yield,
+                'color'          : self.fermentable.lovibond,
+                'add_after_boil' : self.step == 'fermentation',
+                'origin'         : self.fermentable.origin,
+                'notes'          : self.fermentable.description
             }
+
+            kw['type'] = {
+                'MALT'    : 'Grain',
+                'GRAIN'   : 'Grain',
+                'ADJUNCT' : 'Adjunct',
+                'EXTRACT' : 'Extract',
+                'SUGAR'   : 'Sugar'
+            }.get(self.fermentable.type)
+
+            if self.fermentable.type == 'EXTRACT' and 'DME' in self.fermentable.name:
+                kw['type'] = 'Dry Extract'
+
             return export.Fermentable(**kw)
 
         if self.yeast:

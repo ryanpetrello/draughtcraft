@@ -70,6 +70,10 @@ class Fermentable(Ingredient):
         if value == 'Malt': value = 'Grain'
         return value
 
+    @property
+    def percent_yield(self):
+        return round((self.ppg / 46.00) * 100)
+
 
 class Hop(Ingredient):
 

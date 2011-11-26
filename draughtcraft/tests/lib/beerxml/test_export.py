@@ -587,3 +587,100 @@ class TestRecipeWithHops(TestModel):
         '   <VERSION>1</VERSION>',
         '</HOP>'
         ]) in xml
+
+
+class TestRecipeWithFermentables(TestModel):
+    
+    def test_malt(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use         = 'MASH',
+                    amount      = 1,
+                    unit        = 'POUND',
+                    duration    = timedelta(seconds = 3600),
+                    fermentable = model.Fermentable(
+                        name        = '2-Row',
+                        ppg         = 36,
+                        lovibond    = 2,
+                        type        = 'MALT',
+                        description = 'A standard base grain.',
+                        origin      = 'US'
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<FERMENTABLE>',
+        '   <ADD_AFTER_BOIL>False</ADD_AFTER_BOIL>',
+        '   <AMOUNT>0.45359237</AMOUNT>',
+        '   <COLOR>2.0</COLOR>',
+        '   <NAME>2-Row</NAME>',
+        '   <NOTES>A standard base grain.</NOTES>',
+        '   <ORIGIN>US</ORIGIN>',
+        '   <TYPE>Grain</TYPE>',
+        '   <VERSION>1</VERSION>',
+        '   <YIELD>78.0</YIELD>',
+        '</FERMENTABLE>'
+        ]) in xml
+
+    def test_grain(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use         = 'MASH',
+                    amount      = 1,
+                    unit        = 'POUND',
+                    duration    = timedelta(seconds = 3600),
+                    fermentable = model.Fermentable(
+                        name        = 'Flaked Oats',
+                        ppg         = 37,
+                        lovibond    = 1,
+                        type        = 'GRAIN',
+                        description = 'Adds body.',
+                        origin      = 'US'
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<FERMENTABLE>',
+        '   <ADD_AFTER_BOIL>False</ADD_AFTER_BOIL>',
+        '   <AMOUNT>0.45359237</AMOUNT>',
+        '   <COLOR>1.0</COLOR>',
+        '   <NAME>Flaked Oats</NAME>',
+        '   <NOTES>Adds body.</NOTES>',
+        '   <ORIGIN>US</ORIGIN>',
+        '   <TYPE>Grain</TYPE>',
+        '   <VERSION>1</VERSION>',
+        '   <YIELD>80.0</YIELD>',
+        '</FERMENTABLE>'
+        ]) in xml
