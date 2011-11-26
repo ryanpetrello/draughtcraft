@@ -82,3 +82,25 @@ class Style(Entity, ShallowCopyMixin):
             return True
 
         return False
+
+    def to_xml(self):
+        from draughtcraft.lib.beerxml import export
+        kw = {
+            'name'            : self.name,
+            'category'        : self.category,
+            'category_number' : self.category_number,
+            'style_letter'    : self.style_letter,
+            'style_guide'     : 'BJCP',
+            'type'            : self.type.capitalize(),
+            'og_min'          : self.min_og,
+            'og_max'          : self.max_og,
+            'fg_min'          : self.min_fg,
+            'fg_max'          : self.max_fg,
+            'ibu_min'         : self.min_ibu,
+            'ibu_max'         : self.max_ibu,
+            'color_min'       : self.min_srm,
+            'color_max'       : self.max_srm,
+            'abv_min'         : self.min_abv,
+            'abv_max'         : self.max_abv
+        }
+        return export.Style(**kw)

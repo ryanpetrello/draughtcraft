@@ -405,3 +405,89 @@ class TestRecipeExport(TestModel):
         '   <YEASTS/>',
         '</RECIPE>'
         ])
+
+    def test_recipe_with_style(self):
+        style = model.Style(
+            name            = 'American Pale Ale',
+            url             = 'http://www.bjcp.org/2008styles/style10.php#1a',
+
+            # Gravities
+            min_og          = 1.045,
+            max_og          = 1.06,
+            min_fg          = 1.01,
+            max_fg          = 1.015,
+
+            # IBU
+            min_ibu         = 30,
+            max_ibu         = 45,
+
+            # SRM
+            min_srm         = 5,
+            max_srm         = 14,
+
+            # ABV
+            min_abv         = 0.045,
+            max_abv         = 0.06,
+
+            category        = 'American Ale',
+            category_number = 10,
+            style_letter    = 'A',
+
+            type            = 'ALE'
+        )
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            style           = style,
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.'
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert xml == prepare_xml([
+        '<RECIPE>',
+        '   <BATCH_SIZE>18.927</BATCH_SIZE>',
+        '   <BOIL_SIZE>23.65875</BOIL_SIZE>',
+        '   <BOIL_TIME>60</BOIL_TIME>',
+        '   <BREWER>Ryan Petrello</BREWER>',
+        '   <EFFICIENCY>75.0</EFFICIENCY>',
+        '   <FERMENTABLES/>',
+        '   <FERMENTATION_STAGES>0</FERMENTATION_STAGES>',
+        '   <HOPS/>',
+        '   <MASH/>',
+        '   <MISCS/>',
+        '   <NAME>Rocky Mountain River IPA</NAME>',
+        '   <NOTES>This is my favorite recipe.</NOTES>',
+        '   <STYLE>',
+        '       <ABV_MAX>0.06</ABV_MAX>',
+        '       <ABV_MIN>0.045</ABV_MIN>',
+        '       <CATEGORY>American Ale</CATEGORY>',
+        '       <CATEGORY_NUMBER>10</CATEGORY_NUMBER>',
+        '       <COLOR_MAX>14</COLOR_MAX>',
+        '       <COLOR_MIN>5</COLOR_MIN>',
+        '       <FG_MAX>1.015</FG_MAX>',
+        '       <FG_MIN>1.01</FG_MIN>',
+        '       <IBU_MAX>45</IBU_MAX>',
+        '       <IBU_MIN>30</IBU_MIN>',
+        '       <NAME>American Pale Ale</NAME>',
+        '       <OG_MAX>1.06</OG_MAX>',
+        '       <OG_MIN>1.045</OG_MIN>',
+        '       <STYLE_GUIDE>BJCP</STYLE_GUIDE>',
+        '       <STYLE_LETTER>A</STYLE_LETTER>',
+        '       <TYPE>Ale</TYPE>',
+        '       <VERSION>1</VERSION>',
+        '   </STYLE>',
+        '   <TYPE>All Grain</TYPE>',
+        '   <VERSION>1</VERSION>',
+        '   <WATERS/>',
+        '   <YEASTS/>',
+        '</RECIPE>'
+        ])
