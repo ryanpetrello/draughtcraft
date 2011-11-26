@@ -1,4 +1,4 @@
-from elixir import (Entity, OneToMany, Field, Unicode, Integer, Float)
+from elixir import (Entity, OneToMany, Field, Unicode, Integer, Enum, Float)
 from draughtcraft.model.deepcopy        import ShallowCopyMixin
 
 
@@ -7,6 +7,13 @@ class InvalidStatistic(Exception):
 
 
 class Style(Entity, ShallowCopyMixin):
+
+    TYPES = [
+        'LAGER',
+        'ALE',
+        'MEAD',
+        'CIDER'
+    ]
 
     uid             = Field(Unicode(32), unique=True)
     name            = Field(Unicode(256), index=True)
@@ -29,6 +36,12 @@ class Style(Entity, ShallowCopyMixin):
     # ABV
     min_abv         = Field(Float)
     max_abv         = Field(Float)
+
+    category        = Field(Unicode(64))
+    category_number = Field(Integer)
+    style_letter    = Field(Unicode(1))
+
+    type            = Field(Enum(*TYPES, native_enum=False))
 
     recipes         = OneToMany('Recipe', inverse='style')
 
