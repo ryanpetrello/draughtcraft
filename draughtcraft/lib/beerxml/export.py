@@ -153,11 +153,17 @@ class Recipe(Node):
 
     name                = Field()
     type                = Field()
+    style               = Field()
     brewer              = Field()
     batch_size          = Field()
     boil_size           = Field()
     boil_time           = Field()
     efficiency          = Field()
+
+    hops                = NodeSet(Hop)
+    fermentables        = NodeSet(Fermentable)
+    miscs               = NodeSet(Misc)
+    yeasts              = NodeSet(Yeast)
 
     notes               = Field()
     fermentation_stages = Field()
@@ -171,31 +177,65 @@ class Recipe(Node):
 class Hop(Node):
 
     name                = Field()
-    alpha               = Field()
-    amount              = Field()
-    use                 = Field()
-    time                = Field()
+
+    alpha               = Field() """Percent alpha of hops - for example "5.5"
+                                     represents 5.5% alpha"""
+
+    amount              = Field() """Weight in Kilograms of the hops used in
+                                     the recipe."""
+
+    use                 = Field() """May be "Boil", "Dry Hop", "Mash", 
+                                     "First Wort" or "Aroma"."""
+
+    time                = Field() """The time as measured in minutes.  Meaning
+                                     is dependent on the “USE” field.  For 
+                                     “Boil” this is the boil time.  For “Mash” 
+                                     this is the mash time.  For “First Wort” 
+                                     this is the boil time.  For “Aroma” this 
+                                     is the steep time.  For “Dry Hop” this is 
+                                     the amount of time to dry hop."""
+
     notes               = Field()
-    form                = Field()
+    form                = Field() """May be "Pellet", "Plug" or "Leaf"."""
     origin              = Field()
 
 
 class Fermentable(Node):
 
     name                = Field()
-    type                = Field()
-    amount              = Field()
+
+    type                = Field() """May be "Grain", "Sugar", "Extract", 
+                                     "Dry Extract" or "Adjunct".  Extract 
+                                     refers to liquid extract."""
+
+    amount              = Field() """Weight of the fermentable, extract or
+                                     sugar in Kilograms."""
+
     YIELD               = Field() # yield (lower) is a reserved keyword
-    color               = Field()
+                                  """Percent dry yield (fine grain) for the
+                                     grain, or the raw yield by weight if This
+                                     is an extract adjunct or sugar."""
+
+    color               = Field() """The color of the item in Lovibond Units
+                                     (SRM for liquid extracts)."""
+
     origin              = Field()
 
 
 class Yeast(Node):
 
     name                = Field()
-    type                = Field()
-    form                = Field()
-    amount              = Field()
+
+    type                = Field() """May be “Ale”, “Lager”, “Wheat”, “Wine” or
+                                     “Champagne”."""
+
+    form                = Field() """May be “Liquid”, “Dry”, “Slant” or
+                                     “Culture”."""
+
+    amount              = Field() """The amount of yeast, measured in liters.
+                                     For a starter this is the size of the 
+                                     starter."""
+
     flocculation        = Field()
     attenuation         = Field()
     add_to_secondary    = Field()
@@ -204,20 +244,57 @@ class Yeast(Node):
 class Misc(Node):
 
     name                = Field()
-    type                = Field()
-    use                 = Field()
-    time                = Field()
-    amount              = Field()
+
+    type                = Field() """May be “Spice”, “Fining”, “Water Agent”,
+                                     “Herb”, “Flavor” or “Other”."""
+
+    use                 = Field() """May be “Boil”, “Mash”, “Primary”,
+                                     “Secondary”, “Bottling”."""
+
+    time                = Field() """Amount of time the misc was boiled,
+                                     steeped, mashed, etc in minutes."""
+
+    amount              = Field() """Amount of item used.  The default
+                                     measurements are by weight, but this may 
+                                     be the measurement in volume units if 
+                                     AMOUNT_IS_WEIGHT is set to TRUE for this 
+                                     record.  If a liquid it is in liters, if a 
+                                     solid the weight is measured in 
+                                     kilograms."""
+
     amount_is_weight    = Field()
 
 
 class Style(Node):
     name                = Field()
-    category            = Field()
-    category_number     = Field()
-    style_letter        = Field()
-    style_guide         = Field()
-    type                = Field()
+
+    category            = Field() """Category that this style belongs to
+                                     - usually associated with a group of 
+                                     styles such as “English Ales” or
+                                     “Amercian Lagers”."""
+
+    category_number     = Field() """Number or identifier associated with this
+                                     style category.  For example in the BJCP 
+                                     style guide, the “American Lager” category 
+                                     has a category number of “1”."""
+
+    style_letter        = Field() """The specific style number or subcategory
+                                     letter associated with this particular 
+                                     style.  For example in the BJCP style 
+                                     guide, an American Standard Lager would be 
+                                     style letter “A” under the main category.  
+                                     Letters should be upper case."""
+
+    style_guide         = Field() """The name of the style guide that this
+                                     particular style or category belongs to.  
+                                     For example “BJCP” might denote the BJCP 
+                                     style guide, and “AHA” would be used for 
+                                     the AHA style guide."""
+
+    type                = Field() """May be “Lager”, “Ale”, “Mead”, “Wheat”,
+                                     “Mixed” or “Cider”.  Defines the type of 
+                                     beverage associated with this category."""
+
     og_min              = Field()
     og_max              = Field()
     fg_min              = Field()
