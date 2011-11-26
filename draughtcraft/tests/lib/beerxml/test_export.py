@@ -684,3 +684,238 @@ class TestRecipeWithFermentables(TestModel):
         '   <YIELD>80.0</YIELD>',
         '</FERMENTABLE>'
         ]) in xml
+
+    def test_sugar(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use         = 'MASH',
+                    amount      = 1,
+                    unit        = 'POUND',
+                    duration    = timedelta(seconds = 3600),
+                    fermentable = model.Fermentable(
+                        name        = 'Sucrose',
+                        ppg         = 46,
+                        lovibond    = 1,
+                        type        = 'SUGAR',
+                        description = 'Table Sugar',
+                        origin      = 'US'
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<FERMENTABLE>',
+        '   <ADD_AFTER_BOIL>False</ADD_AFTER_BOIL>',
+        '   <AMOUNT>0.45359237</AMOUNT>',
+        '   <COLOR>1.0</COLOR>',
+        '   <NAME>Sucrose</NAME>',
+        '   <NOTES>Table Sugar</NOTES>',
+        '   <ORIGIN>US</ORIGIN>',
+        '   <TYPE>Sugar</TYPE>',
+        '   <VERSION>1</VERSION>',
+        '   <YIELD>100.0</YIELD>',
+        '</FERMENTABLE>'
+        ]) in xml
+
+    def test_extract(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use         = 'BOIL',
+                    amount      = 1,
+                    unit        = 'POUND',
+                    duration    = timedelta(seconds = 3600),
+                    fermentable = model.Fermentable(
+                        name        = 'Briess Munich LME',
+                        ppg         = 35,
+                        lovibond    = 8,
+                        type        = 'EXTRACT',
+                        description = 'Light Munich Liquid Extract',
+                        origin      = 'US'
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<FERMENTABLE>',
+        '   <ADD_AFTER_BOIL>False</ADD_AFTER_BOIL>',
+        '   <AMOUNT>0.45359237</AMOUNT>',
+        '   <COLOR>8.0</COLOR>',
+        '   <NAME>Briess Munich LME</NAME>',
+        '   <NOTES>Light Munich Liquid Extract</NOTES>',
+        '   <ORIGIN>US</ORIGIN>',
+        '   <TYPE>Extract</TYPE>',
+        '   <VERSION>1</VERSION>',
+        '   <YIELD>76.0</YIELD>',
+        '</FERMENTABLE>'
+        ]) in xml
+
+    def test_dry_extract(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use         = 'BOIL',
+                    amount      = 1,
+                    unit        = 'POUND',
+                    duration    = timedelta(seconds = 3600),
+                    fermentable = model.Fermentable(
+                        name        = 'Briess Munich DME',
+                        ppg         = 35,
+                        lovibond    = 8,
+                        type        = 'EXTRACT',
+                        description = 'Light Munich Dry Extract',
+                        origin      = 'US'
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<FERMENTABLE>',
+        '   <ADD_AFTER_BOIL>False</ADD_AFTER_BOIL>',
+        '   <AMOUNT>0.45359237</AMOUNT>',
+        '   <COLOR>8.0</COLOR>',
+        '   <NAME>Briess Munich DME</NAME>',
+        '   <NOTES>Light Munich Dry Extract</NOTES>',
+        '   <ORIGIN>US</ORIGIN>',
+        '   <TYPE>Dry Extract</TYPE>',
+        '   <VERSION>1</VERSION>',
+        '   <YIELD>76.0</YIELD>',
+        '</FERMENTABLE>'
+        ]) in xml
+
+    def test_adjunct(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use         = 'BOIL',
+                    amount      = 1,
+                    unit        = 'POUND',
+                    duration    = timedelta(seconds = 3600),
+                    fermentable = model.Fermentable(
+                        name        = 'Barley Hulls',
+                        ppg         = 0,
+                        lovibond    = 0,
+                        type        = 'ADJUNCT',
+                        description = 'Aid in lautering.',
+                        origin      = 'US'
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<FERMENTABLE>',
+        '   <ADD_AFTER_BOIL>False</ADD_AFTER_BOIL>',
+        '   <AMOUNT>0.45359237</AMOUNT>',
+        '   <COLOR>0.0</COLOR>',
+        '   <NAME>Barley Hulls</NAME>',
+        '   <NOTES>Aid in lautering.</NOTES>',
+        '   <ORIGIN>US</ORIGIN>',
+        '   <TYPE>Adjunct</TYPE>',
+        '   <VERSION>1</VERSION>',
+        '   <YIELD>0.0</YIELD>',
+        '</FERMENTABLE>'
+        ]) in xml
+
+    def test_fermentation_addition(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use         = 'PRIMARY',
+                    amount      = 1,
+                    unit        = 'POUND',
+                    duration    = timedelta(seconds = 3600),
+                    fermentable = model.Fermentable(
+                        name        = 'Sucrose',
+                        ppg         = 46,
+                        lovibond    = 1,
+                        type        = 'SUGAR',
+                        description = 'Table Sugar',
+                        origin      = 'US'
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<FERMENTABLE>',
+        '   <ADD_AFTER_BOIL>True</ADD_AFTER_BOIL>',
+        '   <AMOUNT>0.45359237</AMOUNT>',
+        '   <COLOR>1.0</COLOR>',
+        '   <NAME>Sucrose</NAME>',
+        '   <NOTES>Table Sugar</NOTES>',
+        '   <ORIGIN>US</ORIGIN>',
+        '   <TYPE>Sugar</TYPE>',
+        '   <VERSION>1</VERSION>',
+        '   <YIELD>100.0</YIELD>',
+        '</FERMENTABLE>'
+        ]) in xml
