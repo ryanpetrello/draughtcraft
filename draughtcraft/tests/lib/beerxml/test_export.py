@@ -1,4 +1,6 @@
+from draughtcraft                   import model
 from draughtcraft.lib.beerxml       import export
+from draughtcraft.tests             import TestModel
 from unittest                       import TestCase
 
 def prepare_xml(xml):
@@ -195,4 +197,61 @@ class TestRecipeNodes(TestCase):
             '   <USE>Boil</USE>',
             '   <VERSION>1</VERSION>'
             '</MISC>'
+        ])
+
+
+class TestRecipeExport(TestModel):
+
+    def test_simplest_recipe(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.'
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert xml == prepare_xml([
+        '<RECIPE>',
+        '   <BATCH_SIZE>18.927</BATCH_SIZE>',
+        '   <BOIL_SIZE>23.65875</BOIL_SIZE>',
+        '   <BOIL_TIME>60</BOIL_TIME>',
+        '   <BREWER>Ryan Petrello</BREWER>',
+        '   <EFFICIENCY>75.0</EFFICIENCY>',
+        '   <FERMENTABLES/>',
+        '   <FERMENTATION_STAGES>0</FERMENTATION_STAGES>',
+        '   <HOPS/>',
+        '   <MASH/>',
+        '   <MISCS/>',
+        '   <NAME>Rocky Mountain River IPA</NAME>',
+        '   <NOTES>This is my favorite recipe.</NOTES>',
+        '   <STYLE>',
+        '       <CATEGORY>No Style Chosen</CATEGORY>',
+        '       <CATEGORY_NUMBER>0</CATEGORY_NUMBER>',
+        '       <COLOR_MAX>0</COLOR_MAX>',
+        '       <COLOR_MIN>0</COLOR_MIN>',
+        '       <FG_MAX>0</FG_MAX>',
+        '       <FG_MIN>0</FG_MIN>',
+        '       <IBU_MAX>0</IBU_MAX>',
+        '       <IBU_MIN>0</IBU_MIN>',
+        '       <NAME></NAME>',
+        '       <OG_MAX>0</OG_MAX>',
+        '       <OG_MIN>0</OG_MIN>',
+        '       <STYLE_LETTER></STYLE_LETTER>',
+        '       <TYPE>None</TYPE>',
+        '       <VERSION>1</VERSION>',
+        '   </STYLE>',
+        '   <TYPE>All Grain</TYPE>',
+        '   <VERSION>1</VERSION>',
+        '   <WATERS/>',
+        '   <YEASTS/>',
+        '</RECIPE>'
         ])

@@ -319,6 +319,70 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
     def ibu(self):
         return self._ibu
 
+    def to_xml(self):
+        from draughtcraft.lib.beerxml import export
+        kw = {
+            'name'                : self.name,
+            'type'                : {
+                'MASH'    : 'All Grain',
+                'EXTRACT' : 'Extract'
+            }.get(self.type, 'Partial Mash'),
+            'brewer'              : self.author.printed_name,
+            'batch_size'          : self.liters,
+            'boil_size'           : self.liters * 1.25,
+            'boil_time'           : self.boil_minutes,
+            'notes'               : self.notes,
+            'fermentation_stages' : len(self.fermentation_steps),
+        }
+
+        hops = [a.to_xml() for a in self.additions if a.hop]
+        fermentables = [a.to_xml() for a in self.additions if a.fermentable]
+        yeast = [a.to_xml() for a in self.additions if a.yeast]
+        extras = [a.to_xml() for a in self.additions if a.extra]
+
+        kw['hops'] = hops
+        kw['fermentables'] = fermentables
+        kw['yeasts'] = yeast
+        kw['miscs'] = extras
+
+        kw['mash'] = []
+        kw['waters'] = []
+
+        if self.style is None:
+            kw['style'] = export.Style(
+                name            = '',
+                category        = 'No Style Chosen',
+                type            = 'None',
+                category_number = 0,
+                style_letter    = '',
+                og_min          = 0,
+                og_max          = 0,
+                ibu_min         = 0,
+                ibu_max         = 0,
+                color_min       = 0,
+                color_max       = 0,
+                fg_min          = 0,
+                fg_max          = 0
+            )
+        else:
+            kw['style'] = self.style.to_xml()
+
+        if self.type != 'Extract':
+            kw['efficiency'] = self.efficiency * 100.00
+
+        for stage in self.fermentation_steps:
+            if stage.step == 'PRIMARY':
+                kw['primary_age']  = stage.days
+                kw['primary_temp'] = stage.celsius
+            if stage.step == 'SECONDARY':
+                kw['secondary_age']  = stage.days
+                kw['secondary_temp'] = stage.celsius
+            if stage.step == 'TERTIARY':
+                kw['tertiary_age']  = stage.days
+                kw['tertiary_temp'] = stage.celsius
+
+        return export.Recipe(**kw).render()
+
 
 class RecipeAddition(Entity, DeepCopyMixin):
 
