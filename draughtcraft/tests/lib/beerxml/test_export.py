@@ -110,9 +110,9 @@ class NodeSet(TestCase):
         ])
 
 
-class TestHop(TestCase):
+class TestRecipeComponents(TestCase):
 
-    def test_hop_export(self):
+    def test_hop(self):
         assert export.Hop(
             name    = 'Target',
             alpha   = 10.5,
@@ -134,4 +134,24 @@ class TestHop(TestCase):
             '   <USE>BOIL</USE>',
             '   <VERSION>1</VERSION>',
             '</HOP>'
+        ])
+
+    def test_fermentable(self):
+        assert export.Fermentable(
+            name    = 'US 2-Row Malt',
+            type    = 'Grain',
+            amount  = 1,
+            YIELD   = 80.00,
+            color   = 1.8,
+            origin  = 'US'
+        ).render() == prepare_xml([
+            '<FERMENTABLE>',
+            '   <AMOUNT>1</AMOUNT>',
+            '   <COLOR>1.8</COLOR>',
+            '   <NAME>US 2-Row Malt</NAME>',
+            '   <ORIGIN>US</ORIGIN>',
+            '   <TYPE>Grain</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '   <YIELD>80.0</YIELD>',
+            '</FERMENTABLE>'
         ])
