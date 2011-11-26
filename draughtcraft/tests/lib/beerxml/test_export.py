@@ -155,3 +155,39 @@ class TestRecipeComponents(TestCase):
             '   <YIELD>80.0</YIELD>',
             '</FERMENTABLE>'
         ])
+
+    def test_yeast(self):
+        assert export.Yeast(
+            name        = 'Wyeast 1056 - American Ale',
+            type        = 'Ale',
+            amount      = .135,
+            form        = 'Liquid',
+            attenuation = 75.0
+        ).render() == prepare_xml([
+            '<YEAST>',
+            '   <AMOUNT>0.135</AMOUNT>',
+            '   <ATTENUATION>75.0</ATTENUATION>',
+            '   <FORM>Liquid</FORM>',
+            '   <NAME>Wyeast 1056 - American Ale</NAME>',
+            '   <TYPE>Ale</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '</YEAST>'
+        ])
+
+    def test_misc(self):
+        assert export.Misc(
+            name        = 'Irish Moss',
+            type        = 'Fining',
+            use         = 'Boil',
+            amount      = .125,
+            time        = 15,
+        ).render() == prepare_xml([
+            '<MISC>',
+            '   <AMOUNT>0.125</AMOUNT>',
+            '   <NAME>Irish Moss</NAME>',
+            '   <TIME>15</TIME>',
+            '   <TYPE>Fining</TYPE>',
+            '   <USE>Boil</USE>',
+            '   <VERSION>1</VERSION>'
+            '</MISC>'
+        ])

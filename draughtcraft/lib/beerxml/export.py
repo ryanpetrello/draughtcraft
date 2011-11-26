@@ -211,7 +211,6 @@ class Yeast(Node):
                                   # For a starter this is the size of the 
                                   # starter.
 
-    flocculation        = Field()
     attenuation         = Field()
     add_to_secondary    = Field()
 
