@@ -5,7 +5,7 @@ from elixir import (
 )
 from draughtcraft.lib.calculations  import Calculations
 from draughtcraft.lib.units         import (UnitConvert, InvalidUnitException,
-                                            to_us, to_metric)
+                                            to_us, to_metric, to_kg)
 from draughtcraft.model.deepcopy    import DeepCopyMixin, ShallowCopyMixin
 from datetime                       import datetime
 from copy                           import deepcopy
@@ -478,6 +478,52 @@ class RecipeAddition(Entity, DeepCopyMixin):
     def percentage(self):
         additions = getattr(self.recipe, self.step)
         return self.recipe._percent(additions).get(self, 0)
+
+    def to_xml(self):
+        from draughtcraft.lib.beerxml import export
+
+        if self.hop:
+
+            kw = {
+                'name'   : self.hop.name,
+                'alpha'  : self.hop.alpha_acid,
+                'amount' : to_kg(self.amount, self.unit),
+                'time'   : self.minutes,
+                'notes'  : self.hop.description,
+                'form'   : self.form.capitalize(),
+                'origin' : self.hop.origin
+            }
+
+            kw['use'] = {
+                'MASH'       : 'Mash',
+                'FIRST WORT' : 'First Wort',
+                'BOIL'       : 'Boil',
+                'POST-BOIL'  : 'Boil',
+                'FLAME OUT'  : 'Boil',
+                'PRIMARY'    : 'Dry Hop',
+                'SECONDARY'  : 'Dry Hop',
+                'TERTIARY'   : 'Dry Hop'
+            }.get(self.use)
+
+            return export.Hop(**kw)
+
+        if self.fermentable:
+            kw = {
+
+            }
+            return export.Fermentable(**kw)
+
+        if self.yeast:
+            kw = {
+
+            }
+            return export.Yeast(**kw)
+
+        if self.extra:
+            kw = {
+
+            }
+            return export.Misc(**kw)
 
 
 class HopAddition(RecipeAddition):

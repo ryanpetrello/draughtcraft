@@ -1,6 +1,7 @@
 from draughtcraft                   import model
 from draughtcraft.lib.beerxml       import export
 from draughtcraft.tests             import TestModel
+from datetime                       import timedelta
 from unittest                       import TestCase
 
 def prepare_xml(xml):
@@ -491,3 +492,98 @@ class TestRecipeExport(TestModel):
         '   <YEASTS/>',
         '</RECIPE>'
         ])
+
+
+class TestRecipeWithHops(TestModel):
+
+    def test_60_minute_boil(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.HopAddition(
+                    use         = 'BOIL',
+                    amount      = 1,
+                    unit        = 'POUND',
+                    duration    = timedelta(seconds = 3600),
+                    form        = 'PELLET',
+                    hop         = model.Hop(
+                        name        = 'Cascade',
+                        description = 'The Cascade Hop',
+                        alpha_acid  = 4.5,
+                        origin      = 'US'
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<HOP>',
+        '   <ALPHA>4.5</ALPHA>',
+        '   <AMOUNT>0.45359237</AMOUNT>', # 1lb in kg
+        '   <FORM>Pellet</FORM>',
+        '   <NAME>Cascade</NAME>',
+        '   <NOTES>The Cascade Hop</NOTES>',
+        '   <ORIGIN>US</ORIGIN>',
+        '   <TIME>60</TIME>',
+        '   <USE>Boil</USE>',
+        '   <VERSION>1</VERSION>',
+        '</HOP>'
+        ]) in xml
+
+    def test_hops_in_ounces(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.HopAddition(
+                    use         = 'BOIL',
+                    amount      = 1,
+                    unit        = 'OUNCE',
+                    duration    = timedelta(seconds = 3600),
+                    form        = 'PELLET',
+                    hop         = model.Hop(
+                        name        = 'Cascade',
+                        description = 'The Cascade Hop',
+                        alpha_acid  = 4.5,
+                        origin      = 'US'
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<HOP>',
+        '   <ALPHA>4.5</ALPHA>',
+        '   <AMOUNT>0.0283495231</AMOUNT>',
+        '   <FORM>Pellet</FORM>',
+        '   <NAME>Cascade</NAME>',
+        '   <NOTES>The Cascade Hop</NOTES>',
+        '   <ORIGIN>US</ORIGIN>',
+        '   <TIME>60</TIME>',
+        '   <USE>Boil</USE>',
+        '   <VERSION>1</VERSION>',
+        '</HOP>'
+        ]) in xml

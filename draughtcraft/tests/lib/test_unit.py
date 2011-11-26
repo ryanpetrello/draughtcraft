@@ -1,6 +1,6 @@
 from draughtcraft.lib.units         import (UnitConvert, InvalidUnitException, PoundOunceMerge, 
                                             OunceMerge, GramMerge, KilogramMerge, PoundExpansion,
-                                            to_us, to_metric, UNIT_MAP)
+                                            to_us, to_metric, to_kg, UNIT_MAP)
 from pytest                         import raises
 
 import unittest
@@ -342,3 +342,6 @@ class TestMetricConversion(unittest.TestCase):
 
     def test_passthrough(self):
         assert to_metric(*(5, 'TSP')) == (5, 'TSP')
+
+	def test_to_kg(self):
+		assert to_kg(*(5, 'POUND')) == 2.2679618500000003

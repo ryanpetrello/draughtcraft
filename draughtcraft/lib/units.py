@@ -362,3 +362,9 @@ def to_metric(amount, unit):
     if unit == 'GALLON':
         return (amount * 3.78541178, 'LITER')
     return (amount, unit)
+
+def to_kg(amount, unit):
+	amount, unit = to_metric(amount, unit)
+	if unit == 'GRAM':
+		amount /= 1000.00
+	return amount
