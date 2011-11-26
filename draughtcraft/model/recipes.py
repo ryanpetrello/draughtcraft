@@ -367,7 +367,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         else:
             kw['style'] = self.style.to_xml()
 
-        if self.type != 'Extract':
+        if self.type != 'EXTRACT':
             kw['efficiency'] = self.efficiency * 100.00
 
         for stage in self.fermentation_steps:

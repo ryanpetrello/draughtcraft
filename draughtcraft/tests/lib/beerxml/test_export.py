@@ -255,3 +255,153 @@ class TestRecipeExport(TestModel):
         '   <YEASTS/>',
         '</RECIPE>'
         ])
+
+    def test_all_grain_type(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.'
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+        assert '<TYPE>All Grain</TYPE>' in xml
+
+    def test_mini_mash_type(self):
+        model.Recipe(
+            type            = 'MINIMASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.'
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+        assert '<TYPE>Partial Mash</TYPE>' in xml
+
+    def test_steeped_grains_type(self):
+        model.Recipe(
+            type            = 'EXTRACTSTEEP',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.'
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+        assert '<TYPE>Partial Mash</TYPE>' in xml
+
+    def test_extract_type(self):
+        model.Recipe(
+            type            = 'EXTRACT',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.'
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+        assert '<TYPE>Extract</TYPE>' in xml
+        assert '<EFFICIENCY>' not in xml
+
+    def test_recipe_with_fermentation_steps(self):
+        model.Recipe(
+            type               = 'MASH',
+            name               = 'Rocky Mountain River IPA',
+            author             = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons            = 5,
+            boil_minutes       = 60,
+            notes              = u'This is my favorite recipe.',
+            fermentation_steps = [
+                model.FermentationStep(
+                    step       = 'PRIMARY',
+                    days       = 14,
+                    fahrenheit = 65
+                ),
+                model.FermentationStep(
+                    step       = 'SECONDARY',
+                    days       = 28,
+                    fahrenheit = 72
+                ),
+                model.FermentationStep(
+                    step       = 'TERTIARY',
+                    days       = 28,
+                    fahrenheit = 42
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert xml == prepare_xml([
+        '<RECIPE>',
+        '   <BATCH_SIZE>18.927</BATCH_SIZE>',
+        '   <BOIL_SIZE>23.65875</BOIL_SIZE>',
+        '   <BOIL_TIME>60</BOIL_TIME>',
+        '   <BREWER>Ryan Petrello</BREWER>',
+        '   <EFFICIENCY>75.0</EFFICIENCY>',
+        '   <FERMENTABLES/>',
+        '   <FERMENTATION_STAGES>3</FERMENTATION_STAGES>',
+        '   <HOPS/>',
+        '   <MASH/>',
+        '   <MISCS/>',
+        '   <NAME>Rocky Mountain River IPA</NAME>',
+        '   <NOTES>This is my favorite recipe.</NOTES>',
+        '   <PRIMARY_AGE>14</PRIMARY_AGE>',
+        '   <PRIMARY_TEMP>18.0</PRIMARY_TEMP>',
+        '   <SECONDARY_AGE>28</SECONDARY_AGE>',
+        '   <SECONDARY_TEMP>22.0</SECONDARY_TEMP>',
+        '   <STYLE>',
+        '       <CATEGORY>No Style Chosen</CATEGORY>',
+        '       <CATEGORY_NUMBER>0</CATEGORY_NUMBER>',
+        '       <COLOR_MAX>0</COLOR_MAX>',
+        '       <COLOR_MIN>0</COLOR_MIN>',
+        '       <FG_MAX>0</FG_MAX>',
+        '       <FG_MIN>0</FG_MIN>',
+        '       <IBU_MAX>0</IBU_MAX>',
+        '       <IBU_MIN>0</IBU_MIN>',
+        '       <NAME></NAME>',
+        '       <OG_MAX>0</OG_MAX>',
+        '       <OG_MIN>0</OG_MIN>',
+        '       <STYLE_LETTER></STYLE_LETTER>',
+        '       <TYPE>None</TYPE>',
+        '       <VERSION>1</VERSION>',
+        '   </STYLE>',
+        '   <TERTIARY_AGE>28</TERTIARY_AGE>',
+        '   <TERTIARY_TEMP>6.0</TERTIARY_TEMP>',
+        '   <TYPE>All Grain</TYPE>',
+        '   <VERSION>1</VERSION>',
+        '   <WATERS/>',
+        '   <YEASTS/>',
+        '</RECIPE>'
+        ])
