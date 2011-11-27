@@ -374,5 +374,7 @@ def to_kg(amount, unit):
 	return amount
 
 def to_l(amount, unit):
+    if unit == 'OUNCE':
+        return amount * 0.0295735296
     amount, _ = to_metric(amount, unit)
     return amount

@@ -1574,3 +1574,305 @@ class TestRecipeWithYeast(TestModel):
         '   <VERSION>1</VERSION>',
         '</YEAST>'
         ]) in xml
+
+
+class TestRecipeWithExtras(TestModel):
+
+    def test_mash_extra(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use         = 'MASH',
+                    amount      = 1,
+                    unit        = 'OUNCE',
+                    extra       = model.Extra(
+                        name        = 'Irish Moss',
+                        description = 'A fining agent.',
+                        type        = 'FINING',
+                        liquid      = False
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<MISC>',
+        '   <AMOUNT>0.0283495231</AMOUNT>',
+        '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
+        '   <NAME>Irish Moss</NAME>',
+        '   <NOTES>A fining agent.</NOTES>',
+        '   <TIME>0</TIME>',
+        '   <TYPE>Fining</TYPE>',
+        '   <USE>Mash</USE>',
+        '   <VERSION>1</VERSION>'
+        '</MISC>'
+        ]) in xml
+
+    def test_boil_extra(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use         = 'BOIL',
+                    amount      = 1,
+                    unit        = 'OUNCE',
+                    duration    = timedelta(minutes=15),
+                    extra       = model.Extra(
+                        name        = 'Irish Moss',
+                        description = 'A fining agent.',
+                        type        = 'FINING',
+                        liquid      = False
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<MISC>',
+        '   <AMOUNT>0.0283495231</AMOUNT>',
+        '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
+        '   <NAME>Irish Moss</NAME>',
+        '   <NOTES>A fining agent.</NOTES>',
+        '   <TIME>15</TIME>',
+        '   <TYPE>Fining</TYPE>',
+        '   <USE>Boil</USE>',
+        '   <VERSION>1</VERSION>'
+        '</MISC>'
+        ]) in xml
+
+    def test_primary_extra(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use         = 'PRIMARY',
+                    amount      = 1,
+                    unit        = 'OUNCE',
+                    extra       = model.Extra(
+                        name        = 'Irish Moss',
+                        description = 'A fining agent.',
+                        type        = 'FINING',
+                        liquid      = False
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<MISC>',
+        '   <AMOUNT>0.0283495231</AMOUNT>',
+        '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
+        '   <NAME>Irish Moss</NAME>',
+        '   <NOTES>A fining agent.</NOTES>',
+        '   <TIME>0</TIME>',
+        '   <TYPE>Fining</TYPE>',
+        '   <USE>Primary</USE>',
+        '   <VERSION>1</VERSION>'
+        '</MISC>'
+        ]) in xml
+
+    def test_secondary_extra(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use         = 'SECONDARY',
+                    amount      = 1,
+                    unit        = 'OUNCE',
+                    extra       = model.Extra(
+                        name        = 'Irish Moss',
+                        description = 'A fining agent.',
+                        type        = 'FINING',
+                        liquid      = False
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<MISC>',
+        '   <AMOUNT>0.0283495231</AMOUNT>',
+        '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
+        '   <NAME>Irish Moss</NAME>',
+        '   <NOTES>A fining agent.</NOTES>',
+        '   <TIME>0</TIME>',
+        '   <TYPE>Fining</TYPE>',
+        '   <USE>Secondary</USE>',
+        '   <VERSION>1</VERSION>'
+        '</MISC>'
+        ]) in xml
+
+    def test_tertiary_extra(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use         = 'TERTIARY',
+                    amount      = 1,
+                    unit        = 'OUNCE',
+                    extra       = model.Extra(
+                        name        = 'Irish Moss',
+                        description = 'A fining agent.',
+                        type        = 'FINING',
+                        liquid      = False
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<MISC>',
+        '   <AMOUNT>0.0283495231</AMOUNT>',
+        '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
+        '   <NAME>Irish Moss</NAME>',
+        '   <NOTES>A fining agent.</NOTES>',
+        '   <TIME>0</TIME>',
+        '   <TYPE>Fining</TYPE>',
+        '   <USE>Secondary</USE>',
+        '   <VERSION>1</VERSION>'
+        '</MISC>'
+        ]) in xml
+
+    def test_liquid_extra(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use         = 'PRIMARY',
+                    amount      = 1,
+                    unit        = 'OUNCE',
+                    extra       = model.Extra(
+                        name        = 'Strawberry Flavoring',
+                        description = 'Tastes like strawberries.',
+                        type        = 'FLAVOR',
+                        liquid      = True
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<MISC>',
+        '   <AMOUNT>0.0295735296</AMOUNT>',
+        '   <NAME>Strawberry Flavoring</NAME>',
+        '   <NOTES>Tastes like strawberries.</NOTES>',
+        '   <TIME>0</TIME>',
+        '   <TYPE>Flavor</TYPE>',
+        '   <USE>Primary</USE>',
+        '   <VERSION>1</VERSION>'
+        '</MISC>'
+        ]) in xml
+
+    def test_no_unit_extra(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use         = 'PRIMARY',
+                    amount      = 1,
+                    extra       = model.Extra(
+                        name        = 'Whirlfloc Tablet',
+                        description = 'A fining agent.',
+                        type        = 'FINING'
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<MISC>',
+        '   <AMOUNT>0.015</AMOUNT>',
+        '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
+        '   <NAME>Whirlfloc Tablet</NAME>',
+        '   <NOTES>A fining agent.</NOTES>',
+        '   <TIME>0</TIME>',
+        '   <TYPE>Fining</TYPE>',
+        '   <USE>Primary</USE>',
+        '   <VERSION>1</VERSION>'
+        '</MISC>'
+        ]) in xml

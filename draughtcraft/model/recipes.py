@@ -11,6 +11,8 @@ from datetime                       import datetime
 from copy                           import deepcopy
 from sys                            import maxint
 
+import string
+
 
 class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
 
@@ -570,9 +572,10 @@ class RecipeAddition(Entity, DeepCopyMixin):
 
         if self.extra:
             kw = {
-                'name' : self.extra.name,
-                'type' : string.capwords(self.extra.type),
-                'time' : self.minutes
+                'name'  : self.extra.name,
+                'type'  : string.capwords(self.extra.type),
+                'time'  : self.minutes,
+                'notes' : self.extra.description
             }
 
             kw['use'] = {
@@ -587,12 +590,16 @@ class RecipeAddition(Entity, DeepCopyMixin):
             }.get(self.use)
 
             if self.unit is None:
+                #
+                # If there's no unit (meaning it's just one "unit"), assume
+                # a weight of 15 grams.
+                #
                 kw['amount'] = 0.015
                 kw['amount_is_weight'] = True
             elif self.extra.liquid:
-                kw['amount'] = to_l(self.amount)
+                kw['amount'] = to_l(self.amount, self.unit)
             else:
-                kw['amount'] = to_kg(self.amount)
+                kw['amount'] = to_kg(self.amount, self.unit)
                 kw['amount_is_weight'] = True
 
             return export.Misc(**kw)
