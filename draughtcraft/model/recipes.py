@@ -71,7 +71,6 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         'current_draft',
         'published_version',
         'copies',
-        'copied_from',
         'views',
         'creation_date',
         'state',

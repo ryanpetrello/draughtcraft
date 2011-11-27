@@ -47,6 +47,11 @@
     ${h.form('async/name', class_='name')}
       <h1>
         ${h.text('name', value=recipe.name)}
+        % if recipe.copied_from:
+          <span class="copied_from">  
+            based on <a href="${recipe.copied_from.url()}">${recipe.copied_from.author.username}'s recipe</a>
+          </span>
+        % endif
       </h1> 
     ${h.end_form()}
     <fieldset>
