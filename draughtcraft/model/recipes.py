@@ -493,7 +493,7 @@ class RecipeAddition(Entity, DeepCopyMixin):
                 'time'   : self.minutes,
                 'notes'  : self.hop.description,
                 'form'   : self.form.capitalize(),
-                'origin' : self.hop.origin
+                'origin' : self.hop.printed_origin
             }
 
             kw['use'] = {
@@ -516,7 +516,7 @@ class RecipeAddition(Entity, DeepCopyMixin):
                 'yield'          : self.fermentable.percent_yield,
                 'color'          : self.fermentable.lovibond,
                 'add_after_boil' : self.step == 'fermentation',
-                'origin'         : self.fermentable.origin,
+                'origin'         : self.fermentable.printed_origin,
                 'notes'          : self.fermentable.description
             }
 

@@ -35,6 +35,13 @@ class Ingredient(Entity, ShallowCopyMixin):
     def printed_name(self):
         return self.name
 
+    @property
+    def printed_origin(self):
+        origin = self.origin
+        if len(origin) > 2:
+            origin = origin.title()
+        return origin
+
 
 class Fermentable(Ingredient):
 
@@ -57,10 +64,7 @@ class Fermentable(Ingredient):
 
     @property
     def printed_name(self):
-        origin = self.origin
-        if len(origin) > 2:
-            origin = origin.title()
-        return '%s (%s)' % (self.name, origin)
+        return '%s (%s)' % (self.name, self.printed_origin)
 
     @property
     def printed_type(self):
@@ -86,10 +90,7 @@ class Hop(Ingredient):
 
     @property
     def printed_name(self):
-        origin = self.origin
-        if len(origin) > 2:
-            origin = origin.title()
-        return '%s (%s)' % (self.name, origin)
+        return '%s (%s)' % (self.name, self.printed_origin)
 
 
 class Yeast(Ingredient):
