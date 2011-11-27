@@ -95,7 +95,7 @@ class Node(object):
                 # name of the field.
                 #
                 if isinstance(value, Field):
-                    cls.__fields__[key] = value
+                    cls.__fields__[key.lower()] = value
                     value.name = key
 
                 #
@@ -143,8 +143,8 @@ class Node(object):
                 ns.update({
                     key: value.render(xml=False)
                 })
-            elif key in self.__fields__:
-                field = self.__fields__[key]
+            elif key.lower() in self.__fields__:
+                field = self.__fields__[key.lower()]
                 # Get the `transform`'ed value and store it in the namespace.
                 fval = field.get_value(value)
                 ns.update(fval)

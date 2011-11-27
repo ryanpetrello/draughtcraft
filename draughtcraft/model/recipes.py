@@ -511,7 +511,7 @@ class RecipeAddition(Entity, DeepCopyMixin):
             kw = {
                 'name'           : self.fermentable.name,
                 'amount'         : to_kg(self.amount, self.unit),
-                'YIELD'          : self.fermentable.percent_yield,
+                'yield'          : self.fermentable.percent_yield,
                 'color'          : self.fermentable.lovibond,
                 'add_after_boil' : self.step == 'fermentation',
                 'origin'         : self.fermentable.origin,
