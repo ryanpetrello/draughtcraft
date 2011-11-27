@@ -54,14 +54,16 @@
       % endif
     </ul>
 
-    <ul class="badge">
-      <li class="first views" title="${h.plural(len(recipe.views), 'View', 'Views', True)}">
-        ${len(recipe.views)}
-      </li> 
-      <li class="copies" title="${h.plural(len(recipe.copies), 'Copy', 'Copies', True)}">
-        ${len(recipe.copies)}
-      </li> 
-    </ul>
+    % if recipe.state == 'PUBLISHED':
+      <ul class="badge">
+        <li class="first views" title="${h.plural(len(recipe.views), 'View', 'Views', True)}">
+          ${len(recipe.views)}
+        </li> 
+        <li class="copies" title="${h.plural(len(recipe.copies), 'Copy', 'Copies', True)}">
+          ${len(recipe.copies)}
+        </li> 
+      </ul>
+    % endif
 
   </div>
 
