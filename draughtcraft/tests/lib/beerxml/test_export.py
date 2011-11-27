@@ -1195,3 +1195,386 @@ class TestRecipeWithFermentables(TestModel):
         '   <YIELD>100.0</YIELD>',
         '</FERMENTABLE>'
         ]) in xml
+
+class TestRecipeWithYeast(TestModel):
+
+    def test_ale_yeast(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use     = 'PRIMARY',
+                    yeast   = model.Yeast(
+                        name        = 'Wyeast 1056 - American Ale',
+                        type        = 'ALE',
+                        form        = 'LIQUID',
+                        attenuation = 0.75,
+                        description = 'A yeast for American Ales.',
+                        origin      = 'US'
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<YEAST>',
+        '   <AMOUNT>0.125</AMOUNT>',
+        '   <ATTENUATION>75.0</ATTENUATION>',
+        '   <FORM>Liquid</FORM>',
+        '   <NAME>Wyeast 1056 - American Ale</NAME>',
+        '   <NOTES>A yeast for American Ales.</NOTES>',
+        '   <TYPE>Ale</TYPE>',
+        '   <VERSION>1</VERSION>',
+        '</YEAST>'
+        ]) in xml
+    
+    def test_wild_yeast(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use     = 'PRIMARY',
+                    yeast   = model.Yeast(
+                        name        = 'Wyeast 5112 - Brettanomyces Bruxellensis',
+                        type        = 'WILD',
+                        form        = 'LIQUID',
+                        attenuation = 0.75,
+                        description = 'A yeast for wild ales.',
+                        origin      = 'US'
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<YEAST>',
+        '   <AMOUNT>0.125</AMOUNT>',
+        '   <ATTENUATION>75.0</ATTENUATION>',
+        '   <FORM>Liquid</FORM>',
+        '   <NAME>Wyeast 5112 - Brettanomyces Bruxellensis</NAME>',
+        '   <NOTES>A yeast for wild ales.</NOTES>',
+        '   <TYPE>Ale</TYPE>',
+        '   <VERSION>1</VERSION>',
+        '</YEAST>'
+        ]) in xml
+
+    def test_lager_yeast(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use     = 'PRIMARY',
+                    yeast   = model.Yeast(
+                        name        = 'Wyeast 2035 - American Lager',
+                        type        = 'LAGER',
+                        form        = 'LIQUID',
+                        attenuation = 0.75,
+                        description = 'A yeast for American Lagers.',
+                        origin      = 'US'
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<YEAST>',
+        '   <AMOUNT>0.125</AMOUNT>',
+        '   <ATTENUATION>75.0</ATTENUATION>',
+        '   <FORM>Liquid</FORM>',
+        '   <NAME>Wyeast 2035 - American Lager</NAME>',
+        '   <NOTES>A yeast for American Lagers.</NOTES>',
+        '   <TYPE>Lager</TYPE>',
+        '   <VERSION>1</VERSION>',
+        '</YEAST>'
+        ]) in xml
+
+    def test_mead_yeast(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use     = 'PRIMARY',
+                    yeast   = model.Yeast(
+                        name        = 'Wyeast 4184 - Sweet Mead',
+                        type        = 'MEAD',
+                        form        = 'LIQUID',
+                        attenuation = 0.75,
+                        description = 'A yeast for meads.',
+                        origin      = 'US'
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<YEAST>',
+        '   <AMOUNT>0.125</AMOUNT>',
+        '   <ATTENUATION>75.0</ATTENUATION>',
+        '   <FORM>Liquid</FORM>',
+        '   <NAME>Wyeast 4184 - Sweet Mead</NAME>',
+        '   <NOTES>A yeast for meads.</NOTES>',
+        '   <TYPE>Wine</TYPE>',
+        '   <VERSION>1</VERSION>',
+        '</YEAST>'
+        ]) in xml
+
+    def test_cider_yeast(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use     = 'PRIMARY',
+                    yeast   = model.Yeast(
+                        name        = 'Wyeast 4766 - Cider',
+                        type        = 'CIDER',
+                        form        = 'LIQUID',
+                        attenuation = 0.75,
+                        description = 'A yeast for ciders.',
+                        origin      = 'US'
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<YEAST>',
+        '   <AMOUNT>0.125</AMOUNT>',
+        '   <ATTENUATION>75.0</ATTENUATION>',
+        '   <FORM>Liquid</FORM>',
+        '   <NAME>Wyeast 4766 - Cider</NAME>',
+        '   <NOTES>A yeast for ciders.</NOTES>',
+        '   <TYPE>Wine</TYPE>',
+        '   <VERSION>1</VERSION>',
+        '</YEAST>'
+        ]) in xml
+
+    def test_wine_yeast(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use     = 'PRIMARY',
+                    yeast   = model.Yeast(
+                        name        = 'White Labs WLP715 - Champagne Yeast',
+                        type        = 'WINE',
+                        form        = 'LIQUID',
+                        attenuation = 0.75,
+                        description = 'A yeast for wine.',
+                        origin      = 'US'
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<YEAST>',
+        '   <AMOUNT>0.125</AMOUNT>',
+        '   <ATTENUATION>75.0</ATTENUATION>',
+        '   <FORM>Liquid</FORM>',
+        '   <NAME>White Labs WLP715 - Champagne Yeast</NAME>',
+        '   <NOTES>A yeast for wine.</NOTES>',
+        '   <TYPE>Wine</TYPE>',
+        '   <VERSION>1</VERSION>',
+        '</YEAST>'
+        ]) in xml
+
+    def test_dry_yeast(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use     = 'PRIMARY',
+                    yeast   = model.Yeast(
+                        name        = 'DCL S-04 - SafAle English Ale',
+                        type        = 'ALE',
+                        form        = 'DRY',
+                        attenuation = 0.75,
+                        description = 'A dry yeast.',
+                        origin      = 'US'
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<YEAST>',
+        '   <AMOUNT>0.0115</AMOUNT>',
+        '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
+        '   <ATTENUATION>75.0</ATTENUATION>',
+        '   <FORM>Dry</FORM>',
+        '   <NAME>DCL S-04 - SafAle English Ale</NAME>',
+        '   <NOTES>A dry yeast.</NOTES>',
+        '   <TYPE>Ale</TYPE>',
+        '   <VERSION>1</VERSION>',
+        '</YEAST>'
+        ]) in xml
+
+    def test_yeast_in_secondary(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use     = 'SECONDARY',
+                    yeast   = model.Yeast(
+                        name        = 'Wyeast 1056 - American Ale',
+                        type        = 'ALE',
+                        form        = 'LIQUID',
+                        attenuation = 0.75,
+                        description = 'A yeast for American Ales.',
+                        origin      = 'US'
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<YEAST>',
+        '   <ADD_TO_SECONDARY>True</ADD_TO_SECONDARY>',
+        '   <AMOUNT>0.125</AMOUNT>',
+        '   <ATTENUATION>75.0</ATTENUATION>',
+        '   <FORM>Liquid</FORM>',
+        '   <NAME>Wyeast 1056 - American Ale</NAME>',
+        '   <NOTES>A yeast for American Ales.</NOTES>',
+        '   <TYPE>Ale</TYPE>',
+        '   <VERSION>1</VERSION>',
+        '</YEAST>'
+        ]) in xml
+
+    def test_yeast_in_tertiary(self):
+        model.Recipe(
+            type            = 'MASH',
+            name            = 'Rocky Mountain River IPA',
+            author          = model.User(
+                first_name  = u'Ryan',
+                last_name   = u'Petrello'
+            ),
+            gallons         = 5,
+            boil_minutes    = 60,
+            notes           = u'This is my favorite recipe.',
+            additions       = [
+                model.RecipeAddition(
+                    use     = 'TERTIARY',
+                    yeast   = model.Yeast(
+                        name        = 'Wyeast 1056 - American Ale',
+                        type        = 'ALE',
+                        form        = 'LIQUID',
+                        attenuation = 0.75,
+                        description = 'A yeast for American Ales.',
+                        origin      = 'US'
+                    )
+                )
+            ]
+        )
+        model.commit()
+
+        recipe = model.Recipe.query.first()
+        xml = recipe.to_xml()
+
+        assert prepare_xml([
+        '<YEAST>',
+        '   <ADD_TO_SECONDARY>True</ADD_TO_SECONDARY>',
+        '   <AMOUNT>0.125</AMOUNT>',
+        '   <ATTENUATION>75.0</ATTENUATION>',
+        '   <FORM>Liquid</FORM>',
+        '   <NAME>Wyeast 1056 - American Ale</NAME>',
+        '   <NOTES>A yeast for American Ales.</NOTES>',
+        '   <TYPE>Ale</TYPE>',
+        '   <VERSION>1</VERSION>',
+        '</YEAST>'
+        ]) in xml

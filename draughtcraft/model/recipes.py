@@ -533,8 +533,39 @@ class RecipeAddition(Entity, DeepCopyMixin):
 
         if self.yeast:
             kw = {
-
+                'name'        : self.yeast.name,
+                'form'        : self.yeast.form.capitalize(),
+                'attenuation' : self.yeast.attenuation * 100.00,
+                'notes'       : self.yeast.description
             }
+
+            # Map types as appropriately as possible to BeerXML <TYPE>'s.
+            kw['type'] = {
+                'ALE'   : 'Ale',
+                'LAGER' : 'Lager',
+                'WILD'  : 'Ale',
+                'MEAD'  : 'Wine',
+                'CIDER' : 'Wine',
+                'WINE'  : 'Wine'
+            }.get(self.yeast.type)
+
+            if self.yeast.form == 'LIQUID':
+                #
+                # If the yeast is liquid, it's probably a activator/vial.  For
+                # simplicity, we'll assume Wyeast's volume, 125ml.
+                #
+                kw['amount'] = 0.125
+            else:
+                #
+                # If the yeast is dry, it's probably a small packet.  For
+                # simplicity, we'll assume a standard weight of 11.5g.
+                #
+                kw['amount'] = 0.0115
+                kw['amount_is_weight'] = True
+
+            if self.use in ('SECONDARY', 'TERTIARY'):
+                kw['add_to_secondary'] = True
+
             return export.Yeast(**kw)
 
         if self.extra:

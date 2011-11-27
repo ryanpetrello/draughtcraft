@@ -233,8 +233,11 @@ class Yeast(Node):
                                   # For a starter this is the size of the 
                                   # starter.
 
+    amount_is_weight    = Field() # True if amount is weight (kg).
+
     attenuation         = Field()
     add_to_secondary    = Field()
+    notes               = Field()
 
 
 class Misc(Node):
