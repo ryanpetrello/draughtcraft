@@ -1,6 +1,6 @@
 from elixir import (
     Entity, Field, Integer, Float, Unicode,
-    UnicodeText, Enum, using_options,
+    UnicodeText, Boolean, Enum, using_options,
     OneToMany
 )
 from draughtcraft.model.deepcopy    import ShallowCopyMixin
@@ -142,3 +142,4 @@ class Extra(Ingredient):
     additions           = OneToMany('RecipeAddition', inverse='extra')
 
     type                = Field(Enum(*TYPES, native_enum=False))
+    liquid              = Field(Boolean)

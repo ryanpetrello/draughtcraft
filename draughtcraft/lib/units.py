@@ -361,6 +361,10 @@ def to_metric(amount, unit):
         return (amount * 28.3495231, 'GRAM')
     if unit == 'GALLON':
         return (amount * 3.78541178, 'LITER')
+    if unit == 'TEASPOON':
+        return (amount * 0.00492892159, 'LITER')
+    if unit == 'TABLESPOON':
+        return (amount * 0.0147867648, 'LITER')
     return (amount, unit)
 
 def to_kg(amount, unit):
@@ -368,3 +372,7 @@ def to_kg(amount, unit):
 	if unit == 'GRAM':
 		amount /= 1000.00
 	return amount
+
+def to_l(amount, unit):
+    amount, _ = to_metric(amount, unit)
+    return amount

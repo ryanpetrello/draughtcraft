@@ -262,6 +262,7 @@ class Misc(Node):
                                   #  kilograms.
 
     amount_is_weight    = Field()
+    notes               = Field()
 
 
 class Style(Node):

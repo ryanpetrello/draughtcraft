@@ -5,7 +5,7 @@ from elixir import (
 )
 from draughtcraft.lib.calculations  import Calculations
 from draughtcraft.lib.units         import (UnitConvert, InvalidUnitException,
-                                            to_us, to_metric, to_kg)
+                                            to_us, to_metric, to_kg, to_l)
 from draughtcraft.model.deepcopy    import DeepCopyMixin, ShallowCopyMixin
 from datetime                       import datetime
 from copy                           import deepcopy
@@ -570,8 +570,31 @@ class RecipeAddition(Entity, DeepCopyMixin):
 
         if self.extra:
             kw = {
-
+                'name' : self.extra.name,
+                'type' : string.capwords(self.extra.type),
+                'time' : self.minutes
             }
+
+            kw['use'] = {
+                'MASH'       : 'Mash',
+                'FIRST WORT' : 'Boil',
+                'BOIL'       : 'Boil',
+                'POST-BOIL'  : 'Boil',
+                'FLAME OUT'  : 'Boil',
+                'PRIMARY'    : 'Primary',
+                'SECONDARY'  : 'Secondary',
+                'TERTIARY'   : 'Secondary'
+            }.get(self.use)
+
+            if self.unit is None:
+                kw['amount'] = 0.015
+                kw['amount_is_weight'] = True
+            elif self.extra.liquid:
+                kw['amount'] = to_l(self.amount)
+            else:
+                kw['amount'] = to_kg(self.amount)
+                kw['amount_is_weight'] = True
+
             return export.Misc(**kw)
 
 

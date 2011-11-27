@@ -117,6 +117,10 @@ def populate():
             for k,v in kwargs.items():
                 if not ne(getattr(ingredient, k), v):
                     changed = True
+
+                if k == 'liquid':
+                    v = True if v == 1 else False
+
                 setattr(ingredient, k, v)
 
             if new is True:
