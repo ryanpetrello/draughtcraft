@@ -34,6 +34,9 @@
       ${h.form("%scopy" % recipe.url())}
         <li class="first copy btn submit" title="Copy this Recipe"></li>
       ${h.end_form()}
+      ${h.form("%sxml" % recipe.url())}
+        <li class="xml btn submit" title="Download BeerXML"></li>
+      ${h.end_form()}
       % if h.request.context['user'] == recipe.author and recipe.state == 'PUBLISHED':
         <form method="GET" action="${recipe.url()}">
           <li class="preview btn submit" title="Preview this Recipe"></li>

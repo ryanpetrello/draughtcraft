@@ -21,6 +21,9 @@
         </form>
       % endif
       % if not editable:
+        ${h.form("%sxml" % recipe.url())}
+          <li class="xml submit" title="Download BeerXML"></li>
+        ${h.end_form()}
         ${h.form("%scopy" % recipe.url())}
           <li class="copy submit last" title="Copy this Recipe"></li>
         ${h.end_form()}
