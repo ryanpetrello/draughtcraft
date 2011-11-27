@@ -1,9 +1,10 @@
 from pecan                                      import (expose, request, abort,
-                                                        redirect)
+                                                        response, redirect)
 from sqlalchemy                                 import (select, and_, or_, asc,
                                                         desc, func, case,
                                                         literal)
 from draughtcraft                               import model
+from draughtcraft.lib.beerxml					import export
 from draughtcraft.lib.schemas.recipes.browse    import RecipeSearchSchema
 from create                                     import RecipeCreationController
 from builder                                    import RecipeBuilderController
@@ -30,6 +31,16 @@ class SlugController(object):
             recipe      = recipe,
             editable    = False
         )
+
+    @expose(content_type='application/xml')
+    def xml(self):
+		recipe = request.context['recipe']
+		if recipe.state == "DRAFT":
+			if recipe.author and recipe.author != request.context['user']:
+				abort(404)
+
+		response.headers['Content-Disposition'] = 'attachment; filename="%s.xml"' % self.slug
+		return export.to_xml([request.context['recipe']])
 
     @expose(generic=True)
     def async(self): abort(405)

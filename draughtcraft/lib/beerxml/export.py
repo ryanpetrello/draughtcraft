@@ -1,4 +1,6 @@
+from genshi             import XML
 from genshi.builder     import Element
+from genshi.template    import MarkupTemplate
 from BeautifulSoup      import UnicodeDammit
 
 import unicodedata
@@ -331,3 +333,11 @@ class Recipe(Node):
     secondary_temp      = Field()
     tertiary_age        = Field()
     tertiary_temp       = Field()
+
+
+def to_xml(recipes):
+    c = '<?xml version="1.0" encoding="ISO-8859-1"?><RECIPES>${xml}</RECIPES>'
+    tmpl = MarkupTemplate(c)
+    return tmpl.generate(
+        xml = XML(''.join([r.to_xml() for r in recipes])),
+    ).render()
