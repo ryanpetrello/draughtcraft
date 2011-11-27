@@ -500,8 +500,8 @@ class RecipeAddition(Entity, DeepCopyMixin):
                 'MASH'       : 'Mash',
                 'FIRST WORT' : 'First Wort',
                 'BOIL'       : 'Boil',
-                'POST-BOIL'  : 'Boil',
-                'FLAME OUT'  : 'Boil',
+                'POST-BOIL'  : 'Aroma',
+                'FLAME OUT'  : 'Aroma',
                 'PRIMARY'    : 'Dry Hop',
                 'SECONDARY'  : 'Dry Hop',
                 'TERTIARY'   : 'Dry Hop'

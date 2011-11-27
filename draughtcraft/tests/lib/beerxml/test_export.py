@@ -627,7 +627,7 @@ class TestRecipeWithHops(TestModel):
         '   <NOTES>The Cascade Hop</NOTES>',
         '   <ORIGIN>US</ORIGIN>',
         '   <TIME>0</TIME>',
-        '   <USE>Boil</USE>',
+        '   <USE>Aroma</USE>',
         '   <VERSION>1</VERSION>',
         '</HOP>'
         ]) in xml
@@ -672,7 +672,7 @@ class TestRecipeWithHops(TestModel):
         '   <NOTES>The Cascade Hop</NOTES>',
         '   <ORIGIN>US</ORIGIN>',
         '   <TIME>0</TIME>',
-        '   <USE>Boil</USE>',
+        '   <USE>Aroma</USE>',
         '   <VERSION>1</VERSION>',
         '</HOP>'
         ]) in xml
