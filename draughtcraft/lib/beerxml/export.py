@@ -109,10 +109,6 @@ class Node(object):
                     value.name = key
     
     def __init__(self, entity=None, **kw):
-        # If an entity with an XML namespace is passed, use it
-        if entity is not None and hasattr(entity, 'xmlns'):
-            kw.update(entity.xmlns)
-
         # Every node must specify <VERSION>1</VERSION>.
         kw.update({'version':1})
 
