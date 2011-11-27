@@ -558,7 +558,6 @@ class TestRecipeWithHops(TestModel):
                     use         = 'MASH',
                     amount      = 1,
                     unit        = 'POUND',
-                    duration    = timedelta(seconds = 3600),
                     form        = 'PELLET',
                     hop         = model.Hop(
                         name        = 'Cascade',
@@ -582,7 +581,7 @@ class TestRecipeWithHops(TestModel):
         '   <NAME>Cascade</NAME>',
         '   <NOTES>The Cascade Hop</NOTES>',
         '   <ORIGIN>US</ORIGIN>',
-        '   <TIME>60</TIME>',
+        '   <TIME>0</TIME>',
         '   <USE>Mash</USE>',
         '   <VERSION>1</VERSION>',
         '</HOP>'
@@ -604,7 +603,6 @@ class TestRecipeWithHops(TestModel):
                     use         = 'POST-BOIL',
                     amount      = 1,
                     unit        = 'POUND',
-                    duration    = timedelta(seconds = 3600),
                     form        = 'PELLET',
                     hop         = model.Hop(
                         name        = 'Cascade',
@@ -628,7 +626,7 @@ class TestRecipeWithHops(TestModel):
         '   <NAME>Cascade</NAME>',
         '   <NOTES>The Cascade Hop</NOTES>',
         '   <ORIGIN>US</ORIGIN>',
-        '   <TIME>60</TIME>',
+        '   <TIME>0</TIME>',
         '   <USE>Boil</USE>',
         '   <VERSION>1</VERSION>',
         '</HOP>'
@@ -650,7 +648,6 @@ class TestRecipeWithHops(TestModel):
                     use         = 'FLAME OUT',
                     amount      = 1,
                     unit        = 'POUND',
-                    duration    = timedelta(seconds = 3600),
                     form        = 'PELLET',
                     hop         = model.Hop(
                         name        = 'Cascade',
@@ -674,7 +671,7 @@ class TestRecipeWithHops(TestModel):
         '   <NAME>Cascade</NAME>',
         '   <NOTES>The Cascade Hop</NOTES>',
         '   <ORIGIN>US</ORIGIN>',
-        '   <TIME>60</TIME>',
+        '   <TIME>0</TIME>',
         '   <USE>Boil</USE>',
         '   <VERSION>1</VERSION>',
         '</HOP>'
@@ -696,7 +693,6 @@ class TestRecipeWithHops(TestModel):
                     use         = 'PRIMARY',
                     amount      = 1,
                     unit        = 'POUND',
-                    duration    = timedelta(seconds = 3600),
                     form        = 'PELLET',
                     hop         = model.Hop(
                         name        = 'Cascade',
@@ -720,7 +716,7 @@ class TestRecipeWithHops(TestModel):
         '   <NAME>Cascade</NAME>',
         '   <NOTES>The Cascade Hop</NOTES>',
         '   <ORIGIN>US</ORIGIN>',
-        '   <TIME>60</TIME>',
+        '   <TIME>0</TIME>',
         '   <USE>Dry Hop</USE>',
         '   <VERSION>1</VERSION>',
         '</HOP>'
