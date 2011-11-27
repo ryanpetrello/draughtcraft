@@ -309,7 +309,7 @@ class TestRecipeExport(TestModel):
 
         recipe = model.Recipe.query.first()
         xml = recipe.to_xml()
-        assert '<TYPE>Partial Mash</TYPE>' in xml
+        assert '<TYPE>Extract</TYPE>' in xml
 
     def test_extract_type(self):
         model.Recipe(

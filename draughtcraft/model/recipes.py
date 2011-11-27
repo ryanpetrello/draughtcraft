@@ -326,9 +326,9 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         kw = {
             'name'                : self.name,
             'type'                : {
-                'MASH'    : 'All Grain',
-                'EXTRACT' : 'Extract'
-            }.get(self.type, 'Partial Mash'),
+                'MASH'         : 'All Grain',
+                'MINIMASH'     : 'Partial Mash'
+            }.get(self.type, 'Extract'),
             'brewer'              : self.author.printed_name,
             'batch_size'          : self.liters,
             'boil_size'           : self.liters * 1.25,
