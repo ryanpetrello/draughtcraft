@@ -30,12 +30,16 @@
       <li>
         <b>Form:</b> ${ingredient.form.capitalize()}
       </li>
-      <li>
-        <b>Attenuation:</b> ${h.format_percentage(ingredient.attenuation)}
-      </li>
-      <li>
-        <b>Flocculation:</b> ${'/'.join([v.capitalize() for v in ingredient.flocculation.split('/')])}
-      </li>
+      % if ingredient.attenuation:
+        <li>
+          <b>Attenuation:</b> ${h.format_percentage(ingredient.attenuation)}
+        </li>
+      % endif
+      % if ingredient.flocculation:
+        <li>
+          <b>Flocculation:</b> ${'/'.join([v.capitalize() for v in ingredient.flocculation.split('/')])}
+        </li>
+      % endif
     </ul>
   </%def>
 
