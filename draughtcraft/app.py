@@ -2,7 +2,6 @@ from pecan                      import make_app
 from pecan.hooks                import TransactionHook
 from draughtcraft               import model
 from draughtcraft.lib.auth      import AuthenticationHook
-from draughtcraft.lib.csrf      import CSRFPreventionHook 
 from draughtcraft.lib.minify    import ResourceLookupMiddleware
 from draughtcraft.templates     import helpers
 from lesspy                     import Less
@@ -50,8 +49,7 @@ def setup_app(config):
                 model.rollback,
                 model.clear
             ),
-            AuthenticationHook(),
-            CSRFPreventionHook() 
+            AuthenticationHook()
         ],   
         extra_template_vars = dict(
             h           = helpers

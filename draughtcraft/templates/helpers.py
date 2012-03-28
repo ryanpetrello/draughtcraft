@@ -3,7 +3,6 @@ from draughtcraft                       import model
 from draughtcraft.lib.notice            import notices
 from webhelpers.html.tags               import *
 from webhelpers.text                    import *
-from draughtcraft.lib.csrf              import secure_form as form
 
 #
 # Resources, minification, and automatic resource file merging

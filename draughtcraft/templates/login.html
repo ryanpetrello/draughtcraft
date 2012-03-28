@@ -38,19 +38,19 @@
   % endif
 
   ${h.form('')}
+    ${form.csrf_token}
     <fieldset>
       <dl class="clearfix">
-        <dt><label for="name">Username</label></dt>
+        <dt>${form.username.label}</dt>
         <dd>
-          ${h.text(
-            'username', 
+          ${form.username(
             tabindex = '1', 
             size = '256'
           )}
         </dd>
-        <dt><label for="name">Password</label></dt>
+        <dt><label for="name">${form.password.label}</label></dt>
         <dd>
-          ${h.password('password', size = '256')}
+          ${form.password(size = '256')}
         </dd>
       </dl>
     </fieldset>

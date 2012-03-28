@@ -1,9 +1,9 @@
-from pecan                              import expose, request, redirect, abort
-from draughtcraft                       import model
-from draughtcraft.lib.auth              import (save_user_session, 
-                                                remove_user_session, 
-                                                remove_trial_recipe)
-from draughtcraft.lib.schemas.login     import LoginSchema
+from pecan import expose, request, redirect, abort
+from pecan.ext.wtforms import with_form
+from draughtcraft import model
+from draughtcraft.lib.auth import (save_user_session, remove_user_session,
+                                    remove_trial_recipe)
+from draughtcraft.lib.forms.login import LoginForm
 
 # from error          import ErrorController
 # from forgot         import ForgotPasswordController
@@ -13,6 +13,7 @@ from draughtcraft.lib.schemas.login     import LoginSchema
 # from settings       import SettingsController
 # from signup         import SignupController
 
+
 class RootController(object):
 
     @expose('index.html')
@@ -21,14 +22,16 @@ class RootController(object):
             redirect('/profile/%s' % request.context['user'].username)
         return dict()
 
-    @expose(
-        generic     = True,
-        template    = 'login.html'
-    )
+    @expose(generic=True, template='login.html')
+    @with_form(LoginForm)
     def login(self, **kw):
-        return dict(welcome = 'welcome' in kw)
+        return dict(welcome='welcome' in kw)
 
     @login.when(method='POST')
+    @with_form(LoginForm, error_cfg={
+        'auto_insert_errors': True,
+        'handler': lambda: request.path
+    })
     def _post_login(self, username, password):
         user = model.User.get_by(username=username)
         save_user_session(user)
