@@ -40,5 +40,9 @@ setup(
     package_data = {
         'draughtcraft': ['*.db'],
     },
-    packages = find_packages(exclude=['ez_setup'])
+    packages = find_packages(exclude=['ez_setup']),
+    entry_points="""
+    [pecan.command]
+    populate = draughtcraft.data.tools.populate:PopulateCommand
+    """
 )

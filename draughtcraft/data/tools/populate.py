@@ -1,11 +1,10 @@
-from pecan.commands.base            import Command
+from pecan.commands.base            import BaseCommand
 from elixir                         import entities
 from sqlalchemy.ext.sqlsoup         import SqlSoup
 
 from draughtcraft                   import model, data
 
 import os
-import sys
 
 BLUE = '\033[94m'
 DARKBLUE = '\033[90m'
@@ -14,63 +13,49 @@ YELLOW = '\033[93m'
 RED = '\033[91m'
 ENDS = '\033[0m'
 
+
 def ne(x, y, tolerance=0.01):
     if type(x) is float and type(y) is float:
-        return abs(x-y) <= 0.5 * tolerance * (x + y)
+        return abs(x - y) <= 0.5 * tolerance * (x + y)
     return x == y
 
-class EnvCommand(Command):
+
+class PopulateCommand(BaseCommand):
     """
-    Load a pecan environment (namely, database initialization and binding).
+    Load a pecan environment and initializate the database.
     """
-    
-    # command information
-    usage = 'CONFIG_NAME'
-    summary = __doc__.strip().splitlines()[0].rstrip('.')
-    
-    # command options/arguments
-    min_args = 1
-    max_args = 1
-    
-    def command(self):
-        
-        # load the config and the app
-        config = self.load_configuration(self.args[0])
-        setattr(config.app, 'reload', False)
-        self.load_app(config)
 
-        # establish the model for the app
-        self.load_model(config)
+    def run(self, args):
+        super(PopulateCommand, self).run(args)
+        self.load_app()
 
+        print "=" * 80
+        print BLUE + "LOADING ENVIRONMENT" + ENDS
+        print "=" * 80
 
-def run():
-    print "="*80
-    print BLUE + "LOADING ENVIRONMENT" + ENDS
-    print "="*80
-    EnvCommand('env').run([sys.argv[1]])
+        print BLUE + "BUILDING SCHEMA" + ENDS
+        print "=" * 80
+        try:
+            print "STARTING A TRANSACTION..."
+            print "=" * 80
+            model.start()
+            model.metadata.create_all()
 
-    print BLUE + "BUILDING SCHEMA" + ENDS
-    print "="*80
-    try:
-        print "STARTING A TRANSACTION..."
-        print "="*80
-        model.start()
-        model.metadata.create_all()
+            print BLUE + "GENERATING INGREDIENTS" + ENDS
+            print "=" * 80
+            populate()
+        except:
+            model.rollback()
+            print "=" * 80
+            print "%s ROLLING BACK... %s" % (RED, ENDS)
+            print "=" * 80
+            raise
+        else:
+            print "=" * 80
+            print "%s COMMITING... %s" % (GREEN, ENDS)
+            print "=" * 80
+            model.commit()
 
-        print BLUE + "GENERATING INGREDIENTS" + ENDS
-        print "="*80
-        populate()
-    except:
-        model.rollback()
-        print "="*80
-        print "%s ROLLING BACK... %s" % (RED, ENDS)
-        print "="*80
-        raise
-    else:
-        print "="*80
-        print "%s COMMITING... %s" % (GREEN, ENDS)
-        print "="*80
-        model.commit()
 
 def populate():
 
@@ -87,15 +72,15 @@ def populate():
     )
 
     for table, cls in tables:
-        print "-"*80
+        print "-" * 80
         print DARKBLUE + table.upper() + ENDS
-        print "-"*80
+        print "-" * 80
         for ingredient in getattr(handle, table).all():
 
             # Coerce the data mapping into a dictionary
             kwargs = dict(
                 (
-                    k, 
+                    k,
                     getattr(ingredient, k, '')
                 )
                 for k in ingredient.c.keys()
@@ -114,7 +99,7 @@ def populate():
                 ingredient = getattr(entities, cls)()
 
             # Update necessary columns
-            for k,v in kwargs.items():
+            for k, v in kwargs.items():
                 if not ne(getattr(ingredient, k), v):
                     changed = True
 
@@ -134,11 +119,13 @@ def populate():
                     '%s Updated %s' % (YELLOW, ENDS)
                 )
             else:
-                print "%s (No Changes)" % ingredient.printed_name.encode('utf-8', 'ignore')
+                print "%s (No Changes)" % ingredient.printed_name.encode(
+                    'utf-8', 'ignore'
+                )
 
-    print "="*80
+    print "=" * 80
     print BLUE + "GENERATING STYLES" + ENDS
-    print "="*80
+    print "=" * 80
 
     handle = SqlSoup(
         'sqlite:///%s' % os.path.join(path, 'styles.db')
@@ -147,7 +134,7 @@ def populate():
         # Coerce the data mapping into a dictionary
         kwargs = dict(
             (
-                k, 
+                k,
                 getattr(style, k, '')
             )
             for k in style.c.keys()
@@ -166,7 +153,7 @@ def populate():
             style = entities.Style()
 
         # Update necessary columns
-        for k,v in kwargs.items():
+        for k, v in kwargs.items():
             if not ne(getattr(style, k), v):
                 changed = True
             setattr(style, k, v)
@@ -185,9 +172,3 @@ def populate():
             print "%s (No Changes)" % style.name.encode('utf-8', 'ignore')
 
     model.commit()
-
-if __name__ == '__main__':
-    if len(sys.argv) == 2:
-        run()
-    else:
-        print 'Usage: python populate.py /path/to/config.py'

@@ -5,13 +5,13 @@ from draughtcraft.lib.auth              import (save_user_session,
                                                 remove_trial_recipe)
 from draughtcraft.lib.schemas.login     import LoginSchema
 
-from error          import ErrorController
-from forgot         import ForgotPasswordController
-from ingredients    import IngredientsController
-from profile        import ProfilesController
-from recipes        import RecipesController
-from settings       import SettingsController
-from signup         import SignupController
+# from error          import ErrorController
+# from forgot         import ForgotPasswordController
+# from ingredients    import IngredientsController
+# from profile        import ProfilesController
+# from recipes        import RecipesController
+# from settings       import SettingsController
+# from signup         import SignupController
 
 class RootController(object):
 
@@ -28,12 +28,7 @@ class RootController(object):
     def login(self, **kw):
         return dict(welcome = 'welcome' in kw)
 
-    @login.when(
-        method          = 'POST',
-        schema          = LoginSchema(),
-        htmlfill        = dict(auto_insert_errors = True, prefix_error = True),
-        error_handler   = lambda: request.path
-    )
+    @login.when(method='POST')
     def _post_login(self, username, password):
         user = model.User.get_by(username=username)
         save_user_session(user)
@@ -68,10 +63,10 @@ class RootController(object):
             session.save()
         return dict()
 
-    error       = ErrorController()
-    forgot      = ForgotPasswordController()
-    ingredients = IngredientsController()
-    profile     = ProfilesController()
-    recipes     = RecipesController()
-    settings    = SettingsController()
-    signup      = SignupController()
+    # error       = ErrorController()
+    # forgot      = ForgotPasswordController()
+    # ingredients = IngredientsController()
+    # profile     = ProfilesController()
+    # recipes     = RecipesController()
+    # settings    = SettingsController()
+    # signup      = SignupController()

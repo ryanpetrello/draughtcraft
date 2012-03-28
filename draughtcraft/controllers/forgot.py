@@ -1,5 +1,5 @@
 from pecan                              import (expose, request, response,
-                                                redirect, ValidationException)
+                                                redirect)
 from pecan.rest                         import RestController
 from draughtcraft                       import model
 from draughtcraft.lib                   import email as emaillib
@@ -27,6 +27,7 @@ class ResetController(RestController):
         error_handler   = lambda: request.path        
     )
     def post(self, code, **kw):
+        from pecan import ValidationException
 
         req = model.PasswordResetRequest.get(code)
         if req is None:
@@ -58,6 +59,7 @@ class ForgotPasswordController(object):
         error_handler       = lambda: request.path
     )
     def do_post(self, email):
+        from pecan import ValidationException
         
         u = model.User.get_by(email=email)
         if u is None:

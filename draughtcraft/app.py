@@ -37,12 +37,11 @@ def setup_app(config):
     return make_app(
         config.app.root,
         static_root     = config.app.static_root,
-        debug           = config.app.debug,
+        template_path   = config.app.template_path,
         wrap_app        = add_middleware,
         logging         = config.app.logging,
-        template_path   = config.app.template_path,
-        force_canonical = config.app.force_canonical,
-        errorcfg        = getattr(config, 'error', {}),
+        debug           = getattr(config.app, 'debug', False),
+        force_canonical = getattr(config.app, 'force_canonical', True),
         hooks           = [
             TransactionHook(
                 model.start,
