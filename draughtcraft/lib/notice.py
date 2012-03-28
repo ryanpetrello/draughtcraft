@@ -37,6 +37,37 @@ class Notify(Flash):
                                          use_js=False,
                                          request=request, 
                                          response=response)
+
+    def pop_payload(self, request=None, response=None):
+        """
+        Fetches and decodes the flash payload from the request and sets the
+        required Set-Cookie header in the response so the browser deletes the
+        flash cookie.
+
+        This method is intended to manage the flash payload without using
+        JavaScript and requires webob compatible request/response
+        objects.
+        """
+        # First try fetching it from the request
+        request = request or self.get_request()
+        response = response or self.get_response()
+        if request is None or response is None:
+            raise ValueError("Need to provide a request and reponse objects")
+        payload = request.environ.get('webflash.payload', {})
+        if not payload:
+            payload = request.cookies.get(self.cookie_name, {})
+            if payload:
+                log.debug("Got payload from cookie")
+        else:
+            log.debug("Got payload for environ %d, %r",
+                      id(request.environ), payload)
+        if payload:
+            payload = json.loads(unquote(payload))
+            if 'webflash.deleted_cookie' not in request.environ:
+                log.debug("Deleting flash payload")
+                response.delete_cookie(self.cookie_name)
+                request.environ['webflash.delete_cookie'] = True
+        return payload or {}
     
 notify = notices = Notify(
     cookie_name    = 'draughtcraft-notify',
