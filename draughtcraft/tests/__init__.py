@@ -1,16 +1,20 @@
-from pecan              import conf
+from pecan              import conf, set_config
+from pecan.testing      import load_test_app
 from draughtcraft       import model as dcmodel
-from webtest            import TestApp as WebTestApp
 from unittest           import TestCase
 
-import py.test
+import os
+
 
 class TestModel(TestCase):
 
     def setUp(self):
         # Set up a fake app
-        self.app = WebTestApp(py.test.wsgi_app)
-        
+        self.app = load_test_app(os.path.join(
+            os.path.dirname(__file__),
+            'config.py'
+        ))
+
         # Create the database tables
         dcmodel.clear()
         dcmodel.start()
@@ -20,7 +24,6 @@ class TestModel(TestCase):
 
     def tearDown(self):
         from sqlalchemy.engine import reflection
-        from sqlalchemy import create_engine
         from sqlalchemy.schema import (
             MetaData,
             Table,
@@ -28,7 +31,7 @@ class TestModel(TestCase):
             ForeignKeyConstraint,
             DropConstraint,
         )
-        
+
         # Tear down and dispose the DB binding
         dcmodel.clear()
 
@@ -41,7 +44,7 @@ class TestModel(TestCase):
         inspector = reflection.Inspector.from_engine(engine)
 
         # gather all data first before dropping anything.
-        # some DBs lock after things have been dropped in 
+        # some DBs lock after things have been dropped in
         # a transaction.
 
         metadata = MetaData()
@@ -55,9 +58,9 @@ class TestModel(TestCase):
                 if not fk['name']:
                     continue
                 fks.append(
-                    ForeignKeyConstraint((),(),name=fk['name'])
+                    ForeignKeyConstraint((), (), name=fk['name'])
                     )
-            t = Table(table_name,metadata,*fks)
+            t = Table(table_name, metadata, *fks)
             tbs.append(t)
             all_fks.extend(fks)
 
@@ -70,6 +73,8 @@ class TestModel(TestCase):
         trans.commit()
         conn.close()
 
+        set_config({}, overwrite=True)
+
 
 class TestApp(TestModel):
     """
@@ -78,12 +83,6 @@ class TestApp(TestModel):
     """
 
     __headers__ = {}
-
-    def setUp(self):
-        # Set up a fake app
-        self.app = WebTestApp(py.test.wsgi_app)
-
-        super(TestApp, self).setUp()
 
     def _do_request(self, url, method='GET', **kwargs):
         methods = {
@@ -136,13 +135,13 @@ class TestAuthenticatedApp(TestApp):
         # Make a user and authenticate as them.
         #
         dcmodel.User(
-            username = 'ryanpetrello',
-            password = 'secret',
-            email    = 'ryan@example.com'
+            username='ryanpetrello',
+            password='secret',
+            email='ryan@example.com'
         )
         dcmodel.commit()
         response = self.post('/login', params={
-            'username'  : 'ryanpetrello',
-            'password'  : 'secret'
+            'username': 'ryanpetrello',
+            'password': 'secret'
         })
         assert 'user_id' in response.environ['beaker.session']
