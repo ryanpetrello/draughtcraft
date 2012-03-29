@@ -11,7 +11,7 @@ from draughtcraft.lib.forms.login import LoginForm
 # from profile        import ProfilesController
 # from recipes        import RecipesController
 # from settings       import SettingsController
-# from signup         import SignupController
+from signup         import SignupController
 
 
 class RootController(object):
@@ -72,4 +72,4 @@ class RootController(object):
     # profile     = ProfilesController()
     # recipes     = RecipesController()
     # settings    = SettingsController()
-    # signup      = SignupController()
+    signup = SignupController()
