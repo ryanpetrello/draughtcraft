@@ -22,9 +22,9 @@ class ResetController(RestController):
         return dict(password_request = req)
         
     @expose(
-        schema          = ResetPasswordSchema(),
-        htmlfill        = dict(auto_insert_errors = True, prefix_error = False),
-        error_handler   = lambda: request.path        
+        #schema          = ResetPasswordSchema(),
+        #htmlfill        = dict(auto_insert_errors = True, prefix_error = False),
+        #error_handler   = lambda: request.path        
     )
     def post(self, code, **kw):
         from pecan import ValidationException
@@ -54,9 +54,9 @@ class ForgotPasswordController(object):
             
     @index.when(
         method              = 'POST',
-        schema              = ForgotPasswordSchema(),
-        htmlfill            = dict(auto_insert_errors = True, prefix_error = False),
-        error_handler       = lambda: request.path
+        #schema              = ForgotPasswordSchema(),
+        #htmlfill            = dict(auto_insert_errors = True, prefix_error = False),
+        #error_handler       = lambda: request.path
     )
     def do_post(self, email):
         from pecan import ValidationException

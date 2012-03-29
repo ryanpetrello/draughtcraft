@@ -146,7 +146,7 @@ class RecipesController(object):
 
     @expose(
         template    = 'recipes/browse/list.html',
-        schema      = RecipeSearchSchema()
+        #schema      = RecipeSearchSchema()
     )
     def recipes(self, **kw):
         if request.pecan['validation_errors']: abort(400)

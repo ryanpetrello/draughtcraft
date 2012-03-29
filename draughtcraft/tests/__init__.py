@@ -16,6 +16,7 @@ class TestModel(TestCase):
         ))
 
         # Create the database tables
+        print conf.sqlalchemy.sa_engine
         dcmodel.clear()
         dcmodel.start()
         dcmodel.metadata.create_all()
@@ -144,4 +145,4 @@ class TestAuthenticatedApp(TestApp):
             'username': 'ryanpetrello',
             'password': 'secret'
         })
-        assert 'user_id' in response.environ['beaker.session']
+        assert 'user_id' in response.request.environ['beaker.session']

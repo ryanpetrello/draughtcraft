@@ -17,9 +17,9 @@ class PasswordController(object):
 
     @index.when(
         method              = 'POST',
-        schema              = UserPasswordSchema(),
-        error_handler       = lambda: request.path,
-        htmlfill            = dict(auto_insert_errors = True, prefix_error = False)
+        #schema              = UserPasswordSchema(),
+        #error_handler       = lambda: request.path,
+        #htmlfill            = dict(auto_insert_errors = True, prefix_error = False)
     )
     def index_post(self, **kw):
         user = request.context['user']

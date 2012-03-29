@@ -17,9 +17,9 @@ class ProfileController(object):
 
     @index.when(
         method              = 'POST',
-        schema              = UserProfileSchema(),
-        error_handler       = lambda: request.path,
-        htmlfill            = dict(auto_insert_errors = True, prefix_error = False)
+        #schema              = UserProfileSchema(),
+        #error_handler       = lambda: request.path,
+        #htmlfill            = dict(auto_insert_errors = True, prefix_error = False)
     )
     def index_post(self, **kw):
         user = request.context['user']

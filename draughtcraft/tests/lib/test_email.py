@@ -6,9 +6,8 @@ import fudge
 import unittest
 
 def _gen_template_path():
-    root = getattr(conf.app, 'modules', [])[0]
     return os.path.join(
-        os.path.dirname(root.__file__),
+        '..',
         'tests',
         'fixtures',
         'emails'

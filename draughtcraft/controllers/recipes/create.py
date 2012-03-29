@@ -21,9 +21,9 @@ class RecipeCreationController(RestController):
 
     @expose(
         'json',
-        schema              = RecipeCreation(),
-        error_handler       = lambda: request.path,
-        htmlfill            = dict(auto_insert_errors = True, prefix_error = False)
+        #schema              = RecipeCreation(),
+        #error_handler       = lambda: request.path,
+        #htmlfill            = dict(auto_insert_errors = True, prefix_error = False)
     )
     def post(self, **kw):
         recipe = model.Recipe(

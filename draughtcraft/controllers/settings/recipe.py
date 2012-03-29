@@ -18,9 +18,9 @@ class RecipeController(object):
 
     @index.when(
         method              = 'POST',
-        schema              = UserRecipeSchema(),
-        error_handler       = lambda: request.path,
-        htmlfill            = dict(auto_insert_errors = True, prefix_error = True)
+        #schema              = UserRecipeSchema(),
+        #error_handler       = lambda: request.path,
+        #htmlfill            = dict(auto_insert_errors = True, prefix_error = True)
     )
     def index_post(self, **kw):
         user = request.context['user']

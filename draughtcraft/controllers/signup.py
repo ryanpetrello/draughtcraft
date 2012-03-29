@@ -29,9 +29,9 @@ class SignupController(object):
 
     @index.when(
         method          = 'POST',
-        schema          = SignupSchema(),
-        htmlfill        = dict(auto_insert_errors = True, prefix_error = True),
-        error_handler   = lambda: request.path
+        #schema          = SignupSchema(),
+        #htmlfill        = dict(auto_insert_errors = True, prefix_error = True),
+        #error_handler   = lambda: request.path
     )
     @after_commit(send_signup_email)
     def _post(self, username, password, password_confirm, email):

@@ -1,3 +1,5 @@
+from sqlalchemy.pool import NullPool
+
 # Server Specific Configurations
 server = {
     'port': '8080',
@@ -8,8 +10,8 @@ server = {
 app = {
     'root': 'draughtcraft.controllers.root.RootController',
     'modules': ['draughtcraft'],
-    'static_root': '%(confdir)s/public',
-    'template_path': '%(confdir)s/draughtcraft/templates',
+    'static_root': '%(confdir)s/../../public',
+    'template_path': '%(confdir)s/../templates',
     'stamp': 'dev',
     'reload': True,
     'debug': True,
@@ -21,7 +23,8 @@ sqlalchemy = {
     'echo': False,
     'echo_pool': False,
     'pool_recycle': 3600,
-    'encoding': 'utf-8'
+    'encoding': 'utf-8',
+    'poolclass': NullPool
 }
 
 signups = {

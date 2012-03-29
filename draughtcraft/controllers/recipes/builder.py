@@ -45,7 +45,7 @@ class FermentationStepsController(RestController):
 
     @expose(
         'recipes/builder/async.html',
-        schema = FermentationStepUpdate()
+        #schema = FermentationStepUpdate()
     )
     def put(self, step, **kw):
         """
@@ -89,7 +89,7 @@ class RecipeSettingsController(object):
     @style.when(
         method      = 'POST',
         template    = 'recipes/builder/async.html',
-        schema      = RecipeStyle()
+        #schema      = RecipeStyle()
     )
     def _style(self, target):
         self.recipe.style = target
@@ -105,14 +105,14 @@ class RecipeSettingsController(object):
     @volume.when(
         method          = 'POST',
         template        = 'recipes/builder/async.html',
-        schema          = RecipeVolume(),
-        error_handler   = lambda: '%sasync/ingredients' % request.context['recipe'].url(public=False),
-        htmlfill        = dict(
-            auto_insert_errors  = True, 
-            prefix_error        = False,
-            encoding            = u'utf-8',
-            force_defaults      = False
-        )
+        #schema          = RecipeVolume(),
+        #error_handler   = lambda: '%sasync/ingredients' % request.context['recipe'].url(public=False),
+        #htmlfill        = dict(
+        #    auto_insert_errors  = True, 
+        #    prefix_error        = False,
+        #    encoding            = u'utf-8',
+        #    force_defaults      = False
+        #)
     )
     def _volume(self, volume, unit):
         if unit == 'GALLON':
@@ -131,7 +131,7 @@ class RecipeSettingsController(object):
     @mash.when(
         method      = 'POST',
         template    = 'json',
-        schema      = RecipeMashSettings()
+        #schema      = RecipeMashSettings()
     )
     def _mash(self, method, instructions):
         if self.recipe.type != 'MASH':
@@ -150,14 +150,14 @@ class RecipeSettingsController(object):
     @boil_minutes.when(
         method          = 'POST',
         template        = 'recipes/builder/async.html',
-        schema          = RecipeBoilMinutes(),
-        error_handler   = lambda: '%sasync/ingredients' % request.context['recipe'].url(public=False),
-        htmlfill        = dict(
-            auto_insert_errors  = True, 
-            prefix_error        = False,
-            encoding            = u'utf-8',
-            force_defaults      = False
-        )
+        #schema          = RecipeBoilMinutes(),
+        #error_handler   = lambda: '%sasync/ingredients' % request.context['recipe'].url(public=False),
+        #htmlfill        = dict(
+        #    auto_insert_errors  = True, 
+        #    prefix_error        = False,
+        #    encoding            = u'utf-8',
+        #    force_defaults      = False
+        #)
     )
     def _boil_minutes(self, minutes):
         self.recipe.boil_minutes = minutes
@@ -173,7 +173,7 @@ class RecipeSettingsController(object):
     @notes.when(
         method      = 'POST',
         template    = 'json',
-        schema      = RecipeNotes()
+        #schema      = RecipeNotes()
     )
     def _notes(self, notes):
         self.recipe.notes = notes
@@ -206,15 +206,15 @@ class IngredientsController(RestController):
 
     @expose(
         'recipes/builder/async.html',
-        schema              = RecipeChange(),
-        error_handler       = lambda: request.path,
-        htmlfill            = dict(
-            auto_insert_errors  = True, 
-            prefix_error        = False,
-            encoding            = u'utf-8',
-            force_defaults      = False
-        ),
-        variable_decode     = True
+        #schema              = RecipeChange(),
+        #error_handler       = lambda: request.path,
+        #htmlfill            = dict(
+        #    auto_insert_errors  = True, 
+        #    prefix_error        = False,
+        #    encoding            = u'utf-8',
+        #    force_defaults      = False
+        #),
+        #variable_decode     = True
     )
     def put(self, **kw):
         """
@@ -268,7 +268,7 @@ class IngredientsController(RestController):
 
     @expose(
         'recipes/builder/async.html',
-        schema = RecipeAddition()
+        #schema = RecipeAddition()
     )
     def post(self, **kw):
         """
