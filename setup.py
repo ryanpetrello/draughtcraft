@@ -21,7 +21,6 @@ setup(
         "formencode",
         "genshi",
         "webhelpers",
-        "webflash",
         "simplejson",
         "python-postmark",
         "BeautifulSoup",
