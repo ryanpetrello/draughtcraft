@@ -114,12 +114,10 @@ class MinificationTestCase(TestEnv):
         f.close()
 
     def in_cache(self, filename):
-        ns = self.cache.get_cache('draughtcraft.lib.minify.combine_sources').namespace
-        for (timestamp, _, values) in ns.dictionary.values():
-            if filename in values: return True
-        ns = self.cache.get_cache('draughtcraft.lib.minify.minify_sources').namespace
-        for (timestamp, _, values) in ns.dictionary.values():
-            if filename in values: return True
+        import beaker
+        for c in beaker.cache.cache_managers.values():
+            for (timestamp, _, values) in c.namespace.dictionary.values():
+                if filename in values: return True
         return False
 
     def test_paths(self):
