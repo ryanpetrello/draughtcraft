@@ -1,14 +1,16 @@
-from pecan                      import conf
-from draughtcraft.lib           import email
+from pecan import conf
+from draughtcraft.tests import TestEnv
+from draughtcraft.lib import email
 
 import os
 import fudge
 import unittest
 
+
 def _gen_template_path():
     return os.path.join(
+        os.path.dirname(__file__),
         '..',
-        'tests',
         'fixtures',
         'emails'
     )
@@ -31,34 +33,34 @@ class TestEmailTemplate(unittest.TestCase):
 
     def test_html_rendering(self):
         template = email.EmailTemplate('sample', self.template_path)
-        body = template.html({'name': 'Ryan'})
-        assert body == email.EmailTemplate.__html_wrap__ % '<p>Hello, Ryan!</p>'
+        body = template.html({'name': 'Joe'})
+        assert body == email.EmailTemplate.__html_wrap__ % '<p>Hello, Joe!</p>'
 
     def test_html_rendering_with_missing_template(self):
         template = email.EmailTemplate('missing', self.template_path)
         assert template.html({'name': 'Ryan'}) == None
 
 
-class TestEmailSend(unittest.TestCase):
-    
+class TestEmailSend(TestEnv):
+
     @fudge.patch('postmark.PMMail')
     def test_send(self, FakeMail):
 
         ns = {'username': 'sample_user'}
 
         (FakeMail.expects_call().with_args(
-            api_key     = conf.postmark.api_key,
-            to          = 'bob@example.com',
-            cc          = 'bob+cc@example.com',
-            bcc         = 'bob+bcc@example.com,ryan+bcc@example.com',
-            subject     = 'Sample Subject',
-            sender      = 'notify@draughtcraft.com',
-            html_body   = email.EmailTemplate(
-                            'signup', 
+            api_key=conf.postmark.api_key,
+            to='bob@example.com',
+            cc='bob+cc@example.com',
+            bcc='bob+bcc@example.com,ryan+bcc@example.com',
+            subject='Sample Subject',
+            sender='notify@draughtcraft.com',
+            html_body=email.EmailTemplate(
+                            'signup',
                             '%s/emails' % conf.app.template_path
                           ).html(ns),
-            text_body   = email.EmailTemplate(
-                            'signup', 
+            text_body=email.EmailTemplate(
+                            'signup',
                             '%s/emails' % conf.app.template_path
                           ).text(ns)
         ).returns_fake().expects('send'))
@@ -68,6 +70,6 @@ class TestEmailSend(unittest.TestCase):
             'signup',
             'Sample Subject',
             ns,
-            cc = ['bob+cc@example.com'],
-            bcc = ['bob+bcc@example.com', 'ryan+bcc@example.com']
+            cc=['bob+cc@example.com'],
+            bcc=['bob+bcc@example.com', 'ryan+bcc@example.com']
         )

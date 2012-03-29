@@ -6,7 +6,7 @@ from unittest           import TestCase
 import os
 
 
-class TestModel(TestCase):
+class TestEnv(TestCase):
 
     def setUp(self):
         # Set up a fake app
@@ -15,8 +15,16 @@ class TestModel(TestCase):
             'config.py'
         ))
 
+    def tearDown(self):
+        set_config({}, overwrite=True)
+
+
+class TestModel(TestEnv):
+
+    def setUp(self):
+        super(TestModel, self).setUp()
+
         # Create the database tables
-        print conf.sqlalchemy.sa_engine
         dcmodel.clear()
         dcmodel.start()
         dcmodel.metadata.create_all()
@@ -74,7 +82,7 @@ class TestModel(TestCase):
         trans.commit()
         conn.close()
 
-        set_config({}, overwrite=True)
+        super(TestModel, self).tearDown()
 
 
 class TestApp(TestModel):

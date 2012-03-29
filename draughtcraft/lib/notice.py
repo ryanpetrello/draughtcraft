@@ -56,15 +56,9 @@ class Notify(Flash):
         payload = request.environ.get('webflash.payload', {})
         if not payload:
             payload = request.cookies.get(self.cookie_name, {})
-            if payload:
-                log.debug("Got payload from cookie")
-        else:
-            log.debug("Got payload for environ %d, %r",
-                      id(request.environ), payload)
         if payload:
             payload = json.loads(unquote(payload))
             if 'webflash.deleted_cookie' not in request.environ:
-                log.debug("Deleting flash payload")
                 response.delete_cookie(self.cookie_name)
                 request.environ['webflash.delete_cookie'] = True
         return payload or {}

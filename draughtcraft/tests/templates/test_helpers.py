@@ -6,9 +6,6 @@ from datetime                           import datetime, timedelta
 
 class TestHelpers(TestCase):
 
-    def test_stamp(self):
-        assert stamp('/javascript/foo.js') == '/javascript/foo.js?XYZ'
-
     def test_format_percentage(self):
         assert format_percentage(0) == '0%'
         assert format_percentage(0.00) == '0%'
