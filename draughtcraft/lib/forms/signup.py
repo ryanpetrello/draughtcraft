@@ -1,5 +1,5 @@
-from pecan.ext.wtforms import (SecureForm, TextField, ValidationError,
-                                validators as v)
+from pecan.ext.wtforms import (SecureForm, fields as f, validators as v,
+                                ValidationError)
 from draughtcraft import model
 from sqlalchemy import func
 
@@ -18,7 +18,7 @@ def unique(attr):
 
 class SignupForm(SecureForm):
 
-    username = TextField('Username', validators=[
+    username = f.TextField('Username', validators=[
         v.Required(),
         v.Regexp(
             '^[a-zA-Z0-9_]{4,}$',
@@ -26,17 +26,17 @@ class SignupForm(SecureForm):
         ),
         unique('username')
     ])
-    password = TextField('Password', validators=[
+    password = f.PasswordField('Password', validators=[
         v.Required(),
         v.Length(min=4),
         v.EqualTo('password_confirm', message='Passwords must match.')
     ])
-    password_confirm = TextField('', validators=[
+    password_confirm = f.PasswordField('', validators=[
         v.Required(),
         v.Length(min=4),
         v.EqualTo('password', message='Passwords must match.')
     ])
-    email = TextField('Email', validators=[
+    email = f.TextField('Email', validators=[
         v.Required(),
         v.Email(),
         unique('email')
