@@ -26,37 +26,34 @@
   ${h.notices.render()}
 
   ${h.form('')}
+  ${form.csrf_token}
     <fieldset>
       <dl class="clearfix">
-        <dt><label for="name">Username</label></dt>
+        <dt><label for="name">${form.username.label}</label></dt>
         <dd>
-          ${h.text(
-            'username', 
+          ${form.username(
             tabindex = '1', 
             size = '256'
           )}
         </dd>
-        <dt><label for="name">Password</label></dt>
+        <dt><label for="name">${form.password.label}</label></dt>
         <dd>
-          ${h.password(
-            'password', 
+          ${form.password(
             tabindex = '2', 
             size = '256'
           )}
           <small>Choose a secure password with both letters and numbers.</small>
         </dd>
         <dd>
-          ${h.password(
-            'password_confirm', 
+          ${form.password_confirm(
             tabindex = '3', 
             size = '256'
           )}
           <small>Type your password again.</small>
         </dd>
-        <dt><label for="name">Email</label></dt>
+        <dt><label for="name">${form.email.label}</label></dt>
         <dd>
-          ${h.text(
-            'email', 
+          ${form.email(
             tabindex = '4', 
             size = '256'
           )}
