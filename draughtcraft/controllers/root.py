@@ -5,8 +5,8 @@ from draughtcraft.lib.auth import (save_user_session, remove_user_session,
                                     remove_trial_recipe)
 from draughtcraft.lib.forms.login import LoginForm
 
-# from error          import ErrorController
-# from forgot         import ForgotPasswordController
+from error          import ErrorController
+from forgot         import ForgotPasswordController
 from ingredients    import IngredientsController
 from profile        import ProfilesController
 # from recipes        import RecipesController
@@ -66,10 +66,10 @@ class RootController(object):
             session.save()
         return dict()
 
-    # error       = ErrorController()
-    # forgot      = ForgotPasswordController()
+    error = ErrorController()
+    forgot = ForgotPasswordController()
     ingredients = IngredientsController()
-    profile     = ProfilesController()
+    profile = ProfilesController()
     # recipes     = RecipesController()
     # settings    = SettingsController()
     signup = SignupController()

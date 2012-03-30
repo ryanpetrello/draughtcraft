@@ -24,12 +24,12 @@
 <div class="clearfix">
 
   ${h.form('')}
+    ${form.csrf_token}
     <fieldset>
       <dl class="clearfix">
-        <dt><label for="name">Email Address</label></dt>
+        <dt><label for="name">${form.email.label}</label></dt>
         <dd>
-          ${h.text(
-            'email', 
+          ${form.email(
             tabindex = '1', 
             size = '256'
           )}
