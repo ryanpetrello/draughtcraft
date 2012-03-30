@@ -7,8 +7,8 @@ from draughtcraft.lib.forms.login import LoginForm
 
 # from error          import ErrorController
 # from forgot         import ForgotPasswordController
-# from ingredients    import IngredientsController
-# from profile        import ProfilesController
+from ingredients    import IngredientsController
+from profile        import ProfilesController
 # from recipes        import RecipesController
 # from settings       import SettingsController
 from signup         import SignupController
@@ -68,8 +68,8 @@ class RootController(object):
 
     # error       = ErrorController()
     # forgot      = ForgotPasswordController()
-    # ingredients = IngredientsController()
-    # profile     = ProfilesController()
+    ingredients = IngredientsController()
+    profile     = ProfilesController()
     # recipes     = RecipesController()
     # settings    = SettingsController()
     signup = SignupController()

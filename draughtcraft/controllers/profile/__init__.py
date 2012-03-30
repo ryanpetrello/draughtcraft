@@ -11,7 +11,7 @@ class ProfileController(object):
 
     @expose('profile/index.html')
     def index(self):
-        return dict(user = self.user)
+        return dict(user=self.user)
 
 
 class ProfilesController(object):
