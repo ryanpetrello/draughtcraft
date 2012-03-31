@@ -10,7 +10,7 @@ from forgot         import ForgotPasswordController
 from ingredients    import IngredientsController
 from profile        import ProfilesController
 # from recipes        import RecipesController
-# from settings       import SettingsController
+from settings       import SettingsController
 from signup         import SignupController
 
 
@@ -71,5 +71,5 @@ class RootController(object):
     ingredients = IngredientsController()
     profile = ProfilesController()
     # recipes     = RecipesController()
-    # settings    = SettingsController()
+    settings = SettingsController()
     signup = SignupController()

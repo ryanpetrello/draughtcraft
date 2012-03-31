@@ -2,8 +2,6 @@ from draughtcraft           import model
 from draughtcraft.tests     import TestApp, TestAuthenticatedApp
 
 
-import unittest
-@unittest.expectedFailure
 class TestUnauthenticatedProfileSettings(TestApp):
 
     def test_profile_render(self):
@@ -12,7 +10,6 @@ class TestUnauthenticatedProfileSettings(TestApp):
         assert resp.headers['Location'].endswith('/signup')
 
 
-@unittest.expectedFailure
 class TestProfileSettings(TestAuthenticatedApp):
 
     def test_profile_render(self):
@@ -20,11 +17,11 @@ class TestProfileSettings(TestAuthenticatedApp):
 
     def test_missing_name(self):
         params = {
-            'first_name'    : '',
-            'last_name'     : '',
-            'email'         : 'ryantesting123@example.com',
-            'location'      : '',
-            'bio'           : ''
+            'first_name': '',
+            'last_name': '',
+            'email': 'ryantesting123@example.com',
+            'location': '',
+            'bio': ''
         }
         self.post('/settings/profile/', params=params)
 
@@ -32,43 +29,43 @@ class TestProfileSettings(TestAuthenticatedApp):
 
     def test_missing_email(self):
         params = {
-            'first_name'    : '',
-            'last_name'     : '',
-            'email'         : '',
-            'location'      : '',
-            'bio'           : ''
+            'first_name': '',
+            'last_name': '',
+            'email': '',
+            'location': '',
+            'bio': ''
         }
 
         assert model.User.get(1).email == 'ryan@example.com'
 
         response = self.post('/settings/profile/', params=params)
-        assert 'validation_errors' in response.request.pecan
+        assert len(response.request.pecan['form'].errors)
 
         assert model.User.get(1).email == 'ryan@example.com'
 
     def test_invalid_email(self):
         params = {
-            'first_name'    : '',
-            'last_name'     : '',
-            'email'         : 'ryan@invalid',
-            'location'      : '',
-            'bio'           : ''
+            'first_name': '',
+            'last_name': '',
+            'email': 'ryan@invalid',
+            'location': '',
+            'bio': ''
         }
 
         assert model.User.get(1).email == 'ryan@example.com'
 
         response = self.post('/settings/profile/', params=params)
-        assert 'validation_errors' in response.request.pecan
+        assert len(response.request.pecan['form'].errors)
 
         assert model.User.get(1).email == 'ryan@example.com'
 
     def test_success(self):
         params = {
-            'first_name'    : 'Ryan',
-            'last_name'     : 'Petrello',
-            'email'         : 'ryantesting123@example.com',
-            'location'      : 'Atlanta, GA',
-            'bio'           : 'I am Ryan.'
+            'first_name': 'Ryan',
+            'last_name': 'Petrello',
+            'email': 'ryantesting123@example.com',
+            'location': 'Atlanta, GA',
+            'bio': 'I am Ryan.'
         }
         self.post('/settings/profile/', params=params)
 

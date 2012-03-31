@@ -20,11 +20,11 @@ class TestRecipeSettings(TestAuthenticatedApp):
 
     def test_success(self):
         params = {
-            'default_recipe_type'       : 'EXTRACT',
-            'default_recipe_volume'     : '2.5',
-            'default_ibu_formula'       : 'daniels',
-            'unit_system'               : 'METRIC',
-            'brewhouse_efficiency'      : 75
+            'default_recipe_type': 'EXTRACT',
+            'default_recipe_volume': '2.5',
+            'default_ibu_formula': 'daniels',
+            'unit_system': 'METRIC',
+            'brewhouse_efficiency': 75
         }
         response = self.post('/settings/recipe/', params=params)
         assert response.status_int == 302
@@ -42,11 +42,11 @@ class TestRecipeSettings(TestAuthenticatedApp):
         model.commit()
 
         params = {
-            'default_recipe_type'       : 'EXTRACT',
-            'default_recipe_volume'     : '10', # (in liters)
-            'default_ibu_formula'       : 'daniels',
-            'unit_system'               : 'METRIC',
-            'brewhouse_efficiency'      : 75
+            'default_recipe_type': 'EXTRACT',
+            'default_recipe_volume': '10',  # (in liters)
+            'default_ibu_formula': 'daniels',
+            'unit_system': 'METRIC',
+            'brewhouse_efficiency': 75
         }
         response = self.post('/settings/recipe/', params=params)
         assert response.status_int == 302
