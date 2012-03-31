@@ -21,9 +21,9 @@ class TestRecipeBrowser(TestApp):
         'direction' : 'DESC',
         'style'     : '',
         'color'     : '',
-        'mash'      : 'true',
-        'minimash'  : 'true',
-        'extract'   : 'true'
+        'mash'      : 'on',
+        'minimash'  : 'on',
+        'extract'   : 'on'
     }
 
     def _get(self, args={}, **kwargs):
@@ -40,8 +40,6 @@ class TestRecipeBrowser(TestApp):
         assert self._ns[key] == value
 
 
-import unittest
-@unittest.expectedFailure
 class TestRecipeBrowse(TestRecipeBrowser):
 
     def test_browse_index(self):
@@ -53,11 +51,10 @@ class TestRecipeBrowse(TestRecipeBrowser):
         assert len(response.namespace.get('styles')) == 1
 
     def test_browse_ajax(self):
-        response = self.get('/recipes/recipes', status=400)
-        assert response.status_int == 400
+        response = self.get('/recipes/recipes', status=200)
+        assert response.status_int == 200
 
 
-@unittest.expectedFailure
 class TestRecipeBase(TestRecipeBrowser):
     """
     Make sure non-published recipes are filtered out.
@@ -79,12 +76,7 @@ class TestRecipeBase(TestRecipeBrowser):
         self._eq('direction', 'DESC')
         self._eq('recipes', [])
 
-    def test_schema_failure(self):
-        self._get({'style': 500}, status=400) # Invalid model.Style
-        assert self._ns.status_int == 400
 
-
-@unittest.expectedFailure
 class TestPaging(TestRecipeBrowser):
     """
     Make sure recipe pagination works properly.
@@ -151,7 +143,6 @@ class TestPaging(TestRecipeBrowser):
         assert len(self._ns['recipes']) == 1
 
 
-@unittest.expectedFailure
 class TestFiltering(TestRecipeBrowser):
 
     def test_filter_by_style(self):
@@ -183,72 +174,6 @@ class TestFiltering(TestRecipeBrowser):
         model.commit()
 
         self._get({'style': '2'})
-        self._eq('pages', 1)
-        self._eq('current_page', 1)
-        self._eq('offset', 0)
-        self._eq('perpage', 15)
-        self._eq('total', 0)
-        self._eq('order_by', 'last_updated')
-        self._eq('direction', 'DESC')
-        assert len(self._ns['recipes']) == 0
-
-    def test_filter_by_type(self):
-        R({'name': 'MASH', 'state': 'PUBLISHED', 'type': 'MASH'})
-        R({'name': 'MINIMASH', 'state': 'PUBLISHED', 'type': 'MINIMASH'})
-        R({'name': 'EXTRACTSTEEP', 'state': 'PUBLISHED', 'type': 'EXTRACTSTEEP'})
-        R({'name': 'EXTRACT', 'state': 'PUBLISHED', 'type': 'EXTRACT'})
-        model.commit()
-
-        self._get()
-        self._eq('pages', 1)
-        self._eq('current_page', 1)
-        self._eq('offset', 0)
-        self._eq('perpage', 15)
-        self._eq('total', 4)
-        self._eq('order_by', 'last_updated')
-        self._eq('direction', 'DESC')
-        assert len(self._ns['recipes']) == 4
-
-        # Mash Only
-        self._get({'minimash': 'false', 'extract': 'false'})
-        self._eq('pages', 1)
-        self._eq('current_page', 1)
-        self._eq('offset', 0)
-        self._eq('perpage', 15)
-        self._eq('total', 1)
-        self._eq('order_by', 'last_updated')
-        self._eq('direction', 'DESC')
-        assert len(self._ns['recipes']) == 1
-        assert self._ns['recipes'][0].id == model.Recipe.get_by(name='MASH').id
-
-        # Mini-Mash Only
-        self._get({'mash': 'false', 'extract': 'false'})
-        self._eq('pages', 1)
-        self._eq('current_page', 1)
-        self._eq('offset', 0)
-        self._eq('perpage', 15)
-        self._eq('total', 1)
-        self._eq('order_by', 'last_updated')
-        self._eq('direction', 'DESC')
-        assert len(self._ns['recipes']) == 1
-        assert self._ns['recipes'][0].id == model.Recipe.get_by(name='MINIMASH').id
-
-        # Extracts
-        self._get({'mash': 'false', 'minimash': 'false'})
-        self._eq('pages', 1)
-        self._eq('current_page', 1)
-        self._eq('offset', 0)
-        self._eq('perpage', 15)
-        self._eq('total', 2)
-        self._eq('order_by', 'last_updated')
-        self._eq('direction', 'DESC')
-        assert len(self._ns['recipes']) == 2
-        identifiers = [r.id for r in self._ns['recipes']]
-        for recipe in model.Recipe.query.filter(model.Recipe.type.like('EXTRACT%')).all():
-            assert recipe.id in identifiers
-
-        # All three types disabled
-        self._get({'mash': 'false', 'minimash': 'false', 'extract': 'false'})
         self._eq('pages', 1)
         self._eq('current_page', 1)
         self._eq('offset', 0)
@@ -319,7 +244,83 @@ class TestFiltering(TestRecipeBrowser):
         assert len(self._ns['recipes']) == 2
 
 
-@unittest.expectedFailure
+class TestFilteringByType(TestRecipeBrowser):
+
+    _default = {
+        'page'      : '1',
+        'order_by'  : 'last_updated',
+        'direction' : 'DESC',
+        'style'     : '',
+        'color'     : ''
+    }
+
+    def test_filter_by_type(self):
+        R({'name': 'MASH', 'state': 'PUBLISHED', 'type': 'MASH'})
+        R({'name': 'MINIMASH', 'state': 'PUBLISHED', 'type': 'MINIMASH'})
+        R({'name': 'EXTRACTSTEEP', 'state': 'PUBLISHED', 'type': 'EXTRACTSTEEP'})
+        R({'name': 'EXTRACT', 'state': 'PUBLISHED', 'type': 'EXTRACT'})
+        model.commit()
+
+        self._get({'mash': 'on', 'minimash': 'on', 'extract': 'on'})
+        self._eq('pages', 1)
+        self._eq('current_page', 1)
+        self._eq('offset', 0)
+        self._eq('perpage', 15)
+        self._eq('total', 4)
+        self._eq('order_by', 'last_updated')
+        self._eq('direction', 'DESC')
+        assert len(self._ns['recipes']) == 4
+
+        # Mash Only
+        self._get({'mash': 'on'})
+        self._eq('pages', 1)
+        self._eq('current_page', 1)
+        self._eq('offset', 0)
+        self._eq('perpage', 15)
+        self._eq('total', 1)
+        self._eq('order_by', 'last_updated')
+        self._eq('direction', 'DESC')
+        assert len(self._ns['recipes']) == 1
+        assert self._ns['recipes'][0].id == model.Recipe.get_by(name='MASH').id
+
+        # Mini-Mash Only
+        self._get({'minimash': 'on'})
+        self._eq('pages', 1)
+        self._eq('current_page', 1)
+        self._eq('offset', 0)
+        self._eq('perpage', 15)
+        self._eq('total', 1)
+        self._eq('order_by', 'last_updated')
+        self._eq('direction', 'DESC')
+        assert len(self._ns['recipes']) == 1
+        assert self._ns['recipes'][0].id == model.Recipe.get_by(name='MINIMASH').id
+
+        # Extracts
+        self._get({'extract': 'on'})
+        self._eq('pages', 1)
+        self._eq('current_page', 1)
+        self._eq('offset', 0)
+        self._eq('perpage', 15)
+        self._eq('total', 2)
+        self._eq('order_by', 'last_updated')
+        self._eq('direction', 'DESC')
+        assert len(self._ns['recipes']) == 2
+        identifiers = [r.id for r in self._ns['recipes']]
+        for recipe in model.Recipe.query.filter(model.Recipe.type.like('EXTRACT%')).all():
+            assert recipe.id in identifiers
+
+        # All three types disabled
+        self._get({})
+        self._eq('pages', 1)
+        self._eq('current_page', 1)
+        self._eq('offset', 0)
+        self._eq('perpage', 15)
+        self._eq('total', 0)
+        self._eq('order_by', 'last_updated')
+        self._eq('direction', 'DESC')
+        assert len(self._ns['recipes']) == 0
+
+
 class TestSorting(TestRecipeBrowser):
 
     def test_sort_by_type(self):

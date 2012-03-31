@@ -34,7 +34,7 @@ $.draughtcraft.recipes.browse.restoreLastFormValues = function(){
         // Store the "last state" for on/off toggle buttons
         $('#searchbar > form li.btn input').each(function(){
             var li = $(this).closest('li');
-            var enabled = $(this).val() == 'true';
+            var enabled = $(this).prop('checked');
             li.addClass(enabled ? 'enabled' : 'disabled');
             li.removeClass(enabled ? 'disabled' : 'enabled');
         });
@@ -78,8 +78,8 @@ $.draughtcraft.recipes.browse.prepareFormValues = function(){
 
     // For each "toggle" button...
     $('#searchbar ul.primary li.btn').each(function(){
-        // Store true/false in the hidden input field
-        $(this).children('input').val($(this).hasClass('enabled'));
+        // Check/uncheck the hidden input field
+        $(this).children('input').prop('checked', $(this).hasClass('enabled'));
     });
 
     // For each "dropdown"

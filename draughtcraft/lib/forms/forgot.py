@@ -5,7 +5,6 @@ from draughtcraft import model
 
 def email_exists(form, field):
     message = "Sorry, we couldn't find anyone with that email address."
-    print field.data
     if model.User.get_by(email=field.data) is None:
         raise ValidationError(message)
 
