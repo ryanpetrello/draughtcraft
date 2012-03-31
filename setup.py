@@ -15,7 +15,7 @@ setup(
     author='Ryan Petrello',
     author_email='ryan (at) draughtcraft.com',
     install_requires=[
-        "pecan >= 0.2",
+        "pecan >= 0.2a",
         "elixir",
         "beaker",
         "genshi",
@@ -40,5 +40,6 @@ setup(
     entry_points="""
     [pecan.command]
     populate=draughtcraft.data.tools.populate:PopulateCommand
+    flush=draughtcraft.data.tools.cacheflush:RedisFlushCommand
     """
 )
