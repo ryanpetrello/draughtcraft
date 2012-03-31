@@ -8,10 +8,10 @@ create a local database.  The name configured by default is `draughtcraftdev`:
     $ createdb draughtcraftdev
 
     $ python setup.py develop
-    $ python draughtcraft/data/tools/populate.py ./development.py
-    $ pecan serve ./development.py
+    $ pecan populate development.py
+    $ pecan serve development.py
 
 Running the Tests
 ====================================
     $ createdb draughtcrafttest
-    $ py.test
+    $ python setup.py test
