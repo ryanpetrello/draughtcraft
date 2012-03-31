@@ -12,7 +12,7 @@ class CustomTextArea(object):
     def __call__(self, field, **kwargs):
         kwargs.setdefault('id', field.id)
         value = unicode(field._value())
-        if 'value' in kwargs:
+        if 'value' in kwargs and kwargs['value']:
             value = kwargs['value']
         return w.HTMLString(u'<textarea %s>%s</textarea>' % (
             w.html_params(name=field.name, **kwargs),
