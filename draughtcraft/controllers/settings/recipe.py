@@ -1,36 +1,36 @@
-from pecan                                      import (expose, request,
-                                                        response, redirect)
-from draughtcraft.lib.units                     import to_us
-from draughtcraft.lib.notice                    import notify
-from draughtcraft.lib.schemas.settings.recipe   import UserRecipeSchema
+from pecan import expose, request, response, redirect
+from pecan.ext.wtforms import with_form
+from draughtcraft.lib.units import to_us
+from draughtcraft.lib.notice import notify
+from draughtcraft.lib.forms.settings.recipe import UserRecipeForm
 
 
 class RecipeController(object):
 
-    @expose(
-        generic     = True,
-        template    = 'settings/recipe.html'
-    )
+    @expose(generic=True, template='settings/recipe.html')
+    @with_form(UserRecipeForm)
     def index(self):
         return dict(
-            user = request.context['user']
+            user=request.context['user']
         )
 
-    @index.when(
-        method              = 'POST',
-        #schema              = UserRecipeSchema(),
-        #error_handler       = lambda: request.path,
-        #htmlfill            = dict(auto_insert_errors = True, prefix_error = True)
-    )
+    @index.when(method='POST')
+    @with_form(UserRecipeForm, error_cfg={
+        'auto_insert_errors': True,
+        'handler': lambda: request.path
+    })
     def index_post(self, **kw):
         user = request.context['user']
 
-        for k,v in kw.items():
+        for k, v in kw.items():
             user.settings[k] = v
 
         if request.context['metric'] == True:
-            user.settings['default_recipe_volume'] = to_us(*(user.settings['default_recipe_volume'], 'LITER'))[0]
-        user.settings['brewhouse_efficiency'] = user.settings['brewhouse_efficiency'] / 100.00
+            user.settings['default_recipe_volume'] = to_us(
+                *(user.settings['default_recipe_volume'], 'LITER')
+            )[0]
+
+        user.settings['brewhouse_efficiency'] /= 100.00
 
         notify('Your settings have been saved.')
         redirect('/settings/recipe', headers=response.headers)

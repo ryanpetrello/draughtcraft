@@ -21,6 +21,6 @@ class RecipeSearchForm(Form):
     ])
     style = QuerySelectField(query_factory=any_style, allow_blank=True)
 
-    mash = f.BooleanField('')
-    minimash = f.BooleanField('')
-    extract = f.BooleanField('')
+    mash = f.BooleanField('', filters=[default(False)])
+    minimash = f.BooleanField('', filters=[default(False)])
+    extract = f.BooleanField('', filters=[default(False)])

@@ -1,4 +1,5 @@
 from pecan import expose, request, abort, response, redirect
+from pecan.ext.wtforms import with_form
 from sqlalchemy import select, and_, or_, asc, desc, func, case, literal
 from draughtcraft import model
 from draughtcraft.lib.beerxml import export
@@ -148,12 +149,10 @@ class RecipesController(object):
         )
 
     @expose(template='recipes/browse/list.html')
+    @with_form(RecipeSearchForm, validate_safe=True)
     def recipes(self, **kw):
-        form = RecipeSearchForm(request.GET)
-        form.validate()
-        if form.errors:
+        if request.pecan['form'].errors:
             abort(400)
-        kw = form.data
 
         perpage = 15.0
         offset = int(perpage * (kw['page'] - 1))
