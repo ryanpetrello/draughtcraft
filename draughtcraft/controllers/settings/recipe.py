@@ -10,8 +10,17 @@ class RecipeController(object):
     @expose(generic=True, template='settings/recipe.html')
     @with_form(UserRecipeForm)
     def index(self):
+        form = request.pecan['form']
+        user = request.context['user']
+        form.process(**{
+            'unit_system': user.settings['unit_system'],
+            'default_recipe_type': user.settings['default_recipe_type'],
+            'default_ibu_formula': user.settings['default_ibu_formula']
+        })
+
         return dict(
-            user=request.context['user']
+            form=form,
+            user=user
         )
 
     @index.when(method='POST')

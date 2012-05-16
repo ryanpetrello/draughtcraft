@@ -24,18 +24,12 @@
 
         <dt><label for="name">${form.unit_system.label}</label></dt>
         <dd>
-          ${form.unit_system(
-            value=user.settings.get('unit_system', 'US'),
-            tabindex='1'
-          )}
+          ${form.unit_system(tabindex='1')}
         </dd>
 
         <dt><label for="name">${form.default_recipe_type.label}</label></dt>
         <dd>
-          ${form.default_recipe_type(
-            value=user.settings['default_recipe_type'],
-            tabindex='2'
-          )}
+          ${form.default_recipe_type(tabindex='2')}
         </dd>
 
         <dt><label for="name">${form.default_recipe_volume.label}</label></dt>
@@ -61,10 +55,7 @@
 
         <dt><label for="name">${form.default_ibu_formula.label}</label></dt>
         <dd>
-          ${form.default_ibu_formula(
-            value=user.settings['default_ibu_formula'],
-            tabindex='4'
-          )}
+          ${form.default_ibu_formula(tabindex='4')}
         </dd>
 
         <dt><label for="name">${form.brewhouse_efficiency.label}</label></dt>
