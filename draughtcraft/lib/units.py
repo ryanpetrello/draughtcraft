@@ -1,4 +1,3 @@
-from formencode import validators, Invalid
 import re
 
 UNITS = [
@@ -38,6 +37,24 @@ UNIT_MAP = {
     'l'             : 'LITER',
     'L'             : 'LITER'
 }
+
+
+def to_num(value):
+    """
+    Coerce a string to a "Number", adapted from
+    ``formencode.validators.Number``.
+    """
+    try:
+        value = float(value)
+        try:
+            int_value = int(value)
+        except OverflowError:
+            int_value = None
+        if value == int_value:
+            return int_value
+        return value
+    except ValueError:
+        return None
 
 
 class UnitException(Exception):
@@ -226,9 +243,9 @@ class UnitConvert(object):
         # value and return it.  If this fails, continue on
         # to normal "<amount> <unit>" parsing.
         #
-        try:
-            return validators.Number.to_python(stripped), None
-        except Invalid: pass
+        coerced = to_num(stripped)
+        if coerced is not None:
+            return coerced, None
 
         #
         # Split into pairs of (amount, unit), e.g.,

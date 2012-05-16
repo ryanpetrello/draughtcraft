@@ -9,17 +9,17 @@ class ProfileController(object):
     @expose(generic=True, template='settings/profile.html')
     @with_form(UserProfileForm)
     def index(self):
-        return dict(
-            user=request.context['user']
-        )
+        user = request.context['user']
+        request.pecan['form'].process(obj=user)
+        return dict(user=user)
 
-    @index.when(method='POST')
-    @with_form(UserProfileForm, error_cfg={
-        'auto_insert_errors': True,
-        'handler': lambda: request.path
-    })
+    @index.when(method='POST', template='settings/profile.html')
+    @with_form(UserProfileForm, error_cfg={'auto_insert_errors': True})
     def index_post(self, **kw):
         user = request.context['user']
+        form = request.pecan['form']
+        if form.errors:
+            return dict(user=user, form=form)
 
         for k, v in kw.items():
             setattr(user, k, v)

@@ -32,12 +32,10 @@
         <dt><label for="first_name">Full Name</label></dt>
         <dd>
           ${form.first_name(
-            value = user.first_name or '',
             tabindex = '1',
             class_ = 'short'
           )}
           ${form.last_name(
-            value = user.last_name or '',
             tabindex = '2',
             class_ = 'short'
           )}
@@ -50,7 +48,6 @@
         <dt><label for="email">${form.email.label}</label></dt>
         <dd>
           ${form.email(
-            value = user.email,
             tabindex = '3', 
             size = '256'
           )}
@@ -59,7 +56,6 @@
         <dt><label for="location">${form.location.label}</label></dt>
         <dd>
           ${form.location(
-            value = user.location or '',
             tabindex = '4', 
             size = '256'
           )}
@@ -71,7 +67,6 @@
         <dt><label for="bio">${form.bio.label}</label></dt>
         <dd>
           ${form.bio(
-            value = user.bio,
             tabindex = '5',
             rows = 8,
             cols = 33
