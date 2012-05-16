@@ -1,13 +1,15 @@
 from pecan                                          import expose, request, redirect
 from pecan.rest                                     import RestController
+from pecan.ext.wtforms                              import with_form
 from draughtcraft                                   import model
 from draughtcraft.lib.auth                          import save_trial_recipe
 from draughtcraft.lib.units                         import to_us
-from draughtcraft.lib.schemas.recipes.create        import RecipeCreation
+from draughtcraft.lib.forms.recipes.create          import RecipeCreationForm
 
 class RecipeCreationController(RestController):
 
     @expose('recipes/create.html')
+    @with_form(RecipeCreationForm)
     def get_all(self):
         #
         # If you're not logged in, and you already have a trial recipe,
@@ -19,12 +21,11 @@ class RecipeCreationController(RestController):
 
         return dict()
 
-    @expose(
-        'json',
-        #schema              = RecipeCreation(),
-        #error_handler       = lambda: request.path,
-        #htmlfill            = dict(auto_insert_errors = True, prefix_error = False)
-    )
+    @expose('json')
+    @with_form(RecipeCreationForm, error_cfg={
+        'auto_insert_errors': True,
+        'handler': lambda: request.path
+    })
     def post(self, **kw):
         recipe = model.Recipe(
             name        = kw.get('name'),

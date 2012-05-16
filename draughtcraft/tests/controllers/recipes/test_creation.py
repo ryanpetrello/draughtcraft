@@ -2,8 +2,6 @@ from draughtcraft.tests     import TestApp, TestAuthenticatedApp
 from draughtcraft           import model
 
 
-import unittest
-@unittest.expectedFailure
 class TestRecipeCreation(TestApp):
 
     def test_creation(self):
@@ -45,7 +43,7 @@ class TestRecipeCreation(TestApp):
 
             response = self.post('/recipes/create', params=copy)
             assert response.status_int == 200
-            assert 'validation_errors' in response.request.pecan
+            assert len(response.request.pecan['form'].errors)
 
         assert model.Recipe.query.count() == 0
 
@@ -77,7 +75,7 @@ class TestRecipeCreation(TestApp):
         # Because the user isn't logged in, we'll assume they're a guest
         # and store the recipe as a `trial_recipe` in their session.
         #
-        assert 'trial_recipe_id' in response.environ['beaker.session']
+        assert 'trial_recipe_id' in response.request.environ['beaker.session']
 
         #
         # Make sure we're allowed to view/edit the new recipe.
@@ -85,7 +83,6 @@ class TestRecipeCreation(TestApp):
         assert response.follow().status_int == 200
 
 
-@unittest.expectedFailure
 class TestUserRecipeCreation(TestAuthenticatedApp):
 
     def test_recipe_author(self):
@@ -138,7 +135,7 @@ class TestUserRecipeCreation(TestAuthenticatedApp):
         r = model.Recipe.get(1)
         assert r.author.id == 1
 
-        assert 'trial_recipe_id' not in response.environ['beaker.session']
+        assert 'trial_recipe_id' not in response.request.environ['beaker.session']
 
     def test_default_settings_for_first_recipe(self):
         """
