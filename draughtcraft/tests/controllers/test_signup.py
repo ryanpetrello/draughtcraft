@@ -247,8 +247,7 @@ class TestSignup(TestApp):
         self.post('/signup/', params=params)
         assert model.User.query.count() == 1
 
-import unittest
-@unittest.expectedFailure
+
 class TestRecipeConversion(TestApp):
 
     def test_trial_recipe_conversion(self):
@@ -290,4 +289,4 @@ class TestRecipeConversion(TestApp):
         # `trial_recipe_id` record should have been removed from the session.
         #
         assert len(user.recipes) == 1
-        assert 'trial_recipe_id' not in response.environ['beaker.session']
+        assert 'trial_recipe_id' not in response.request.environ['beaker.session']

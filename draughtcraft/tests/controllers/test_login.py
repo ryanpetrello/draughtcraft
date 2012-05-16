@@ -74,8 +74,6 @@ class TestLogin(TestApp):
         assert 'user_id' not in response.request.environ['beaker.session']
 
 
-import unittest
-@unittest.expectedFailure
 class TestRecipeConversion(TestApp):
 
     def test_trial_recipe_conversion(self):

@@ -2,8 +2,6 @@ from draughtcraft.tests     import TestAuthenticatedApp, TestApp
 from draughtcraft           import model
 
 
-import unittest
-@unittest.expectedFailure
 class TestRecipePublish(TestAuthenticatedApp):
 
     def test_async_get(self):
@@ -78,7 +76,6 @@ class TestRecipePublish(TestAuthenticatedApp):
         assert len(model.Recipe.query.first().views) == 0
 
 
-@unittest.expectedFailure
 class TestRecipeView(TestApp):
 
     def test_view_published_recipe_async(self):
