@@ -1,6 +1,5 @@
-from draughtcraft       import model
+from draughtcraft import model
 
-import pytest
 import unittest
 
 
@@ -96,7 +95,7 @@ class TestStyleDefined(unittest.TestCase):
             min_og = 1.050,
             max_og = 1.060
         )
-        with pytest.raises(model.InvalidStatistic):
+        with self.assertRaises(model.InvalidStatistic):
             assert style.defined('invalid')
 
 class TestStyleMatches(unittest.TestCase):
@@ -209,5 +208,5 @@ class TestStyleMatches(unittest.TestCase):
             min_og = 1.050,
             max_og = 1.060
         )
-        with pytest.raises(model.InvalidStatistic):
+        with self.assertRaises(model.InvalidStatistic):
             assert style.matches(recipe, 'invalid')

@@ -1,6 +1,5 @@
-from draughtcraft       import model
+from draughtcraft import model
 
-import pytest
 import unittest
 
 

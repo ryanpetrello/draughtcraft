@@ -1,7 +1,6 @@
-from draughtcraft.lib.units         import (UnitConvert, InvalidUnitException, PoundOunceMerge, 
-                                            OunceMerge, GramMerge, KilogramMerge, PoundExpansion,
-                                            to_us, to_metric, to_kg, to_l, UNIT_MAP)
-from pytest                         import raises
+from draughtcraft.lib.units import (UnitConvert, InvalidUnitException, PoundOunceMerge,
+                                    OunceMerge, GramMerge, KilogramMerge, PoundExpansion,
+                                    to_us, to_metric, to_kg, to_l, UNIT_MAP)
 
 import unittest
 
@@ -19,6 +18,7 @@ class TestMergeImplementations(unittest.TestCase):
 
     def test_kilogram_merge(self):
         assert KilogramMerge.merge((0.45359237, 'KILOGRAM')) == (1, 'POUND')
+
 
 class TestExpansionImplementations(unittest.TestCase):
 
@@ -181,7 +181,7 @@ class TestUnitConversionFromString(unittest.TestCase):
         assert UnitConvert.__coerce_units__(['liters']) == ['LITER']
         assert UnitConvert.__coerce_units__(['Liters']) == ['LITER']
 
-        with raises(InvalidUnitException):
+        with self.assertRaises(InvalidUnitException):
             UnitConvert.__coerce_units__(['Invalid'])
             UnitConvert.__coerce_units__([''])
 

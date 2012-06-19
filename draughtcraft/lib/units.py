@@ -41,7 +41,7 @@ UNIT_MAP = {
 
 def to_num(value):
     """
-    Coerce a string to a "Number", adapted from
+    Coerce a string to a "Number". Adapted from
     ``formencode.validators.Number``.
     """
     try:

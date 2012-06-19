@@ -1,6 +1,5 @@
-from draughtcraft           import model
-from datetime               import timedelta
-from pytest                 import raises
+from draughtcraft import model
+from datetime import timedelta
 
 import unittest
 
@@ -89,7 +88,7 @@ class TestCachedCalcuations(unittest.TestCase):
             _og         = 1.050
         )
         assert recipe.og == 1.050
-        with raises(AttributeError):
+        with self.assertRaises(AttributeError):
             recipe.og = 1.080
         assert recipe.og == 1.050
 
@@ -100,7 +99,7 @@ class TestCachedCalcuations(unittest.TestCase):
             _fg         = 1.050
         )
         assert recipe.fg == 1.050
-        with raises(AttributeError):
+        with self.assertRaises(AttributeError):
             recipe.fg = 1.080
         assert recipe.fg == 1.050
 
@@ -111,7 +110,7 @@ class TestCachedCalcuations(unittest.TestCase):
             _abv        = 8.0
         )
         assert recipe.abv == 8.0
-        with raises(AttributeError):
+        with self.assertRaises(AttributeError):
             recipe.abv = 6.0
         assert recipe.abv == 8.0
 
@@ -122,7 +121,7 @@ class TestCachedCalcuations(unittest.TestCase):
             _srm        = 10
         )
         assert recipe.srm == 10
-        with raises(AttributeError):
+        with self.assertRaises(AttributeError):
             recipe.srm = 20
         assert recipe.srm == 10
 
@@ -133,6 +132,6 @@ class TestCachedCalcuations(unittest.TestCase):
             _ibu        = 30
         )
         assert recipe.ibu == 30
-        with raises(AttributeError):
+        with self.assertRaises(AttributeError):
             recipe.ibu = 40
         assert recipe.ibu == 30
