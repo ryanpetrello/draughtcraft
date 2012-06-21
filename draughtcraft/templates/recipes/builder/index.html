@@ -1,13 +1,3 @@
-<%
-  def printable_type(type):
-    return ({
-      'MASH'          : 'All-Grain',
-      'MINIMASH'      : 'Extract w/ Mini-Mash',
-      'EXTRACTSTEEP'  : 'Extract w/ Steeped Grains',
-      'EXTRACT'       : 'Extract'
-    })[type] 
-%>
-
 <%inherit file="../../layout.html" />
 
 <%def name="title()">
@@ -20,97 +10,56 @@
 <%def name="style()">
     ${h.css('/css/recipes/builder.css')}
     <link rel="stylesheet" type="text/css" media="print" href="${h.stamp('/css/recipes/builder.print.css')}" />
-    ${h.css('/css/jquery.selectbox.css')}
 </%def>
 
 <%def name="javascript()">
-  ${h.js('/javascript/jquery.form.min.js')}
-  ${h.js('/javascript/jquery-scrolltofixed-min.js')}
+  <script type="text/javascript" src="/javascript/knockout-2.1.0.js"></script>
   <script type="text/javascript" src="/javascript/recipes/builder.js"></script>
-  ${h.js('/javascript/jquery.selectbox.min.js')}
 </%def>
 
-<div id="builder">
+<div id="builder" data-bind="with: recipe">
 
-  <div class="header">
-    ${h.form('async/name', class_='name')}
-      <h1>
-        ${h.text('name', value=recipe.name)}
-        % if recipe.copied_from:
-          <span class="copied_from">  
-            based on <a href="${recipe.copied_from.url()}">${recipe.copied_from.author.username}'s recipe</a>
-          </span>
-        % endif
-      </h1> 
-    ${h.end_form()}
-    <fieldset>
-      ${h.form('async/settings/style')}
-        ${h.select(
-          'target', 
-          recipe.style.id if recipe.style else None, 
-          [('', 'No Target Style Chosen')] + [(s.id, s.name) for s in h.model.Style.query.order_by(h.model.Style.name).all()],
-        )}
-      ${h.end_form()}
-    </fieldset>
+  <div id="header">
 
-    % if recipe.metric:
-        <fieldset>
-          ${h.form('async/settings/volume', class_='volume')}
-            ${h.text(
-              'volume', 
-              h.format_volume(recipe.liters),
-              class_ = 'unit'
-            )}
-            ${h.hidden(
-              'unit',
-              'LITER'
-            )}
-            L.
-          ${h.end_form()}
-        </fieldset>
-    % else:
-        <fieldset>
-          ${h.form('async/settings/volume', class_='volume')}
-            ${h.text(
-              'volume', 
-              h.format_volume(recipe.gallons),
-              class_ = 'unit'
-            )}
-            ${h.hidden(
-              'unit',
-              'GALLON'
-            )}
-            Gal.
-          ${h.end_form()}
-        </fieldset>
+    <h1>
+      <input data-bind="value: name" type="text" class_="name" />
+    </h1>
+    % if recipe.copied_from:
+      <span class="copied_from">
+        based on 
+        <a href="${recipe.copied_from.url()}">${recipe.copied_from.author.username}'s recipe</a>
+      </span>
     % endif
 
-    <fieldset class="type">
-      <span>${printable_type(recipe.type)}</span>
+    <fieldset>
+      <select
+        data-bind="options: $root.styles, value: style, optionsText: 'name', optionsValue: 'id'">
+      </select>
+    </fieldset>
+
+    <fieldset>
+      <input data-bind="value: volume" type="text" class="unit" />
+      ${'L.' if recipe.metric else 'Gal.'}
     </fieldset>
 
     % if recipe.author:
-      <p class="author">By: ${recipe.author.full_name.strip() or recipe.author.username}</p>
+      <p class="author">
+        By: ${recipe.author.full_name.strip() or recipe.author.username}
+      </p>
       <a href="/profile/${recipe.author.username}" class="author">
-        <img 
-          src="${recipe.author.gravatar}&s=45" 
+        <img
+          src="${recipe.author.gravatar}&s=45"
           class="gravatar"
           title="${recipe.author.username}"
         />
       </a>
-      <img 
-        src="${recipe.author.gravatar}&s=100" 
+      <img
+        src="${recipe.author.gravatar}&s=100"
         class="gravatar fullsize"
         title="${recipe.author.username}"
       />
-    %else:
-      
-    <div id="actions">
-      <ul>
-        <li class="intl submit" title="Switch to ${'U.S.' if recipe.metric else 'Metric'} Units"></li>
-      </ul>
-    </div>
     % endif
+
   </div>
 
   <div id="builder-ajax">
@@ -119,16 +68,16 @@
     </div>
   </div>
 
-</div>
-<div id="builder-buttons">
-  % if recipe.author:
-    ${h.form('publish')}
-      <button class="publish-btn">Publish Changes</button>
-      <span class="sep">or</span> <a href="/profile/${recipe.author.username}">Cancel</a>
-    ${h.end_form()}
-  % else:
-    ${h.form('/signup', method='GET')}
-      <button>Save Changes</button>
-    ${h.end_form()}
-  % endif
+  <div id="builder-buttons">
+    % if recipe.author:
+      ${h.form('publish')}
+        <button class="publish-btn">Publish Changes</button>
+        <span class="sep">or</span> <a href="/profile/${recipe.author.username}">Cancel</a>
+      ${h.end_form()}
+    % else:
+      ${h.form('/signup', method='GET')}
+        <button>Save Changes</button>
+      ${h.end_form()}
+    % endif
+  </div>
 </div>
