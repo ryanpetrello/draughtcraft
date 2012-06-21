@@ -12,14 +12,10 @@
     ns.RecipeViewModel = function(){
         ns.recipe = this.recipe = new ns.Recipe();
 
-        this.styles = ko.observableArray([]);
+        this.styles = ns.STYLES;
 
         ($.proxy(function(){
             // Fetch recipe data via AJAX
-            this.styles.push({id: null, name: 'No Target Style Chosen'});
-            this.styles.push({id: 34, name: 'American Amber Ale'});
-            this.styles.push({id: 55, name: 'Witbier'});
-
             this.recipe.name("Summer's End");
             this.recipe.volume(5);
             this.recipe.style(55);

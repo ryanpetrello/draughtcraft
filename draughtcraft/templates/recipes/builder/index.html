@@ -13,6 +13,19 @@
 </%def>
 
 <%def name="javascript()">
+  <script type="text/javascript">
+
+    (function(ns, $){
+      ns.recipes = ns.recipes || {}, ns.recipes.builder = ns.recipes.builder || {};
+      ns.recipes.builder.STYLES = [
+      % for s in h.model.Style.query.order_by(h.model.Style.name).all():
+        {"id": ${s.id}, "name": "${s.name}"},
+      % endfor
+      ];
+      
+    })($.draughtcraft = $.draughtcraft || {}, $);
+
+  </script>
   <script type="text/javascript" src="/javascript/knockout-2.1.0.js"></script>
   <script type="text/javascript" src="/javascript/recipes/builder.js"></script>
 </%def>
