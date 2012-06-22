@@ -42,6 +42,12 @@ class Ingredient(Entity, ShallowCopyMixin):
             origin = origin.title()
         return origin
 
+    def __json__(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
+
 
 class Fermentable(Ingredient):
 
@@ -71,12 +77,22 @@ class Fermentable(Ingredient):
         if self.type is None:
             return 'Grain'
         value = self.type.capitalize()
-        if value == 'Malt': value = 'Grain'
+        if value == 'Malt':
+            value = 'Grain'
         return value
 
     @property
     def percent_yield(self):
         return round((self.ppg / 46.00) * 100)
+
+    def __json__(self):
+        json = super(Fermentable, self).__json__()
+        json.update({
+            'ppg': self.ppg,
+            'lovibond': self.lovibond,
+            'printed_type': self.printed_type
+        })
+        return json
 
 
 class Hop(Ingredient):

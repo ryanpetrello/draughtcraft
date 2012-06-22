@@ -7,6 +7,10 @@
         this.name = ko.observable();
         this.volume = ko.observable();
         this.style = ko.observable();
+
+        this.mash = ko.observableArray();
+        this.boil = ko.observableArray();
+        this.fermentation = ko.observableArray();
     };
 
     ns.RecipeViewModel = function(){
@@ -19,10 +23,26 @@
             $.getJSON(
                 window.location.toString()+'index.json',
                 ($.proxy(function(data){
-                    for(var k in data['recipe']){
+                    var data = data['recipe'];
+
+                    var pop = function(obj, key){
+                        var v = obj[key];
+                        if(v)
+                            delete obj[key]
+                        return v;
+                    };
+
+                    // Recipe additions
+                    this.recipe.mash(pop(data, 'mash'));
+                    this.recipe.boil(pop(data, 'boil'));
+                    this.recipe.fermentation(pop(data, 'fermentation'));
+
+                    // Recipe attributes
+                    for(var k in data){
                         if(this.recipe[k])
-                            this.recipe[k](data['recipe'][k]);
+                            this.recipe[k](data[k]);
                     }
+
                 }, this))
             );
 

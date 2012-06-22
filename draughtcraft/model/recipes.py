@@ -386,9 +386,24 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
 
     def __json__(self):
         return {
+            # Basic attributes
             'name': self.name,
             'style': self.style.id,
-            'volume': self.gallons
+            'volume': self.liters if self.metric else self.gallons,
+
+            # Ingredients
+            'mash': filter(
+                lambda a: a.step == 'mash',
+                self.additions
+            ),
+            'boil': filter(
+                lambda a: a.step == 'boil',
+                self.additions
+            ),
+            'fermentation': filter(
+                lambda a: a.step == 'fermentation',
+                self.additions
+            )
         }
 
 
@@ -609,6 +624,15 @@ class RecipeAddition(Entity, DeepCopyMixin):
                 kw['amount_is_weight'] = True
 
             return export.Misc(**kw)
+
+    def __json__(self):
+        return {
+            'amount': self.amount,
+            'unit': self.unit,
+            'use': self.use,
+            'minutes': self.minutes,
+            'ingredient': self.ingredient
+        }
 
 
 class HopAddition(RecipeAddition):
