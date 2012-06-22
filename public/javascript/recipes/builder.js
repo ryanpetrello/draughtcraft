@@ -16,9 +16,16 @@
 
         ($.proxy(function(){
             // Fetch recipe data via AJAX
-            this.recipe.name("Summer's End");
-            this.recipe.volume(5);
-            this.recipe.style(55);
+            $.getJSON(
+                window.location.toString()+'index.json',
+                ($.proxy(function(data){
+                    for(var k in data['recipe']){
+                        if(this.recipe[k])
+                            this.recipe[k](data['recipe'][k]);
+                    }
+                }, this))
+            );
+
         }, this))();
     };
 

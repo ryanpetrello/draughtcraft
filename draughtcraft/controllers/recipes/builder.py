@@ -331,6 +331,7 @@ class RecipeBuilderController(SecureController):
         return False
 
     @expose('recipes/builder/index.html')
+    @expose('json', content_type='application/json')
     def index(self):
         return dict(
             recipe=request.context['recipe'],

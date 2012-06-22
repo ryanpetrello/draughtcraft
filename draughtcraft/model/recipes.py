@@ -384,6 +384,13 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
 
         return export.Recipe(**kw).render()
 
+    def __json__(self):
+        return {
+            'name': self.name,
+            'style': self.style.id,
+            'volume': self.gallons
+        }
+
 
 class RecipeAddition(Entity, DeepCopyMixin):
 
