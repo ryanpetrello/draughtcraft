@@ -1,0 +1,40 @@
+<table>
+  <tbody>
+    <tr>
+      <th class="type"></th>
+      <th class="percent">%</th>
+      <th class="amount">Amount</th>
+      <th>Fermentable</th>
+      <th>PPG</th>
+      <th class="unit">L</th>
+      <th class="close"></th>
+    </tr>
+  </tbody>
+  <tbody data-bind="foreach: mash">
+    <tr data-bind="css: { 'even': ($index() % 2 == 0) }" id="xyz" class="addition">
+      <td data-bind="with: ingredient" class="type grain">
+        <span data-bind="text: printed_type"></span>
+      </td>
+      <td class="percent">
+        XYZ%
+      </td>
+      <td class="amount">
+        <input data-bind="value: amount + ' ' + unit" type="text" />
+      </td>
+      <td data-bind="with: ingredient">
+        <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
+      </td>
+      <td data-bind="with: ingredient">
+        <span data-bind="text: ppg"></span>
+      </td>
+      <td class="unit" data-bind="with: ingredient">
+        <span data-bind="text: lovibond"></span>
+      </td>
+      <td class="close">
+        <a href="#" tabindex="9999">
+          <img src="/images/close.png">
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>

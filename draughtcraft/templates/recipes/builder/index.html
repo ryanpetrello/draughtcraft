@@ -76,67 +76,44 @@
   </div>
 
   <div id="builder-ajax">
+
     <div class="builder-loading">
       <img src="/images/loading.gif" /> 
     </div>
 
-    <div class="step clearfix active">
-      <h2>
-        <ul>
-          <li class="active"><a href="#mash">Mash</a></li>
-          <li><a href="#boil">Boil</a></li>
-          <li class="last"><a href="#ferment">Ferment</a></li>
-        </ul>
-      </h2>
+    <%def name="li(name, active=False, last=False)">
+      <%
+        cls = 'active' if active else ''
+        if last:
+          cls += ' last'
+      %>
+      <li class="${cls}">
+        <a href="#${name}">${name.capitalize()}</a>
+      </li>
+    </%def>
 
-      <div class="ingredient-list">
-        <h3 class="ribbon">
-          Ingredients
-        </h3>
+    <%def name="step(name)">
+      <div class="step clearfix active">
 
-        <table>
-          <tbody>
-            <tr>
-              <th class="type"></th>
-              <th class="percent">%</th>
-              <th class="amount">Amount</th>
-              <th>Fermentable</th>
-              <th>PPG</th>
-              <th class="unit">L</th>
-              <th class="close"></th>
-            </tr>
-          </tbody>
-          <tbody data-bind="foreach: mash">
-            <tr data-bind="css: { 'even': ($index() % 2 == 0) }" id="xyz" class="addition">
-              <td data-bind="with: ingredient" class="type grain">
-                <span data-bind="text: printed_type"></span>
-              </td>
-              <td class="percent">
-                XYZ%
-              </td>
-              <td class="amount">
-                <input data-bind="value: amount + ' ' + unit" type="text" />
-              </td>
-              <td data-bind="with: ingredient">
-                <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
-              </td>
-              <td data-bind="with: ingredient">
-                <span data-bind="text: ppg"></span>
-              </td>
-              <td class="unit" data-bind="with: ingredient">
-                <span data-bind="text: lovibond"></span>
-              </td>
-              <td class="close">
-                <a href="#" tabindex="9999">
-                  <img src="/images/close.png">
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <h2>
+          <ul>
+            ${li('mash', name == 'mash')}
+            ${li('boil', name == 'boil')}
+            ${li('ferment', name == 'ferment', True)}
+          </ul>
+        </h2>
+
+        <div class="ingredient-list">
+          <h3 class="ribbon">
+            Ingredients
+          </h3>
+
+          <%include file="steps/${name}.html"/>
+        </div>
       </div>
+    </%def>
 
-    </div>
+    ${step('mash')}
 
   </div>
 
