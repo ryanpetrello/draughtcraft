@@ -1,6 +1,30 @@
-<table>
-  <tbody>
+<%def name="tbody(cls)">
+  <tbody data-bind="visible: ${cls}().length > 0">
     <tr>
+      ${caller.header()}
+    </tr>
+  </tbody>
+  <tbody data-bind="foreach: ${cls}, visible: ${cls}().length > 0">
+    <tr data-bind="css: { 'even': ($index() % 2 == 0) }" class="addition">
+      ${caller.row()}
+    </tr>
+  </tbody>
+</%def>
+
+<!-- Empty Placeholder -->
+<table data-bind="visible: mash.additions().length == 0">
+  <tr>
+    <td>
+      Choose one or more fermentables for this recipe.
+    </td>
+  </tr>
+</table>
+
+<table data-bind="with: mash">
+
+  <!-- Fermentables -->
+  <%self:tbody cls="fermentables">
+    <%def name="header()">
       <th class="type"></th>
       <th class="percent">%</th>
       <th class="amount">Amount</th>
@@ -8,10 +32,8 @@
       <th>PPG</th>
       <th class="unit">L</th>
       <th class="close"></th>
-    </tr>
-  </tbody>
-  <tbody data-bind="foreach: mash">
-    <tr data-bind="css: { 'even': ($index() % 2 == 0) }" id="xyz" class="addition">
+    </%def>
+    <%def name="row()">
       <td data-bind="with: ingredient" class="type grain">
         <span data-bind="text: printed_type"></span>
       </td>
@@ -35,6 +57,74 @@
           <img src="/images/close.png">
         </a>
       </td>
-    </tr>
-  </tbody>
+    </%def>
+  </%self:tbody>
+
+  <!-- Hops -->
+  <%self:tbody cls="hops">
+    <%def name="header()">
+      <th class="type"></th>
+      <th class="percent"></th>
+      <th class="amount">Amount</th>
+      <th>Variety</th>
+      <th>Form</th>
+      <th class="unit">AA</th>
+      <th class="close"></th>
+    </%def>
+    <%def name="row()">
+      <td data-bind="with: ingredient" class="type hop">
+        <span>Hop</span>
+      </td>
+      <td class="percent"></td>
+      <td class="amount">
+        <input data-bind="value: amount + ' ' + unit" type="text" />
+      </td>
+      <td data-bind="with: ingredient">
+        <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
+      </td>
+      <td>
+        <span data-bind="text: form"></span>
+      </td>
+      <td class="unit">
+        <input data-bind="value: alpha_acid" type="text" /></span>
+      </td>
+      <td class="close">
+        <a href="#" tabindex="9999">
+          <img src="/images/close.png">
+        </a>
+      </td>
+    </%def>
+  </%self:tbody>
+
+  <!-- Extras -->
+  <%self:tbody cls="extras">
+    <%def name="header()">
+      <th class="type"></th>
+      <th class="percent"></th>
+      <th class="amount">Amount</th>
+      <th>Name</th>
+      <th></th>
+      <th class="unit"></th>
+      <th class="close"></th>
+    </%def>
+    <%def name="row()">
+      <td data-bind="with: ingredient" class="type extra">
+        <span>Extra</span>
+      </td>
+      <td class="percent"></td>
+      <td class="amount">
+        <input data-bind="value: amount + ' ' + unit" type="text" />
+      </td>
+      <td data-bind="with: ingredient">
+        <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
+      </td>
+      <td />
+      <td class="unit"></td>
+      <td class="close">
+        <a href="#" tabindex="9999">
+          <img src="/images/close.png">
+        </a>
+      </td>
+    </%def>
+  </%self:tbody>
 </table>

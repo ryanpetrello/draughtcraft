@@ -45,7 +45,8 @@ class Ingredient(Entity, ShallowCopyMixin):
     def __json__(self):
         return {
             'id': self.id,
-            'name': self.name
+            'class': self.__class__.__name__,
+            'name': self.printed_name
         }
 
 

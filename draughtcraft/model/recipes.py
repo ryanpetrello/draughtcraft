@@ -668,6 +668,15 @@ class HopAddition(RecipeAddition):
         offset = self.recipe.boil_minutes - self.minutes
         return '%sm' % offset
 
+    def __json__(self):
+        json = super(HopAddition, self).__json__()
+        json.update({
+            'form': self.form,
+            'alpha_acid': self.alpha_acid
+        })
+        return json
+
+
 
 
 class FermentationStep(Entity, DeepCopyMixin):

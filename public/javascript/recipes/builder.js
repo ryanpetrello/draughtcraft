@@ -3,14 +3,43 @@
     n.recipes = n.recipes || {}, n.recipes.builder = n.recipes.builder || {};
     ns = n.recipes.builder;
 
+    ns.RecipeStep = function(){
+        this.additions = ko.observableArray();
+
+        this.fermentables = ko.computed(function() {
+            return ko.utils.arrayFilter(this.additions(), function(item) {
+                return item.ingredient.class == 'Fermentable';
+            });
+        }, this);
+
+        this.hops = ko.computed(function() {
+            return ko.utils.arrayFilter(this.additions(), function(item) {
+                return item.ingredient.class == 'Hop';
+            });
+        }, this);
+
+        this.yeast = ko.computed(function() {
+            return ko.utils.arrayFilter(this.additions(), function(item) {
+                return item.ingredient.class == 'Yeast';
+            });
+        }, this);
+
+        this.extras = ko.computed(function() {
+            return ko.utils.arrayFilter(this.additions(), function(item) {
+                return item.ingredient.class == 'Extra';
+            });
+        }, this);
+
+    };
+
     ns.Recipe = function(){
         this.name = ko.observable();
         this.volume = ko.observable();
         this.style = ko.observable();
 
-        this.mash = ko.observableArray();
-        this.boil = ko.observableArray();
-        this.fermentation = ko.observableArray();
+        this.mash = new ns.RecipeStep();
+        this.boil = new ns.RecipeStep();
+        this.fermentation = new ns.RecipeStep();
     };
 
     ns.RecipeViewModel = function(){
@@ -33,9 +62,15 @@
                     };
 
                     // Recipe additions
-                    this.recipe.mash(pop(data, 'mash'));
-                    this.recipe.boil(pop(data, 'boil'));
-                    this.recipe.fermentation(pop(data, 'fermentation'));
+                    this.recipe.mash.additions(
+                        pop(data, 'mash')
+                    );
+                    this.recipe.boil.additions(
+                        pop(data, 'boil')
+                    );
+                    this.recipe.fermentation.additions(
+                        pop(data, 'fermentation')
+                    );
 
                     // Recipe attributes
                     for(var k in data){
