@@ -46,6 +46,11 @@
         ns.recipe = this.recipe = new ns.Recipe();
 
         this.styles = ns.STYLES;
+        this.hop_forms = [
+            {'id': 'LEAF', 'name': 'Leaf'},
+            {'id': 'PELLET', 'name': 'Pellet'},
+            {'id': 'PLUG', 'name': 'Plug'},
+        ];
 
         ($.proxy(function(){
             // Fetch recipe data via AJAX

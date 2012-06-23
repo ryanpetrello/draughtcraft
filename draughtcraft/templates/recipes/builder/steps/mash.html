@@ -83,7 +83,8 @@
         <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
       </td>
       <td>
-        <span data-bind="text: form"></span>
+        <select data-bind="options: $root.hop_forms, value: form, optionsText: 'name', optionsValue: 'id'">
+        </select>
       </td>
       <td class="unit">
         <input data-bind="value: alpha_acid" type="text" /></span>
