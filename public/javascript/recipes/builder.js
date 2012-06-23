@@ -52,13 +52,20 @@
             {'id': 'PLUG', 'name': 'Plug'},
         ];
 
+        var show = function(){
+            // Display the UI after data has been fetched via AJAX.
+            $('.builder-loading').hide();
+            $('.step').addClass('active');
+        };
+
         ($.proxy(function(){
-            // Fetch recipe data via AJAX
+            // Fetch recipe data via AJAX and render the UI
             $.getJSON(
                 window.location.toString()+'index.json',
                 ($.proxy(function(data){
-                    var data = data['recipe'];
+                    show();
 
+                    var data = data['recipe'];
                     var pop = function(obj, key){
                         var v = obj[key];
                         if(v)
@@ -93,7 +100,6 @@
 
 $(function(){
     ko.applyBindings(new $.draughtcraft.recipes.builder.RecipeViewModel());
-    //
     // Register a JS tooltip on the author's thumbnail (if there is one).
     $('img.gravatar').tipTip({'delay': 50});
 });
