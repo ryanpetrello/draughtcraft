@@ -143,6 +143,13 @@ class Yeast(Ingredient):
 
     additions           = OneToMany('RecipeAddition', inverse='yeast')
 
+    def __json__(self):
+        json = super(Yeast, self).__json__()
+        json.update({
+            'form': self.form.capitalize()
+        })
+        return json
+
 
 class Extra(Ingredient):
 

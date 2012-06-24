@@ -1,0 +1,130 @@
+<%def name="tbody(cls)">
+  <tbody data-bind="if: $.grep($.draughtcraft.recipes.builder.recipe.fermentation.additions(), function(a){ return a.ingredient().class == '${cls}' }).length">
+    <tr>
+      ${caller.header()}
+    </tr>
+  </tbody>
+  <tbody data-bind="foreach: additions">
+    <tr data-bind="if: ingredient().class == '${cls}', css: { 'even': ($index() % 2 == 0) }" class="addition">
+      ${caller.row()}
+    </tr>
+  </tbody>
+</%def>
+
+<%def name="fermentation_stage()">
+  <select data-bind="options: [{'id': 'PRIMARY', 'name': 'Primary'}, {'id': 'SECONDARY', 'name': 'Secondary'}, {'id': 'TERTIARY', 'name': 'Tertiary'}], value: use, optionsText: 'name', optionsValue: 'id'"></select>
+</%def>
+
+<!-- Empty Placeholder -->
+<table data-bind="visible: fermentation.additions().length == 0">
+  <tr>
+    <td>
+      Choose yeast(s) for fermentation.
+    </td>
+  </tr>
+</table>
+
+<table data-bind="with: fermentation">
+
+  <!-- Yeast -->
+  <%self:tbody cls="Yeast">
+    <%def name="header()">
+      <th class="type"></th>
+      <th>Add to</th>
+      <th />
+      <th>Strain</th>
+      <th>Form</th>
+      <th />
+      <th class="close"></th>
+    </%def>
+    <%def name="row()">
+      <td data-bind="with: ingredient()" class="type yeast">
+        <span>Yeast</span>
+      </td>
+      <td>${fermentation_stage()}</td>
+      <td></td>
+      <td data-bind="with: ingredient()">
+        <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
+      </td>
+      <td data-bind="text: ingredient().form">
+      </td>
+      <td></td>
+      <td class="close">
+        <a href="#" tabindex="9999">
+          <img src="/images/close.png">
+        </a>
+      </td>
+    </%def>
+  </%self:tbody>
+
+  <!-- Hops -->
+  <%self:tbody cls="Hop">
+    <%def name="header()">
+      <th class="type"></th>
+      <th>Add to</th>
+      <th class="amount">Amount</th>
+      <th>Variety</th>
+      <th>Form</th>
+      <th class="unit">AA</th>
+      <th class="close"></th>
+    </%def>
+    <%def name="row()">
+      <td data-bind="with: ingredient()" class="type hop">
+        <span>Hop</span>
+      </td>
+      <td>
+        ${fermentation_stage()}
+      </td>
+      <td class="amount">
+        <input data-bind="value: amount() + ' ' + unit()" type="text" />
+      </td>
+      <td data-bind="with: ingredient()">
+        <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
+      </td>
+      <td>
+        <select data-bind="options: $root.hop_forms, value: form, optionsText: 'name', optionsValue: 'id'">
+        </select>
+      </td>
+      <td class="unit">
+        <input data-bind="value: alpha_acid" type="text" /></span>
+      </td>
+      <td class="close">
+        <a href="#" tabindex="9999">
+          <img src="/images/close.png">
+        </a>
+      </td>
+    </%def>
+  </%self:tbody>
+
+  <!-- Extras -->
+  <%self:tbody cls="Extra">
+    <%def name="header()">
+      <th class="type"></th>
+      <th>Add to</th>
+      <th class="amount">Amount</th>
+      <th>Name</th>
+      <th></th>
+      <th class="unit"></th>
+      <th class="close"></th>
+    </%def>
+    <%def name="row()">
+      <td data-bind="with: ingredient()" class="type extra">
+        <span>Extra</span>
+      </td>
+      <td>${fermentation_stage()}</td>
+      <td class="amount">
+        <input data-bind="value: amount() + ' ' + unit()" type="text" />
+      </td>
+      <td data-bind="with: ingredient()">
+        <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
+      </td>
+      <td />
+      <td class="unit"></td>
+      <td class="close">
+        <a href="#" tabindex="9999">
+          <img src="/images/close.png">
+        </a>
+      </td>
+    </%def>
+  </%self:tbody>
+</table>

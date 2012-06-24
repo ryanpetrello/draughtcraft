@@ -1,5 +1,5 @@
 <%def name="tbody(cls)">
-  <tbody data-bind="if: $.grep($.draughtcraft.recipes.builder.recipe.boil.additions(), function(a){ return a.ingredient().class == '${cls}' }).length">
+  <tbody data-bind="if: $.grep($.draughtcraft.recipes.builder.recipe.mash.additions(), function(a){ return a.ingredient().class == '${cls}' }).length">
     <tr>
       ${caller.header()}
     </tr>
