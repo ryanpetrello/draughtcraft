@@ -1,0 +1,140 @@
+<%def name="tbody(cls)">
+  <tbody data-bind="if: $.grep($.draughtcraft.recipes.builder.recipe.boil.additions(), function(a){ return a.ingredient().class == '${cls}' }).length">
+    <tr>
+      ${caller.header()}
+    </tr>
+  </tbody>
+  <tbody data-bind="foreach: additions">
+    <tr data-bind="if: ingredient().class == '${cls}', css: { 'even': ($index() % 2 == 0) }" class="addition">
+      ${caller.row()}
+    </tr>
+  </tbody>
+</%def>
+
+<%def name="time()">
+  <select data-bind="options: [{'id': 'FIRST WORT', 'name': 'First Wort'}, {'id': 'BOIL', 'name': 'Boil'}, {'id': 'FLAME OUT', 'name': 'Flame Out'}], value: use, optionsText: 'name', optionsValue: 'id'"></select>
+  <select data-bind="options: $root.boil_times(), value: minutes, optionsText: 'name', optionsValue: 'id', visible: use() == 'BOIL'"></select>
+</%def>
+
+<!-- Empty Placeholder -->
+<table data-bind="visible: boil.additions().length == 0">
+  <tr>
+    <td>
+      Choose one or more boil additions for this recipe.
+    </td>
+  </tr>
+</table>
+
+<table data-bind="with: boil">
+
+  <!-- Fermentables -->
+  <%self:tbody cls="Fermentable">
+    <%def name="header()">
+      <th class="type"></th>
+      <th class="time">Use</th>
+      <th class="amount">Amount</th>
+      <th>Fermentable</th>
+      <th>PPG</th>
+      <th class="unit">L</th>
+      <th class="close"></th>
+    </%def>
+    <%def name="row()">
+      <td data-bind="with: ingredient()" class="type grain">
+        <span data-bind="text: printed_type"></span>
+      </td>
+      <td class="time">
+        ${time()}
+      </td>
+      <td class="amount">
+        <input data-bind="value: amount() + ' ' + unit()" type="text" />
+      </td>
+      <td data-bind="with: ingredient()">
+        <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
+      </td>
+      <td data-bind="with: ingredient()">
+        <span data-bind="text: ppg"></span>
+      </td>
+      <td class="unit" data-bind="with: ingredient()">
+        <span data-bind="text: lovibond"></span>
+      </td>
+      <td class="close">
+        <a href="#" tabindex="9999">
+          <img src="/images/close.png">
+        </a>
+      </td>
+    </%def>
+  </%self:tbody>
+
+  <!-- Hops -->
+  <%self:tbody cls="Hop">
+    <%def name="header()">
+      <th class="type"></th>
+      <th class="time">Use</th>
+      <th class="amount">Amount</th>
+      <th>Variety</th>
+      <th>Form</th>
+      <th class="unit">AA</th>
+      <th class="close"></th>
+    </%def>
+    <%def name="row()">
+      <td data-bind="with: ingredient()" class="type hop">
+        <span>Hop</span>
+      </td>
+      <td class="time">
+        ${time()} 
+      </td>
+      <td class="amount">
+        <input data-bind="value: amount() + ' ' + unit()" type="text" />
+      </td>
+      <td data-bind="with: ingredient()">
+        <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
+      </td>
+      <td>
+        <select data-bind="options: $root.hop_forms, value: form, optionsText: 'name', optionsValue: 'id'">
+        </select>
+      </td>
+      <td class="unit">
+        <input data-bind="value: alpha_acid" type="text" /></span>
+      </td>
+      <td class="close">
+        <a href="#" tabindex="9999">
+          <img src="/images/close.png">
+        </a>
+      </td>
+    </%def>
+  </%self:tbody>
+
+  <!-- Extras -->
+  <%self:tbody cls="Extra">
+    <%def name="header()">
+      <th class="type"></th>
+      <th class="time">Use</th>
+      <th class="amount">Amount</th>
+      <th>Name</th>
+      <th></th>
+      <th class="unit"></th>
+      <th class="close"></th>
+    </%def>
+    <%def name="row()">
+      <td data-bind="with: ingredient()" class="type extra">
+        <span>Extra</span>
+      </td>
+      <td class="time">
+        ${time()}
+      </td>
+      <td class="amount">
+        <input data-bind="value: amount() + ' ' + unit()" type="text" />
+      </td>
+      <td data-bind="with: ingredient()">
+        <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
+      </td>
+      <td />
+      <td class="unit"></td>
+      <td class="close">
+        <a href="#" tabindex="9999">
+          <img src="/images/close.png">
+        </a>
+      </td>
+    </%def>
+  </%self:tbody>
+</table>

@@ -403,7 +403,10 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
             'fermentation': filter(
                 lambda a: a.step == 'fermentation',
                 self.additions
-            )
+            ),
+
+            # Step-specific settings
+            'boil_minutes': self.boil_minutes
         }
 
 

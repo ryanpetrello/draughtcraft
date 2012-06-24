@@ -1,11 +1,11 @@
 <%def name="tbody(cls)">
-  <tbody data-bind="visible: ${cls}().length > 0">
+  <tbody data-bind="if: $.grep($.draughtcraft.recipes.builder.recipe.boil.additions(), function(a){ return a.ingredient().class == '${cls}' }).length">
     <tr>
       ${caller.header()}
     </tr>
   </tbody>
-  <tbody data-bind="foreach: ${cls}, visible: ${cls}().length > 0">
-    <tr data-bind="css: { 'even': ($index() % 2 == 0) }" class="addition">
+  <tbody data-bind="foreach: additions">
+    <tr data-bind="if: ingredient().class == '${cls}', css: { 'even': ($index() % 2 == 0) }" class="addition">
       ${caller.row()}
     </tr>
   </tbody>
@@ -23,7 +23,7 @@
 <table data-bind="with: mash">
 
   <!-- Fermentables -->
-  <%self:tbody cls="fermentables">
+  <%self:tbody cls="Fermentable">
     <%def name="header()">
       <th class="type"></th>
       <th class="percent">%</th>
@@ -34,22 +34,22 @@
       <th class="close"></th>
     </%def>
     <%def name="row()">
-      <td data-bind="with: ingredient" class="type grain">
+      <td data-bind="with: ingredient()" class="type grain">
         <span data-bind="text: printed_type"></span>
       </td>
       <td class="percent">
         XYZ%
       </td>
       <td class="amount">
-        <input data-bind="value: amount + ' ' + unit" type="text" />
+        <input data-bind="value: amount() + ' ' + unit()" type="text" />
       </td>
-      <td data-bind="with: ingredient">
+      <td data-bind="with: ingredient()">
         <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
       </td>
-      <td data-bind="with: ingredient">
+      <td data-bind="with: ingredient()">
         <span data-bind="text: ppg"></span>
       </td>
-      <td class="unit" data-bind="with: ingredient">
+      <td class="unit" data-bind="with: ingredient()">
         <span data-bind="text: lovibond"></span>
       </td>
       <td class="close">
@@ -61,7 +61,7 @@
   </%self:tbody>
 
   <!-- Hops -->
-  <%self:tbody cls="hops">
+  <%self:tbody cls="Hop">
     <%def name="header()">
       <th class="type"></th>
       <th class="percent"></th>
@@ -72,14 +72,14 @@
       <th class="close"></th>
     </%def>
     <%def name="row()">
-      <td data-bind="with: ingredient" class="type hop">
+      <td class="type hop">
         <span>Hop</span>
       </td>
       <td class="percent"></td>
       <td class="amount">
-        <input data-bind="value: amount + ' ' + unit" type="text" />
+        <input data-bind="value: amount() + ' ' + unit()" type="text" />
       </td>
-      <td data-bind="with: ingredient">
+      <td data-bind="with: ingredient()">
         <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
       </td>
       <td>
@@ -98,7 +98,7 @@
   </%self:tbody>
 
   <!-- Extras -->
-  <%self:tbody cls="extras">
+  <%self:tbody cls="Extra">
     <%def name="header()">
       <th class="type"></th>
       <th class="percent"></th>
@@ -109,14 +109,14 @@
       <th class="close"></th>
     </%def>
     <%def name="row()">
-      <td data-bind="with: ingredient" class="type extra">
+      <td data-bind="with: ingredient()" class="type extra">
         <span>Extra</span>
       </td>
       <td class="percent"></td>
       <td class="amount">
-        <input data-bind="value: amount + ' ' + unit" type="text" />
+        <input data-bind="value: amount() + ' ' + unit()" type="text" />
       </td>
-      <td data-bind="with: ingredient">
+      <td data-bind="with: ingredient()">
         <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
       </td>
       <td />
