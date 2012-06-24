@@ -88,12 +88,12 @@
           cls += ' last'
       %>
       <li class="${cls}">
-        <a href="#${name}">${name.capitalize()}</a>
+        <a data-bind="click: function(d, e) { $root.activateStep('${name}', d, e) }" href="#">${name.capitalize()}</a>
       </li>
     </%def>
 
     <%def name="step(name)">
-      <div class="step clearfix">
+      <div class="step clearfix ${name}">
 
         <h2>
           <ul>

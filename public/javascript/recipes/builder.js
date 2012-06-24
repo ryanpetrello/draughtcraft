@@ -81,16 +81,23 @@
             return times;
         }, this);
 
-        var show = function(){
+        var show = $.proxy(function(){
             // Display the UI after data has been fetched via AJAX.
             $('.builder-loading').hide();
-            $('.step').addClass('active');
+            var last = window.location.hash.replace('#', '');
+            this.activateStep(last || 'mash');
+        }, this);
+
+        this.activateStep = function(step){
+            $('.step').removeClass('active');
+            $('.step.'+step).addClass('active');
+            window.location = '#'+step;
         };
 
         ($.proxy(function(){
             // Fetch recipe data via AJAX and render the UI
             $.getJSON(
-                window.location.toString()+'index.json',
+                window.location.pathname.toString()+'index.json',
                 ($.proxy(function(data){
                     show();
 
