@@ -1,11 +1,11 @@
 <%def name="tbody(cls)">
   <tbody data-bind="if: $.grep($.draughtcraft.recipes.builder.recipe.fermentation.additions(), function(a){ return a.ingredient().class == '${cls}' }).length">
-    <tr>
+    <tr class="header">
       ${caller.header()}
     </tr>
   </tbody>
   <tbody data-bind="foreach: additions">
-    <tr data-bind="if: ingredient().class == '${cls}', css: { 'even': ($index() % 2 == 0) }" class="addition">
+    <tr data-bind="if: ingredient().class == '${cls}'" class="addition">
       ${caller.row()}
     </tr>
   </tbody>
@@ -24,7 +24,7 @@
   </tr>
 </table>
 
-<table data-bind="with: fermentation">
+<table data-bind="with: fermentation, stripe: fermentation.additions()">
 
   <!-- Yeast -->
   <%self:tbody cls="Yeast">

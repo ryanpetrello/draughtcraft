@@ -94,6 +94,16 @@
             window.location = '#'+step;
         };
 
+        this.stripe = function(table){
+            var rows = $(table).find("tr:not(:empty):not(.header)")
+            rows.each(function(i, row){
+                if(i % 2 == 0)
+                    $(row).addClass('even');
+                else
+                    $(row).removeClass('even');
+            });
+        };
+
         ($.proxy(function(){
             // Fetch recipe data via AJAX and render the UI
             $.getJSON(
@@ -134,6 +144,9 @@
             );
 
         }, this))();
+
+        ko.bindingHandlers.stripe = {update: this.stripe};
+
     };
 
 })($.draughtcraft = $.draughtcraft || {}, $);
