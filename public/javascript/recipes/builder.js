@@ -16,38 +16,25 @@
         this.ingredient = ko.observable();
 
         this.removeAddition = $.proxy(function(addition) {
-            this.recipe.mash.additions.remove(addition)
-            this.recipe.boil.additions.remove(addition)
-            this.recipe.fermentation.additions.remove(addition)
+            this.recipe.mash.additions.remove(addition);
+            this.recipe.boil.additions.remove(addition);
+            this.recipe.fermentation.additions.remove(addition);
         }, ns);
     };
 
     ns.model.RecipeStep = function(){
         this.additions = ko.observableArray();
 
-        this.fermentables = ko.computed(function() {
+        var partition = function(cls){
             return ko.utils.arrayFilter(this.additions(), function(item) {
-                return item.ingredient().class == 'Fermentable';
+                return item.ingredient().class == cls;
             });
-        }, this);
+        }
 
-        this.hops = ko.computed(function() {
-            return ko.utils.arrayFilter(this.additions(), function(item) {
-                return item.ingredient().class == 'Hop';
-            });
-        }, this);
-
-        this.yeast = ko.computed(function() {
-            return ko.utils.arrayFilter(this.additions(), function(item) {
-                return item.ingredient().class == 'Yeast';
-            });
-        }, this);
-
-        this.extras = ko.computed(function() {
-            return ko.utils.arrayFilter(this.additions(), function(item) {
-                return item.ingredient().class == 'Extra';
-            });
-        }, this);
+        this.fermentables = ko.computed($.proxy(partition, this, 'Fermentable'), this);
+        this.hops = ko.computed($.proxy(partition, this, 'Hop'), this);
+        this.yeast = ko.computed($.proxy(partition, this, 'Yeast'), this);
+        this.extra = ko.computed($.proxy(partition, this, 'Extra'), this);
 
     };
 
@@ -67,10 +54,15 @@
         ns.recipe = this.recipe = new ns.model.Recipe();
 
         this.STYLES = ns.STYLES;
+        this.HOP_USES = [
+            {'id': 'FIRST WORT', 'name': 'First Wort'},
+            {'id': 'BOIL', 'name': 'Boil'},
+            {'id': 'FLAME OUT', 'name': 'Flame Out'}
+        ];
         this.HOP_FORMS = [
             {'id': 'LEAF', 'name': 'Leaf'},
             {'id': 'PELLET', 'name': 'Pellet'},
-            {'id': 'PLUG', 'name': 'Plug'},
+            {'id': 'PLUG', 'name': 'Plug'}
         ];
 
         this.BOIL_TIMES = $.proxy(function(){
@@ -163,6 +155,3 @@ $(function(){
     // Register a JS tooltip on the author's thumbnail (if there is one).
     $('img.gravatar').tipTip({'delay': 50});
 });
-
-// Disabling Safari's annoying form warning - the builder auto-saves for you.
-window.onbeforeunload=function(e){};
