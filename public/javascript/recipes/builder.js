@@ -47,7 +47,10 @@
         this.boil = new ns.model.RecipeStep();
         this.fermentation = new ns.model.RecipeStep();
 
-        this.boil_minutes = new ko.observable();
+        this.boil_minutes = ko.observable();
+
+        // Inventory
+        this.inventory = ko.observableArray();
     };
 
     ns.RecipeViewModel = function(){

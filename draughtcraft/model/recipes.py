@@ -385,6 +385,15 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         return export.Recipe(**kw).render()
 
     def __json__(self):
+        from draughtcraft.templates.helpers import alphanum_key
+
+        def inventory(cls, types=[]):
+            return sorted([
+                {'id': f.id, 'name': f.printed_name}
+                for f in cls.query.all()
+                if not types or (types and f.type in types)
+            ], key=lambda f: alphanum_key(f['name']))
+
         return {
             # Basic attributes
             'name': self.name,
@@ -406,7 +415,22 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
             ),
 
             # Step-specific settings
-            'boil_minutes': self.boil_minutes
+            'boil_minutes': self.boil_minutes,
+
+            # Inventory
+            'inventory': {
+                'malts': inventory(
+                    entities.Fermentable,
+                    ('MALT', 'GRAIN', 'ADJUNCT', 'SUGAR')
+                ),
+                'extracts': inventory(
+                    entities.Fermentable,
+                    ('EXTRACT',)
+                ),
+                'hops': inventory(entities.Hop),
+                'yeast': inventory(entities.Yeast),
+                'extras': inventory(entities.Extra)
+            }
         }
 
 
