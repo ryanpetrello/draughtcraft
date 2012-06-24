@@ -13,6 +13,12 @@
         this.alpha_acid = ko.observable();
 
         this.ingredient = ko.observable();
+
+        this.removeAddition = $.proxy(function(addition) {
+            this.recipe.mash.additions.remove(addition)
+            this.recipe.boil.additions.remove(addition)
+            this.recipe.fermentation.additions.remove(addition)
+        }, ns);
     };
 
     ns.RecipeStep = function(){
