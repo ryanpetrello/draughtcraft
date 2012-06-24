@@ -2,8 +2,9 @@
 
     n.recipes = n.recipes || {}, n.recipes.builder = n.recipes.builder || {};
     ns = n.recipes.builder;
+    ns.model = ns.model || {};
 
-    ns.RecipeAddition = function(){
+    ns.model.RecipeAddition = function(){
         this.amount = ko.observable();
         this.unit = ko.observable();
         this.use = ko.observable();
@@ -21,7 +22,7 @@
         }, ns);
     };
 
-    ns.RecipeStep = function(){
+    ns.model.RecipeStep = function(){
         this.additions = ko.observableArray();
 
         this.fermentables = ko.computed(function() {
@@ -50,29 +51,29 @@
 
     };
 
-    ns.Recipe = function(){
+    ns.model.Recipe = function(){
         this.name = ko.observable();
         this.volume = ko.observable();
         this.style = ko.observable();
 
-        this.mash = new ns.RecipeStep();
-        this.boil = new ns.RecipeStep();
-        this.fermentation = new ns.RecipeStep();
+        this.mash = new ns.model.RecipeStep();
+        this.boil = new ns.model.RecipeStep();
+        this.fermentation = new ns.model.RecipeStep();
 
         this.boil_minutes = new ko.observable();
     };
 
     ns.RecipeViewModel = function(){
-        ns.recipe = this.recipe = new ns.Recipe();
+        ns.recipe = this.recipe = new ns.model.Recipe();
 
-        this.styles = ns.STYLES;
-        this.hop_forms = [
+        this.STYLES = ns.STYLES;
+        this.HOP_FORMS = [
             {'id': 'LEAF', 'name': 'Leaf'},
             {'id': 'PELLET', 'name': 'Pellet'},
             {'id': 'PLUG', 'name': 'Plug'},
         ];
 
-        this.boil_times = $.proxy(function(){
+        this.BOIL_TIMES = $.proxy(function(){
             var minutes = this.recipe.boil_minutes() || 60;
             var times = [];
             while(minutes >= 5){
@@ -128,7 +129,7 @@
                     var appendAdditions = $.proxy(function(key){
                         var additions = pop(data, key);
                         for(var i in additions){
-                            var a = new ns.RecipeAddition();
+                            var a = new ns.model.RecipeAddition();
                             for(var k in additions[i]){
                                 if(a[k])
                                     a[k](additions[i][k]);

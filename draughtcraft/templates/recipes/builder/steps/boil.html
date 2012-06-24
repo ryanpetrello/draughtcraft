@@ -13,7 +13,7 @@
 
 <%def name="time()">
   <select data-bind="options: [{'id': 'FIRST WORT', 'name': 'First Wort'}, {'id': 'BOIL', 'name': 'Boil'}, {'id': 'FLAME OUT', 'name': 'Flame Out'}], value: use, optionsText: 'name', optionsValue: 'id'"></select>
-  <select data-bind="options: $root.boil_times(), value: minutes, optionsText: 'name', optionsValue: 'id', visible: use() == 'BOIL'"></select>
+  <select data-bind="options: $root.BOIL_TIMES(), value: minutes, optionsText: 'name', optionsValue: 'id', visible: use() == 'BOIL'"></select>
 </%def>
 
 <!-- Empty Placeholder -->
@@ -90,7 +90,7 @@
         <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
       </td>
       <td>
-        <select data-bind="options: $root.hop_forms, value: form, optionsText: 'name', optionsValue: 'id'">
+        <select data-bind="options: $root.HOP_FORMS, value: form, optionsText: 'name', optionsValue: 'id'">
         </select>
       </td>
       <td class="unit">
