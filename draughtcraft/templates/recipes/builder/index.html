@@ -9,6 +9,7 @@
 
 <%def name="style()">
     ${h.css('/css/recipes/builder.css')}
+    ${h.css('/css/jquery.selectbox.css')}
     <link rel="stylesheet" type="text/css" media="print" href="${h.stamp('/css/recipes/builder.print.css')}" />
 </%def>
 
@@ -26,7 +27,8 @@
     })($.draughtcraft = $.draughtcraft || {}, $);
 
   </script>
-  <script type="text/javascript" src="/javascript/knockout-2.1.0.js"></script>
+  ${h.js('/javascript/jquery.selectbox.min.js')}
+  <script type="text/javascript" src="/javascript/knockout.min.js"></script>
   <script type="text/javascript" src="/javascript/recipes/builder.js"></script>
 </%def>
 
@@ -122,18 +124,29 @@
       <%def name="inventory()">
         <h3>Add to Mash</h3>
 
-        <select
-          data-bind="options: inventory().malts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt/Fermentables...'">
-        </select>
-        <select
-          data-bind="options: inventory().extracts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt Extract...'">
-        </select>
-        <select
-          data-bind="options: inventory().hops, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Hops...'">
-        </select>
-        <select
-          data-bind="options: inventory().extras, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Misc...'">
-        </select>
+        <fieldset>
+          <select
+            data-bind="options: inventory().malts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt/Fermentables...'">
+          </select>
+        </fieldset>
+
+        <fieldset>
+          <select
+            data-bind="options: inventory().extracts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt Extract...'">
+          </select>
+        </fieldset>
+
+        <fieldset>
+          <select
+            data-bind="options: inventory().hops, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Hops...'">
+          </select>
+        </fieldset>
+
+        <fieldset>
+          <select
+            data-bind="options: inventory().extras, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Misc...'">
+          </select>
+        </fieldset>
       </%def>
     </%self:step>
 
@@ -141,18 +154,29 @@
       <%def name="inventory()">
         <h3>Add to Boil</h3>
 
-        <select
-          data-bind="options: inventory().malts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt/Fermentables...'">
-        </select>
-        <select
-          data-bind="options: inventory().extracts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt Extract...'">
-        </select>
-        <select
-          data-bind="options: inventory().hops, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Hops...'">
-        </select>
-        <select
-          data-bind="options: inventory().extras, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Misc...'">
-        </select>
+        <fieldset>
+          <select
+            data-bind="options: inventory().malts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt/Fermentables...'">
+          </select>
+        </fieldset>
+
+        <fieldset>
+          <select
+            data-bind="options: inventory().extracts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt Extract...'">
+          </select>
+        </fieldset>
+
+        <fieldset>
+          <select
+            data-bind="options: inventory().hops, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Hops...'">
+          </select>
+        </fieldset>
+
+        <fieldset>
+          <select
+            data-bind="options: inventory().extras, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Misc...'">
+          </select>
+        </fieldset>
       </%def>
     </%self:step>
 
@@ -160,15 +184,23 @@
       <%def name="inventory()">
         <h3>Add to Fermenter</h3>
 
-        <select
-          data-bind="options: inventory().yeast, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Yeast...'">
-        </select>
-        <select
-          data-bind="options: inventory().hops, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Dry Hops...'">
-        </select>
-        <select
-          data-bind="options: inventory().extras, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Misc...'">
-        </select>
+        <fieldset>
+          <select
+            data-bind="options: inventory().yeast, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Yeast...'">
+          </select>
+        </fieldset>
+
+        <fieldset>
+          <select
+            data-bind="options: inventory().hops, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Dry Hops...'">
+          </select>
+        </fieldset>
+
+        <fieldset>
+          <select
+            data-bind="options: inventory().extras, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Misc...'">
+          </select>
+        </fieldset>
       </%def>
     </%self:step>
 

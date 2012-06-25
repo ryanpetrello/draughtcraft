@@ -142,7 +142,14 @@
                             this.recipe[k](data[k]);
                     }
 
+                    // Render select boxes
+                    $("#header select, .inventory select").selectBox({
+                        'menuTransition'    : 'fade',
+                        'menuSpeed'         : 'fast'
+                    });
+
                 }, this))
+
             );
 
         }, this))();
