@@ -255,7 +255,7 @@ class UnitConvert(object):
 
         #
         # Now that we have a list of potential
-        # unit/amonut pairs, attempt to combine
+        # unit/amount pairs, attempt to combine
         # them into a single unit that makes sense, e.g.,
         #
         # [(5.0, 'POUND'), (8.0, 'OUNCE')] == (5.5, 'POUND')
