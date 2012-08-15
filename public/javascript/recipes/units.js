@@ -17,21 +17,24 @@
 
     function OunceMerge(){
         this.signature = ['OUNCE'];
-        this.merge = function(ounces){
+        this.merge = function(units){
+            var ounces = units[0];
             return [ounces[0] / 16, 'POUND'];
         };
     };
 
     function GramMerge(){
         this.signature = ['GRAM'];
-        this.merge = function(grams){
+        this.merge = function(units){
+            var grams = units[0];
             return [grams[0] / 453.59237, "POUND"];
         };
     };
 
     function KilogramMerge(){
         this.signature = ['KILOGRAM'];
-        this.merge = function(kilograms){
+        this.merge = function(units){
+            var kilograms = units[0];
             return [kilograms[0] / .45359237, "POUND"];
         };
     };
@@ -281,6 +284,40 @@
         eq(['Liter'], ['LITER'])
         eq(['liters'], ['LITER'])
         eq(['Liters'], ['LITER'])
+    })();
+
+    (function test_from_str(){
+        var eq = function(a, b){
+            chai.expect(ns.from_str(a)).to.deep.equal(b);
+        };
+
+        eq('2lb', [2, 'POUND']);
+        eq('2Lb', [2, 'POUND']);
+        eq('2LB', [2, 'POUND']);
+        eq('2 lb', [2, 'POUND']);
+        eq('2 Lb', [2, 'POUND']);
+        eq('2 LB', [2, 'POUND']);
+
+        eq('8oz', [.5, 'POUND']);
+        eq('8.5oz', [.53125, 'POUND']);
+
+        eq('2lb 8oz', [2.5, 'POUND']);
+        eq('2.5lb 8oz', [3, 'POUND']);
+        eq('2.5lb 8.5oz', [3.03125, 'POUND']);
+
+        $.each(UNIT_MAP, function(key, value){
+            if(value == 'OUNCE') return;
+            if(value == 'GRAM') return;
+            if(value == 'KILOGRAM') return;
+            eq('5'+key, [5, value]);
+        });
+
+        eq('453.59237g', [1, 'POUND']);
+        eq('.45359237kg', [1, 'POUND']);
+
+        eq('5', [5, undefined]);
+        eq('5.25', [5.25, undefined]);
+
     })();
 
 })($.draughtcraft = $.draughtcraft || {}, $);
