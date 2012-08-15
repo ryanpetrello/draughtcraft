@@ -162,7 +162,6 @@ class UnitConvert(object):
 
     punctuationRe = re.compile('[^0-9a-zA-z.\s]')
     unitRe = re.compile('[a-zA-Z]+( \.)?')
-    amountRe = re.compile('[0-9]+')
 
     @classmethod
     def __pairs__(cls, val):

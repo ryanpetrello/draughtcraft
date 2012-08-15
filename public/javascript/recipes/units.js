@@ -5,7 +5,36 @@
 
     var punctuationRe = /[^0-9a-zA-z.\s]/;
     var unitRe = /[a-zA-Z]+( \.)?/;
-    var amountRe = /[0-9]+/;
+
+    function PoundOunceMerge(){
+        this.signature = ['POUND', 'OUNCE'];
+        this.merge = function(units){
+            var pounds = units[0];
+            var ounces = units[1];
+            return [pounds[0] + (ounces[0] / 16), 'POUND'];
+        };
+    };
+
+    function OunceMerge(){
+        this.signature = ['OUNCE'];
+        this.merge = function(ounces){
+            return [ounces[0] / 16, 'POUND'];
+        };
+    };
+
+    function GramMerge(){
+        this.signature = ['GRAM'];
+        this.merge = function(grams){
+            return [grams[0] / 453.59237, "POUND"];
+        };
+    };
+
+    function KilogramMerge(){
+        this.signature = ['KILOGRAM'];
+        this.merge = function(kilograms){
+            return [kilograms[0] / .45359237, "POUND"];
+        };
+    };
 
     var UNITS = [
         'GRAM',
@@ -133,7 +162,125 @@
 
     ns.from_str = function(val){
         val = val.trim().replace(punctuationRe, '');
-        return __pairs__(val);
+        var pairs = __pairs__(val);
+        var units = $.map(pairs, function(value){
+            return value[1];
+        });
+
+        var pair;
+
+        $.each([
+            new PoundOunceMerge(),
+            new OunceMerge(),
+            new GramMerge(),
+            new KilogramMerge()
+        ], function(index, value){
+            if(JSON.stringify(value.signature) == JSON.stringify(units)){
+                pair = value.merge(pairs);
+                return;
+            }
+        });
+
+        if(pair)
+            return pair;
+
+        return pairs[0];
     };
+
+    (function test_pairs(){
+        var eq = function(a, b){
+            chai.expect(__pairs__(a)).to.deep.equal(b);
+        };
+
+        eq('2lb', [[2.0, 'POUND']]);
+        eq('2Lb', [[2.0, 'POUND']]);
+        eq('2lb 5oz', [[2.0, 'POUND'], [5.0, 'OUNCE']]);
+        eq('2.5lb 5oz', [[2.5, 'POUND'], [5.0, 'OUNCE']]);
+        eq('2.5lb 5.5oz', [[2.5, 'POUND'], [5.5, 'OUNCE']]);
+
+        eq('2lb.', [[2.0, 'POUND']]);
+        eq('2lb. 5oz.', [[2.0, 'POUND'], [5.0, 'OUNCE']]);
+        eq('2.5lb. 5oz.', [[2.5, 'POUND'], [5.0, 'OUNCE']]);
+        eq('2.5lb. 5.5oz.', [[2.5, 'POUND'], [5.5, 'OUNCE']]);
+
+        eq('2lb5oz', [[2.0, 'POUND'], [5.0, 'OUNCE']]);
+        eq('2.5lb5oz', [[2.5, 'POUND'], [5.0, 'OUNCE']]);
+        eq('2.5lb5.5oz', [[2.5, 'POUND'], [5.5, 'OUNCE']]);
+        eq('2lb.5oz', [[2.0, 'POUND'], [.5, 'OUNCE']]);
+        eq('2.5lb.5oz', [[2.5, 'POUND'], [.5, 'OUNCE']]);
+        eq('2lb.5oz.', [[2.0, 'POUND'], [.5, 'OUNCE']]);
+    })();
+
+    (function test_coerce_amounts(){
+        var eq = function(a, b){
+            chai.expect(__coerce_amounts__(a)).to.deep.equal(b);
+        };
+        eq(['525.75'], [525.75]);
+    })();
+
+    (function test_coerce_units(){
+        var eq = function(a, b){
+            chai.expect(__coerce_units__(a)).to.deep.equal(b);
+        };
+
+        eq(['lb'], ['POUND'])
+        eq(['lbs'], ['POUND'])
+        eq(['pound'], ['POUND'])
+        eq(['Pound'], ['POUND'])
+        eq(['pounds'], ['POUND'])
+        eq(['Pounds'], ['POUND'])
+
+        eq(['oz'], ['OUNCE'])
+        eq(['ounce'], ['OUNCE'])
+        eq(['ounces'], ['OUNCE'])
+        eq(['Ounce'], ['OUNCE'])
+        eq(['Ounces'], ['OUNCE'])
+
+        eq(['g'], ['GRAM'])
+        eq(['gram'], ['GRAM'])
+        eq(['Gram'], ['GRAM'])
+        eq(['grams'], ['GRAM'])
+        eq(['Grams'], ['GRAM'])
+
+        eq(['kg'], ['KILOGRAM'])
+        eq(['kilogram'], ['KILOGRAM'])
+        eq(['Kilogram'], ['KILOGRAM'])
+        eq(['kilograms'], ['KILOGRAM'])
+        eq(['Kilograms'], ['KILOGRAM'])
+
+        eq(['t'], ['TEASPOON'])
+        eq(['ts'], ['TEASPOON'])
+        eq(['tsp'], ['TEASPOON'])
+        eq(['tspn'], ['TEASPOON'])
+        eq(['teaspoon'], ['TEASPOON'])
+        eq(['teaspoons'], ['TEASPOON'])
+        eq(['Teaspoon'], ['TEASPOON'])
+        eq(['Teaspoons'], ['TEASPOON'])
+
+        eq(['T'], ['TABLESPOON'])
+        eq(['tbs'], ['TABLESPOON'])
+        eq(['tbsp'], ['TABLESPOON'])
+        eq(['tblsp'], ['TABLESPOON'])
+        eq(['tblspn'], ['TABLESPOON'])
+        eq(['tablespoon'], ['TABLESPOON'])
+        eq(['tablespoons'], ['TABLESPOON'])
+        eq(['Tablespoon'], ['TABLESPOON'])
+        eq(['Tablespoons'], ['TABLESPOON'])
+
+        eq(['G'], ['GALLON'])
+        eq(['gal'], ['GALLON'])
+        eq(['Gal'], ['GALLON'])
+        eq(['gallon'], ['GALLON'])
+        eq(['Gallon'], ['GALLON'])
+        eq(['gallons'], ['GALLON'])
+        eq(['Gallons'], ['GALLON'])
+        
+        eq(['l'], ['LITER'])
+        eq(['L'], ['LITER'])
+        eq(['liter'], ['LITER'])
+        eq(['Liter'], ['LITER'])
+        eq(['liters'], ['LITER'])
+        eq(['Liters'], ['LITER'])
+    })();
 
 })($.draughtcraft = $.draughtcraft || {}, $);
