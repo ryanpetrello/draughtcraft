@@ -62,6 +62,18 @@
         this.yeast = ko.computed($.proxy(partition, this, 'Yeast'), this);
         this.extra = ko.computed($.proxy(partition, this, 'Extra'), this);
 
+        this.percentage_for = function(addition){
+            var sum = 0.0, match = null;
+            $.each(this.additions(), function(_, a){
+                if(addition == a)
+                    match = addition;
+                sum += a.amount();
+            });
+
+            if(match)
+                return ((match.amount() / sum) * 100).toFixed(1) + '%';
+        };
+
     };
 
     ns.model.Recipe = function(){

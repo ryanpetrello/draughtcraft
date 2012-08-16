@@ -37,9 +37,7 @@
       <td data-bind="with: ingredient()" class="type grain">
         <span data-bind="text: printed_type"></span>
       </td>
-      <td class="percent">
-        XYZ%
-      </td>
+      <td class="percent" data-bind="text: $parent.percentage_for($data)"></td>
       <td class="amount">
         <input data-bind="value: readable_amount, event: {keyup: delayedWrite}" type="text" />
       </td>
