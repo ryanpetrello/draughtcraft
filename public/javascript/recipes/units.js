@@ -77,7 +77,7 @@
         'L'             : 'LITER'
     };
 
-    __zip__ = function() {
+    var __zip__ = function() {
         var args = [].slice.call(arguments);
         var longest = args.reduce(function(a, b){
             return a.length > b.length ? a : b
@@ -88,7 +88,7 @@
         });
     };
 
-    __pairs__ = function(val){
+    var __pairs__ = function(val){
         /*
          * Convert a unit string into a list of pairs, e.g.,
          * '2.5 lb. 6oz' => [[2.5, 'lb'], [6, 'oz']]
@@ -123,14 +123,14 @@
         return __zip__(amounts, units);
     };
 
-    __coerce_amounts__ = function(amounts){
+    var __coerce_amounts__ = function(amounts){
         // Cast amounts to floats
         return $.map(amounts, function(x){
             return parseFloat(x.replace(/\. /g, ''))
         });
     };
 
-    __coerce_units__ = function(units){
+    var __coerce_units__ = function(units){
         // Filter all punctuation from the units
         units = $.map(units, function(x){
             return x.replace(/[^a-zA-Z]/g, '');
@@ -163,6 +163,69 @@
         return $.map(units, unitize);
     };
 
+    var __expand_pounds__ = function(pounds){
+        /*
+         * Attempt to expand POUND units into whole POUND, OUNCE units, e.g.,
+         *
+         * 5.5 lb == 5 lb, 8 oz
+         *
+         * If the unit is less than a pound, just use ounce increments.
+         */
+
+        if(parseInt(pounds) === pounds)
+            return [[pounds, 'POUND']];
+
+        if(pounds < 1)
+            return [[pounds * 16, 'OUNCE']];
+
+        /*
+         * There's 16 oz in a lb.
+         * Multiply the weight in pounds by individual
+         * ounce increments (e.g., 1, 2, 3...).
+         *
+         * If the result is roughly an integer,
+         * we can split into lbs, oz.
+         */
+        for (i=0; i<16; i++){
+            // We're only interested in the fractional part.
+            var decimal = pounds - parseInt(pounds);
+            if(decimal * 16 == i+1)
+                return [[parseInt(pounds), "POUND"], [i+1, "OUNCE"]];
+        }
+
+        return [[pounds, 'POUND']];
+    };
+
+    var __str_amount__ = function(amount){
+        if(parseInt(amount) === 0)
+            return '0';
+
+        return amount.toString().match(
+            /^\d+(?:\.\d{0,3})?/
+        ).toString().replace(
+            /0*$/,
+            ''
+        ).replace(
+            /\.*$/,
+            ''
+        );
+    };
+
+    var __str_unit__ = function(unit){
+        unit = unit.toString();
+        var _map = {
+            'GRAM'          : 'g',
+            'KILOGRAM'      : 'kg',
+            'OUNCE'         : 'oz',
+            'POUND'         : 'lb',
+            'TEASPOON'      : 't',
+            'TABLESPOON'    : 'T',
+            'GALLON'        : 'Gal',
+            'LITER'         : 'L'
+        };
+        return _map[unit] || '';
+    };
+
     ns.from_str = function(val){
         val = val.trim().replace(punctuationRe, '');
         var pairs = __pairs__(val);
@@ -188,6 +251,39 @@
             return pair;
 
         return pairs[0];
+    };
+
+    ns.to_str = function(amount, unit){
+        if(!unit)
+            return amount.toString();
+
+        var pairs = [[amount, unit]];
+
+        if(unit == 'POUND')
+            pairs = __expand_pounds__(amount);
+
+        var result = $.map(pairs, function(pair){
+            if(!pair[0])
+                return '';
+            return [
+                __str_amount__(pair[0]),
+                __str_unit__(pair[1])
+            ].join(' ');
+        }).join(' ');
+
+        /*
+         * If result is an empty string,
+         * we filtered out all of the "zero"
+         * ingredients, leaving nothing.
+         *
+         * This can happen in circumstances like
+         * (0, 'POUND').  This scenario is
+         * special cased.
+         */
+        if(result == '')
+            return "0 "+__str_unit__(unit);
+
+        return result;
     };
 
     (function test_pairs(){
@@ -319,5 +415,46 @@
         eq('5.25', [5.25, undefined]);
 
     })();
+
+    (function test_to_str(){
+        var eq = function(a, b){
+            chai.expect(ns.to_str(a[0], a[1])).to.equal(b);
+        };
+
+        eq([5, 'POUND'], '5 lb');
+        eq([5, 'OUNCE'], '5 oz');
+        eq([5, 'GRAM'], '5 g');
+        eq([5, 'TEASPOON'], '5 t');
+        eq([5, 'TABLESPOON'], '5 T');
+        eq([5, 'GALLON'], '5 Gal');
+        eq([5, 'LITER'], '5 L');
+
+        eq([5.0, 'POUND'], '5 lb');
+        eq([5.0, 'OUNCE'], '5 oz');
+        eq([5.0, 'GRAM'], '5 g');
+        eq([5.0, 'TEASPOON'], '5 t');
+        eq([5.0, 'TABLESPOON'], '5 T');
+        eq([5.0, 'GALLON'], '5 Gal');
+        eq([5.0, 'LITER'], '5 L');
+
+        eq([5.1, 'POUND'], '5.1 lb');
+        eq([5.1, 'OUNCE'], '5.1 oz');
+        eq([5.1, 'GRAM'], '5.1 g');
+        eq([5.1, 'TEASPOON'], '5.1 t');
+        eq([5.1, 'TABLESPOON'], '5.1 T');
+        eq([5.1, 'GALLON'], '5.1 Gal');
+        eq([5.1, 'LITER'], '5.1 L');
+
+        eq([5.25, 'POUND'], '5 lb 4 oz');
+        eq([.25, 'POUND'], '4 oz');
+
+        eq([0, 'POUND'], '0 lb');
+
+        eq([5, undefined], '5');
+        eq([5.0, undefined], '5');
+        eq([5.25, undefined], '5.25');
+
+    })();
+
 
 })($.draughtcraft = $.draughtcraft || {}, $);
