@@ -5,6 +5,9 @@
     ns.model = ns.model || {};
 
     ns.model.RecipeAddition = function(){
+
+        var writeTimeoutInstance = null;
+
         this.amount = ko.observable();
         this.unit = ko.observable();
         this.use = ko.observable();
@@ -15,16 +18,28 @@
 
         this.ingredient = ko.observable();
 
+        var write = $.proxy(function(value){
+            clearTimeout(writeTimeoutInstance);
+            var result = n.recipes.units.from_str(value), amount = result[0],
+                unit = result[1];
+            this.amount(amount);
+            this.unit(unit);
+        }, this);
+
         this.readable_amount = ko.computed({
             read: function(){
                 if(this.amount())
                     return n.recipes.units.to_str(this.amount(), this.unit());
             },
-            write: function(){
-
-            },
+            write: write,
             owner: this
         });
+
+        this.delayedWrite = $.proxy(function(obj, evt){
+            clearTimeout(writeTimeoutInstance);
+            var value = evt.currentTarget.value;
+            writeTimeoutInstance = setTimeout(write, 2000, value);
+        }, this);
 
         this.removeAddition = $.proxy(function(addition) {
             this.recipe.mash.additions.remove(addition);
