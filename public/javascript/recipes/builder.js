@@ -15,6 +15,17 @@
 
         this.ingredient = ko.observable();
 
+        this.readable_amount = ko.computed({
+            read: function(){
+                if(this.amount())
+                    return n.recipes.units.to_str(this.amount(), this.unit());
+            },
+            write: function(){
+
+            },
+            owner: this
+        });
+
         this.removeAddition = $.proxy(function(addition) {
             this.recipe.mash.additions.remove(addition);
             this.recipe.boil.additions.remove(addition);

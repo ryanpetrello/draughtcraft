@@ -197,13 +197,10 @@
     };
 
     var __str_amount__ = function(amount){
-        if(parseInt(amount) === 0)
-            return '0';
-
         return amount.toString().match(
-            /^\d+(?:\.\d{0,3})?/
+            /^\d+(?:\.\d{1,3})?/
         ).toString().replace(
-            /0*$/,
+            /\.0*$/,
             ''
         ).replace(
             /\.*$/,
@@ -272,13 +269,11 @@
         }).join(' ');
 
         /*
-         * If result is an empty string,
-         * we filtered out all of the "zero"
+         * If result is an empty string, we filtered out all of the "zero"
          * ingredients, leaving nothing.
          *
-         * This can happen in circumstances like
-         * (0, 'POUND').  This scenario is
-         * special cased.
+         * This can happen in circumstances like (0, 'POUND').  This scenario
+         * is special cased.
          */
         if(result == '')
             return "0 "+__str_unit__(unit);
@@ -453,6 +448,40 @@
         eq([5, undefined], '5');
         eq([5.0, undefined], '5');
         eq([5.25, undefined], '5.25');
+
+        eq([.0625, 'POUND'], '1 oz')
+        eq([.125, 'POUND'], '2 oz')
+        eq([.1875, 'POUND'], '3 oz')
+        eq([.25, 'POUND'], '4 oz')
+        eq([.3125, 'POUND'], '5 oz')
+        eq([.375, 'POUND'], '6 oz')
+        eq([.4375, 'POUND'], '7 oz')
+        eq([.50, 'POUND'], '8 oz')
+        eq([.5625, 'POUND'], '9 oz')
+        eq([.625, 'POUND'], '10 oz')
+        eq([.6875, 'POUND'], '11 oz')
+        eq([.75, 'POUND'], '12 oz')
+        eq([.8125, 'POUND'], '13 oz')
+        eq([.875, 'POUND'], '14 oz')
+        eq([.9375, 'POUND'], '15 oz')
+
+        eq([1.0625, 'POUND'], '1 lb 1 oz')
+        eq([1.125, 'POUND'], '1 lb 2 oz')
+        eq([1.1875, 'POUND'], '1 lb 3 oz')
+        eq([1.25, 'POUND'], '1 lb 4 oz')
+        eq([1.3125, 'POUND'], '1 lb 5 oz')
+        eq([1.375, 'POUND'], '1 lb 6 oz')
+        eq([1.4375, 'POUND'], '1 lb 7 oz')
+        eq([1.50, 'POUND'], '1 lb 8 oz')
+        eq([1.5625, 'POUND'], '1 lb 9 oz')
+        eq([1.625, 'POUND'], '1 lb 10 oz')
+        eq([1.6875, 'POUND'], '1 lb 11 oz')
+        eq([1.75, 'POUND'], '1 lb 12 oz')
+        eq([1.8125, 'POUND'], '1 lb 13 oz')
+        eq([1.875, 'POUND'], '1 lb 14 oz')
+        eq([1.9375, 'POUND'], '1 lb 15 oz')
+
+        eq([1.171, 'POUND'], '1.171 lb')
 
     })();
 

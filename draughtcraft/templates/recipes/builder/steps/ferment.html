@@ -76,7 +76,7 @@
         ${fermentation_stage()}
       </td>
       <td class="amount">
-        <input data-bind="value: amount() + ' ' + unit()" type="text" />
+        <input data-bind="value: readable_amount()" type="text" />
       </td>
       <td data-bind="with: ingredient()">
         <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
@@ -113,7 +113,7 @@
       </td>
       <td>${fermentation_stage()}</td>
       <td class="amount">
-        <input data-bind="value: amount() + ' ' + unit()" type="text" />
+        <input data-bind="value: readable_amount()" type="text" />
       </td>
       <td data-bind="with: ingredient()">
         <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
