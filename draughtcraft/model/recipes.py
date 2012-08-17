@@ -389,8 +389,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
 
         def inventory(cls, types=[]):
             return sorted([
-                {'id': f.id, 'name': f.printed_name}
-                for f in cls.query.all()
+                f.__json__() for f in cls.query.all()
                 if not types or (types and f.type in types)
             ], key=lambda f: alphanum_key(f['name']))
 

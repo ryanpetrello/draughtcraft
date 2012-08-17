@@ -12,7 +12,7 @@
 </%def>
 
 <%def name="time()">
-  <select data-bind="options: $root.HOP_USES, value: use, optionsText: 'name', optionsValue: 'id'"></select>
+  <select data-bind="options: $root.HOP_USES, value: use, optionsText: 'name', optionsValue: 'id', hasfocus: editing"></select>
   <select data-bind="options: $root.BOIL_TIMES(), value: minutes, optionsText: 'name', optionsValue: 'id', visible: use() == 'BOIL'"></select>
 </%def>
 

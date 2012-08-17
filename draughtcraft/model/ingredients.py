@@ -109,6 +109,13 @@ class Hop(Ingredient):
     def printed_name(self):
         return '%s (%s)' % (self.name, self.printed_origin)
 
+    def __json__(self):
+        json = super(Hop, self).__json__()
+        json.update({
+            'alpha_acid': self.alpha_acid
+        })
+        return json
+
 
 class Yeast(Ingredient):
 

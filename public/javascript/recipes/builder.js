@@ -7,6 +7,7 @@
     ns.model.RecipeAddition = function(){
 
         var writeTimeoutInstance = null;
+        this.editing = ko.observable(false);
 
         this.amount = ko.observable();
         this.unit = ko.observable();
@@ -83,6 +84,48 @@
         this.yeast = ko.computed($.proxy(partition, this, 'Yeast'), this);
         this.extra = ko.computed($.proxy(partition, this, 'Extra'), this);
 
+        this.addAddition = $.proxy(function(obj, evt){
+            var field = evt.currentTarget;
+            var id = field.value;
+            // Deep copy
+            var ingredient = $.extend(
+                true,
+                {},
+                ns.recipe.inventory().map[id]
+            );
+
+            // Create the new addition
+            var a = new ns.model.RecipeAddition();
+
+            a.amount('0');
+            a.unit('POUND');
+            a.ingredient(ingredient);
+
+            // Hop-specific
+            if(a.ingredient().class.toUpperCase() == 'HOP'){
+                a.alpha_acid(a.ingredient().alpha_acid);
+                a.unit('OUNCE');
+                a.form('LEAF');
+            }
+
+            // Boil-specific
+            if(this == ns.recipe.boil){
+                a.use('BOIL');
+                a.minutes(60);
+            }
+
+            // Fermentation-specific
+            if(this == ns.recipe.fermentation)
+                a.use('PRIMARY');
+
+            this.additions.push(a);
+            a.editing(true);
+
+            // Reset all of the select boxes
+            field.selectedIndex = 0;
+            ns.recipe.initInventoryDropDowns();
+        }, this);
+
     };
 
     ns.model.Recipe = function(){
@@ -98,6 +141,14 @@
 
         // Inventory
         this.inventory = ko.observableArray();
+
+        this.initInventoryDropDowns = function(){
+            $(".inventory select").selectBox('destroy').selectBox({
+                'menuTransition'    : 'fade',
+                'menuSpeed'         : 'fast'
+            });
+        };
+
     };
 
     ns.RecipeViewModel = function(){
@@ -189,11 +240,22 @@
                             this.recipe[k](data[k]);
                     }
 
+                    // For speed, build a map of ingredients indexed by ID
+                    var _map = {};
+                    $.each(this.recipe.inventory(), function(type, ingredients){
+                        $.each(ingredients, function(_, ingredient){
+                            _map[ingredient.id] = ingredient;
+                        });
+                    });
+                    this.recipe.inventory().map = _map;
+
                     // Render select boxes
-                    $("#header select, .inventory select").selectBox({
+                    $("#header select").selectBox({
                         'menuTransition'    : 'fade',
                         'menuSpeed'         : 'fast'
                     });
+
+                    this.recipe.initInventoryDropDowns();
 
                 }, this))
 

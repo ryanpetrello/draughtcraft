@@ -39,7 +39,7 @@
       </td>
       <td class="percent" data-bind="text: mash_percentage()"></td>
       <td class="amount">
-        <input data-bind="value: readable_amount, event: {keyup: delayedWrite}" type="text" />
+        <input data-bind="value: readable_amount, hasfocus: editing, event: {keyup: delayedWrite}" type="text" />
       </td>
       <td data-bind="with: ingredient()">
         <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
@@ -75,7 +75,7 @@
       </td>
       <td class="percent"></td>
       <td class="amount">
-        <input data-bind="value: readable_amount, event: {keyup: delayedWrite}" type="text" />
+        <input data-bind="value: readable_amount, hasfocus: editing, event: {keyup: delayedWrite}" type="text" />
       </td>
       <td data-bind="with: ingredient()">
         <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
@@ -112,7 +112,7 @@
       </td>
       <td class="percent"></td>
       <td class="amount">
-        <input data-bind="value: readable_amount, event: {keyup: delayedWrite}" type="text" />
+        <input data-bind="value: readable_amount, hasfocus: editing, event: {keyup: delayedWrite}" type="text" />
       </td>
       <td data-bind="with: ingredient()">
         <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>

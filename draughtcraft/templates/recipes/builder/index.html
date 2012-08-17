@@ -115,7 +115,7 @@
           <%include file="steps/${name}.html"/>
         </div>
 
-        <div class="inventory ${name}">
+        <div class="inventory ${name}" data-bind="with: ${{'ferment': 'fermentation'}.get(name, name)}">
           ${caller.inventory()}
         </div>
 
@@ -128,25 +128,25 @@
 
         <fieldset>
           <select
-            data-bind="options: inventory().malts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt/Fermentables...'">
+            data-bind="options: $parent.inventory().malts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt/Fermentables...', event: {change: addAddition}">
           </select>
         </fieldset>
 
         <fieldset>
           <select
-            data-bind="options: inventory().extracts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt Extract...'">
+            data-bind="options: $parent.inventory().extracts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt Extract...', event: {change: addAddition}">
           </select>
         </fieldset>
 
         <fieldset>
           <select
-            data-bind="options: inventory().hops, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Hops...'">
+            data-bind="options: $parent.inventory().hops, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Hops...', event: {change: addAddition}">
           </select>
         </fieldset>
 
         <fieldset>
           <select
-            data-bind="options: inventory().extras, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Misc...'">
+            data-bind="options: $parent.inventory().extras, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Misc...', event: {change: addAddition}">
           </select>
         </fieldset>
       </%def>
@@ -158,25 +158,25 @@
 
         <fieldset>
           <select
-            data-bind="options: inventory().malts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt/Fermentables...'">
+            data-bind="options: $parent.inventory().malts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt/Fermentables...', event: {change: addAddition}">
           </select>
         </fieldset>
 
         <fieldset>
           <select
-            data-bind="options: inventory().extracts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt Extract...'">
+            data-bind="options: $parent.inventory().extracts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt Extract...', event: {change: addAddition}">
           </select>
         </fieldset>
 
         <fieldset>
           <select
-            data-bind="options: inventory().hops, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Hops...'">
+            data-bind="options: $parent.inventory().hops, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Hops...', event: {change: addAddition}">
           </select>
         </fieldset>
 
         <fieldset>
           <select
-            data-bind="options: inventory().extras, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Misc...'">
+            data-bind="options: $parent.inventory().extras, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Misc...', event: {change: addAddition}">
           </select>
         </fieldset>
       </%def>
@@ -188,19 +188,19 @@
 
         <fieldset>
           <select
-            data-bind="options: inventory().yeast, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Yeast...'">
+            data-bind="options: $parent.inventory().yeast, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Yeast...', event: {change: addAddition}">
           </select>
         </fieldset>
 
         <fieldset>
           <select
-            data-bind="options: inventory().hops, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Dry Hops...'">
+            data-bind="options: $parent.inventory().hops, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Dry Hops...', event: {change: addAddition}">
           </select>
         </fieldset>
 
         <fieldset>
           <select
-            data-bind="options: inventory().extras, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Misc...'">
+            data-bind="options: $parent.inventory().extras, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Misc...', event: {change: addAddition}">
           </select>
         </fieldset>
       </%def>
