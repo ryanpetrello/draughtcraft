@@ -4,7 +4,7 @@
       ${caller.header()}
     </tr>
   </tbody>
-  <tbody data-bind="foreach: additions">
+  <tbody data-bind="foreach: sortedAdditions">
     <tr data-bind="if: ingredient().class == '${cls}'" class="addition">
       ${caller.row()}
     </tr>

@@ -4,7 +4,7 @@
       ${caller.header()}
     </tr>
   </tbody>
-  <tbody data-bind="foreach: additions">
+  <tbody data-bind="foreach: sortedAdditions">
     <tr data-bind="if: ingredient().class == '${cls}'" class="addition">
       ${caller.row()}
     </tr>
@@ -37,7 +37,7 @@
       <td data-bind="with: ingredient()" class="type grain">
         <span data-bind="text: printed_type"></span>
       </td>
-      <td class="percent" data-bind="text: $parent.percentage_for($data)"></td>
+      <td class="percent" data-bind="text: mash_percentage()"></td>
       <td class="amount">
         <input data-bind="value: readable_amount, event: {keyup: delayedWrite}" type="text" />
       </td>

@@ -38,7 +38,7 @@
         this.delayedWrite = $.proxy(function(obj, evt){
             clearTimeout(writeTimeoutInstance);
             var value = evt.currentTarget.value;
-            writeTimeoutInstance = setTimeout(write, 2000, value);
+            writeTimeoutInstance = setTimeout(write, 1750, value);
         }, this);
 
         this.removeAddition = $.proxy(function(addition) {
@@ -46,10 +46,31 @@
             this.recipe.boil.additions.remove(addition);
             this.recipe.fermentation.additions.remove(addition);
         }, ns);
+
+        this.mash_percentage = ko.computed({
+            read: function(){
+                var sum = 0.0;
+                $.each(ns.recipe.mash.additions(), function(_, a){
+                    var type = (a.ingredient().printed_type || '').toUpperCase();
+                    if(type != 'GRAIN' && type != 'EXTRACT')
+                        return;
+                    sum += a.amount();
+                });
+
+                return ((this.amount() / sum) * 100).toFixed(1) + '%';
+            },
+            owner: this
+        });
+
     };
 
     ns.model.RecipeStep = function(){
         this.additions = ko.observableArray();
+        this.sortedAdditions = ko.computed(function(){
+            return this.additions().sort(function(a, b){
+                return a.amount() > b.amount() ? -1 : 0;
+            });
+        }, this);
 
         var partition = function(cls){
             return ko.utils.arrayFilter(this.additions(), function(item) {
@@ -61,18 +82,6 @@
         this.hops = ko.computed($.proxy(partition, this, 'Hop'), this);
         this.yeast = ko.computed($.proxy(partition, this, 'Yeast'), this);
         this.extra = ko.computed($.proxy(partition, this, 'Extra'), this);
-
-        this.percentage_for = function(addition){
-            var sum = 0.0, match = null;
-            $.each(this.additions(), function(_, a){
-                if(addition == a)
-                    match = addition;
-                sum += a.amount();
-            });
-
-            if(match)
-                return ((match.amount() / sum) * 100).toFixed(1) + '%';
-        };
 
     };
 
