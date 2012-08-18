@@ -140,6 +140,7 @@
         this.boil_minutes = ko.observable();
 
         this.efficiency = ko.observable();
+        this.ibu_method = ko.observable();
 
         // Inventory
         this.inventory = ko.observableArray();
@@ -250,6 +251,51 @@
         }, this);
 
         this.ibu = ko.computed(function(){
+            var formulas = {};
+            formulas['tinseth'] = $.proxy(function(){
+                /*
+                 * IBU as calculated with Glenn Tinseth's formula:
+                 * http://www.realbeer.com/hops/FAQ.html
+                 */
+                var total = 0;
+
+                $.each(this.boil.hops(), $.proxy(function(_, h){
+
+                    /*
+                     * Start by calculating utilization
+                     * Bigness factor * Boil Time factor
+                     */
+                    //
+                    // Calculate the bigness factor
+                    var bigness = 1.65 * (Math.pow(0.000125, (this.og() - 1)));
+
+                    // Calculate the boil time factor
+                    var boiltime = (1 - Math.exp(-0.04 * h.minutes())) / 4.15;
+
+                    // Calculate utilization
+                    utilization = bigness * boiltime;
+
+                    /*
+                     * If the hops are in pellet form,
+                     * increase utilization by 15%
+                     */
+                    if(h.form() == 'PELLET')
+                        utilization *= 1.15;
+
+                    // Convert pounds to ounces
+                    var ounces = h.amount() * 16.0;
+
+                    // IBU = Utilization * ((Ounces * AAU * 7490) / Gallons)
+                    var alpha_acid = h.ingredient().alpha_acid / 100;
+                    total += utilization * ((ounces * alpha_acid * 7490) / this.volume());
+
+                }, this));
+
+                return Math.round(total);
+            }, this);
+
+            if(this.ibu_method())
+                return formulas[this.ibu_method()]()
 
         }, this);
 

@@ -74,9 +74,7 @@
         <label>Bitterness:</label>
       </td>
       <td>
-        <label>
-          ${recipe.calculations.ibu} <span class="unit">IBU</span>
-        </label>
+        <label data-bind="html: ibu() + ' <span class=\'unit\'>IBU</span>'"></label>
         % if editable:
           <p class="ibu-formula">
             <a href="/settings/recipe" class="recipe-setting" title="Specify an IBU formula.">

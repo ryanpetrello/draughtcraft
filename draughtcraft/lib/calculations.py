@@ -113,7 +113,7 @@ class Calculations(object):
         """
 
         #
-        # Attempt to look up the preferred calculation method for the 
+        # Attempt to look up the preferred calculation method for the
         # recipe's author.
         #
         user = self.recipe.author

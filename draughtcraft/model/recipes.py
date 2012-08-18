@@ -393,6 +393,15 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
                 if not types or (types and f.type in types)
             ], key=lambda f: alphanum_key(f['name']))
 
+        #
+        # Attempt to look up the preferred calculation method for the
+        # recipe's author.
+        #
+        ibu_method = 'tinseth'
+        user = self.author
+        if user:
+            ibu_method = user.settings.get('default_ibu_formula', 'tinseth')
+
         return {
             # Basic attributes
             'name': self.name,
@@ -413,6 +422,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
                 self.additions
             ),
 
+            'ibu_method': ibu_method,
             'efficiency': self.efficiency,
 
             # Step-specific settings
