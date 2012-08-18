@@ -153,7 +153,8 @@ class Yeast(Ingredient):
     def __json__(self):
         json = super(Yeast, self).__json__()
         json.update({
-            'form': self.form.capitalize()
+            'form': self.form.capitalize(),
+            'attenuation': self.attenuation
         })
         return json
 

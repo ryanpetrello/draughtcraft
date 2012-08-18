@@ -139,6 +139,8 @@
 
         this.boil_minutes = ko.observable();
 
+        this.efficiency = ko.observable();
+
         // Inventory
         this.inventory = ko.observableArray();
 
@@ -149,12 +151,149 @@
             });
         };
 
+        // Style attributes
+        this.style_range = $.proxy(function(attr){
+            var min = this.STYLE_MAP[this.style()]['min_'+attr];
+            var max = this.STYLE_MAP[this.style()]['max_'+attr];
+
+            if(min && max){
+                min = min.toFixed(3);
+                max = max.toFixed(3);
+                if(attr == 'abv'){
+                    min = parseFloat(min).toFixed(1) + '%';
+                    max = parseFloat(max).toFixed(1) + '%';
+                }
+                if(attr == 'ibu' || attr == 'srm'){
+                    min = parseFloat(min).toFixed();
+                    max = parseFloat(max).toFixed();
+                }
+
+                var range = min + ' - ' + max
+                if(attr == 'srm')
+                    range += ' <span class="unit">&#186 SRM</span>';
+                if(attr == 'ibu')
+                    range += ' <span class="unit">IBU</span>';
+                return range;
+            }
+
+            return '-';
+        }, this);
+
+        this.style_matches = $.proxy(function(attr){
+            if(!this.style())
+                return "</span>"
+
+            var min = this.STYLE_MAP[this.style()]['min_'+attr];
+            var max = this.STYLE_MAP[this.style()]['max_'+attr];
+
+            if(min && max && this[attr]() <= max && this[attr]() >= min)
+                return "<img src='/images/yes.png' />";
+
+            return "<img src='/images/no.png' />";
+        }, this);
+
+        this.STYLE_MAP = {};
+        $.each(ns.STYLES, $.proxy(function(_, style){
+            this.STYLE_MAP[style.id] = style;
+        }, this));
+
+        // Calculations
+        this.og = ko.computed(function(){
+            var points = 0;
+
+            $.each(
+                this.mash.fermentables().concat(
+                    this.boil.fermentables(),
+                    this.fermentation.fermentables()
+                ),
+                $.proxy(function(_, a){
+                    var type = (a.ingredient().printed_type || '').toUpperCase();
+
+                    // Default to the mash efficiency specified by the recipe.
+                    var efficiency = this.efficiency();
+
+                    /*
+                     * If the fermentable is extract, we don't take mash
+                     * efficiency into account - instead, we just use the
+                     * potential on record for the ingredient.
+                     */
+                    if(type == 'EXTRACT')
+                        efficiency = 1.0;
+
+                    points += (a.amount() * a.ingredient().ppg * efficiency) / this.volume();
+                }, this)
+            );
+
+            return (points / 1000 + 1).toFixed(3);
+
+        }, this);
+
+        this.fg = ko.computed(function(){
+
+            // Default attenuation to 75%;
+            var attenuation = 0.75;
+
+            $.each(this.fermentation.yeast(), function(_, a){
+                // For more than one yeast addition, choose the highest attenuation
+                attenuation = Math.max(attenuation, a.ingredient().attenuation);
+            });
+
+            var points = (this.og() - 1) * 1000;
+            var fg = points - (points * attenuation);
+            return (fg / 1000 + 1).toFixed(3);
+
+        }, this);
+
+        this.abv = ko.computed(function(){
+            var abv = (this.og() - this.fg()) * 131;
+            return abv;
+        }, this);
+
+        this.ibu = ko.computed(function(){
+
+        }, this);
+
+        this.srm = ko.computed(function(){
+            var total = 0;
+
+            $.each(
+                this.mash.fermentables().concat(
+                    this.boil.fermentables(),
+                    this.fermentation.fermentables()
+                ),
+                $.proxy(function(_, a){
+                    var mcu = (a.amount() * a.ingredient().lovibond) / this.volume();
+                    total += mcu;
+                }, this)
+            );
+
+            return (1.4922 * Math.pow(total, 0.6859)).toFixed(1);
+
+        }, this);
+
+        this.srmClass = ko.computed(function(){
+            return 'srm-' + Math.min(parseInt(this.srm()), 30);
+        }, this);
+
+        this.printable_srm = ko.computed(function(){
+            return this.srm() + ' <span class="unit">&#186; SRM</span>';
+        }, this);
+
+        this.printable_ebc = ko.computed(function(){
+            return this.srm() + ' <span class="unit">EBC</span>';
+        }, this);
+
+        this.color = ko.computed(function(){
+            return this.printable_srm();
+        }, this);
+
     };
 
     ns.RecipeViewModel = function(){
         ns.recipe = this.recipe = new ns.model.Recipe();
 
         this.STYLES = ns.STYLES;
+
         this.HOP_USES = [
             {'id': 'FIRST WORT', 'name': 'First Wort'},
             {'id': 'BOIL', 'name': 'Boil'},
@@ -186,6 +325,7 @@
             $('.builder-loading').hide();
             var last = window.location.hash.replace('#', '');
             this.activateStep(last || 'mash');
+            $('.step.results').css('display', 'block');
         }, this);
 
         this.activateStep = function(step){

@@ -20,7 +20,20 @@
       ns.recipes = ns.recipes || {}, ns.recipes.builder = ns.recipes.builder || {};
       ns.recipes.builder.STYLES = [
       % for s in h.model.Style.query.order_by(h.model.Style.name).all():
-        {"id": ${s.id}, "name": "${s.name}"},
+        {
+          "id": ${s.id},
+          "name": "${s.name}",
+          "min_og": ${s.min_og if s.defined('og') else "null"},
+          "max_og": ${s.max_og if s.defined('og') else "null"},
+          "min_fg": ${s.min_fg if s.defined('fg') else "null"},
+          "max_fg": ${s.max_fg if s.defined('fg') else "null"},
+          "min_abv": ${s.min_abv * 100 if s.defined('abv') else "null"},
+          "max_abv": ${s.max_abv * 100 if s.defined('abv') else "null"},
+          "min_ibu": ${s.min_ibu if s.defined('ibu') else "null"},
+          "max_ibu": ${s.max_ibu if s.defined('ibu') else "null"},
+          "min_srm": ${s.min_srm if s.defined('srm') else "null"},
+          "max_srm": ${s.max_srm if s.defined('srm') else "null"}
+        },
       % endfor
       ];
       
@@ -205,6 +218,8 @@
         </fieldset>
       </%def>
     </%self:step>
+
+    <%include file="stats.html" />
 
   </div>
 

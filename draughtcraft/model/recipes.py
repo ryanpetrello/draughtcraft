@@ -413,6 +413,8 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
                 self.additions
             ),
 
+            'efficiency': self.efficiency,
+
             # Step-specific settings
             'boil_minutes': self.boil_minutes,
 

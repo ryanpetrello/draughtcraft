@@ -1,0 +1,112 @@
+<div class="step results">
+
+  <table>
+
+    <tr>
+      <th colspan="2">
+        <label>Estimated Statistics</label>
+      </th>
+      <th colspan="2">
+        <label>Targets for Style</label>
+      </th>
+      % if editable:
+        <th class="notes">
+          <label>Other Notes</label>
+        </th>
+      % endif
+    </tr>
+
+    <tr>
+      <td>
+        <label>Original Gravity:</label>
+      </td>
+      <td>
+        <label data-bind="text: og"></label>
+        % if editable and recipe.type in ('MASH', 'MINIMASH'):
+          <p class="efficiency">
+            <a href="/settings/recipe" class="recipe-setting" title="Specify a custom brewhouse efficiency.">
+              <img src="/images/cog.png" />
+            </a>
+          </p>
+        % endif
+      </td>
+      <td>
+        <label data-bind="text: style_range('og')"></label>
+      </td>
+      <td data-bind="html: style_matches('og')"></td>
+      % if editable:
+        <td rowspan="5" class="notes">
+          ${h.form('async/settings/notes', class_='no-inject')}
+            <textarea id="notes" name="notes">${recipe.notes or ''}</textarea>
+          ${h.end_form()}
+        </td>
+      % endif
+    </tr>
+
+    <tr>
+      <td>
+        <label>Final Gravity:</label>
+      </td>
+      <td>
+        <label data-bind="text: fg"></label>
+      </td>
+      <td>
+        <label data-bind="text: style_range('fg')"></label>
+      </td>
+      <td data-bind="html: style_matches('fg')"></td>
+    </tr>
+
+    <tr>
+      <td>
+        <label>ABV:</label>
+      </td>
+      <td>
+        <label data-bind="text: abv().toFixed(1) + '%'"></label>
+      </td>
+      <td>
+        <label data-bind="text: style_range('abv')"></label>
+      </td>
+      <td data-bind="html: style_matches('abv')"></td>
+    </tr>
+
+    <tr>
+      <td>
+        <label>Bitterness:</label>
+      </td>
+      <td>
+        <label>
+          ${recipe.calculations.ibu} <span class="unit">IBU</span>
+        </label>
+        % if editable:
+          <p class="ibu-formula">
+            <a href="/settings/recipe" class="recipe-setting" title="Specify an IBU formula.">
+              <img src="/images/cog.png" />
+            </a>
+          </p>
+        % endif
+      </td>
+      <td>
+        <label data-bind="html: style_range('ibu')"></label>
+      </td>
+      <td data-bind="html: style_matches('ibu')"></td>
+    </tr>
+
+    <tr>
+      <td>
+        <label>Color:</label>
+      </td>
+      <td>
+        <label data-bind="attr: {'class': 'control srm ' + srmClass()}">
+          <img class="glass" src="/images/glass.png" />
+          <span data-bind="html: color"></span>
+        </label>
+      </td>
+      <td>
+        <label data-bind="html: style_range('srm')"></label>
+      </td>
+      <td data-bind="html: style_matches('srm')"></td>
+    </tr>
+
+  </table>
+
+</div>
