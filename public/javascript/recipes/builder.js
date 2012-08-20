@@ -40,6 +40,14 @@
             owner: this
         });
 
+        this.sortable_minutes = ko.computed(function(){
+            if(this.use() == 'FIRST WORT')
+                return 60 * 60;
+            if(this.use() == 'POST BOIL' || this.use() == 'FLAME-OUT')
+                return -1;
+            return this.minutes();
+        }, this);
+
         this.delayedWrite = $.proxy(function(obj, evt){
             clearTimeout(writeTimeoutInstance);
             var value = evt.currentTarget.value;
@@ -73,6 +81,12 @@
         this.additions = ko.observableArray();
         this.sortedAdditions = ko.computed(function(){
             return this.additions().sort(function(a, b){
+                if (
+                    a.ingredient().class.toUpperCase() == 'HOP' &&
+                    b.ingredient().class.toUpperCase() == 'HOP'
+                )
+                    return a.sortable_minutes() > b.sortable_minutes() ? -1 : 0;
+
                 return a.amount() > b.amount() ? -1 : 0;
             });
         }, this);
