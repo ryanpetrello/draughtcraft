@@ -23,6 +23,10 @@
             clearTimeout(writeTimeoutInstance);
             var result = n.recipes.units.from_str(value), amount = result[0],
                 unit = result[1];
+            if(isNaN(amount)){
+                amount = 0;
+                unit = 'POUND';
+            }
             this.amount(amount);
             this.unit(unit);
         }, this);
@@ -182,10 +186,13 @@
 
         this.style_matches = $.proxy(function(attr){
             if(!this.style())
-                return "</span>"
+                return "</span>";
 
             var min = this.STYLE_MAP[this.style()]['min_'+attr];
             var max = this.STYLE_MAP[this.style()]['max_'+attr];
+
+            if(!min || !max)
+                return "</span>";
 
             if(min && max && this[attr]() <= max && this[attr]() >= min)
                 return "<img src='/images/yes.png' />";
@@ -286,7 +293,7 @@
                     var ounces = h.amount() * 16.0;
 
                     // IBU = Utilization * ((Ounces * AAU * 7490) / Gallons)
-                    var alpha_acid = h.ingredient().alpha_acid / 100;
+                    var alpha_acid = h.alpha_acid() / 100;
                     total += utilization * ((ounces * alpha_acid * 7490) / this.volume());
 
                 }, this));

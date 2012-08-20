@@ -19,6 +19,10 @@
     (function(ns, $){
       ns.recipes = ns.recipes || {}, ns.recipes.builder = ns.recipes.builder || {};
       ns.recipes.builder.STYLES = [
+        {
+          "id": null,
+          "name": "No Style Specified"
+        },
       % for s in h.model.Style.query.order_by(h.model.Style.name).all():
         {
           "id": ${s.id},
