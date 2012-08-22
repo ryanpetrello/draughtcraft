@@ -18,19 +18,22 @@ class TestModel(TestCase):
             'modules': ['draughtcraft'],
             'static_root': '%s/../../public' % os.path.dirname(__file__),
             'template_path': '%s/../templates' % os.path.dirname(__file__),
-            'stamp': 'test',
+            'stamp': 'XYZ',
             'reload': False,
             'debug': True,
             'logging': False
         },
         'signups': {
-            'bcc': 'ryan@example.com',
+            'bcc': 'ryan@example.com'
         },
         'postmark': {
             'api_key': 'POSTMARK_API_TEST'
         },
         'cache': {
             'key': 'resources_to_compile',
+            '__force_dict__': True
+        },
+        'redis': {
             '__force_dict__': True
         }
     }
