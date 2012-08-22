@@ -40,6 +40,14 @@
             owner: this
         });
 
+        this.pounds = ko.computed(function(){
+            if(this.unit() == 'POUND')
+                return this.amount();
+            if(this.unit() == 'OUNCE')
+                return this.amount() / 16.0;
+            return 0;
+        }, this);
+
         this.sortable_minutes = ko.computed(function(){
             if(this.use() == 'FIRST WORT')
                 return 60 * 60;
@@ -67,13 +75,13 @@
                     var type = (a.ingredient().printed_type || '').toUpperCase();
                     if(type != 'GRAIN' && type != 'EXTRACT')
                         return;
-                    sum += a.amount();
+                    sum += a.pounds();
                 });
 
-                if(isNaN(this.amount() / sum))
+                if(isNaN(this.pounds() / sum))
                     return '0%'; // Avoid zero division
 
-                return ((this.amount() / sum) * 100).toFixed(1) + '%';
+                return ((this.pounds() / sum) * 100).toFixed(1) + '%';
             },
             owner: this
         });
@@ -90,7 +98,7 @@
                 )
                     return a.sortable_minutes() > b.sortable_minutes() ? -1 : 0;
 
-                return a.amount() > b.amount() ? -1 : 0;
+                return a.pounds() > b.pounds() ? -1 : 0;
             });
         }, this);
 
@@ -245,7 +253,7 @@
                     if(type == 'EXTRACT')
                         efficiency = 1.0;
 
-                    points += (a.amount() * a.ingredient().ppg * efficiency) / this.volume();
+                    points += (a.pounds() * a.ingredient().ppg * efficiency) / this.volume();
                 }, this)
             );
 
@@ -306,8 +314,7 @@
                     if(h.form() == 'PELLET')
                         utilization *= 1.15;
 
-                    // Convert pounds to ounces
-                    var ounces = h.amount() * 16.0;
+                    var ounces = h.pounds() * 16.0;
 
                     // IBU = Utilization * ((Ounces * AAU * 7490) / Gallons)
                     var alpha_acid = h.alpha_acid() / 100;
@@ -332,7 +339,7 @@
                     this.fermentation.fermentables()
                 ),
                 $.proxy(function(_, a){
-                    var mcu = (a.amount() * a.ingredient().lovibond) / this.volume();
+                    var mcu = (a.pounds() * a.ingredient().lovibond) / this.volume();
                     total += mcu;
                 }, this)
             );
