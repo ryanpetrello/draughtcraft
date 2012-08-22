@@ -67,7 +67,7 @@ import os
 from tempfile                   import mkdtemp
 from shutil                     import rmtree
 
-from draughtcraft.tests         import TestEnv
+from draughtcraft.tests         import TestModel
 from draughtcraft.lib.minify    import (javascript_link, stylesheet_link, 
                                     RedisResourceCache, ResourceLookupMiddleware)
 from beaker.cache               import CacheManager
@@ -77,7 +77,7 @@ import pecan
 import fudge
 
 
-class MinificationTestCase(TestEnv):
+class MinificationTestCase(TestModel):
 
     def setUp(self):
         super(MinificationTestCase, self).setUp()
@@ -215,7 +215,7 @@ class MinificationTestCase(TestEnv):
         assert self.in_cache('/a.b.COMBINED.min.js')
 
 
-class TestRedisLookupMiddleware(TestEnv):
+class TestRedisLookupMiddleware(TestModel):
 
     @fudge.patch('redis.Redis')
     def test_cache_hit(self, FakeRedis):

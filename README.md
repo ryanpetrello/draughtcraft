@@ -13,5 +13,4 @@ create a local database.  The name configured by default is `draughtcraftdev`:
 
 Running the Tests
 ====================================
-    $ createdb draughtcrafttest
     $ python setup.py test

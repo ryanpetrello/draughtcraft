@@ -1,5 +1,5 @@
 from pecan import conf
-from draughtcraft.tests import TestEnv
+from draughtcraft.tests import TestModel
 from draughtcraft.lib import email
 
 import os
@@ -41,7 +41,7 @@ class TestEmailTemplate(unittest.TestCase):
         assert template.html({'name': 'Ryan'}) == None
 
 
-class TestEmailSend(TestEnv):
+class TestEmailSend(TestModel):
 
     @fudge.patch('postmark.PMMail')
     def test_send(self, FakeMail):

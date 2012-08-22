@@ -1,44 +1,93 @@
-from pecan              import conf, set_config
-from pecan.testing      import load_test_app
-from draughtcraft       import model as dcmodel
-from unittest           import TestCase
-
+from copy import deepcopy
+from unittest import TestCase
 import os
 
+from pecan import conf, set_config
+from pecan.testing import load_test_app
+from sqlalchemy import create_engine
+from sqlalchemy.pool import NullPool
 
-class TestEnv(TestCase):
+from draughtcraft import model as dcmodel
+
+
+class TestModel(TestCase):
+
+    config = {
+        'app': {
+            'root': 'draughtcraft.controllers.root.RootController',
+            'modules': ['draughtcraft'],
+            'static_root': '%s/../../public' % os.path.dirname(__file__),
+            'template_path': '%s/../templates' % os.path.dirname(__file__),
+            'stamp': 'test',
+            'reload': False,
+            'debug': True,
+            'logging': False
+        },
+        'signups': {
+            'bcc': 'ryan@example.com',
+        },
+        'postmark': {
+            'api_key': 'POSTMARK_API_TEST'
+        },
+        'cache': {
+            'key': 'resources_to_compile',
+            '__force_dict__': True
+        }
+    }
+
+    #
+    # This approach is definitely not thread-safe, but we're operating on the
+    # assumption that tests aren't running in parallel.
+    #
+    _database_created = False
+    _tables_created = False
 
     def setUp(self):
+
+        config = deepcopy(self.config)
+
+        # ...and add the appropriate connection string to the app config.
+        bind = 'postgresql+psycopg2://localhost'
+        db = 'draughtcrafttest'
+        config['sqlalchemy'] = {
+            'url': '%s/%s' % (bind, db),
+            'encoding': 'utf-8',
+            'poolclass': NullPool
+        }
+
+        # Connect and create the temporary database if it doesn't exist
+        if not self._database_created:
+            print "=" * 80
+            print "CREATING TEMPORARY DATABASE FOR TESTS"
+            print "=" * 80
+            conn = create_engine(bind + '/template1', echo=True).connect()
+            conn.connection.set_isolation_level(0)
+            conn.execute('DROP DATABASE IF EXISTS %s' % db)
+            conn.execute('CREATE DATABASE %s' % db)
+            conn.connection.set_isolation_level(1)
+            TestModel._database_created = True
+            conn.close()
+
         # Set up a fake app
-        self.app = load_test_app(os.path.join(
-            os.path.dirname(__file__),
-            'config.py'
-        ))
+        self.app = load_test_app(config)
 
-    def tearDown(self):
-        set_config({}, overwrite=True)
-
-
-class TestModel(TestEnv):
-
-    def setUp(self):
-        super(TestModel, self).setUp()
-
-        # Create the database tables
-        dcmodel.clear()
-        dcmodel.start()
-        dcmodel.metadata.create_all()
-        dcmodel.commit()
-        dcmodel.clear()
+        # Create the database tables (if we haven't already)
+        if not TestModel._tables_created:
+            dcmodel.clear()
+            dcmodel.start()
+            dcmodel.init_model()
+            dcmodel.metadata.create_all(conf.sqlalchemy.sa_engine)
+            dcmodel.commit()
+            dcmodel.clear()
+            TestModel._tables_created = True
 
     def tearDown(self):
         from sqlalchemy.engine import reflection
         from sqlalchemy.schema import (
             MetaData,
             Table,
-            DropTable,
             ForeignKeyConstraint,
-            DropConstraint,
+            DropConstraint
         )
 
         # Tear down and dispose the DB binding
@@ -77,11 +126,12 @@ class TestModel(TestEnv):
             conn.execute(DropConstraint(fkc))
 
         for table in tbs:
-            conn.execute(DropTable(table))
+            conn.execute('TRUNCATE TABLE %s RESTART IDENTITY' % table.name)
 
         trans.commit()
         conn.close()
 
+        set_config({}, overwrite=True)
         super(TestModel, self).tearDown()
 
 
