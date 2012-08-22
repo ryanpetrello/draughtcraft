@@ -4,6 +4,11 @@
     ns = n.recipes.builder;
     ns.model = ns.model || {};
 
+    var roundTo = function(number, to) {
+        to = Math.pow(10, to);
+        return Math.round(number * to) / to;
+    };
+
     ns.model.RecipeAddition = function(){
 
         var writeTimeoutInstance = null;
@@ -81,7 +86,7 @@
                 if(isNaN(this.pounds() / sum))
                     return '0%'; // Avoid zero division
 
-                return ((this.pounds() / sum) * 100).toFixed(1) + '%';
+                return roundTo((this.pounds() / sum) * 100, 1) + '%';
             },
             owner: this
         });
@@ -187,15 +192,15 @@
             var max = this.STYLE_MAP[this.style()]['max_'+attr];
 
             if(min && max){
-                min = min.toFixed(3);
-                max = max.toFixed(3);
                 if(attr == 'abv'){
-                    min = parseFloat(min).toFixed(1) + '%';
-                    max = parseFloat(max).toFixed(1) + '%';
-                }
-                if(attr == 'ibu' || attr == 'srm'){
-                    min = parseFloat(min).toFixed();
-                    max = parseFloat(max).toFixed();
+                    min = roundTo(min, 1) + '%';
+                    max = roundTo(max, 1) + '%';
+                } else if (attr == 'ibu' || attr == 'srm'){
+                    min = Math.round(min);
+                    max = Math.round(max);
+                } else {
+                    min = roundTo(min, 3);
+                    max = roundTo(max, 3);
                 }
 
                 var range = min + ' - ' + max
@@ -257,7 +262,7 @@
                 }, this)
             );
 
-            return (points / 1000 + 1).toFixed(3);
+            return roundTo((points / 1000 + 1), 3);
 
         }, this);
 
@@ -273,7 +278,7 @@
 
             var points = (this.og() - 1) * 1000;
             var fg = points - (points * attenuation);
-            return (fg / 1000 + 1).toFixed(3);
+            return roundTo(fg / 1000 + 1, 3);
 
         }, this);
 
@@ -344,7 +349,7 @@
                 }, this)
             );
 
-            return (1.4922 * Math.pow(total, 0.6859)).toFixed(1);
+            return roundTo(1.4922 * Math.pow(total, 0.6859), 1)
 
         }, this);
 
