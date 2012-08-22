@@ -43,7 +43,6 @@ class TestModel(TestCase):
     # assumption that tests aren't running in parallel.
     #
     _database_created = False
-    _tables_created = False
 
     def setUp(self):
 
@@ -74,15 +73,13 @@ class TestModel(TestCase):
         # Set up a fake app
         self.app = load_test_app(config)
 
-        # Create the database tables (if we haven't already)
-        if not TestModel._tables_created:
-            dcmodel.clear()
-            dcmodel.start()
-            dcmodel.init_model()
-            dcmodel.metadata.create_all(conf.sqlalchemy.sa_engine)
-            dcmodel.commit()
-            dcmodel.clear()
-            TestModel._tables_created = True
+        # Create the database tables
+        dcmodel.clear()
+        dcmodel.start()
+        dcmodel.init_model()
+        dcmodel.metadata.create_all()
+        dcmodel.commit()
+        dcmodel.clear()
 
     def tearDown(self):
         from sqlalchemy.engine import reflection
@@ -90,6 +87,7 @@ class TestModel(TestCase):
             MetaData,
             Table,
             ForeignKeyConstraint,
+            DropTable,
             DropConstraint
         )
 
@@ -129,13 +127,12 @@ class TestModel(TestCase):
             conn.execute(DropConstraint(fkc))
 
         for table in tbs:
-            conn.execute('TRUNCATE TABLE %s RESTART IDENTITY' % table.name)
+            conn.execute(DropTable(table))
 
         trans.commit()
         conn.close()
 
         set_config({}, overwrite=True)
-        super(TestModel, self).tearDown()
 
 
 class TestApp(TestModel):
