@@ -70,6 +70,9 @@
                     sum += a.amount();
                 });
 
+                if(isNaN(this.amount() / sum))
+                    return '0%'; // Avoid zero division
+
                 return ((this.amount() / sum) * 100).toFixed(1) + '%';
             },
             owner: this
