@@ -1,13 +1,16 @@
 from copy import deepcopy
 from unittest import TestCase
+import subprocess
 import os
 
-from pecan import conf, set_config
+from pecan import conf
 from pecan.testing import load_test_app
 from sqlalchemy import create_engine
 from sqlalchemy.pool import NullPool
 
 from draughtcraft import model as dcmodel
+
+__bind__ = 'postgresql+psycopg2://localhost'
 
 
 class TestModel(TestCase):
@@ -38,48 +41,42 @@ class TestModel(TestCase):
         }
     }
 
-    #
-    # This approach is definitely not thread-safe, but we're operating on the
-    # assumption that tests aren't running in parallel.
-    #
-    _database_created = False
+    __db__ = None
+
+    @classmethod
+    def setUpClass(cls):
+        if TestModel.__db__ is None:
+            TestModel.__db__ = 'draughtcrafttest'
+            # Connect and create the temporary database
+            print "=" * 80
+            print "CREATING TEMPORARY DATABASE FOR TESTS"
+            print "=" * 80
+            subprocess.call(['createdb', TestModel.__db__])
+
+            # Bind and create the database tables
+            dcmodel.clear()
+            dcmodel.bind(create_engine(
+                '%s/%s' % (__bind__, TestModel.__db__), **{
+                    'encoding': 'utf-8',
+                    'poolclass': NullPool
+                }
+            ))
+            dcmodel.metadata.create_all()
+            dcmodel.commit()
+            dcmodel.clear()
 
     def setUp(self):
-
         config = deepcopy(self.config)
 
-        # ...and add the appropriate connection string to the app config.
-        bind = 'postgresql+psycopg2://localhost'
-        db = 'draughtcrafttest'
+        # Add the appropriate connection string to the app config.
         config['sqlalchemy'] = {
-            'url': '%s/%s' % (bind, db),
+            'url': '%s/%s' % (__bind__, TestModel.__db__),
             'encoding': 'utf-8',
             'poolclass': NullPool
         }
 
-        # Connect and create the temporary database if it doesn't exist
-        if not self._database_created:
-            print "=" * 80
-            print "CREATING TEMPORARY DATABASE FOR TESTS"
-            print "=" * 80
-            conn = create_engine(bind + '/template1', echo=True).connect()
-            conn.connection.set_isolation_level(0)
-            conn.execute('DROP DATABASE IF EXISTS %s' % db)
-            conn.execute('CREATE DATABASE %s' % db)
-            conn.connection.set_isolation_level(1)
-            TestModel._database_created = True
-            conn.close()
-
         # Set up a fake app
         self.app = load_test_app(config)
-
-        # Create the database tables
-        dcmodel.clear()
-        dcmodel.start()
-        dcmodel.init_model()
-        dcmodel.metadata.create_all()
-        dcmodel.commit()
-        dcmodel.clear()
 
     def tearDown(self):
         from sqlalchemy.engine import reflection
@@ -94,10 +91,9 @@ class TestModel(TestCase):
         # Tear down and dispose the DB binding
         dcmodel.clear()
 
+        # start a transaction
         engine = conf.sqlalchemy.sa_engine
         conn = engine.connect()
-
-        # start at transaction
         trans = conn.begin()
 
         inspector = reflection.Inspector.from_engine(engine)
@@ -105,34 +101,12 @@ class TestModel(TestCase):
         # gather all data first before dropping anything.
         # some DBs lock after things have been dropped in
         # a transaction.
-
-        metadata = MetaData()
-
-        tbs = []
-        all_fks = []
-
-        for table_name in inspector.get_table_names():
-            fks = []
-            for fk in inspector.get_foreign_keys(table_name):
-                if not fk['name']:
-                    continue
-                fks.append(
-                    ForeignKeyConstraint((), (), name=fk['name'])
-                    )
-            t = Table(table_name, metadata, *fks)
-            tbs.append(t)
-            all_fks.extend(fks)
-
-        for fkc in all_fks:
-            conn.execute(DropConstraint(fkc))
-
-        for table in tbs:
-            conn.execute(DropTable(table))
+        conn.execute("TRUNCATE TABLE %s RESTART IDENTITY CASCADE" % (
+            ', '.join(inspector.get_table_names())
+        ))
 
         trans.commit()
         conn.close()
-
-        set_config({}, overwrite=True)
 
 
 class TestApp(TestModel):

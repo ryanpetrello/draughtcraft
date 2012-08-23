@@ -35,6 +35,7 @@ setup(
     zip_safe=False,
     include_package_data=True,
     test_suite='draughtcraft.tests',
+    tests_require=['selenium'],
     package_data={
         'draughtcraft': ['*.db'],
     },
