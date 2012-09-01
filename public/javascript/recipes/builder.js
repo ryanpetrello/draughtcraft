@@ -190,7 +190,7 @@
             read: function(){
                 if(this.dirtyFlag.dirty()){
                     this.dirtyFlag.reset();
-                    var json = ko.toJSON(this);
+                    ns.save(ko.toJSON(this));
                 }
             },
             owner: this,
@@ -536,6 +536,10 @@
 
         ko.bindingHandlers.stripe = {update: this.stripe};
 
+    };
+
+    ns.save = function(json){
+        console.log(json);
     };
 
 })($.draughtcraft = $.draughtcraft || {}, $);
