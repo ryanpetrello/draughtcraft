@@ -542,6 +542,10 @@
 
 $(function(){
 
+    /*
+     * An observable "dirty flag".
+     * http://www.knockmeout.net/2011/05/creating-smart-dirty-flag-in-knockoutjs.html
+     */
     ko.dirtyFlag = function(root, isInitiallyDirty) {
         var result = function() {},
             _initialState = ko.observable(ko.toJSON(root)),
