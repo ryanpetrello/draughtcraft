@@ -93,6 +93,20 @@
 
     };
 
+    ns.model.RecipeAddition.prototype.toJSON = function() {
+        return {
+            amount: this.amount,
+            unit: this.unit,
+            use: this.use,
+            minutes: this.minutes,
+
+            form: this.form,
+            alpha_acid: this.alpha_acid,
+
+            ingredient: this.ingredient
+        };
+    };
+
     ns.model.RecipeStep = function(){
         this.additions = ko.observableArray();
         this.sortedAdditions = ko.computed(function(){
@@ -162,7 +176,27 @@
 
     };
 
+    ns.model.RecipeStep.prototype.toJSON = function() {
+        return {
+            additions: this.additions
+        };
+    };
+
     ns.model.Recipe = function(){
+
+        // Set up auto-save bindings
+        this.dirtyFlag = new ko.dirtyFlag(this, false);
+        ko.computed({
+            read: function(){
+                if(this.dirtyFlag.dirty()){
+                    this.dirtyFlag.reset();
+                    var json = ko.toJSON(this);
+                }
+            },
+            owner: this,
+            deferEvaluation: true
+        }).extend({throttle: 500});
+
         this.name = ko.observable();
         this.volume = ko.observable();
         this.style = ko.observable();
@@ -371,6 +405,20 @@
 
     };
 
+    ns.model.Recipe.prototype.toJSON = function() {
+        return {
+            name: this.name,
+            volume: this.volume,
+            style: this.style,
+
+            mash: this.mash,
+            boil: this.boil,
+            fermentation: this.fermentation,
+
+            boil_minutes: this.boil_minutes
+        };
+    };
+
     ns.RecipeViewModel = function(){
         ns.recipe = this.recipe = new ns.model.Recipe();
 
@@ -478,6 +526,7 @@
                     });
 
                     this.recipe.initInventoryDropDowns();
+                    this.recipe.dirtyFlag.reset();
 
                 }, this))
 
@@ -492,7 +541,26 @@
 })($.draughtcraft = $.draughtcraft || {}, $);
 
 $(function(){
+
+    ko.dirtyFlag = function(root, isInitiallyDirty) {
+        var result = function() {},
+            _initialState = ko.observable(ko.toJSON(root)),
+            _isInitiallyDirty = ko.observable(isInitiallyDirty);
+
+        result.dirty = ko.computed(function() {
+            return _isInitiallyDirty() || _initialState() !== ko.toJSON(root);
+        }).extend({throttle: 500});
+
+        result.reset = function() {
+            _initialState(ko.toJSON(root));
+            _isInitiallyDirty(false);
+        };
+
+        return result;
+    };
+
     ko.applyBindings(new $.draughtcraft.recipes.builder.RecipeViewModel());
+
     // Register a JS tooltip on the author's thumbnail (if there is one).
     $('img.gravatar').tipTip({'delay': 50});
 });
