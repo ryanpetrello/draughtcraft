@@ -477,7 +477,7 @@
         ($.proxy(function(){
             // Fetch recipe data via AJAX and render the UI
             $.getJSON(
-                window.location.pathname.toString()+'index.json',
+                window.location.pathname.toString()+'.json',
                 ($.proxy(function(data){
                     show();
 
@@ -539,7 +539,13 @@
     };
 
     ns.save = function(json){
-        console.log(json);
+        $.ajax({
+            type: 'POST',
+            url: window.location.pathname.toString() + '?_method=PUT',
+            data: {
+                recipe: json
+            }
+        });
     };
 
 })($.draughtcraft = $.draughtcraft || {}, $);

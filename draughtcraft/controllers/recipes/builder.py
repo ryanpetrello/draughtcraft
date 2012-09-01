@@ -1,11 +1,12 @@
 from datetime import timedelta
+from json import loads
 
 from pecan import (expose, request, abort, redirect)
 from pecan.rest import RestController
 from pecan.secure import SecureController
 
 
-class RecipeBuilderController(SecureController, RestController):
+class RecipeBuilderController(RestController, SecureController):
 
     @classmethod
     def check_permissions(cls):
@@ -20,19 +21,23 @@ class RecipeBuilderController(SecureController, RestController):
 
     @expose('recipes/builder/index.html')
     @expose('json', content_type='application/json')
-    def index(self):
+    def get_all(self):
         return dict(
             recipe=request.context['recipe'],
             editable=True
         )
 
+    @expose()
     def put(self, **kw):
         """
         Used to update the ingredients in the recipe.
         Contains a list of `additions` for which updated information is
         available.
         """
-
+        try:
+            kw = loads(kw.get('recipe'))
+        except:
+            abort(400)
         import pdb; pdb.set_trace()
 
         keys = ('mash_additions', 'boil_additions', 'fermentation_additions')
