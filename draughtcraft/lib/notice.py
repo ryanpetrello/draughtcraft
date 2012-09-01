@@ -5,7 +5,7 @@ redirects.
 from pecan import request, response
 from random import randint
 from urllib import quote, unquote
-import simplejson
+import json
 
 __all__ = ['notify', 'notices']
 
@@ -43,13 +43,13 @@ class Notify(object):
             )
 
     def prepare_payload(self, **data):
-        return quote(simplejson.dumps(data))
+        return quote(json.dumps(data))
 
     def pop_payload(self):
         payload = self.get_request().environ.get('dcflash.payload', {}) or \
                     self.get_request().cookies.get(self.cookie_name, {})
         if payload:
-            payload = simplejson.loads(unquote(payload))
+            payload = json.loads(unquote(payload))
             if 'dcflash.deleted_cookie' not in self.get_request().environ:
                 self.get_response().delete_cookie(self.cookie_name)
                 self.get_request().environ['dcflash.delete_cookie'] = True

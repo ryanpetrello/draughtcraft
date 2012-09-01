@@ -1,6 +1,6 @@
 from unittest                       import TestCase
 from webob                          import Request, Response
-from simplejson                     import dumps
+from json                           import dumps
 from draughtcraft.lib.notice        import Notify
 
 import pecan

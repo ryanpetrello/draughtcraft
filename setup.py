@@ -22,7 +22,6 @@ setup(
         "beaker",
         "genshi",
         "webhelpers",
-        "simplejson",
         "python-postmark",
         "BeautifulSoup",
         "redis",

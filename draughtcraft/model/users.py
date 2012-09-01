@@ -3,7 +3,7 @@ from elixir                             import (Entity, Field, Unicode, DateTime
                                                 ManyToOne)
 from draughtcraft.model.deepcopy        import ShallowCopyMixin
 from pecan                              import conf
-from simplejson                         import loads, dumps
+from json                               import loads, dumps
 from datetime                           import datetime
 from hashlib                            import sha256, md5
 from sqlalchemy.ext.associationproxy    import AssociationProxy
