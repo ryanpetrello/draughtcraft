@@ -159,9 +159,10 @@ class Node(object):
         # Its value should be the accumulated collection of its child
         # `Element`s.
         #
-        element = Element(name)(
-            *[v if isinstance(v, Element) else Element(k.upper())(v) for k, v in items]
-        )
+        element = Element(name)(*[
+            v if isinstance(v, Element) else Element(k.upper())(v)
+            for k, v in items
+        ])
 
         # Return xml or a raw `Element`.
         if xml is False:

@@ -10,9 +10,19 @@ class ErrorController(object):
         """
     )
     status = {
-        401: ("Unauthorized", "Sorry, you don't have permission to access this page."),
-        403: ("Unauthorized", "Sorry, you don't have permission to access this page."),
-        404: ("Not Found", "Sorry, we couldn't find the page you were looking for.  This might be a temporary issue, or the result of a bad link.")
+        401: (
+            "Unauthorized",
+            "Sorry, you don't have permission to access this page."
+        ),
+        403: (
+            "Unauthorized",
+            "Sorry, you don't have permission to access this page."
+        ),
+        404: (
+            "Not Found",
+            "Sorry, we couldn't find the page you were looking for.  This "
+            "might be a temporary issue, or the result of a bad link."
+        )
     }
 
     @expose('error.html')

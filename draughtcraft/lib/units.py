@@ -332,7 +332,10 @@ class UnitConvert(object):
             if expandcls.signature == unit:
                 pairs = expandcls.expand(amount)
 
-        result = ' '.join(['%s %s' % (cls.__str_amount__(amount), cls.__str_abbr__(unit)) for amount, unit in pairs if amount])
+        result = ' '.join([
+            '%s %s' % (cls.__str_amount__(amount), cls.__str_abbr__(unit))
+            for amount, unit in pairs if amount
+        ])
 
         #
         # If result is an empty string,

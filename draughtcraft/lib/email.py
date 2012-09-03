@@ -1,8 +1,9 @@
+from mako import exceptions
+import postmark
+
 from pecan import conf
 from pecan.templating import RendererFactory
-from mako import exceptions
 
-import postmark
 
 __all__ = ['send']
 
@@ -25,7 +26,10 @@ class EmailTemplate(object):
 
     __html_wrap__ = u'''
         <html>
-        <body bgcolor="#ffffff" link="#0099cc" alink="#0099cc" vlink="#0099cc" leftmargin="0" topmargin="0" style="padding: 15px; font-family: Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.3em; text-align: left;">
+        <body bgcolor="#ffffff" link="#0099cc" alink="#0099cc" vlink="#0099cc"
+        leftmargin="0" topmargin="0" style="padding: 15px; font-family:
+        Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.3em;
+        text-align: left;">
             %s
         </body>
         </html>

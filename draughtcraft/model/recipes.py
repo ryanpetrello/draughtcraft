@@ -69,7 +69,12 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         'RecipeView', inverse='recipe', cascade='all, delete-orphan')
     additions = OneToMany(
         'RecipeAddition', inverse='recipe', cascade='all, delete-orphan')
-    fermentation_steps = OneToMany('FermentationStep', inverse='recipe', order_by='step', cascade='all, delete-orphan')
+    fermentation_steps = OneToMany(
+        'FermentationStep',
+        inverse='recipe',
+        order_by='step',
+        cascade='all, delete-orphan'
+    )
     slugs = OneToMany('RecipeSlug', inverse='recipe', order_by='id',
                       cascade='all, delete-orphan')
     style = ManyToOne('Style', inverse='recipes')
@@ -172,7 +177,8 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         # Make sure this is a draft with a source recipe
         assert self.state == 'DRAFT', "Only drafts can be merged."
         source = self.published_version
-        assert source is not None, "This recipe doesn't have a `published_version`."
+        assert source is not None, \
+            "This recipe doesn't have a `published_version`."
 
         # Clone the draft onto the published version
         self.__copy_target__ = self.published_version
@@ -193,7 +199,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
 
     @property
     def unit_system(self):
-        if request.context['metric'] == True:
+        if request.context['metric'] is True:
             return 'METRIC'
         return 'US'
 
@@ -206,7 +212,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         liters = to_metric(*(self.gallons, "GALLON"))[0]
         return round(liters, 3)
 
-    @liters.setter
+    @liters.setter  # noqa
     def liters(self, v):
         gallons = to_us(*(v, "LITER"))[0]
         self.gallons = gallons
@@ -256,7 +262,9 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
 
     @property
     def fermentation(self):
-        return self._partition([a for a in self.additions if a.step == 'fermentation'])
+        return self._partition([
+            a for a in self.additions if a.step == 'fermentation'
+        ])
 
     def contains(self, ingredient, step):
         if step not in ('mash', 'boil', 'fermentation'):
@@ -597,7 +605,8 @@ class RecipeAddition(Entity, DeepCopyMixin):
                 'SUGAR': 'Sugar'
             }.get(self.fermentable.type)
 
-            if self.fermentable.type == 'EXTRACT' and 'DME' in self.fermentable.name:
+            if self.fermentable.type == 'EXTRACT' and \
+                    'DME' in self.fermentable.name:
                 kw['type'] = 'Dry Extract'
 
             return export.Fermentable(**kw)
@@ -744,7 +753,7 @@ class FermentationStep(Entity, DeepCopyMixin):
     def celsius(self):
         return round((5 / 9.0) * (self.fahrenheit - 32))
 
-    @celsius.setter
+    @celsius.setter  # noqa
     def celsius(self, v):
         self.fahrenheit = ((9 / 5.0) * v) + 32
 

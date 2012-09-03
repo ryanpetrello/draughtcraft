@@ -1,4 +1,4 @@
-from draughtcraft.lib.minify        import RedisResourceCache
+from draughtcraft.lib.minify import RedisResourceCache
 
 # Server Specific Configurations
 server = {

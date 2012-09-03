@@ -22,7 +22,7 @@ class RecipeCreationController(RestController):
             redirect(recipe.url(public=False))
 
         form = request.pecan['form']
-        metric = request.context.get('metric') == True
+        metric = request.context.get('metric') is True
         if request.context['user']:
             settings = request.context['user'].settings
             volume = settings['default_recipe_volume']

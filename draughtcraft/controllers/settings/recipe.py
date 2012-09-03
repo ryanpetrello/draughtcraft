@@ -34,7 +34,7 @@ class RecipeController(object):
         for k, v in kw.items():
             user.settings[k] = v
 
-        if request.context['metric'] == True:
+        if request.context['metric'] is True:
             user.settings['default_recipe_volume'] = to_us(
                 *(user.settings['default_recipe_volume'], 'LITER')
             )[0]

@@ -46,15 +46,20 @@ class DeepCopyMixin(object):
         # Look at each property of the object, based on the mapper definition
         for prop in object_mapper(self).iterate_properties:
 
-            # If the property is the primary key, `id`, or is explicitly ignored, always skip it
-            if prop.key == 'id' or prop.key in getattr(self, '__ignored_properties__', []):
+            #
+            # If the property is the primary key, `id`, or is explicitly
+            # ignored, always skip it
+            #
+            if prop.key == 'id' or \
+                    prop.key in getattr(self, '__ignored_properties__', []):
                 continue
 
             #
             # ColumnProperties are easy.  As long as the property isn't a
             # foreign key (e.g., ends in `_id`), just copy the values directly.
             #
-            if isinstance(prop, ColumnProperty) and not prop.key.endswith('_id'):
+            if isinstance(prop, ColumnProperty) and \
+                    not prop.key.endswith('_id'):
                 setattr(newobj, prop.key, getattr(self, prop.key))
 
             # If the property is a relationship...

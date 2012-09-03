@@ -11,7 +11,10 @@ class SettingsController(SecureController):
     @classmethod
     def check_permissions(cls):
         if request.context['user'] is None:
-            notify('Sign up for a (free) account to take advantage of this feature.')
+            notify(
+                'Sign up for a (free) account to take advantage of this '
+                'feature.'
+            )
             redirect('/signup', headers=response.headers)
         return True
 

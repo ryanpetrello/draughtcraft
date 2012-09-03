@@ -87,7 +87,6 @@ class Calculations(object):
         gallons = float(self.recipe.gallons)
         for f in fermentables:
             try:
-                pounds = f.pounds
                 mcu = (f.pounds * f.ingredient.lovibond) / gallons
                 total += mcu
             except InvalidUnitException:
@@ -120,7 +119,11 @@ class Calculations(object):
         #
         user = self.recipe.author
         if user:
-            return getattr(self, user.settings['default_ibu_formula'], self.tinseth)
+            return getattr(
+                self,
+                user.settings['default_ibu_formula'],
+                self.tinseth
+            )
         return self.tinseth
 
     @property

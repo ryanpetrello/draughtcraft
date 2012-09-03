@@ -1,14 +1,16 @@
-from elixir import (
-    Entity, Field, Unicode, DateTime,
-    Enum, UnicodeText, OneToMany,
-    ManyToOne)
-from draughtcraft.model.deepcopy import ShallowCopyMixin
-from pecan import conf
 from json import loads, dumps
 from datetime import datetime
 from hashlib import sha256, md5
+
+from elixir import (
+    Entity, Field, Unicode, DateTime,
+    UnicodeText, OneToMany, ManyToOne
+)
+from pecan import conf
 from sqlalchemy.ext.associationproxy import AssociationProxy
 from sqlalchemy.orm.collections import attribute_mapped_collection
+
+from draughtcraft.model.deepcopy import ShallowCopyMixin
 
 
 class User(Entity, ShallowCopyMixin):
@@ -27,10 +29,16 @@ class User(Entity, ShallowCopyMixin):
 
     recipes = OneToMany(
         'Recipe', inverse='author', order_by='-last_updated')
-    user_settings = OneToMany('UserSetting', cascade='all, delete-orphan',
-                              collection_class=attribute_mapped_collection('name'))
-    settings = AssociationProxy('user_settings', 'value',
-                                creator=lambda name, value: UserSetting(name=name, value=value))
+    user_settings = OneToMany(
+        'UserSetting',
+        cascade='all, delete-orphan',
+        collection_class=attribute_mapped_collection('name')
+    )
+    settings = AssociationProxy(
+        'user_settings',
+        'value',
+        creator=lambda name, value: UserSetting(name=name, value=value)
+    )
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)
@@ -65,7 +73,7 @@ class User(Entity, ShallowCopyMixin):
     def password(self):
         return self._password
 
-    @password.setter
+    @password.setter  # noqa
     def password(self, v):
         self._password = self.__hash_password__(v)
 
@@ -75,7 +83,10 @@ class User(Entity, ShallowCopyMixin):
 
     @property
     def drafts(self):
-        return filter(lambda r: r.state == "DRAFT" and r.published_version is None, self.recipes)
+        return filter(
+            lambda r: r.state == "DRAFT" and r.published_version is None,
+            self.recipes
+        )
 
     @property
     def gravatar(self):
@@ -119,7 +130,7 @@ class UserSetting(Entity):
     def value(self):
         return loads(self._value)
 
-    @value.setter
+    @value.setter  # noqa
     def value(self, v):
         self._value = dumps(v)
 
