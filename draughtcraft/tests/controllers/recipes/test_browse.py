@@ -310,7 +310,9 @@ class TestFilteringByType(TestRecipeBrowser):
         self._eq('direction', 'DESC')
         assert len(self._ns['recipes']) == 2
         identifiers = [r.id for r in self._ns['recipes']]
-        for recipe in model.Recipe.query.filter(model.Recipe.type.like('EXTRACT%')).all():
+        for recipe in model.Recipe.query.filter(
+            model.Recipe.type.like('EXTRACT%')
+        ).all():
             assert recipe.id in identifiers
 
         # All three types disabled

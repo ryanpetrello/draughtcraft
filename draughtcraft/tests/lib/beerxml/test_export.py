@@ -1,8 +1,9 @@
+from datetime import timedelta
+from unittest import TestCase
+
 from draughtcraft import model
 from draughtcraft.lib.beerxml import export
 from draughtcraft.tests import TestModel
-from datetime import timedelta
-from unittest import TestCase
 
 
 def prepare_xml(xml):
@@ -138,7 +139,8 @@ class TestRecipeNodes(TestCase):
             '   <AMOUNT>0.0625</AMOUNT>',
             '   <FORM>LEAF</FORM>',
             '   <NAME>Target</NAME>',
-            '   <NOTES>English mid-to-high alpha hop bred from Kent Goldings.</NOTES>',
+            '   <NOTES>English mid-to-high alpha hop bred from Kent Goldings.'
+            '</NOTES>',
             '   <ORIGIN>GERMAN</ORIGIN>',
             '   <TIME>60</TIME>',
             '   <USE>BOIL</USE>',
@@ -223,41 +225,41 @@ class TestRecipeExport(TestModel):
         xml = recipe.to_xml()
 
         assert xml == prepare_xml([
-                                  '<RECIPE>',
-                                  '   <BATCH_SIZE>18.927</BATCH_SIZE>',
-                                  '   <BOIL_SIZE>23.65875</BOIL_SIZE>',
-                                  '   <BOIL_TIME>60</BOIL_TIME>',
-                                  '   <BREWER>Ryan Petrello</BREWER>',
-                                  '   <EFFICIENCY>75.0</EFFICIENCY>',
-                                  '   <FERMENTABLES/>',
-                                  '   <FERMENTATION_STAGES>0</FERMENTATION_STAGES>',
-                                  '   <HOPS/>',
-                                  '   <MASH/>',
-                                  '   <MISCS/>',
-                                  '   <NAME>Rocky Mountain River IPA</NAME>',
-                                  '   <NOTES>This is my favorite recipe.</NOTES>',
-                                  '   <STYLE>',
-                                  '       <CATEGORY>No Style Chosen</CATEGORY>',
-                                  '       <CATEGORY_NUMBER>0</CATEGORY_NUMBER>',
-                                  '       <COLOR_MAX>0</COLOR_MAX>',
-                                  '       <COLOR_MIN>0</COLOR_MIN>',
-                                  '       <FG_MAX>0</FG_MAX>',
-                                  '       <FG_MIN>0</FG_MIN>',
-                                  '       <IBU_MAX>0</IBU_MAX>',
-                                  '       <IBU_MIN>0</IBU_MIN>',
-                                  '       <NAME></NAME>',
-                                  '       <OG_MAX>0</OG_MAX>',
-                                  '       <OG_MIN>0</OG_MIN>',
-                                  '       <STYLE_LETTER></STYLE_LETTER>',
-                                  '       <TYPE>None</TYPE>',
-                                  '       <VERSION>1</VERSION>',
-                                  '   </STYLE>',
-                                  '   <TYPE>All Grain</TYPE>',
-                                  '   <VERSION>1</VERSION>',
-                                  '   <WATERS/>',
-                                  '   <YEASTS/>',
-                                  '</RECIPE>'
-                                  ])
+            '<RECIPE>',
+            '   <BATCH_SIZE>18.927</BATCH_SIZE>',
+            '   <BOIL_SIZE>23.65875</BOIL_SIZE>',
+            '   <BOIL_TIME>60</BOIL_TIME>',
+            '   <BREWER>Ryan Petrello</BREWER>',
+            '   <EFFICIENCY>75.0</EFFICIENCY>',
+            '   <FERMENTABLES/>',
+            '   <FERMENTATION_STAGES>0</FERMENTATION_STAGES>',
+            '   <HOPS/>',
+            '   <MASH/>',
+            '   <MISCS/>',
+            '   <NAME>Rocky Mountain River IPA</NAME>',
+            '   <NOTES>This is my favorite recipe.</NOTES>',
+            '   <STYLE>',
+            '       <CATEGORY>No Style Chosen</CATEGORY>',
+            '       <CATEGORY_NUMBER>0</CATEGORY_NUMBER>',
+            '       <COLOR_MAX>0</COLOR_MAX>',
+            '       <COLOR_MIN>0</COLOR_MIN>',
+            '       <FG_MAX>0</FG_MAX>',
+            '       <FG_MIN>0</FG_MIN>',
+            '       <IBU_MAX>0</IBU_MAX>',
+            '       <IBU_MIN>0</IBU_MIN>',
+            '       <NAME></NAME>',
+            '       <OG_MAX>0</OG_MAX>',
+            '       <OG_MIN>0</OG_MIN>',
+            '       <STYLE_LETTER></STYLE_LETTER>',
+            '       <TYPE>None</TYPE>',
+            '       <VERSION>1</VERSION>',
+            '   </STYLE>',
+            '   <TYPE>All Grain</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '   <WATERS/>',
+            '   <YEASTS/>',
+            '</RECIPE>'
+        ])
 
     def test_all_grain_type(self):
         model.Recipe(
@@ -367,47 +369,47 @@ class TestRecipeExport(TestModel):
         xml = recipe.to_xml()
 
         assert xml == prepare_xml([
-                                  '<RECIPE>',
-                                  '   <BATCH_SIZE>18.927</BATCH_SIZE>',
-                                  '   <BOIL_SIZE>23.65875</BOIL_SIZE>',
-                                  '   <BOIL_TIME>60</BOIL_TIME>',
-                                  '   <BREWER>Ryan Petrello</BREWER>',
-                                  '   <EFFICIENCY>75.0</EFFICIENCY>',
-                                  '   <FERMENTABLES/>',
-                                  '   <FERMENTATION_STAGES>3</FERMENTATION_STAGES>',
-                                  '   <HOPS/>',
-                                  '   <MASH/>',
-                                  '   <MISCS/>',
-                                  '   <NAME>Rocky Mountain River IPA</NAME>',
-                                  '   <NOTES>This is my favorite recipe.</NOTES>',
-                                  '   <PRIMARY_AGE>14</PRIMARY_AGE>',
-                                  '   <PRIMARY_TEMP>18.0</PRIMARY_TEMP>',
-                                  '   <SECONDARY_AGE>28</SECONDARY_AGE>',
-                                  '   <SECONDARY_TEMP>22.0</SECONDARY_TEMP>',
-                                  '   <STYLE>',
-                                  '       <CATEGORY>No Style Chosen</CATEGORY>',
-                                  '       <CATEGORY_NUMBER>0</CATEGORY_NUMBER>',
-                                  '       <COLOR_MAX>0</COLOR_MAX>',
-                                  '       <COLOR_MIN>0</COLOR_MIN>',
-                                  '       <FG_MAX>0</FG_MAX>',
-                                  '       <FG_MIN>0</FG_MIN>',
-                                  '       <IBU_MAX>0</IBU_MAX>',
-                                  '       <IBU_MIN>0</IBU_MIN>',
-                                  '       <NAME></NAME>',
-                                  '       <OG_MAX>0</OG_MAX>',
-                                  '       <OG_MIN>0</OG_MIN>',
-                                  '       <STYLE_LETTER></STYLE_LETTER>',
-                                  '       <TYPE>None</TYPE>',
-                                  '       <VERSION>1</VERSION>',
-                                  '   </STYLE>',
-                                  '   <TERTIARY_AGE>28</TERTIARY_AGE>',
-                                  '   <TERTIARY_TEMP>6.0</TERTIARY_TEMP>',
-                                  '   <TYPE>All Grain</TYPE>',
-                                  '   <VERSION>1</VERSION>',
-                                  '   <WATERS/>',
-                                  '   <YEASTS/>',
-                                  '</RECIPE>'
-                                  ])
+            '<RECIPE>',
+            '   <BATCH_SIZE>18.927</BATCH_SIZE>',
+            '   <BOIL_SIZE>23.65875</BOIL_SIZE>',
+            '   <BOIL_TIME>60</BOIL_TIME>',
+            '   <BREWER>Ryan Petrello</BREWER>',
+            '   <EFFICIENCY>75.0</EFFICIENCY>',
+            '   <FERMENTABLES/>',
+            '   <FERMENTATION_STAGES>3</FERMENTATION_STAGES>',
+            '   <HOPS/>',
+            '   <MASH/>',
+            '   <MISCS/>',
+            '   <NAME>Rocky Mountain River IPA</NAME>',
+            '   <NOTES>This is my favorite recipe.</NOTES>',
+            '   <PRIMARY_AGE>14</PRIMARY_AGE>',
+            '   <PRIMARY_TEMP>18.0</PRIMARY_TEMP>',
+            '   <SECONDARY_AGE>28</SECONDARY_AGE>',
+            '   <SECONDARY_TEMP>22.0</SECONDARY_TEMP>',
+            '   <STYLE>',
+            '       <CATEGORY>No Style Chosen</CATEGORY>',
+            '       <CATEGORY_NUMBER>0</CATEGORY_NUMBER>',
+            '       <COLOR_MAX>0</COLOR_MAX>',
+            '       <COLOR_MIN>0</COLOR_MIN>',
+            '       <FG_MAX>0</FG_MAX>',
+            '       <FG_MIN>0</FG_MIN>',
+            '       <IBU_MAX>0</IBU_MAX>',
+            '       <IBU_MIN>0</IBU_MIN>',
+            '       <NAME></NAME>',
+            '       <OG_MAX>0</OG_MAX>',
+            '       <OG_MIN>0</OG_MIN>',
+            '       <STYLE_LETTER></STYLE_LETTER>',
+            '       <TYPE>None</TYPE>',
+            '       <VERSION>1</VERSION>',
+            '   </STYLE>',
+            '   <TERTIARY_AGE>28</TERTIARY_AGE>',
+            '   <TERTIARY_TEMP>6.0</TERTIARY_TEMP>',
+            '   <TYPE>All Grain</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '   <WATERS/>',
+            '   <YEASTS/>',
+            '</RECIPE>'
+        ])
 
     def test_recipe_with_style(self):
         style = model.Style(
@@ -456,43 +458,43 @@ class TestRecipeExport(TestModel):
         xml = recipe.to_xml()
 
         assert xml == prepare_xml([
-                                  '<RECIPE>',
-                                  '   <BATCH_SIZE>18.927</BATCH_SIZE>',
-                                  '   <BOIL_SIZE>23.65875</BOIL_SIZE>',
-                                  '   <BOIL_TIME>60</BOIL_TIME>',
-                                  '   <BREWER>Ryan Petrello</BREWER>',
-                                  '   <EFFICIENCY>75.0</EFFICIENCY>',
-                                  '   <FERMENTABLES/>',
-                                  '   <FERMENTATION_STAGES>0</FERMENTATION_STAGES>',
-                                  '   <HOPS/>',
-                                  '   <MASH/>',
-                                  '   <MISCS/>',
-                                  '   <NAME>Rocky Mountain River IPA</NAME>',
-                                  '   <NOTES>This is my favorite recipe.</NOTES>',
-                                  '   <STYLE>',
-                                  '       <ABV_MAX>0.06</ABV_MAX>',
-                                  '       <ABV_MIN>0.045</ABV_MIN>',
-                                  '       <CATEGORY>American Ale</CATEGORY>',
-                                  '       <CATEGORY_NUMBER>10</CATEGORY_NUMBER>',
-                                  '       <COLOR_MAX>14</COLOR_MAX>',
-                                  '       <COLOR_MIN>5</COLOR_MIN>',
-                                  '       <FG_MAX>1.015</FG_MAX>',
-        '       <FG_MIN>1.01</FG_MIN>',
-        '       <IBU_MAX>45</IBU_MAX>',
-        '       <IBU_MIN>30</IBU_MIN>',
-        '       <NAME>American Pale Ale</NAME>',
-        '       <OG_MAX>1.06</OG_MAX>',
-        '       <OG_MIN>1.045</OG_MIN>',
-        '       <STYLE_GUIDE>BJCP</STYLE_GUIDE>',
-        '       <STYLE_LETTER>A</STYLE_LETTER>',
-        '       <TYPE>Ale</TYPE>',
-        '       <VERSION>1</VERSION>',
-        '   </STYLE>',
-        '   <TYPE>All Grain</TYPE>',
-        '   <VERSION>1</VERSION>',
-        '   <WATERS/>',
-        '   <YEASTS/>',
-        '</RECIPE>'
+            '<RECIPE>',
+            '   <BATCH_SIZE>18.927</BATCH_SIZE>',
+            '   <BOIL_SIZE>23.65875</BOIL_SIZE>',
+            '   <BOIL_TIME>60</BOIL_TIME>',
+            '   <BREWER>Ryan Petrello</BREWER>',
+            '   <EFFICIENCY>75.0</EFFICIENCY>',
+            '   <FERMENTABLES/>',
+            '   <FERMENTATION_STAGES>0</FERMENTATION_STAGES>',
+            '   <HOPS/>',
+            '   <MASH/>',
+            '   <MISCS/>',
+            '   <NAME>Rocky Mountain River IPA</NAME>',
+            '   <NOTES>This is my favorite recipe.</NOTES>',
+            '   <STYLE>',
+            '       <ABV_MAX>0.06</ABV_MAX>',
+            '       <ABV_MIN>0.045</ABV_MIN>',
+            '       <CATEGORY>American Ale</CATEGORY>',
+            '       <CATEGORY_NUMBER>10</CATEGORY_NUMBER>',
+            '       <COLOR_MAX>14</COLOR_MAX>',
+            '       <COLOR_MIN>5</COLOR_MIN>',
+            '       <FG_MAX>1.015</FG_MAX>',
+            '       <FG_MIN>1.01</FG_MIN>',
+            '       <IBU_MAX>45</IBU_MAX>',
+            '       <IBU_MIN>30</IBU_MIN>',
+            '       <NAME>American Pale Ale</NAME>',
+            '       <OG_MAX>1.06</OG_MAX>',
+            '       <OG_MIN>1.045</OG_MIN>',
+            '       <STYLE_GUIDE>BJCP</STYLE_GUIDE>',
+            '       <STYLE_LETTER>A</STYLE_LETTER>',
+            '       <TYPE>Ale</TYPE>',
+            '       <VERSION>1</VERSION>',
+            '   </STYLE>',
+            '   <TYPE>All Grain</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '   <WATERS/>',
+            '   <YEASTS/>',
+            '</RECIPE>'
         ])
 
 
@@ -531,17 +533,17 @@ class TestRecipeWithHops(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<HOP>',
-        '   <ALPHA>4.5</ALPHA>',
-        '   <AMOUNT>0.45359237</AMOUNT>',  # 1lb in kg
-        '   <FORM>Pellet</FORM>',
-        '   <NAME>Cascade</NAME>',
-        '   <NOTES>The Cascade Hop</NOTES>',
-        '   <ORIGIN>US</ORIGIN>',
-        '   <TIME>60</TIME>',
-        '   <USE>Boil</USE>',
-        '   <VERSION>1</VERSION>',
-        '</HOP>'
+            '<HOP>',
+            '   <ALPHA>4.5</ALPHA>',
+            '   <AMOUNT>0.45359237</AMOUNT>',  # 1lb in kg
+            '   <FORM>Pellet</FORM>',
+            '   <NAME>Cascade</NAME>',
+            '   <NOTES>The Cascade Hop</NOTES>',
+            '   <ORIGIN>US</ORIGIN>',
+            '   <TIME>60</TIME>',
+            '   <USE>Boil</USE>',
+            '   <VERSION>1</VERSION>',
+            '</HOP>'
         ]) in xml
 
     def test_hops_in_mash(self):
@@ -576,17 +578,17 @@ class TestRecipeWithHops(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<HOP>',
-        '   <ALPHA>4.5</ALPHA>',
-        '   <AMOUNT>0.45359237</AMOUNT>',  # 1lb in kg
-        '   <FORM>Pellet</FORM>',
-        '   <NAME>Cascade</NAME>',
-        '   <NOTES>The Cascade Hop</NOTES>',
-        '   <ORIGIN>US</ORIGIN>',
-        '   <TIME>0</TIME>',
-        '   <USE>Mash</USE>',
-        '   <VERSION>1</VERSION>',
-        '</HOP>'
+            '<HOP>',
+            '   <ALPHA>4.5</ALPHA>',
+            '   <AMOUNT>0.45359237</AMOUNT>',  # 1lb in kg
+            '   <FORM>Pellet</FORM>',
+            '   <NAME>Cascade</NAME>',
+            '   <NOTES>The Cascade Hop</NOTES>',
+            '   <ORIGIN>US</ORIGIN>',
+            '   <TIME>0</TIME>',
+            '   <USE>Mash</USE>',
+            '   <VERSION>1</VERSION>',
+            '</HOP>'
         ]) in xml
 
     def test_hops_post_boil(self):
@@ -621,17 +623,17 @@ class TestRecipeWithHops(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<HOP>',
-        '   <ALPHA>4.5</ALPHA>',
-        '   <AMOUNT>0.45359237</AMOUNT>',  # 1lb in kg
-        '   <FORM>Pellet</FORM>',
-        '   <NAME>Cascade</NAME>',
-        '   <NOTES>The Cascade Hop</NOTES>',
-        '   <ORIGIN>US</ORIGIN>',
-        '   <TIME>0</TIME>',
-        '   <USE>Aroma</USE>',
-        '   <VERSION>1</VERSION>',
-        '</HOP>'
+            '<HOP>',
+            '   <ALPHA>4.5</ALPHA>',
+            '   <AMOUNT>0.45359237</AMOUNT>',  # 1lb in kg
+            '   <FORM>Pellet</FORM>',
+            '   <NAME>Cascade</NAME>',
+            '   <NOTES>The Cascade Hop</NOTES>',
+            '   <ORIGIN>US</ORIGIN>',
+            '   <TIME>0</TIME>',
+            '   <USE>Aroma</USE>',
+            '   <VERSION>1</VERSION>',
+            '</HOP>'
         ]) in xml
 
     def test_hops_flame_out(self):
@@ -666,17 +668,17 @@ class TestRecipeWithHops(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<HOP>',
-        '   <ALPHA>4.5</ALPHA>',
-        '   <AMOUNT>0.45359237</AMOUNT>',  # 1lb in kg
-        '   <FORM>Pellet</FORM>',
-        '   <NAME>Cascade</NAME>',
-        '   <NOTES>The Cascade Hop</NOTES>',
-        '   <ORIGIN>US</ORIGIN>',
-        '   <TIME>0</TIME>',
-        '   <USE>Aroma</USE>',
-        '   <VERSION>1</VERSION>',
-        '</HOP>'
+            '<HOP>',
+            '   <ALPHA>4.5</ALPHA>',
+            '   <AMOUNT>0.45359237</AMOUNT>',  # 1lb in kg
+            '   <FORM>Pellet</FORM>',
+            '   <NAME>Cascade</NAME>',
+            '   <NOTES>The Cascade Hop</NOTES>',
+            '   <ORIGIN>US</ORIGIN>',
+            '   <TIME>0</TIME>',
+            '   <USE>Aroma</USE>',
+            '   <VERSION>1</VERSION>',
+            '</HOP>'
         ]) in xml
 
     def test_primary_dry_hop(self):
@@ -711,17 +713,17 @@ class TestRecipeWithHops(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<HOP>',
-        '   <ALPHA>4.5</ALPHA>',
-        '   <AMOUNT>0.45359237</AMOUNT>',  # 1lb in kg
-        '   <FORM>Pellet</FORM>',
-        '   <NAME>Cascade</NAME>',
-        '   <NOTES>The Cascade Hop</NOTES>',
-        '   <ORIGIN>US</ORIGIN>',
-        '   <TIME>0</TIME>',
-        '   <USE>Dry Hop</USE>',
-        '   <VERSION>1</VERSION>',
-        '</HOP>'
+            '<HOP>',
+            '   <ALPHA>4.5</ALPHA>',
+            '   <AMOUNT>0.45359237</AMOUNT>',  # 1lb in kg
+            '   <FORM>Pellet</FORM>',
+            '   <NAME>Cascade</NAME>',
+            '   <NOTES>The Cascade Hop</NOTES>',
+            '   <ORIGIN>US</ORIGIN>',
+            '   <TIME>0</TIME>',
+            '   <USE>Dry Hop</USE>',
+            '   <VERSION>1</VERSION>',
+            '</HOP>'
         ]) in xml
 
     def test_secondary_dry_hop(self):
@@ -757,17 +759,17 @@ class TestRecipeWithHops(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<HOP>',
-        '   <ALPHA>4.5</ALPHA>',
-        '   <AMOUNT>0.45359237</AMOUNT>',  # 1lb in kg
-        '   <FORM>Pellet</FORM>',
-        '   <NAME>Cascade</NAME>',
-        '   <NOTES>The Cascade Hop</NOTES>',
-        '   <ORIGIN>US</ORIGIN>',
-        '   <TIME>60</TIME>',
-        '   <USE>Dry Hop</USE>',
-        '   <VERSION>1</VERSION>',
-        '</HOP>'
+            '<HOP>',
+            '   <ALPHA>4.5</ALPHA>',
+            '   <AMOUNT>0.45359237</AMOUNT>',  # 1lb in kg
+            '   <FORM>Pellet</FORM>',
+            '   <NAME>Cascade</NAME>',
+            '   <NOTES>The Cascade Hop</NOTES>',
+            '   <ORIGIN>US</ORIGIN>',
+            '   <TIME>60</TIME>',
+            '   <USE>Dry Hop</USE>',
+            '   <VERSION>1</VERSION>',
+            '</HOP>'
         ]) in xml
 
     def test_tertiary_dry_hop(self):
@@ -803,17 +805,17 @@ class TestRecipeWithHops(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<HOP>',
-        '   <ALPHA>4.5</ALPHA>',
-        '   <AMOUNT>0.45359237</AMOUNT>',  # 1lb in kg
-        '   <FORM>Pellet</FORM>',
-        '   <NAME>Cascade</NAME>',
-        '   <NOTES>The Cascade Hop</NOTES>',
-        '   <ORIGIN>US</ORIGIN>',
-        '   <TIME>60</TIME>',
-        '   <USE>Dry Hop</USE>',
-        '   <VERSION>1</VERSION>',
-        '</HOP>'
+            '<HOP>',
+            '   <ALPHA>4.5</ALPHA>',
+            '   <AMOUNT>0.45359237</AMOUNT>',  # 1lb in kg
+            '   <FORM>Pellet</FORM>',
+            '   <NAME>Cascade</NAME>',
+            '   <NOTES>The Cascade Hop</NOTES>',
+            '   <ORIGIN>US</ORIGIN>',
+            '   <TIME>60</TIME>',
+            '   <USE>Dry Hop</USE>',
+            '   <VERSION>1</VERSION>',
+            '</HOP>'
         ]) in xml
 
     def test_hops_in_ounces(self):
@@ -849,17 +851,17 @@ class TestRecipeWithHops(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<HOP>',
-        '   <ALPHA>4.5</ALPHA>',
-        '   <AMOUNT>0.0283495231</AMOUNT>',
-        '   <FORM>Pellet</FORM>',
-        '   <NAME>Cascade</NAME>',
-        '   <NOTES>The Cascade Hop</NOTES>',
-        '   <ORIGIN>US</ORIGIN>',
-        '   <TIME>60</TIME>',
-        '   <USE>Boil</USE>',
-        '   <VERSION>1</VERSION>',
-        '</HOP>'
+            '<HOP>',
+            '   <ALPHA>4.5</ALPHA>',
+            '   <AMOUNT>0.0283495231</AMOUNT>',
+            '   <FORM>Pellet</FORM>',
+            '   <NAME>Cascade</NAME>',
+            '   <NOTES>The Cascade Hop</NOTES>',
+            '   <ORIGIN>US</ORIGIN>',
+            '   <TIME>60</TIME>',
+            '   <USE>Boil</USE>',
+            '   <VERSION>1</VERSION>',
+            '</HOP>'
         ]) in xml
 
 
@@ -899,17 +901,17 @@ class TestRecipeWithFermentables(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<FERMENTABLE>',
-        '   <ADD_AFTER_BOIL>False</ADD_AFTER_BOIL>',
-        '   <AMOUNT>0.45359237</AMOUNT>',
-        '   <COLOR>2.0</COLOR>',
-        '   <NAME>2-Row</NAME>',
-        '   <NOTES>A standard base grain.</NOTES>',
-        '   <ORIGIN>US</ORIGIN>',
-        '   <TYPE>Grain</TYPE>',
-        '   <VERSION>1</VERSION>',
-        '   <YIELD>78.0</YIELD>',
-        '</FERMENTABLE>'
+            '<FERMENTABLE>',
+            '   <ADD_AFTER_BOIL>False</ADD_AFTER_BOIL>',
+            '   <AMOUNT>0.45359237</AMOUNT>',
+            '   <COLOR>2.0</COLOR>',
+            '   <NAME>2-Row</NAME>',
+            '   <NOTES>A standard base grain.</NOTES>',
+            '   <ORIGIN>US</ORIGIN>',
+            '   <TYPE>Grain</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '   <YIELD>78.0</YIELD>',
+            '</FERMENTABLE>'
         ]) in xml
 
     def test_grain(self):
@@ -946,17 +948,17 @@ class TestRecipeWithFermentables(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<FERMENTABLE>',
-        '   <ADD_AFTER_BOIL>False</ADD_AFTER_BOIL>',
-        '   <AMOUNT>0.45359237</AMOUNT>',
-        '   <COLOR>1.0</COLOR>',
-        '   <NAME>Flaked Oats</NAME>',
-        '   <NOTES>Adds body.</NOTES>',
-        '   <ORIGIN>US</ORIGIN>',
-        '   <TYPE>Grain</TYPE>',
-        '   <VERSION>1</VERSION>',
-        '   <YIELD>80.0</YIELD>',
-        '</FERMENTABLE>'
+            '<FERMENTABLE>',
+            '   <ADD_AFTER_BOIL>False</ADD_AFTER_BOIL>',
+            '   <AMOUNT>0.45359237</AMOUNT>',
+            '   <COLOR>1.0</COLOR>',
+            '   <NAME>Flaked Oats</NAME>',
+            '   <NOTES>Adds body.</NOTES>',
+            '   <ORIGIN>US</ORIGIN>',
+            '   <TYPE>Grain</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '   <YIELD>80.0</YIELD>',
+            '</FERMENTABLE>'
         ]) in xml
 
     def test_sugar(self):
@@ -993,17 +995,17 @@ class TestRecipeWithFermentables(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<FERMENTABLE>',
-        '   <ADD_AFTER_BOIL>False</ADD_AFTER_BOIL>',
-        '   <AMOUNT>0.45359237</AMOUNT>',
-        '   <COLOR>1.0</COLOR>',
-        '   <NAME>Sucrose</NAME>',
-        '   <NOTES>Table Sugar</NOTES>',
-        '   <ORIGIN>US</ORIGIN>',
-        '   <TYPE>Sugar</TYPE>',
-        '   <VERSION>1</VERSION>',
-        '   <YIELD>100.0</YIELD>',
-        '</FERMENTABLE>'
+            '<FERMENTABLE>',
+            '   <ADD_AFTER_BOIL>False</ADD_AFTER_BOIL>',
+            '   <AMOUNT>0.45359237</AMOUNT>',
+            '   <COLOR>1.0</COLOR>',
+            '   <NAME>Sucrose</NAME>',
+            '   <NOTES>Table Sugar</NOTES>',
+            '   <ORIGIN>US</ORIGIN>',
+            '   <TYPE>Sugar</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '   <YIELD>100.0</YIELD>',
+            '</FERMENTABLE>'
         ]) in xml
 
     def test_extract(self):
@@ -1040,17 +1042,17 @@ class TestRecipeWithFermentables(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<FERMENTABLE>',
-        '   <ADD_AFTER_BOIL>False</ADD_AFTER_BOIL>',
-        '   <AMOUNT>0.45359237</AMOUNT>',
-        '   <COLOR>8.0</COLOR>',
-        '   <NAME>Briess Munich LME</NAME>',
-        '   <NOTES>Light Munich Liquid Extract</NOTES>',
-        '   <ORIGIN>US</ORIGIN>',
-        '   <TYPE>Extract</TYPE>',
-        '   <VERSION>1</VERSION>',
-        '   <YIELD>76.0</YIELD>',
-        '</FERMENTABLE>'
+            '<FERMENTABLE>',
+            '   <ADD_AFTER_BOIL>False</ADD_AFTER_BOIL>',
+            '   <AMOUNT>0.45359237</AMOUNT>',
+            '   <COLOR>8.0</COLOR>',
+            '   <NAME>Briess Munich LME</NAME>',
+            '   <NOTES>Light Munich Liquid Extract</NOTES>',
+            '   <ORIGIN>US</ORIGIN>',
+            '   <TYPE>Extract</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '   <YIELD>76.0</YIELD>',
+            '</FERMENTABLE>'
         ]) in xml
 
     def test_dry_extract(self):
@@ -1087,17 +1089,17 @@ class TestRecipeWithFermentables(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<FERMENTABLE>',
-        '   <ADD_AFTER_BOIL>False</ADD_AFTER_BOIL>',
-        '   <AMOUNT>0.45359237</AMOUNT>',
-        '   <COLOR>8.0</COLOR>',
-        '   <NAME>Briess Munich DME</NAME>',
-        '   <NOTES>Light Munich Dry Extract</NOTES>',
-        '   <ORIGIN>US</ORIGIN>',
-        '   <TYPE>Dry Extract</TYPE>',
-        '   <VERSION>1</VERSION>',
-        '   <YIELD>76.0</YIELD>',
-        '</FERMENTABLE>'
+            '<FERMENTABLE>',
+            '   <ADD_AFTER_BOIL>False</ADD_AFTER_BOIL>',
+            '   <AMOUNT>0.45359237</AMOUNT>',
+            '   <COLOR>8.0</COLOR>',
+            '   <NAME>Briess Munich DME</NAME>',
+            '   <NOTES>Light Munich Dry Extract</NOTES>',
+            '   <ORIGIN>US</ORIGIN>',
+            '   <TYPE>Dry Extract</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '   <YIELD>76.0</YIELD>',
+            '</FERMENTABLE>'
         ]) in xml
 
     def test_adjunct(self):
@@ -1134,17 +1136,17 @@ class TestRecipeWithFermentables(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<FERMENTABLE>',
-        '   <ADD_AFTER_BOIL>False</ADD_AFTER_BOIL>',
-        '   <AMOUNT>0.45359237</AMOUNT>',
-        '   <COLOR>0.0</COLOR>',
-        '   <NAME>Barley Hulls</NAME>',
-        '   <NOTES>Aid in lautering.</NOTES>',
-        '   <ORIGIN>US</ORIGIN>',
-        '   <TYPE>Adjunct</TYPE>',
-        '   <VERSION>1</VERSION>',
-        '   <YIELD>0.0</YIELD>',
-        '</FERMENTABLE>'
+            '<FERMENTABLE>',
+            '   <ADD_AFTER_BOIL>False</ADD_AFTER_BOIL>',
+            '   <AMOUNT>0.45359237</AMOUNT>',
+            '   <COLOR>0.0</COLOR>',
+            '   <NAME>Barley Hulls</NAME>',
+            '   <NOTES>Aid in lautering.</NOTES>',
+            '   <ORIGIN>US</ORIGIN>',
+            '   <TYPE>Adjunct</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '   <YIELD>0.0</YIELD>',
+            '</FERMENTABLE>'
         ]) in xml
 
     def test_fermentation_addition(self):
@@ -1181,17 +1183,17 @@ class TestRecipeWithFermentables(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<FERMENTABLE>',
-        '   <ADD_AFTER_BOIL>True</ADD_AFTER_BOIL>',
-        '   <AMOUNT>0.45359237</AMOUNT>',
-        '   <COLOR>1.0</COLOR>',
-        '   <NAME>Sucrose</NAME>',
-        '   <NOTES>Table Sugar</NOTES>',
-        '   <ORIGIN>US</ORIGIN>',
-        '   <TYPE>Sugar</TYPE>',
-        '   <VERSION>1</VERSION>',
-        '   <YIELD>100.0</YIELD>',
-        '</FERMENTABLE>'
+            '<FERMENTABLE>',
+            '   <ADD_AFTER_BOIL>True</ADD_AFTER_BOIL>',
+            '   <AMOUNT>0.45359237</AMOUNT>',
+            '   <COLOR>1.0</COLOR>',
+            '   <NAME>Sucrose</NAME>',
+            '   <NOTES>Table Sugar</NOTES>',
+            '   <ORIGIN>US</ORIGIN>',
+            '   <TYPE>Sugar</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '   <YIELD>100.0</YIELD>',
+            '</FERMENTABLE>'
         ]) in xml
 
 
@@ -1228,15 +1230,15 @@ class TestRecipeWithYeast(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<YEAST>',
-        '   <AMOUNT>0.125</AMOUNT>',
-        '   <ATTENUATION>75.0</ATTENUATION>',
-        '   <FORM>Liquid</FORM>',
-        '   <NAME>Wyeast 1056 - American Ale</NAME>',
-        '   <NOTES>A yeast for American Ales.</NOTES>',
-        '   <TYPE>Ale</TYPE>',
-        '   <VERSION>1</VERSION>',
-        '</YEAST>'
+            '<YEAST>',
+            '   <AMOUNT>0.125</AMOUNT>',
+            '   <ATTENUATION>75.0</ATTENUATION>',
+            '   <FORM>Liquid</FORM>',
+            '   <NAME>Wyeast 1056 - American Ale</NAME>',
+            '   <NOTES>A yeast for American Ales.</NOTES>',
+            '   <TYPE>Ale</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '</YEAST>'
         ]) in xml
 
     def test_wild_yeast(self):
@@ -1270,15 +1272,15 @@ class TestRecipeWithYeast(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<YEAST>',
-        '   <AMOUNT>0.125</AMOUNT>',
-        '   <ATTENUATION>75.0</ATTENUATION>',
-        '   <FORM>Liquid</FORM>',
-        '   <NAME>Wyeast 5112 - Brettanomyces Bruxellensis</NAME>',
-        '   <NOTES>A yeast for wild ales.</NOTES>',
-        '   <TYPE>Ale</TYPE>',
-        '   <VERSION>1</VERSION>',
-        '</YEAST>'
+            '<YEAST>',
+            '   <AMOUNT>0.125</AMOUNT>',
+            '   <ATTENUATION>75.0</ATTENUATION>',
+            '   <FORM>Liquid</FORM>',
+            '   <NAME>Wyeast 5112 - Brettanomyces Bruxellensis</NAME>',
+            '   <NOTES>A yeast for wild ales.</NOTES>',
+            '   <TYPE>Ale</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '</YEAST>'
         ]) in xml
 
     def test_lager_yeast(self):
@@ -1312,15 +1314,15 @@ class TestRecipeWithYeast(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<YEAST>',
-        '   <AMOUNT>0.125</AMOUNT>',
-        '   <ATTENUATION>75.0</ATTENUATION>',
-        '   <FORM>Liquid</FORM>',
-        '   <NAME>Wyeast 2035 - American Lager</NAME>',
-        '   <NOTES>A yeast for American Lagers.</NOTES>',
-        '   <TYPE>Lager</TYPE>',
-        '   <VERSION>1</VERSION>',
-        '</YEAST>'
+            '<YEAST>',
+            '   <AMOUNT>0.125</AMOUNT>',
+            '   <ATTENUATION>75.0</ATTENUATION>',
+            '   <FORM>Liquid</FORM>',
+            '   <NAME>Wyeast 2035 - American Lager</NAME>',
+            '   <NOTES>A yeast for American Lagers.</NOTES>',
+            '   <TYPE>Lager</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '</YEAST>'
         ]) in xml
 
     def test_mead_yeast(self):
@@ -1354,15 +1356,15 @@ class TestRecipeWithYeast(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<YEAST>',
-        '   <AMOUNT>0.125</AMOUNT>',
-        '   <ATTENUATION>75.0</ATTENUATION>',
-        '   <FORM>Liquid</FORM>',
-        '   <NAME>Wyeast 4184 - Sweet Mead</NAME>',
-        '   <NOTES>A yeast for meads.</NOTES>',
-        '   <TYPE>Wine</TYPE>',
-        '   <VERSION>1</VERSION>',
-        '</YEAST>'
+            '<YEAST>',
+            '   <AMOUNT>0.125</AMOUNT>',
+            '   <ATTENUATION>75.0</ATTENUATION>',
+            '   <FORM>Liquid</FORM>',
+            '   <NAME>Wyeast 4184 - Sweet Mead</NAME>',
+            '   <NOTES>A yeast for meads.</NOTES>',
+            '   <TYPE>Wine</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '</YEAST>'
         ]) in xml
 
     def test_cider_yeast(self):
@@ -1396,15 +1398,15 @@ class TestRecipeWithYeast(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<YEAST>',
-        '   <AMOUNT>0.125</AMOUNT>',
-        '   <ATTENUATION>75.0</ATTENUATION>',
-        '   <FORM>Liquid</FORM>',
-        '   <NAME>Wyeast 4766 - Cider</NAME>',
-        '   <NOTES>A yeast for ciders.</NOTES>',
-        '   <TYPE>Wine</TYPE>',
-        '   <VERSION>1</VERSION>',
-        '</YEAST>'
+            '<YEAST>',
+            '   <AMOUNT>0.125</AMOUNT>',
+            '   <ATTENUATION>75.0</ATTENUATION>',
+            '   <FORM>Liquid</FORM>',
+            '   <NAME>Wyeast 4766 - Cider</NAME>',
+            '   <NOTES>A yeast for ciders.</NOTES>',
+            '   <TYPE>Wine</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '</YEAST>'
         ]) in xml
 
     def test_wine_yeast(self):
@@ -1438,15 +1440,15 @@ class TestRecipeWithYeast(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<YEAST>',
-        '   <AMOUNT>0.125</AMOUNT>',
-        '   <ATTENUATION>75.0</ATTENUATION>',
-        '   <FORM>Liquid</FORM>',
-        '   <NAME>White Labs WLP715 - Champagne Yeast</NAME>',
-        '   <NOTES>A yeast for wine.</NOTES>',
-        '   <TYPE>Wine</TYPE>',
-        '   <VERSION>1</VERSION>',
-        '</YEAST>'
+            '<YEAST>',
+            '   <AMOUNT>0.125</AMOUNT>',
+            '   <ATTENUATION>75.0</ATTENUATION>',
+            '   <FORM>Liquid</FORM>',
+            '   <NAME>White Labs WLP715 - Champagne Yeast</NAME>',
+            '   <NOTES>A yeast for wine.</NOTES>',
+            '   <TYPE>Wine</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '</YEAST>'
         ]) in xml
 
     def test_dry_yeast(self):
@@ -1480,16 +1482,16 @@ class TestRecipeWithYeast(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<YEAST>',
-        '   <AMOUNT>0.0115</AMOUNT>',
-        '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
-        '   <ATTENUATION>75.0</ATTENUATION>',
-        '   <FORM>Dry</FORM>',
-        '   <NAME>DCL S-04 - SafAle English Ale</NAME>',
-        '   <NOTES>A dry yeast.</NOTES>',
-        '   <TYPE>Ale</TYPE>',
-        '   <VERSION>1</VERSION>',
-        '</YEAST>'
+            '<YEAST>',
+            '   <AMOUNT>0.0115</AMOUNT>',
+            '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
+            '   <ATTENUATION>75.0</ATTENUATION>',
+            '   <FORM>Dry</FORM>',
+            '   <NAME>DCL S-04 - SafAle English Ale</NAME>',
+            '   <NOTES>A dry yeast.</NOTES>',
+            '   <TYPE>Ale</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '</YEAST>'
         ]) in xml
 
     def test_yeast_in_secondary(self):
@@ -1523,16 +1525,16 @@ class TestRecipeWithYeast(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<YEAST>',
-        '   <ADD_TO_SECONDARY>True</ADD_TO_SECONDARY>',
-        '   <AMOUNT>0.125</AMOUNT>',
-        '   <ATTENUATION>75.0</ATTENUATION>',
-        '   <FORM>Liquid</FORM>',
-        '   <NAME>Wyeast 1056 - American Ale</NAME>',
-        '   <NOTES>A yeast for American Ales.</NOTES>',
-        '   <TYPE>Ale</TYPE>',
-        '   <VERSION>1</VERSION>',
-        '</YEAST>'
+            '<YEAST>',
+            '   <ADD_TO_SECONDARY>True</ADD_TO_SECONDARY>',
+            '   <AMOUNT>0.125</AMOUNT>',
+            '   <ATTENUATION>75.0</ATTENUATION>',
+            '   <FORM>Liquid</FORM>',
+            '   <NAME>Wyeast 1056 - American Ale</NAME>',
+            '   <NOTES>A yeast for American Ales.</NOTES>',
+            '   <TYPE>Ale</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '</YEAST>'
         ]) in xml
 
     def test_yeast_in_tertiary(self):
@@ -1566,16 +1568,16 @@ class TestRecipeWithYeast(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<YEAST>',
-        '   <ADD_TO_SECONDARY>True</ADD_TO_SECONDARY>',
-        '   <AMOUNT>0.125</AMOUNT>',
-        '   <ATTENUATION>75.0</ATTENUATION>',
-        '   <FORM>Liquid</FORM>',
-        '   <NAME>Wyeast 1056 - American Ale</NAME>',
-        '   <NOTES>A yeast for American Ales.</NOTES>',
-        '   <TYPE>Ale</TYPE>',
-        '   <VERSION>1</VERSION>',
-        '</YEAST>'
+            '<YEAST>',
+            '   <ADD_TO_SECONDARY>True</ADD_TO_SECONDARY>',
+            '   <AMOUNT>0.125</AMOUNT>',
+            '   <ATTENUATION>75.0</ATTENUATION>',
+            '   <FORM>Liquid</FORM>',
+            '   <NAME>Wyeast 1056 - American Ale</NAME>',
+            '   <NOTES>A yeast for American Ales.</NOTES>',
+            '   <TYPE>Ale</TYPE>',
+            '   <VERSION>1</VERSION>',
+            '</YEAST>'
         ]) in xml
 
 
@@ -1612,16 +1614,16 @@ class TestRecipeWithExtras(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<MISC>',
-        '   <AMOUNT>0.0283495231</AMOUNT>',
-        '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
-        '   <NAME>Irish Moss</NAME>',
-        '   <NOTES>A fining agent.</NOTES>',
-        '   <TIME>0</TIME>',
-        '   <TYPE>Fining</TYPE>',
-        '   <USE>Mash</USE>',
-        '   <VERSION>1</VERSION>'
-        '</MISC>'
+            '<MISC>',
+            '   <AMOUNT>0.0283495231</AMOUNT>',
+            '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
+            '   <NAME>Irish Moss</NAME>',
+            '   <NOTES>A fining agent.</NOTES>',
+            '   <TIME>0</TIME>',
+            '   <TYPE>Fining</TYPE>',
+            '   <USE>Mash</USE>',
+            '   <VERSION>1</VERSION>'
+            '</MISC>'
         ]) in xml
 
     def test_boil_extra(self):
@@ -1656,16 +1658,16 @@ class TestRecipeWithExtras(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<MISC>',
-        '   <AMOUNT>0.0283495231</AMOUNT>',
-        '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
-        '   <NAME>Irish Moss</NAME>',
-        '   <NOTES>A fining agent.</NOTES>',
-        '   <TIME>15</TIME>',
-        '   <TYPE>Fining</TYPE>',
-        '   <USE>Boil</USE>',
-        '   <VERSION>1</VERSION>'
-        '</MISC>'
+            '<MISC>',
+            '   <AMOUNT>0.0283495231</AMOUNT>',
+            '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
+            '   <NAME>Irish Moss</NAME>',
+            '   <NOTES>A fining agent.</NOTES>',
+            '   <TIME>15</TIME>',
+            '   <TYPE>Fining</TYPE>',
+            '   <USE>Boil</USE>',
+            '   <VERSION>1</VERSION>'
+            '</MISC>'
         ]) in xml
 
     def test_primary_extra(self):
@@ -1699,16 +1701,16 @@ class TestRecipeWithExtras(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<MISC>',
-        '   <AMOUNT>0.0283495231</AMOUNT>',
-        '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
-        '   <NAME>Irish Moss</NAME>',
-        '   <NOTES>A fining agent.</NOTES>',
-        '   <TIME>0</TIME>',
-        '   <TYPE>Fining</TYPE>',
-        '   <USE>Primary</USE>',
-        '   <VERSION>1</VERSION>'
-        '</MISC>'
+            '<MISC>',
+            '   <AMOUNT>0.0283495231</AMOUNT>',
+            '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
+            '   <NAME>Irish Moss</NAME>',
+            '   <NOTES>A fining agent.</NOTES>',
+            '   <TIME>0</TIME>',
+            '   <TYPE>Fining</TYPE>',
+            '   <USE>Primary</USE>',
+            '   <VERSION>1</VERSION>'
+            '</MISC>'
         ]) in xml
 
     def test_secondary_extra(self):
@@ -1742,16 +1744,16 @@ class TestRecipeWithExtras(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<MISC>',
-        '   <AMOUNT>0.0283495231</AMOUNT>',
-        '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
-        '   <NAME>Irish Moss</NAME>',
-        '   <NOTES>A fining agent.</NOTES>',
-        '   <TIME>0</TIME>',
-        '   <TYPE>Fining</TYPE>',
-        '   <USE>Secondary</USE>',
-        '   <VERSION>1</VERSION>'
-        '</MISC>'
+            '<MISC>',
+            '   <AMOUNT>0.0283495231</AMOUNT>',
+            '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
+            '   <NAME>Irish Moss</NAME>',
+            '   <NOTES>A fining agent.</NOTES>',
+            '   <TIME>0</TIME>',
+            '   <TYPE>Fining</TYPE>',
+            '   <USE>Secondary</USE>',
+            '   <VERSION>1</VERSION>'
+            '</MISC>'
         ]) in xml
 
     def test_tertiary_extra(self):
@@ -1785,16 +1787,16 @@ class TestRecipeWithExtras(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<MISC>',
-        '   <AMOUNT>0.0283495231</AMOUNT>',
-        '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
-        '   <NAME>Irish Moss</NAME>',
-        '   <NOTES>A fining agent.</NOTES>',
-        '   <TIME>0</TIME>',
-        '   <TYPE>Fining</TYPE>',
-        '   <USE>Secondary</USE>',
-        '   <VERSION>1</VERSION>'
-        '</MISC>'
+            '<MISC>',
+            '   <AMOUNT>0.0283495231</AMOUNT>',
+            '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
+            '   <NAME>Irish Moss</NAME>',
+            '   <NOTES>A fining agent.</NOTES>',
+            '   <TIME>0</TIME>',
+            '   <TYPE>Fining</TYPE>',
+            '   <USE>Secondary</USE>',
+            '   <VERSION>1</VERSION>'
+            '</MISC>'
         ]) in xml
 
     def test_liquid_extra(self):
@@ -1828,15 +1830,15 @@ class TestRecipeWithExtras(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<MISC>',
-        '   <AMOUNT>0.0295735296</AMOUNT>',
-        '   <NAME>Strawberry Flavoring</NAME>',
-        '   <NOTES>Tastes like strawberries.</NOTES>',
-        '   <TIME>0</TIME>',
-        '   <TYPE>Flavor</TYPE>',
-        '   <USE>Primary</USE>',
-        '   <VERSION>1</VERSION>'
-        '</MISC>'
+            '<MISC>',
+            '   <AMOUNT>0.0295735296</AMOUNT>',
+            '   <NAME>Strawberry Flavoring</NAME>',
+            '   <NOTES>Tastes like strawberries.</NOTES>',
+            '   <TIME>0</TIME>',
+            '   <TYPE>Flavor</TYPE>',
+            '   <USE>Primary</USE>',
+            '   <VERSION>1</VERSION>'
+            '</MISC>'
         ]) in xml
 
     def test_no_unit_extra(self):
@@ -1868,14 +1870,14 @@ class TestRecipeWithExtras(TestModel):
         xml = recipe.to_xml()
 
         assert prepare_xml([
-        '<MISC>',
-        '   <AMOUNT>0.015</AMOUNT>',
-        '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
-        '   <NAME>Whirlfloc Tablet</NAME>',
-        '   <NOTES>A fining agent.</NOTES>',
-        '   <TIME>0</TIME>',
-        '   <TYPE>Fining</TYPE>',
-        '   <USE>Primary</USE>',
-        '   <VERSION>1</VERSION>'
-        '</MISC>'
+            '<MISC>',
+            '   <AMOUNT>0.015</AMOUNT>',
+            '   <AMOUNT_IS_WEIGHT>True</AMOUNT_IS_WEIGHT>',
+            '   <NAME>Whirlfloc Tablet</NAME>',
+            '   <NOTES>A fining agent.</NOTES>',
+            '   <TIME>0</TIME>',
+            '   <TYPE>Fining</TYPE>',
+            '   <USE>Primary</USE>',
+            '   <VERSION>1</VERSION>'
+            '</MISC>'
         ]) in xml

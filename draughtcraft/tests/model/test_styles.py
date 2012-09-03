@@ -1,6 +1,6 @@
-from draughtcraft import model
-
 import unittest
+
+from draughtcraft import model
 
 
 # Stubs
@@ -23,75 +23,75 @@ class TestStyleDefined(unittest.TestCase):
             min_og=1.050,
             max_og=1.060
         )
-        assert style.defined('og') == True
+        assert style.defined('og') is True
         style = model.Style(
             max_og=1.060
         )
-        assert style.defined('og') == False
+        assert style.defined('og') is False
         style = model.Style(
             min_og=1.050
         )
-        assert style.defined('og') == False
+        assert style.defined('og') is False
 
     def test_fg(self):
         style = model.Style(
             min_fg=1.050,
             max_fg=1.060
         )
-        assert style.defined('fg') == True
+        assert style.defined('fg') is True
         style = model.Style(
             max_fg=1.060
         )
-        assert style.defined('fg') == False
+        assert style.defined('fg') is False
         style = model.Style(
             min_fg=1.050
         )
-        assert style.defined('fg') == False
+        assert style.defined('fg') is False
 
     def test_ibu(self):
         style = model.Style(
             min_ibu=1.050,
             max_ibu=1.060
         )
-        assert style.defined('ibu') == True
+        assert style.defined('ibu') is True
         style = model.Style(
             max_ibu=1.060
         )
-        assert style.defined('ibu') == False
+        assert style.defined('ibu') is False
         style = model.Style(
             min_ibu=1.050
         )
-        assert style.defined('ibu') == False
+        assert style.defined('ibu') is False
 
     def test_srm(self):
         style = model.Style(
             min_srm=1.050,
             max_srm=1.060
         )
-        assert style.defined('srm') == True
+        assert style.defined('srm') is True
         style = model.Style(
             max_srm=1.060
         )
-        assert style.defined('srm') == False
+        assert style.defined('srm') is False
         style = model.Style(
             min_srm=1.050
         )
-        assert style.defined('srm') == False
+        assert style.defined('srm') is False
 
     def test_abv(self):
         style = model.Style(
             min_abv=1.050,
             max_abv=1.060
         )
-        assert style.defined('abv') == True
+        assert style.defined('abv') is True
         style = model.Style(
             max_abv=1.060
         )
-        assert style.defined('abv') == False
+        assert style.defined('abv') is False
         style = model.Style(
             min_abv=1.050
         )
-        assert style.defined('abv') == False
+        assert style.defined('abv') is False
 
     def test_invalid_statistic(self):
         style = model.Style(

@@ -71,18 +71,18 @@ class TestAnonymousVisitorSettings(TestApp):
 
         resp = self.get('/')
         session = resp.request.environ['beaker.session']
-        assert session['metric'] == True
+        assert session['metric'] is True
 
         # Toggle to US
         self.post('/units')
 
         resp = self.get('/')
         session = resp.request.environ['beaker.session']
-        assert session['metric'] == False
+        assert session['metric'] is False
 
         # Toggle back to metric
         self.post('/units')
 
         resp = self.get('/')
         session = resp.request.environ['beaker.session']
-        assert session['metric'] == True
+        assert session['metric'] is True

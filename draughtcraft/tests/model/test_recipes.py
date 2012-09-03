@@ -3,6 +3,7 @@ from sys import maxint
 import unittest
 
 from webob import Request
+from sqlalchemy import null
 import pecan
 
 from draughtcraft import model
@@ -1093,9 +1094,11 @@ class TestDrafts(TestModel):
 
         assert model.Recipe.query.count() == 2
         source = model.Recipe.query.filter(
-            model.Recipe.published_version == None).first()  # noqa
+            model.Recipe.published_version == null()
+        ).first()  # noqa
         draft = model.Recipe.query.filter(
-            model.Recipe.published_version != None).first()  # noqa
+            model.Recipe.published_version != null()
+        ).first()  # noqa
 
         assert source != draft
         assert source.type == draft.type == 'MASH'

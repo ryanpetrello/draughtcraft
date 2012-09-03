@@ -1,10 +1,11 @@
-from pecan import conf
-from draughtcraft.tests import TestModel
-from draughtcraft.lib import email
-
 import os
 import fudge
 import unittest
+
+from pecan import conf
+
+from draughtcraft.tests import TestModel
+from draughtcraft.lib import email
 
 
 def _gen_template_path():
@@ -56,12 +57,12 @@ class TestEmailSend(TestModel):
             subject='Sample Subject',
             sender='notify@draughtcraft.com',
             html_body=email.EmailTemplate(
-            'signup',
-            '%s/emails' % conf.app.template_path
+                'signup',
+                '%s/emails' % conf.app.template_path
             ).html(ns),
             text_body=email.EmailTemplate(
-            'signup',
-            '%s/emails' % conf.app.template_path
+                'signup',
+                '%s/emails' % conf.app.template_path
             ).text(ns)
         ).returns_fake().expects('send'))
 

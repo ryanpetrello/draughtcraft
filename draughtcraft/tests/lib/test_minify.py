@@ -29,7 +29,7 @@
 # SUCH DAMAGE.
 #
 #
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #
 #
 # Portions of WebHelpers covered by the following license::
@@ -37,8 +37,8 @@
 # Copyright (c) 2005, the Lawrence Journal-World
 # All rights reserved.
 #
-# Redistribution and use in source and binary forms, with or without modification,
-# are permitted provided that the following conditions are met:
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
 #
 #     1. Redistributions of source code must retain the above copyright notice,
 #        this list of conditions and the following disclaimer.
@@ -47,34 +47,36 @@
 #        notice, this list of conditions and the following disclaimer in the
 #        documentation and/or other materials provided with the distribution.
 #
-#     3. Neither the name of Django nor the names of its contributors may be used
-#        to endorse or promote products derived from this software without
+#     3. Neither the name of Django nor the names of its contributors may be
+#        used to endorse or promote products derived from this software without
 #        specific prior written permission.
 #
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-# ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
 #
 
 import os
 from tempfile import mkdtemp
 from shutil import rmtree
 
-from draughtcraft.tests import TestModel
-from draughtcraft.lib.minify import (javascript_link, stylesheet_link,
-                                     RedisResourceCache, ResourceLookupMiddleware)
 from beaker.cache import CacheManager
 from webob import Request
-
 import pecan
 import fudge
+
+from draughtcraft.tests import TestModel
+from draughtcraft.lib.minify import (javascript_link, stylesheet_link,
+                                     RedisResourceCache,
+                                     ResourceLookupMiddleware)
 
 
 class MinificationTestCase(TestModel):
@@ -219,7 +221,13 @@ class MinificationTestCase(TestModel):
 
         """Testing if paths are constructed correctly"""
         # minify and combine
-        js_source = javascript_link('/deep/a.js', '/b.js', combined=True, minified=True, data_backend=RedisResourceCache)
+        js_source = javascript_link(
+            '/deep/a.js',
+            '/b.js',
+            combined=True,
+            minified=True,
+            data_backend=RedisResourceCache
+        )
         css_source = stylesheet_link('/deep/a.css', '/b.css', combined=True,
                                      data_backend=RedisResourceCache)
         assert '"/a.b.COMBINED.css?XYZ"' in css_source
@@ -320,5 +328,5 @@ class TestRedisLookupMiddleware(TestModel):
         # Make sure the WSGI middleware returns a 200 OK with the raw JS
         resp = ResourceLookupMiddleware(app)(environ, start_response)
 
-        assert passed[0] == True
+        assert passed[0] is True
         assert resp is None
