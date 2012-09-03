@@ -156,11 +156,13 @@
                 a.form('LEAF');
             }
 
-            // Boil-specific
-            if(this == ns.recipe.boil){
+            if(this == ns.recipe.mash)
+                a.use('MASH');
+            else if(this == ns.recipe.boil){
                 a.use('BOIL');
                 a.minutes(60);
-            }
+            }else if(this == ns.recipe.fermentation)
+                a.use('PRIMARY');
 
             // Fermentation-specific
             if(this == ns.recipe.fermentation)
