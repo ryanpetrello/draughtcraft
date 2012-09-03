@@ -50,6 +50,7 @@ class RecipeBuilderController(RestController):
         self.save_volume(recipe, kw.get('volume'))
         self.save_style(recipe, kw.get('style'))
         self.save_mash_settings(recipe, **kw)
+        self.save_boil_settings(recipe, **kw)
         recipe.notes = kw.get('notes')
 
         # additions
@@ -80,6 +81,9 @@ class RecipeBuilderController(RestController):
     def save_mash_settings(self, recipe, **kw):
         recipe.mash_method = kw.get('mash_method')
         recipe.mash_instructions = kw.get('mash_instructions')
+
+    def save_boil_settings(self, recipe, **kw):
+        recipe.boil_minutes = kw.get('boil_minutes')
 
     def save_step(self, recipe, additions):
         for a in additions:

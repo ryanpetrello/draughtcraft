@@ -220,6 +220,15 @@
         </fieldset>
       </%def>
       <%def name="extra()">
+        <h3 class="ribbon">Boil Duration</h3>
+
+        <ol class='process'>
+          <li>
+            Boil for 
+            <input type="text" data-bind="value: boil_minutes" class="unit" /> 
+            minutes.
+          </li>
+        </ol>
       </%def>
     </%self:step>
 

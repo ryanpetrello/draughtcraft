@@ -241,6 +241,29 @@ class TestRecipeSave(TestAuthenticatedApp):
         assert recipe.mash_method == 'TEMPERATURE'
         assert recipe.mash_instructions == 'Mash for an hour.'
 
+    def test_boil_settings_update(self):
+        model.Recipe(
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA'),
+                model.RecipeSlug(name='American IPA (Revised)')
+            ],
+            author=model.User.get(1)
+        )
+        model.commit()
+
+        response = self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={
+                'recipe': dumps({
+                    'boil_minutes': 90
+                })
+            }
+        )
+        assert response.status_int == 200
+        recipe = model.Recipe.query.first()
+        assert recipe.boil_minutes == 90
+
     def test_notes_update(self):
         model.Recipe(
             name='American IPA',
