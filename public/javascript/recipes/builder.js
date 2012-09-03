@@ -215,6 +215,8 @@
         // Inventory
         this.inventory = ko.observableArray();
 
+        this.notes = ko.observable();
+
         this.initInventoryDropDowns = function(){
             $(".inventory select").selectBox('destroy').selectBox({
                 'menuTransition'    : 'fade',
@@ -417,7 +419,9 @@
             boil: this.boil,
             fermentation: this.fermentation,
 
-            boil_minutes: this.boil_minutes
+            boil_minutes: this.boil_minutes,
+
+            notes: this.notes
         };
     };
 

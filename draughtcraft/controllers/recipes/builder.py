@@ -49,6 +49,7 @@ class RecipeBuilderController(RestController):
         self.save_name(recipe, kw.get('name'))
         self.save_volume(recipe, kw.get('volume'))
         self.save_style(recipe, kw.get('style'))
+        recipe.notes = kw.get('notes')
 
         # additions
         recipe.additions = []

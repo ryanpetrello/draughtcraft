@@ -458,7 +458,9 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
                 'hops': inventory(entities.Hop),
                 'yeast': inventory(entities.Yeast),
                 'extras': inventory(entities.Extra)
-            }
+            },
+
+            'notes': self.notes
         }
 
 

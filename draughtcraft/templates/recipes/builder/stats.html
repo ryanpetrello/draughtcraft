@@ -36,9 +36,7 @@
       <td data-bind="html: style_matches('og')"></td>
       % if editable:
         <td rowspan="5" class="notes">
-          ${h.form('async/settings/notes', class_='no-inject')}
-            <textarea id="notes" name="notes">${recipe.notes or ''}</textarea>
-          ${h.end_form()}
+          <textarea data-bind="value: notes"></textarea>
         </td>
       % endif
     </tr>
