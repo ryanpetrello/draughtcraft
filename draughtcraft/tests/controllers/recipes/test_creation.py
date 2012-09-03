@@ -1,5 +1,5 @@
-from draughtcraft.tests     import TestApp, TestAuthenticatedApp
-from draughtcraft           import model
+from draughtcraft.tests import TestApp, TestAuthenticatedApp
+from draughtcraft import model
 
 
 class TestRecipeCreation(TestApp):
@@ -16,14 +16,14 @@ class TestRecipeCreation(TestApp):
         recipe.
         """
         params = {
-            'name'      : 'Rocky Mountain River IPA',
-            'type'      : 'MASH',
-            'volume'    : 25,
-            'unit'      : 'GALLON'
+            'name': 'Rocky Mountain River IPA',
+            'type': 'MASH',
+            'volume': 25,
+            'unit': 'GALLON'
         }
 
         self.post('/recipes/create', params=params)
-        
+
         response = self.get('/recipes/create')
         assert response.status_int == 302
         assert response.headers['Location'].endswith(
@@ -32,10 +32,10 @@ class TestRecipeCreation(TestApp):
 
     def test_schema_validation(self):
         params = {
-            'name'      : 'Rocky Mountain River IPA',
-            'type'      : 'MASH',
-            'volume'    : 5,
-            'unit'      : 'GALLON'
+            'name': 'Rocky Mountain River IPA',
+            'type': 'MASH',
+            'volume': 5,
+            'unit': 'GALLON'
         }
         for k in params:
             copy = params.copy()
@@ -49,10 +49,10 @@ class TestRecipeCreation(TestApp):
 
     def test_success(self):
         params = {
-            'name'      : 'Rocky Mountain River IPA',
-            'type'      : 'MASH',
-            'volume'    : 25,
-            'unit'      : 'GALLON'
+            'name': 'Rocky Mountain River IPA',
+            'type': 'MASH',
+            'volume': 25,
+            'unit': 'GALLON'
         }
 
         response = self.post('/recipes/create', params=params)
@@ -69,7 +69,8 @@ class TestRecipeCreation(TestApp):
         assert r.fermentation_steps[0].step == 'PRIMARY'
 
         assert response.status_int == 302
-        assert response.headers['Location'].endswith('/recipes/1/rocky-mountain-river-ipa/builder')
+        assert response.headers['Location'].endswith(
+            '/recipes/1/rocky-mountain-river-ipa/builder')
 
         #
         # Because the user isn't logged in, we'll assume they're a guest
@@ -87,10 +88,10 @@ class TestUserRecipeCreation(TestAuthenticatedApp):
 
     def test_recipe_author(self):
         params = {
-            'name'      : 'Rocky Mountain River IPA',
-            'type'      : 'MASH',
-            'volume'    : 25,
-            'unit'      : 'GALLON'
+            'name': 'Rocky Mountain River IPA',
+            'type': 'MASH',
+            'volume': 25,
+            'unit': 'GALLON'
         }
 
         self.post('/recipes/create', params=params)
@@ -105,10 +106,10 @@ class TestUserRecipeCreation(TestAuthenticatedApp):
         model.commit()
 
         params = {
-            'name'      : 'Rocky Mountain River IPA',
-            'type'      : 'MASH',
-            'volume'    : 10,
-            'unit'      : 'LITER'
+            'name': 'Rocky Mountain River IPA',
+            'type': 'MASH',
+            'volume': 10,
+            'unit': 'LITER'
         }
 
         self.post('/recipes/create', params=params)
@@ -123,10 +124,10 @@ class TestUserRecipeCreation(TestAuthenticatedApp):
         should not be stored in the session.
         """
         params = {
-            'name'      : 'Rocky Mountain River IPA',
-            'type'      : 'MASH',
-            'volume'    : 25,
-            'unit'      : 'GALLON'
+            'name': 'Rocky Mountain River IPA',
+            'type': 'MASH',
+            'volume': 25,
+            'unit': 'GALLON'
         }
 
         response = self.post('/recipes/create', params=params)
@@ -135,7 +136,8 @@ class TestUserRecipeCreation(TestAuthenticatedApp):
         r = model.Recipe.get(1)
         assert r.author.id == 1
 
-        assert 'trial_recipe_id' not in response.request.environ['beaker.session']
+        assert 'trial_recipe_id' not in response.request.environ[
+            'beaker.session']
 
     def test_default_settings_for_first_recipe(self):
         """
@@ -144,10 +146,10 @@ class TestUserRecipeCreation(TestAuthenticatedApp):
         again next time).
         """
         params = {
-            'name'      : 'Rocky Mountain River IPA (Extract)',
-            'type'      : 'EXTRACT',
-            'volume'    : 25,
-            'unit'      : 'GALLON'
+            'name': 'Rocky Mountain River IPA (Extract)',
+            'type': 'EXTRACT',
+            'volume': 25,
+            'unit': 'GALLON'
         }
         self.post('/recipes/create', params=params)
 
@@ -157,10 +159,10 @@ class TestUserRecipeCreation(TestAuthenticatedApp):
 
         # This is not the first recipe, so we shouldn't save new defaults.
         params = {
-            'name'      : 'Rocky Mountain River IPA (All-Grain)',
-            'type'      : 'MASH',
-            'volume'    : 5,
-            'unit'      : 'GALLON'
+            'name': 'Rocky Mountain River IPA (All-Grain)',
+            'type': 'MASH',
+            'volume': 5,
+            'unit': 'GALLON'
         }
         self.post('/recipes/create', params=params)
 

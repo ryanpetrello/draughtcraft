@@ -1,9 +1,9 @@
-from pecan                      import request, response, redirect
-from draughtcraft.lib.notice    import notify
-from pecan.secure               import SecureController
-from password                   import PasswordController
-from profile                    import ProfileController
-from recipe                     import RecipeController
+from pecan import request, response, redirect
+from draughtcraft.lib.notice import notify
+from pecan.secure import SecureController
+from password import PasswordController
+from profile import ProfileController
+from recipe import RecipeController
 
 
 class SettingsController(SecureController):
@@ -15,6 +15,6 @@ class SettingsController(SecureController):
             redirect('/signup', headers=response.headers)
         return True
 
-    password    = PasswordController()
-    profile     = ProfileController()
-    recipe      = RecipeController()
+    password = PasswordController()
+    profile = ProfileController()
+    recipe = RecipeController()

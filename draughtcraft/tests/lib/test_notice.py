@@ -1,7 +1,7 @@
-from unittest                       import TestCase
-from webob                          import Request, Response
-from json                           import dumps
-from draughtcraft.lib.notice        import Notify
+from unittest import TestCase
+from webob import Request, Response
+from json import dumps
+from draughtcraft.lib.notice import Notify
 
 import pecan
 
@@ -34,7 +34,7 @@ class TestNotice(TestCase):
         n('It worked!', 'general')
 
         assert n.render() == \
-                '<div class="ribbon notice-general">It worked!</div>'
+            '<div class="ribbon notice-general">It worked!</div>'
 
     def test_save_over_4k_cookie(self):
         pecan.core.state.request = Request.blank('/')

@@ -1,6 +1,6 @@
-from pecan              import conf
-from pecan.templating   import RendererFactory
-from mako               import exceptions
+from pecan import conf
+from pecan.templating import RendererFactory
+from mako import exceptions
 
 import postmark
 
@@ -19,7 +19,7 @@ class EmailTemplate(object):
 
     * templates/email/signup.html
     * templates/email/signup.txt
-    
+
     ...for generating both an HTML and plain/text version of the email.
     """
 
@@ -44,7 +44,7 @@ class EmailTemplate(object):
                 ns
             )
         except exceptions.TopLevelLookupException:
-            pass # This will cause the `__render__` call to return `None`
+            pass  # This will cause the `__render__` call to return `None`
 
     def html(self, ns):
         body = self.__render__('html', ns)
@@ -58,7 +58,7 @@ class EmailTemplate(object):
 
 
 def send(to, template, subject, ns={}, sender='notify@draughtcraft.com',
-        cc=[], bcc=[]):
+         cc=[], bcc=[]):
     """
     Used to send a transactional email through Postmark's API.
 
@@ -78,13 +78,13 @@ def send(to, template, subject, ns={}, sender='notify@draughtcraft.com',
         return ','.join(s) if isinstance(s, list) else s
 
     mail = postmark.PMMail(
-        api_key     = conf.postmark.api_key,
-        to          = _flatten(to),
-        cc          = _flatten(cc),
-        bcc         = _flatten(bcc),
-        subject     = subject,
-        sender      = sender,
-        html_body   = email.html(ns),
-        text_body   = email.text(ns)
+        api_key=conf.postmark.api_key,
+        to=_flatten(to),
+        cc=_flatten(cc),
+        bcc=_flatten(bcc),
+        subject=subject,
+        sender=sender,
+        html_body=email.html(ns),
+        text_body=email.text(ns)
     )
     mail.send()

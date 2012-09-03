@@ -1,6 +1,7 @@
 from draughtcraft.lib.units import InvalidUnitException
 import math
 
+
 class Calculations(object):
 
     def __init__(self, recipe):
@@ -36,7 +37,8 @@ class Calculations(object):
 
                 try:
                     pounds = a.pounds
-                    points += (pounds * a.fermentable.ppg * efficiency) / volume
+                    points += (
+                        pounds * a.fermentable.ppg * efficiency) / volume
                 except InvalidUnitException:
                     #
                     # If we can't convert the addition to pounds,
@@ -60,21 +62,21 @@ class Calculations(object):
         # use the highest attenuation available.
         #
         yeast = [a.yeast.attenuation
-                    for a in self.recipe.additions
-                    if a.yeast]
+                 for a in self.recipe.additions
+                 if a.yeast]
         if yeast:
             attenuation = max(yeast) or attenuation
 
         points = (self.og - 1) * 1000
         final = points - (points * attenuation)
-        
+
         return round(final / 1000 + 1, 3)
 
     @property
     def abv(self):
         abv = (self.og - self.fg) * 131
         return round(abv, 1) / 100
-    
+
     #
     # Color Calculations
     #
@@ -105,7 +107,7 @@ class Calculations(object):
 
     #
     # International Bittering Units Calculations
-    # 
+    #
     @property
     def ibu(self):
         """
@@ -136,9 +138,9 @@ class Calculations(object):
             # Start by calculating utilization
             # Bigness factor * Boil Time factor
             #
-            
+
             # Calculate duration in minutes
-            minutes = h.duration.seconds / 60 
+            minutes = h.duration.seconds / 60
 
             # Calculate the bigness factor
             bigness = 1.65 * (math.pow(0.000125, (self.og - 1)))
@@ -176,7 +178,7 @@ class Calculations(object):
         hops = [a for a in self.recipe.additions if a.hop and a.step == 'boil']
         for h in hops:
             # Calculate duration in minutes
-            minutes = h.duration.seconds / 60 
+            minutes = h.duration.seconds / 60
 
             # Calculate utilization as a decimal
             utilization = 18.11 + 13.86 * math.tanh((minutes - 31.32) / 18.27)
@@ -201,7 +203,8 @@ class Calculations(object):
             # Convert AA rating to a decimal
             alpha_acid = h.alpha_acid / 100
 
-            total += (ounces * utilization * alpha_acid * 7462) / (gallons * gravity_adjustment)
+            total += (ounces * utilization * alpha_acid *
+                      7462) / (gallons * gravity_adjustment)
 
         return int(round(total))
 
@@ -217,7 +220,7 @@ class Calculations(object):
         hops = [a for a in self.recipe.additions if a.hop and a.step == 'boil']
         for h in hops:
             # Calculate duration in minutes
-            minutes = h.duration.seconds / 60 
+            minutes = h.duration.seconds / 60
 
             #
             # Calculate utilization based on the table provided in chapter 9 of
@@ -271,6 +274,7 @@ class Calculations(object):
             if self.og > 1.050:
                 gravity_adjustment += ((self.og - 1.050) / 0.2)
 
-            total += (ounces * utilization * alpha_acid * 7462) / (gallons * gravity_adjustment)
+            total += (ounces * utilization * alpha_acid *
+                      7462) / (gallons * gravity_adjustment)
 
         return int(round(total))

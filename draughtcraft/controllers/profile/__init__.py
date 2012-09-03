@@ -1,5 +1,5 @@
-from pecan          import expose, abort
-from draughtcraft   import model
+from pecan import expose, abort
+from draughtcraft import model
 
 
 class ProfileController(object):

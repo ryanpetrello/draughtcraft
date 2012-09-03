@@ -1,5 +1,5 @@
-from draughtcraft           import model
-from draughtcraft.tests     import TestApp, TestAuthenticatedApp
+from draughtcraft import model
+from draughtcraft.tests import TestApp, TestAuthenticatedApp
 
 
 class TestUnauthenticatedProfileSettings(TestApp):

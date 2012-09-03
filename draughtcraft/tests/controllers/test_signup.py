@@ -1,6 +1,6 @@
-from pecan                  import conf, abort
-from draughtcraft.tests     import TestApp
-from draughtcraft           import model
+from pecan import conf, abort
+from draughtcraft.tests import TestApp
+from draughtcraft import model
 
 import fudge
 
@@ -257,21 +257,21 @@ class TestRecipeConversion(TestApp):
         """
 
         params = {
-            'name'      : 'Rocky Mountain River IPA',
-            'type'      : 'MASH',
-            'volume'    : 25,
-            'unit'      : 'GALLON'
+            'name': 'Rocky Mountain River IPA',
+            'type': 'MASH',
+            'volume': 25,
+            'unit': 'GALLON'
         }
 
         self.post('/recipes/create', params=params)
         assert model.Recipe.query.count() == 1
-        assert model.Recipe.get(1).author == None
+        assert model.Recipe.get(1).author is None
 
         params = {
-            'username'          : 'test',
-            'password'          : 'secret',
-            'password_confirm'  : 'secret',
-            'email'             : 'ryan@example.com'
+            'username': 'test',
+            'password': 'secret',
+            'password_confirm': 'secret',
+            'email': 'ryan@example.com'
         }
 
         assert model.User.query.count() == 0
@@ -289,4 +289,5 @@ class TestRecipeConversion(TestApp):
         # `trial_recipe_id` record should have been removed from the session.
         #
         assert len(user.recipes) == 1
-        assert 'trial_recipe_id' not in response.request.environ['beaker.session']
+        assert 'trial_recipe_id' not in response.request.environ[
+            'beaker.session']

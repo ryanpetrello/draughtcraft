@@ -96,9 +96,9 @@ class SlugController(object):
 
         copy = source.duplicate({
             'name': source.name if different_user else
-                    "%s (Duplicate)" % source.name,
+                                "%s (Duplicate)" % source.name,
             'author': request.context['user']
-        })
+                                })
 
         if different_user:
             copy.copied_from = source
@@ -208,8 +208,8 @@ class RecipesController(object):
             model.Recipe.type == 'MASH' if kw['mash'] else None,
             model.Recipe.type == 'MINIMASH' if kw['minimash'] else None,
             model.Recipe.type.in_(('EXTRACTSTEEP', 'EXTRACT'))
-                if kw['extract'] else None,
-        ))
+                     if kw['extract'] else None,
+                     ))
 
         # If applicable, filter by color
         if kw['color']:

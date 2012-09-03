@@ -1,11 +1,12 @@
-from pecan                                          import expose, request, redirect
-from pecan.rest                                     import RestController
-from pecan.ext.wtforms                              import with_form
-from draughtcraft                                   import model
-from draughtcraft.lib.auth                          import save_trial_recipe
-from draughtcraft.lib.units                         import to_us, to_metric
-from draughtcraft.lib.forms.recipes.create          import RecipeCreationForm
-from draughtcraft.templates.helpers                 import format_volume
+from pecan import expose, request, redirect
+from pecan.rest import RestController
+from pecan.ext.wtforms import with_form
+from draughtcraft import model
+from draughtcraft.lib.auth import save_trial_recipe
+from draughtcraft.lib.units import to_us, to_metric
+from draughtcraft.lib.forms.recipes.create import RecipeCreationForm
+from draughtcraft.templates.helpers import format_volume
+
 
 class RecipeCreationController(RestController):
 
@@ -16,9 +17,9 @@ class RecipeCreationController(RestController):
         # If you're not logged in, and you already have a trial recipe,
         # redirect to *that* recipe so you can't create another one.
         #
-        recipe = request.context['trial_recipe'] 
+        recipe = request.context['trial_recipe']
         if request.context['user'] is None and recipe is not None:
-            redirect(recipe.url(public=False)) 
+            redirect(recipe.url(public=False))
 
         form = request.pecan['form']
         metric = request.context.get('metric') == True
@@ -46,9 +47,9 @@ class RecipeCreationController(RestController):
     })
     def post(self, **kw):
         recipe = model.Recipe(
-            name        = kw.get('name'),
-            type        = kw.get('type'),
-            author      = request.context['user']
+            name=kw.get('name'),
+            type=kw.get('type'),
+            author=request.context['user']
         )
 
         if recipe.metric:
@@ -58,9 +59,9 @@ class RecipeCreationController(RestController):
 
         recipe.fermentation_steps.append(
             model.FermentationStep(
-                step = 'PRIMARY',
-                days = 7,
-                fahrenheit = 65
+                step='PRIMARY',
+                days=7,
+                fahrenheit=65
             )
         )
         recipe.flush()

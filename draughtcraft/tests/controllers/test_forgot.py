@@ -1,6 +1,6 @@
-from draughtcraft.tests         import TestApp
-from draughtcraft               import model
-from fudge.inspector            import arg
+from draughtcraft.tests import TestApp
+from draughtcraft import model
+from fudge.inspector import arg
 
 import fudge
 
@@ -31,7 +31,7 @@ class TestForgotPassword(TestApp):
         })
 
         assert "Sorry, we couldn't find anyone with that email address." in \
-                response.body
+            response.body
         assert model.PasswordResetRequest.query.count() == 0
 
     @fudge.patch('draughtcraft.lib.email.send')
@@ -78,7 +78,8 @@ class TestForgotPassword(TestApp):
         assert response.headers['Location'].endswith('/login')
 
         assert model.PasswordResetRequest.query.count() == 0
-        assert model.User.get(1).password == model.User.__hash_password__('newpass')
+        assert model.User.get(
+            1).password == model.User.__hash_password__('newpass')
 
     def test_choose_new_password_expired(self):
         model.User(first_name=u'Ryan', email=u'ryan@example.com')
@@ -93,7 +94,8 @@ class TestForgotPassword(TestApp):
         assert response.status_int == 200
 
         assert model.PasswordResetRequest.query.count() == 0
-        assert model.User.get(1).password != model.User.__hash_password__('newpass')
+        assert model.User.get(
+            1).password != model.User.__hash_password__('newpass')
 
     def test_choose_new_password_invalid_email(self):
         model.User(first_name=u'Ryan', email=u'ryan@example.com')
@@ -111,7 +113,8 @@ class TestForgotPassword(TestApp):
         })
 
         assert model.PasswordResetRequest.query.count() == 1
-        assert model.User.get(1).password != model.User.__hash_password__('newpass')
+        assert model.User.get(
+            1).password != model.User.__hash_password__('newpass')
 
     def test_choose_new_password_mismatch(self):
         model.User(first_name=u'Ryan', email=u'ryan@example.com')
@@ -129,4 +132,5 @@ class TestForgotPassword(TestApp):
         })
 
         assert model.PasswordResetRequest.query.count() == 1
-        assert model.User.get(1).password != model.User.__hash_password__('newpass')
+        assert model.User.get(
+            1).password != model.User.__hash_password__('newpass')

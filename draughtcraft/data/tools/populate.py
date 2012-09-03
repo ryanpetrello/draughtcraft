@@ -1,8 +1,8 @@
-from pecan.commands.base            import BaseCommand
-from elixir                         import entities
-from sqlalchemy.ext.sqlsoup         import SqlSoup
+from pecan.commands.base import BaseCommand
+from elixir import entities
+from sqlalchemy.ext.sqlsoup import SqlSoup
 
-from draughtcraft                   import model, data
+from draughtcraft import model, data
 
 import os
 

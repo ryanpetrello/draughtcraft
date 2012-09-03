@@ -1,5 +1,5 @@
 from pecan.ext.wtforms import (SecureForm, fields as f, validators as v,
-                                ValidationError)
+                               ValidationError)
 from draughtcraft import model
 
 

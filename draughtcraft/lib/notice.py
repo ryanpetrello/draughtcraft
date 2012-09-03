@@ -15,7 +15,7 @@ class Notify(object):
     static_template = '<div class="ribbon %(status)s">%(message)s</div>'
 
     def __init__(self, cookie_name, get_request, get_response,
-                    default_status='ok'):
+                 default_status='ok'):
         self.cookie_name = cookie_name
         self.default_status = default_status
         self.get_request = get_request
@@ -47,7 +47,8 @@ class Notify(object):
 
     def pop_payload(self):
         payload = self.get_request().environ.get('dcflash.payload', {}) or \
-                    self.get_request().cookies.get(self.cookie_name, {})
+            self.get_request(
+            ).cookies.get(self.cookie_name, {})
         if payload:
             payload = json.loads(unquote(payload))
             if 'dcflash.deleted_cookie' not in self.get_request().environ:
@@ -69,7 +70,7 @@ html_escape_table = {
     "'": "&apos;",
     ">": "&gt;",
     "<": "&lt;",
-    }
+}
 
 
 def html_escape(text):

@@ -2,16 +2,16 @@ from pecan import expose, request, redirect, abort
 from pecan.ext.wtforms import with_form
 from draughtcraft import model
 from draughtcraft.lib.auth import (save_user_session, remove_user_session,
-                                    remove_trial_recipe)
+                                   remove_trial_recipe)
 from draughtcraft.lib.forms.login import LoginForm
 
-from error          import ErrorController
-from forgot         import ForgotPasswordController
-from ingredients    import IngredientsController
-from profile        import ProfilesController
-from recipes        import RecipesController
-from settings       import SettingsController
-from signup         import SignupController
+from error import ErrorController
+from forgot import ForgotPasswordController
+from ingredients import IngredientsController
+from profile import ProfilesController
+from recipes import RecipesController
+from settings import SettingsController
+from signup import SignupController
 
 
 class RootController(object):

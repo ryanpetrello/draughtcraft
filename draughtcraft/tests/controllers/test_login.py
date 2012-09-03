@@ -1,5 +1,5 @@
-from draughtcraft.tests     import TestApp
-from draughtcraft           import model
+from draughtcraft.tests import TestApp
+from draughtcraft import model
 
 
 class TestLogin(TestApp):
@@ -83,28 +83,28 @@ class TestRecipeConversion(TestApp):
         """
 
         params = {
-            'name'      : 'Rocky Mountain River IPA',
-            'type'      : 'MASH',
-            'volume'    : 25,
-            'unit'      : 'GALLON'
+            'name': 'Rocky Mountain River IPA',
+            'type': 'MASH',
+            'volume': 25,
+            'unit': 'GALLON'
         }
 
         self.post('/recipes/create', params=params)
         assert model.Recipe.query.count() == 1
-        assert model.Recipe.get(1).author == None
+        assert model.Recipe.get(1).author is None
 
         # Create a new user
         model.User(
-            username = 'ryanpetrello',
-            password = 'secret'
+            username='ryanpetrello',
+            password='secret'
         )
         model.commit()
 
         # Log in as the new user
         assert len(model.User.get(1).recipes) == 0
         response = self.post('/login', params={
-            'username'  : 'ryanpetrello',
-            'password'  : 'secret'
+            'username': 'ryanpetrello',
+            'password': 'secret'
         })
         assert response.request.environ['beaker.session']['user_id'] == 1
 
@@ -113,4 +113,5 @@ class TestRecipeConversion(TestApp):
         # `trial_recipe_id` record should have been removed from the session.
         #
         assert len(model.User.get(1).recipes) == 1
-        assert 'trial_recipe_id' not in response.request.environ['beaker.session']
+        assert 'trial_recipe_id' not in response.request.environ[
+            'beaker.session']

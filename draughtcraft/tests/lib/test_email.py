@@ -29,7 +29,7 @@ class TestEmailTemplate(unittest.TestCase):
 
     def test_text_rendering_with_missing_template(self):
         template = email.EmailTemplate('missing', self.template_path)
-        assert template.text({'name': 'Ryan'}) == None
+        assert template.text({'name': 'Ryan'}) is None
 
     def test_html_rendering(self):
         template = email.EmailTemplate('sample', self.template_path)
@@ -38,7 +38,7 @@ class TestEmailTemplate(unittest.TestCase):
 
     def test_html_rendering_with_missing_template(self):
         template = email.EmailTemplate('missing', self.template_path)
-        assert template.html({'name': 'Ryan'}) == None
+        assert template.html({'name': 'Ryan'}) is None
 
 
 class TestEmailSend(TestModel):
@@ -56,13 +56,13 @@ class TestEmailSend(TestModel):
             subject='Sample Subject',
             sender='notify@draughtcraft.com',
             html_body=email.EmailTemplate(
-                            'signup',
-                            '%s/emails' % conf.app.template_path
-                          ).html(ns),
+            'signup',
+            '%s/emails' % conf.app.template_path
+            ).html(ns),
             text_body=email.EmailTemplate(
-                            'signup',
-                            '%s/emails' % conf.app.template_path
-                          ).text(ns)
+            'signup',
+            '%s/emails' % conf.app.template_path
+            ).text(ns)
         ).returns_fake().expects('send'))
 
         email.send(

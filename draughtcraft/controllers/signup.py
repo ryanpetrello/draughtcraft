@@ -1,10 +1,10 @@
-from pecan                              import expose, request, conf
-from pecan.decorators                   import after_commit
-from pecan.ext.wtforms                  import with_form
-from draughtcraft                       import model
-from draughtcraft.lib.auth              import remove_trial_recipe
-from draughtcraft.lib                   import email as emaillib
-from draughtcraft.lib.forms.signup      import SignupForm
+from pecan import expose, request, conf
+from pecan.decorators import after_commit
+from pecan.ext.wtforms import with_form
+from draughtcraft import model
+from draughtcraft.lib.auth import remove_trial_recipe
+from draughtcraft.lib import email as emaillib
+from draughtcraft.lib.forms.signup import SignupForm
 
 import pecan
 

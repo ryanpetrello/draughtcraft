@@ -1,5 +1,5 @@
 from pecan.ext.wtforms import (SecureForm, fields as f, validators as v,
-                                widgets as w)
+                               widgets as w)
 from cgi import escape
 
 
