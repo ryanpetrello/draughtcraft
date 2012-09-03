@@ -98,7 +98,7 @@
             amount: this.amount,
             unit: this.unit,
             use: this.use,
-            minutes: this.minutes,
+            duration: this.minutes,
 
             form: this.form,
             alpha_acid: this.alpha_acid,

@@ -1,4 +1,5 @@
 from json import dumps
+from datetime import timedelta
 
 from draughtcraft.tests import TestApp, TestAuthenticatedApp
 from draughtcraft import model
@@ -263,6 +264,253 @@ class TestRecipeSave(TestAuthenticatedApp):
         assert response.status_int == 200
         recipe = model.Recipe.query.first()
         assert recipe.style is None
+
+
+class TestMashAdditions(TestAuthenticatedApp):
+
+    def test_fermentable(self):
+        model.Recipe(
+            name='American IPA',
+            author=model.User.get(1)
+        )
+        model.Fermentable(
+            name='2-Row',
+            origin='US',
+            ppg=36,
+            lovibond=2
+        )
+        model.commit()
+
+        data = {
+            u'mash': {
+                u'additions': [{
+                    u'amount': 5,
+                    u'unit': u'POUND',
+                    u'ingredient': {
+                        u'id': 1,
+                        u'class': 'Fermentable'
+                    }
+                }]
+            }
+        }
+
+        self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={'recipe': dumps(data)}
+        )
+
+        assert model.RecipeAddition.query.count() == 1
+        a = model.RecipeAddition.get(1)
+        assert a.recipe == model.Recipe.get(1)
+        assert a.amount == 5
+        assert a.unit == 'POUND'
+        assert a.fermentable == model.Fermentable.get(1)
+
+    def test_hop(self):
+        model.Recipe(
+            name='American IPA',
+            author=model.User.get(1)
+        )
+        model.Hop(name='Cascade', origin='US')
+        model.commit()
+
+        data = {
+            u'mash': {
+                u'additions': [{
+                    u'use': u'MASH',
+                    u'form': u'PELLET',
+                    u'alpha_acid': 8,
+                    u'amount': 16,
+                    u'duration': 60,
+                    u'unit': u'OUNCE',
+                    u'ingredient': {
+                        u'id': 1,
+                        u'class': u'Hop'
+                    }
+                }]
+            }
+        }
+
+        self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={'recipe': dumps(data)}
+        )
+
+        assert model.HopAddition.query.count() == 1
+        a = model.HopAddition.get(1)
+        assert a.recipe == model.Recipe.get(1)
+        assert a.amount == 16
+        assert a.duration == timedelta(minutes=60)
+        assert a.unit == 'OUNCE'
+        assert a.form == 'PELLET'
+        assert a.alpha_acid == 8
+        assert a.hop == model.Hop.get(1)
+
+
+class TestHopAdditions(TestAuthenticatedApp):
+
+    def test_fermentable(self):
+        model.Recipe(
+            name='American IPA',
+            author=model.User.get(1)
+        )
+        model.Fermentable(
+            name='2-Row',
+            origin='US',
+            ppg=36,
+            lovibond=2
+        )
+        model.commit()
+
+        data = {
+            u'boil': {
+                u'additions': [{
+                    u'amount': 5,
+                    u'use': 'BOIL',
+                    u'duration': 15,
+                    u'unit': u'POUND',
+                    u'ingredient': {
+                        u'id': 1,
+                        u'class': 'Fermentable'
+                    }
+                }]
+            }
+        }
+
+        self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={'recipe': dumps(data)}
+        )
+
+        assert model.RecipeAddition.query.count() == 1
+        a = model.RecipeAddition.get(1)
+        assert a.recipe == model.Recipe.get(1)
+        assert a.amount == 5
+        assert a.use == 'BOIL'
+        assert a.duration == timedelta(minutes=15)
+        assert a.unit == 'POUND'
+        assert a.fermentable == model.Fermentable.get(1)
+
+    def test_hop(self):
+        model.Recipe(
+            name='American IPA',
+            author=model.User.get(1)
+        )
+        model.Hop(name='Cascade', origin='US')
+        model.commit()
+
+        data = {
+            u'boil': {
+                u'additions': [{
+                    u'use': u'BOIL',
+                    u'form': u'PELLET',
+                    u'alpha_acid': 8,
+                    u'amount': 16,
+                    u'duration': 60,
+                    u'unit': u'OUNCE',
+                    u'ingredient': {
+                        u'id': 1,
+                        u'class': u'Hop'
+                    }
+                }]
+            }
+        }
+
+        self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={'recipe': dumps(data)}
+        )
+
+        assert model.HopAddition.query.count() == 1
+        a = model.HopAddition.get(1)
+        assert a.recipe == model.Recipe.get(1)
+        assert a.amount == 16
+        assert a.use == 'BOIL'
+        assert a.duration == timedelta(minutes=60)
+        assert a.unit == 'OUNCE'
+        assert a.form == 'PELLET'
+        assert a.alpha_acid == 8
+        assert a.hop == model.Hop.get(1)
+
+
+class TestFermentationAdditions(TestAuthenticatedApp):
+
+    def test_hop(self):
+        model.Recipe(
+            name='American IPA',
+            author=model.User.get(1)
+        )
+        model.Hop(name='Cascade', origin='US')
+        model.commit()
+
+        data = {
+            u'fermentation': {
+                u'additions': [{
+                    u'use': u'SECONDARY',
+                    u'form': u'PELLET',
+                    u'alpha_acid': 8,
+                    u'amount': 16,
+                    u'unit': u'OUNCE',
+                    u'ingredient': {
+                        u'id': 1,
+                        u'class': u'Hop'
+                    }
+                }]
+            }
+        }
+
+        self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={'recipe': dumps(data)}
+        )
+
+        assert model.HopAddition.query.count() == 1
+        a = model.HopAddition.get(1)
+        assert a.recipe == model.Recipe.get(1)
+        assert a.amount == 16
+        assert a.use == 'SECONDARY'
+        assert a.unit == 'OUNCE'
+        assert a.form == 'PELLET'
+        assert a.alpha_acid == 8
+        assert a.hop == model.Hop.get(1)
+
+    def test_yeast(self):
+        model.Recipe(
+            name='American IPA',
+            author=model.User.get(1)
+        )
+        model.Yeast(
+            name='Wyeast 1056 - American Ale',
+            form='LIQUID',
+            attenuation=.75
+        )
+        model.commit()
+
+        data = {
+            u'mash': {
+                u'additions': [{
+                    u'use': u'MASH',
+                    u'amount': 1,
+                    u'use': 'PRIMARY',
+                    u'ingredient': {
+                        u'id': 1,
+                        u'class': u'Yeast'
+                    }
+                }]
+            }
+        }
+
+        self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={'recipe': dumps(data)}
+        )
+
+        assert model.RecipeAddition.query.count() == 1
+        a = model.RecipeAddition.get(1)
+        assert a.recipe == model.Recipe.get(1)
+        assert a.amount == 1
+        assert a.use == 'PRIMARY'
+        assert a.yeast == model.Yeast.get(1)
 
 
 class TestRecipePublish(TestAuthenticatedApp):
