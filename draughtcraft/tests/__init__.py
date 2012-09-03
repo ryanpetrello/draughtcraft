@@ -77,6 +77,7 @@ class TestModel(TestCase):
 
         # Set up a fake app
         self.app = load_test_app(config)
+        dcmodel.clear()
 
     def tearDown(self):
         from sqlalchemy.engine import reflection
