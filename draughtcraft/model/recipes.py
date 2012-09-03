@@ -285,7 +285,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         return '/recipes/%s/%s/%s' % (
             ('%x' % self.id).lower(),
             self.slugs[-1].slug,
-            '' if public else 'builder/'
+            '' if public else 'builder'
         )
 
     @property

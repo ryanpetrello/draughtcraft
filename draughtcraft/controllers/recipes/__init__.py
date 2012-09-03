@@ -1,12 +1,15 @@
+from math import ceil
+
 from pecan import expose, request, abort, response, redirect
+from pecan.secure import secure
 from pecan.ext.wtforms import with_form
 from sqlalchemy import select, and_, or_, asc, desc, func, case, literal
+
 from draughtcraft import model
 from draughtcraft.lib.beerxml import export
 from draughtcraft.lib.forms.recipes.browse import RecipeSearchForm
 from create import RecipeCreationController
 from builder import RecipeBuilderController
-from math import ceil
 
 
 class SlugController(object):
@@ -92,7 +95,7 @@ class SlugController(object):
         different_user = source.author != request.context['user']
 
         copy = source.duplicate({
-            'name': source.name if different_user else \
+            'name': source.name if different_user else
                     "%s (Duplicate)" % source.name,
             'author': request.context['user']
         })
@@ -115,7 +118,10 @@ class SlugController(object):
         source.delete()
         redirect("/")
 
-    builder = RecipeBuilderController()
+    builder = secure(
+        RecipeBuilderController(),
+        RecipeBuilderController.check_permissions
+    )
 
 
 class RecipeController(object):
@@ -198,10 +204,10 @@ class RecipesController(object):
 
         # If applicable, filter by type (MASH, etc...)
         where.append(or_(
-            model.Recipe.id == None,
+            model.Recipe.id is None,
             model.Recipe.type == 'MASH' if kw['mash'] else None,
             model.Recipe.type == 'MINIMASH' if kw['minimash'] else None,
-            model.Recipe.type.in_(('EXTRACTSTEEP', 'EXTRACT')) \
+            model.Recipe.type.in_(('EXTRACTSTEEP', 'EXTRACT'))
                 if kw['extract'] else None,
         ))
 

@@ -19,16 +19,16 @@ class TestAuthenticatedUserRecipeLookup(TestAuthenticatedApp):
         )
         model.commit()
 
-        response = self.get('/recipes/500/american-ipa/builder/', status=404)
+        response = self.get('/recipes/500/american-ipa/builder', status=404)
         assert response.status_int == 404
 
-        response = self.get('/recipes/1/american-ipa/builder/')
+        response = self.get('/recipes/1/american-ipa/builder')
         assert response.status_int == 200
 
-        response = self.get('/recipes/1/american-ipa-revised/builder/')
+        response = self.get('/recipes/1/american-ipa-revised/builder')
         assert response.status_int == 200
 
-        response = self.get('/recipes/1/invalid_slug/builder/', status=404)
+        response = self.get('/recipes/1/invalid_slug/builder', status=404)
         assert response.status_int == 404
 
     def test_unauthorized_lookup_trial_recipe(self):
@@ -44,7 +44,7 @@ class TestAuthenticatedUserRecipeLookup(TestAuthenticatedApp):
         )
         model.commit()
 
-        response = self.get('/recipes/1/american-ipa/builder/', status=401)
+        response = self.get('/recipes/1/american-ipa/builder', status=401)
         assert response.status_int == 401
 
     def test_unauthorized_lookup_draft(self):
@@ -62,7 +62,7 @@ class TestAuthenticatedUserRecipeLookup(TestAuthenticatedApp):
         )
         model.commit()
 
-        response = self.get('/recipes/1/american-ipa/builder/', status=401)
+        response = self.get('/recipes/1/american-ipa/builder', status=401)
         assert response.status_int == 401
 
     def test_unauthorized_lookup_other_user(self):
@@ -79,7 +79,7 @@ class TestAuthenticatedUserRecipeLookup(TestAuthenticatedApp):
         )
         model.commit()
 
-        response = self.get('/recipes/1/american-ipa/builder/', status=401)
+        response = self.get('/recipes/1/american-ipa/builder', status=401)
         assert response.status_int == 401
 
 
@@ -99,7 +99,7 @@ class TestTrialRecipeLookup(TestApp):
         )
         model.commit()
 
-        response = self.get('/recipes/1/american-ipa/builder/', status=401)
+        response = self.get('/recipes/1/american-ipa/builder', status=401)
         assert response.status_int == 401
 
     def test_unauthorized_lookup_trial_other_user(self):
@@ -115,7 +115,7 @@ class TestTrialRecipeLookup(TestApp):
         )
         model.commit()
 
-        response = self.get('/recipes/1/american-ipa/builder/', status=401)
+        response = self.get('/recipes/1/american-ipa/builder', status=401)
         assert response.status_int == 401
 
 
@@ -127,8 +127,8 @@ class TestRecipePublish(TestAuthenticatedApp):
 
         self.get(
             '/recipes/1/rocky-mountain-river-ipa/builder/publish',
-            status=405
-        ).status_int == 405
+            status=404
+        ).status_int == 404
 
     def test_simple_publish(self):
         model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))

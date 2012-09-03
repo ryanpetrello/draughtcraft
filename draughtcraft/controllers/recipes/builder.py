@@ -3,10 +3,13 @@ from json import loads
 
 from pecan import (expose, request, abort, redirect)
 from pecan.rest import RestController
-from pecan.secure import SecureController
 
 
-class RecipeBuilderController(RestController, SecureController):
+class RecipeBuilderController(RestController):
+
+    _custom_actions = {
+        'publish': ['POST']
+    }
 
     @classmethod
     def check_permissions(cls):
@@ -38,7 +41,6 @@ class RecipeBuilderController(RestController, SecureController):
             kw = loads(kw.get('recipe'))
         except:
             abort(400)
-        import pdb; pdb.set_trace()
 
         keys = ('mash_additions', 'boil_additions', 'fermentation_additions')
         for addition_class in keys:
@@ -90,7 +92,7 @@ class RecipeBuilderController(RestController, SecureController):
 
     @expose(generic=True)
     def publish(self):
-        abort(405)
+        pass  # pragma: nocover
 
     @publish.when(method='POST')
     def do_publish(self):

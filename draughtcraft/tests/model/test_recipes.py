@@ -520,7 +520,7 @@ class TestRecipe(unittest.TestCase):
             name    = u'Rocky Mountain River IPA'
         )        
         assert recipe.url() == '/recipes/1/rocky-mountain-river-ipa/'
-        assert recipe.url(False) == '/recipes/1/rocky-mountain-river-ipa/builder/'
+        assert recipe.url(False) == '/recipes/1/rocky-mountain-river-ipa/builder'
 
     def test_url_is_hex(self):
         for i in range(128):
@@ -529,7 +529,7 @@ class TestRecipe(unittest.TestCase):
                 name    = u'Rocky Mountain River IPA'
             )
             assert recipe.url() == '/recipes/%s/rocky-mountain-river-ipa/' % ('%x' % i)
-            assert recipe.url(False) == '/recipes/%s/rocky-mountain-river-ipa/builder/' % ('%x' % i)
+            assert recipe.url(False) == '/recipes/%s/rocky-mountain-river-ipa/builder' % ('%x' % i)
 
     def test_printable_type(self):
         assert model.Recipe(

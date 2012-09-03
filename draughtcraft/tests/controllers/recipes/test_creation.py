@@ -27,7 +27,7 @@ class TestRecipeCreation(TestApp):
         response = self.get('/recipes/create')
         assert response.status_int == 302
         assert response.headers['Location'].endswith(
-            '/recipes/1/rocky-mountain-river-ipa/builder/'
+            '/recipes/1/rocky-mountain-river-ipa/builder'
         )
 
     def test_schema_validation(self):
@@ -69,7 +69,7 @@ class TestRecipeCreation(TestApp):
         assert r.fermentation_steps[0].step == 'PRIMARY'
 
         assert response.status_int == 302
-        assert response.headers['Location'].endswith('/recipes/1/rocky-mountain-river-ipa/builder/')
+        assert response.headers['Location'].endswith('/recipes/1/rocky-mountain-river-ipa/builder')
 
         #
         # Because the user isn't logged in, we'll assume they're a guest
