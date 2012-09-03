@@ -1,3 +1,5 @@
+from json import dumps
+
 from draughtcraft.tests import TestApp, TestAuthenticatedApp
 from draughtcraft import model
 
@@ -117,6 +119,106 @@ class TestTrialRecipeLookup(TestApp):
 
         response = self.get('/recipes/1/american-ipa/builder', status=401)
         assert response.status_int == 401
+
+
+class TestRecipeSave(TestAuthenticatedApp):
+
+            #u'mash': {
+            #    u'additions': [{
+            #        u'amount': 5,
+            #        u'minutes': 60,
+            #        u'use': u'MASH',
+            #        u'unit': u'POUND',
+            #        u'ingredient': {
+            #            u'ppg': 36,
+            #            u'name': u'Pilsner Malt (Belgian)',
+            #            u'lovibond': 1.6,
+            #            u'printed_type':
+            #            u'Grain',
+            #            u'class': u'Fermentable',
+            #            u'id': 354
+            #        }
+            #    }]
+            #},
+            #u'boil': {
+            #    u'additions': [{
+            #        u'use': u'BOIL',
+            #        u'form': u'PELLET',
+            #        u'alpha_acid': 4.5,
+            #        u'amount': 0.75,
+            #        u'minutes': 60,
+            #        u'unit': u'OUNCE',
+            #        u'ingredient': {
+            #            u'class': u'Hop',
+            #            u'id': 440,
+            #            u'alpha_acid': 4.5,
+            #            u'name': u'Cascade (US)'
+            #        }
+            #    }]
+            #},
+            #u'fermentation': {
+            #    u'additions': [{
+            #        u'amount': 1,
+            #        u'minutes': 60,
+            #        u'use': u'PRIMARY',
+            #        u'unit': u'POUND',
+            #        u'ingredient': {
+            #            u'class': u'Yeast',
+            #            u'attenuation': 0.74,
+            #            u'id': 545,
+            #            u'form': u'Liquid',
+            #            u'name': u'Wyeast 3944 - Belgian Witbier'
+            #        }
+            #    }]
+            #}
+
+    def test_name_update(self):
+        model.Recipe(
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA'),
+                model.RecipeSlug(name='American IPA (Revised)')
+            ],
+            author=model.User.get(1)
+        )
+        model.commit()
+
+        response = self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={
+                'recipe': dumps({'name': 'Some Recipe'})
+            }
+        )
+        assert response.status_int == 200
+        recipe = model.Recipe.query.first()
+        assert recipe.name == 'Some Recipe'
+
+        slugs = recipe.slugs
+        assert len(slugs) == 3
+        assert slugs[0].slug == 'american-ipa'
+        assert slugs[1].slug == 'american-ipa-revised'
+        assert slugs[2].slug == 'some-recipe'
+
+    def test_volume_update(self):
+        model.Recipe(
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA'),
+                model.RecipeSlug(name='American IPA (Revised)')
+            ],
+            author=model.User.get(1)
+        )
+        model.commit()
+
+        response = self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={
+                'recipe': dumps({'volume': 10})
+            }
+        )
+        assert response.status_int == 200
+        recipe = model.Recipe.query.first()
+        assert recipe.gallons == 10
 
 
 class TestRecipePublish(TestAuthenticatedApp):

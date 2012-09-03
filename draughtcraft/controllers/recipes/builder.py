@@ -1,6 +1,7 @@
 from datetime import timedelta
 from json import loads
 
+from elixir import entities
 from pecan import (expose, request, abort, redirect)
 from pecan.rest import RestController
 
@@ -30,7 +31,7 @@ class RecipeBuilderController(RestController):
             editable=True
         )
 
-    @expose()
+    @expose('json')
     def put(self, **kw):
         """
         Used to update the ingredients in the recipe.
@@ -41,6 +42,12 @@ class RecipeBuilderController(RestController):
             kw = loads(kw.get('recipe'))
         except:
             abort(400)
+
+        recipe = request.context['recipe']
+        self.save_name(recipe, kw.get('name'))
+        self.save_volume(recipe, kw.get('volume'))
+        recipe.touch()
+        return dict()
 
         keys = ('mash_additions', 'boil_additions', 'fermentation_additions')
         for addition_class in keys:
@@ -88,7 +95,18 @@ class RecipeBuilderController(RestController):
                     if v is not None:
                         setattr(addition, k, v)
 
-        request.context['recipe'].touch()
+    def save_name(self, recipe, name):
+        if recipe.name != name:
+            recipe.slugs.append(
+                entities.RecipeSlug(name=name)
+            )
+        recipe.name = name
+
+    def save_volume(self, recipe, gallons):
+        recipe.gallons = gallons
+
+    def save_style(self, recipe, style):
+        recipe.style = entities.RecipeStyle.get(style)
 
     @expose(generic=True)
     def publish(self):
