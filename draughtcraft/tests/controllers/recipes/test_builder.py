@@ -216,7 +216,7 @@ class TestRecipeSave(TestAuthenticatedApp):
         recipe = model.Recipe.query.first()
         assert recipe.style is None
 
-    def test_name_update(self):
+    def test_mash_settings_update(self):
         model.Recipe(
             name='American IPA',
             slugs=[
@@ -230,18 +230,16 @@ class TestRecipeSave(TestAuthenticatedApp):
         response = self.post(
             '/recipes/1/american-ipa/builder?_method=PUT',
             params={
-                'recipe': dumps({'name': 'Some Recipe'})
+                'recipe': dumps({
+                    'mash_method': 'TEMPERATURE',
+                    'mash_instructions': 'Mash for an hour.'
+                })
             }
         )
         assert response.status_int == 200
         recipe = model.Recipe.query.first()
-        assert recipe.name == 'Some Recipe'
-
-        slugs = recipe.slugs
-        assert len(slugs) == 3
-        assert slugs[0].slug == 'american-ipa'
-        assert slugs[1].slug == 'american-ipa-revised'
-        assert slugs[2].slug == 'some-recipe'
+        assert recipe.mash_method == 'TEMPERATURE'
+        assert recipe.mash_instructions == 'Mash for an hour.'
 
     def test_notes_update(self):
         model.Recipe(

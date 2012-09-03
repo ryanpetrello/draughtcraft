@@ -460,6 +460,9 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
                 'extras': inventory(entities.Extra)
             },
 
+            # Extras
+            'mash_method': self.mash_method,
+            'mash_instructions': self.mash_instructions,
             'notes': self.notes
         }
 

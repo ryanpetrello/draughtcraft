@@ -99,7 +99,7 @@
   <div id="builder-ajax">
 
     <div class="builder-loading">
-      <img src="/images/loading.gif" /> 
+      <img src="/images/loading.gif" />
     </div>
 
     <%def name="li(name, active=False, last=False)">
@@ -130,6 +130,8 @@
           </h3>
 
           <%include file="steps/${name}.html"/>
+
+          ${caller.extra()}
         </div>
 
         <div class="inventory ${name}" data-bind="with: ${{'ferment': 'fermentation'}.get(name, name)}">
@@ -167,6 +169,26 @@
           </select>
         </fieldset>
       </%def>
+      <%def name="extra()">
+        <h3 class="ribbon">Mash Procedure</h3>
+
+        <ol class='process'>
+          <li>
+            <span>Perform a </span>
+            <select data-bind="options: $root.MASH_METHODS, optionsText: 'name', optionsValue: 'id', value: mash_method">
+            </select>
+            % if editable or recipe.mash_instructions:
+              <span>mash according to the following instructions:</span>
+            % else:
+              <span>mash.</span>
+            % endif
+          </li>
+          <li>
+            <textarea rows="6" cols="75" data-bind="value: mash_instructions">
+            </textarea>
+          </li>
+        </ol>
+      </%def>
     </%self:step>
 
     <%self:step name="boil">
@@ -197,6 +219,8 @@
           </select>
         </fieldset>
       </%def>
+      <%def name="extra()">
+      </%def>
     </%self:step>
 
     <%self:step name="ferment">
@@ -220,6 +244,8 @@
             data-bind="options: $parent.inventory().extras, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Misc...', event: {change: addAddition}">
           </select>
         </fieldset>
+      </%def>
+      <%def name="extra()">
       </%def>
     </%self:step>
 

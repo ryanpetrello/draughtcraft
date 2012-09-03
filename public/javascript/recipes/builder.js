@@ -207,14 +207,16 @@
         this.boil = new ns.model.RecipeStep();
         this.fermentation = new ns.model.RecipeStep();
 
-        this.boil_minutes = ko.observable();
-
         this.efficiency = ko.observable();
         this.ibu_method = ko.observable();
 
         // Inventory
         this.inventory = ko.observableArray();
 
+        // Extra
+        this.mash_method = ko.observable();
+        this.mash_instructions = ko.observable();
+        this.boil_minutes = ko.observable();
         this.notes = ko.observable();
 
         this.initInventoryDropDowns = function(){
@@ -420,7 +422,8 @@
             fermentation: this.fermentation,
 
             boil_minutes: this.boil_minutes,
-
+            mash_method: this.mash_method,
+            mash_instructions: this.mash_instructions,
             notes: this.notes
         };
     };
@@ -429,6 +432,12 @@
         ns.recipe = this.recipe = new ns.model.Recipe();
 
         this.STYLES = ns.STYLES;
+        this.MASH_METHODS = [
+            {'id': 'SINGLESTEP', 'name': 'Single Step Infusion'},
+            {'id': 'TEMPERATURE', 'name': 'Temperature'},
+            {'id': 'DECOCTION', 'name': 'Decoction'},
+            {'id': 'MULTISTEP', 'name': 'Multi-Step'}
+        ];
 
         this.HOP_USES = [
             {'id': 'FIRST WORT', 'name': 'First Wort'},
