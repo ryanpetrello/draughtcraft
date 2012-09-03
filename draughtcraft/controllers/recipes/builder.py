@@ -46,6 +46,7 @@ class RecipeBuilderController(RestController):
         recipe = request.context['recipe']
         self.save_name(recipe, kw.get('name'))
         self.save_volume(recipe, kw.get('volume'))
+        self.save_style(recipe, kw.get('style'))
         recipe.touch()
         return dict()
 
@@ -106,7 +107,7 @@ class RecipeBuilderController(RestController):
         recipe.gallons = gallons
 
     def save_style(self, recipe, style):
-        recipe.style = entities.RecipeStyle.get(style)
+        recipe.style = entities.Style.get(style) if style else None
 
     @expose(generic=True)
     def publish(self):

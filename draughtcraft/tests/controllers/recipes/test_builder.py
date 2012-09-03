@@ -220,6 +220,50 @@ class TestRecipeSave(TestAuthenticatedApp):
         recipe = model.Recipe.query.first()
         assert recipe.gallons == 10
 
+    def test_style_save(self):
+        model.Style(name='Some Style')
+        model.Recipe(
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA'),
+                model.RecipeSlug(name='American IPA (Revised)')
+            ],
+            author=model.User.get(1)
+        )
+        model.commit()
+
+        response = self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={
+                'recipe': dumps({'style': 1})
+            }
+        )
+        assert response.status_int == 200
+        recipe = model.Recipe.query.first()
+        assert recipe.style.name == 'Some Style'
+
+    def test_style_remove(self):
+        model.Recipe(
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA'),
+                model.RecipeSlug(name='American IPA (Revised)')
+            ],
+            style=model.Style(name='Some Style'),
+            author=model.User.get(1)
+        )
+        model.commit()
+
+        response = self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={
+                'recipe': dumps({'style': None})
+            }
+        )
+        assert response.status_int == 200
+        recipe = model.Recipe.query.first()
+        assert recipe.style is None
+
 
 class TestRecipePublish(TestAuthenticatedApp):
 
