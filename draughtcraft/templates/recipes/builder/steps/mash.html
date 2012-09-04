@@ -42,7 +42,7 @@
         <input data-bind="value: readable_amount, hasfocus: editing, event: {keyup: delayedWrite}" type="text" />
       </td>
       <td data-bind="with: ingredient()">
-        <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
+        <a data-bind="text: name, attr: {href: '/ingredients/' + id}, popup: true" tabindex="9999"></a>
       </td>
       <td data-bind="with: ingredient()">
         <span data-bind="text: ppg"></span>
@@ -78,7 +78,7 @@
         <input data-bind="value: readable_amount, hasfocus: editing, event: {keyup: delayedWrite}" type="text" />
       </td>
       <td data-bind="with: ingredient()">
-        <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
+        <a data-bind="text: name, attr: {href: '/ingredients/' + id}, popup: true" tabindex="9999"></a>
       </td>
       <td>
         <select data-bind="options: $root.HOP_FORMS, value: form, optionsText: 'name', optionsValue: 'id'">
@@ -115,7 +115,7 @@
         <input data-bind="value: readable_amount, hasfocus: editing, event: {keyup: delayedWrite}" type="text" />
       </td>
       <td data-bind="with: ingredient()">
-        <a data-bind="text: name, attr: {href: '/ingredients/' + id}" tabindex="9999"></a>
+        <a data-bind="text: name, attr: {href: '/ingredients/' + id}, popup: true" tabindex="9999"></a>
       </td>
       <td />
       <td class="unit"></td>

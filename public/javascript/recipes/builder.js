@@ -423,11 +423,12 @@
                 'SECONDARY',
                 'TERTIARY'
             ][ns.recipe.fermentation_steps().length];
-            ns.recipe.fermentation_steps.push({
-                'step': step,
-                'days': 7,
-                'fahrenheit': 70
-            });
+
+            var e = new ns.model.FermentationStep();
+            e.step(step);
+            e.days(7);
+            e.fahrenheit(70);
+            ns.recipe.fermentation_steps.push(e);
             ns.recipe.initDropDowns();
         };
 
@@ -646,6 +647,13 @@ $(function(){
     };
 
     ko.applyBindings(new $.draughtcraft.recipes.builder.RecipeViewModel());
+
+    // Apply a "fancybox" popup
+    ko.bindingHandlers.popup = {
+        init: function(el){
+            if(el) $(el).fancybox();
+        }
+    };
 
     String.prototype.toTitleCase = function () {
         return this.replace(
