@@ -23,9 +23,12 @@ class TestBuilder(TestSeleniumApp):
     def b(self):
         return self.browser
 
-    def test_name_change(self):
-        self.b.find_element_by_name("name").send_keys("!")
+    def blur(self):
         self.b.find_element_by_css_selector(".logo").click()
+
+    def test_name_change_save(self):
+        self.b.find_element_by_name("name").send_keys("!")
+        self.blur()
         time.sleep(1)
 
         self.b.refresh()
