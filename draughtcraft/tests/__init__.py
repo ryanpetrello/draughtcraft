@@ -76,18 +76,14 @@ class TestModel(TestCase):
         }
 
         # Set up a fake app
-        self.app = load_test_app(config)
+        self.app = self.load_test_app(config)
         dcmodel.clear()
+
+    def load_test_app(self, config):
+        return load_test_app(config)
 
     def tearDown(self):
         from sqlalchemy.engine import reflection
-        from sqlalchemy.schema import (
-            MetaData,
-            Table,
-            ForeignKeyConstraint,
-            DropTable,
-            DropConstraint
-        )
 
         # Tear down and dispose the DB binding
         dcmodel.clear()
