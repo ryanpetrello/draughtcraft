@@ -51,6 +51,7 @@ class RecipeBuilderController(RestController):
         self.save_style(recipe, kw.get('style'))
         self.save_mash_settings(recipe, **kw)
         self.save_boil_settings(recipe, **kw)
+        self.save_fermentation_schedule(recipe, kw.get('fermentation_steps', []))
         recipe.notes = kw.get('notes')
 
         # additions
@@ -84,6 +85,17 @@ class RecipeBuilderController(RestController):
 
     def save_boil_settings(self, recipe, **kw):
         recipe.boil_minutes = kw.get('boil_minutes')
+
+    def save_fermentation_schedule(self, recipe, steps):
+        recipe.fermentation_steps = []
+        for step in steps:
+            recipe.fermentation_steps.append(
+                entities.FermentationStep(
+                    step=step['step'],
+                    days=step['days'],
+                    fahrenheit=step['fahrenheit']
+                )
+            )
 
     def save_step(self, recipe, additions):
         for a in additions:

@@ -9,6 +9,12 @@
         return Math.round(number * to) / to;
     };
 
+    ns.model.FermentationStep = function(){
+        this.step = ko.observable();
+        this.days = ko.observable();
+        this.fahrenheit = ko.observable();
+    };
+
     ns.model.RecipeAddition = function(){
 
         var writeTimeoutInstance = null;
@@ -173,7 +179,7 @@
 
             // Reset all of the select boxes
             field.selectedIndex = 0;
-            ns.recipe.initInventoryDropDowns();
+            ns.recipe.initDropDowns();
         }, this);
 
     };
@@ -217,10 +223,12 @@
         this.mash_method = ko.observable();
         this.mash_instructions = ko.observable();
         this.boil_minutes = ko.observable();
+        this.fermentation_steps = ko.observableArray();
         this.notes = ko.observable();
 
-        this.initInventoryDropDowns = function(){
-            $(".inventory select").selectBox('destroy').selectBox({
+        this.initDropDowns = function(){
+            var selects = $(".inventory select");
+            selects.selectBox('destroy').selectBox({
                 'menuTransition'    : 'fade',
                 'menuSpeed'         : 'fast'
             });
@@ -409,6 +417,24 @@
             return this.printable_srm();
         }, this);
 
+        this.addFermentationStep = function(){
+            var step = [
+                'PRIMARY',
+                'SECONDARY',
+                'TERTIARY'
+            ][ns.recipe.fermentation_steps().length];
+            ns.recipe.fermentation_steps.push({
+                'step': step,
+                'days': 7,
+                'fahrenheit': 70
+            });
+            ns.recipe.initDropDowns();
+        };
+
+        this.removeFermentationStep = function(step){
+            ns.recipe.fermentation_steps.remove(step);
+        };
+
     };
 
     ns.model.Recipe.prototype.toJSON = function() {
@@ -424,6 +450,7 @@
             boil_minutes: this.boil_minutes,
             mash_method: this.mash_method,
             mash_instructions: this.mash_instructions,
+            fermentation_steps: this.fermentation_steps,
             notes: this.notes
         };
     };
@@ -464,6 +491,26 @@
             times.push({'id': 0, 'name': '0 min'});
             return times;
         }, this);
+
+
+        this.FERMENTATION_DATE_RANGE = function(){
+            var temps = [];
+            var i = 1;
+            while(i <= 90){
+                temps.push(i);
+                i++;
+            }
+            return temps;
+        }();
+        this.FAHRENHEIT_RANGE = function(){
+            var temps = [];
+            var i = 100;
+            while(i >= 32){
+                temps.push(i);
+                i--
+            }
+            return temps;
+        }();
 
         var show = $.proxy(function(){
             // Display the UI after data has been fetched via AJAX.
@@ -519,6 +566,16 @@
                     appendAdditions('boil');
                     appendAdditions('fermentation');
 
+                    // Fermentation steps
+                    var steps = pop(data, 'fermentation_steps');
+                    for(var i in steps){
+                        var s = new ns.model.FermentationStep();
+                        s['step'](steps[i]['step']);
+                        s['days'](steps[i]['days']);
+                        s['fahrenheit'](steps[i]['fahrenheit']);
+                        this.recipe.fermentation_steps.push(s);
+                    }
+
                     // Recipe attributes
                     for(var k in data){
                         if(this.recipe[k])
@@ -540,7 +597,7 @@
                         'menuSpeed'         : 'fast'
                     });
 
-                    this.recipe.initInventoryDropDowns();
+                    this.recipe.initDropDowns();
                     this.recipe.dirtyFlag.reset();
 
                 }, this))
@@ -589,6 +646,15 @@ $(function(){
     };
 
     ko.applyBindings(new $.draughtcraft.recipes.builder.RecipeViewModel());
+
+    String.prototype.toTitleCase = function () {
+        return this.replace(
+            /\w\S*/g,
+            function(txt){
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            }
+        );
+    };
 
     // Register a JS tooltip on the author's thumbnail (if there is one).
     $('img.gravatar').tipTip({'delay': 50});

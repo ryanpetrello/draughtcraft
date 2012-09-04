@@ -44,11 +44,11 @@
     })($.draughtcraft = $.draughtcraft || {}, $);
 
   </script>
-  ${h.js('/javascript/jquery.selectbox.min.js')}
-  <script type="text/javascript" src="/javascript/knockout.min.js"></script>
-  <script type="text/javascript" src="/javascript/chai.js"></script>
-  <script type="text/javascript" src="/javascript/recipes/units.js"></script>
-  <script type="text/javascript" src="/javascript/recipes/builder.js"></script>
+  <script type="text/javascript" src="/javascript/jquery.selectbox.min.js" ></script>
+  ${h.js('/javascript/chai.js')}
+  ${h.js('/javascript/knockout.js')}
+  ${h.js('/javascript/recipes/units.js')}
+  ${h.js('/javascript/recipes/builder.js')}
 </%def>
 
 <div id="builder" data-bind="with: recipe">
@@ -175,7 +175,7 @@
         <ol class='process'>
           <li>
             <span>Perform a </span>
-            <select data-bind="options: $root.MASH_METHODS, optionsText: 'name', optionsValue: 'id', value: mash_method">
+            <select data-bind="options: $root.MASH_METHODS, optionsText: 'name', optionsValue: 'id', value: mash_method" class="medium">
             </select>
             % if editable or recipe.mash_instructions:
               <span>mash according to the following instructions:</span>
@@ -255,6 +255,31 @@
         </fieldset>
       </%def>
       <%def name="extra()">
+        <h3 class="ribbon">Fermentation Schedule</h3>
+
+        <ol class='process'>
+          <!-- ko foreach: fermentation_steps -->
+            <li>
+              <span class="label" data-bind="html: step().toTitleCase() + ' for'"></span>
+              <select data-bind="options: $root.FERMENTATION_DATE_RANGE, value: days"
+                class="unit" id="days">
+              </select>
+              day(s) at
+              <select data-bind="options: $root.FAHRENHEIT_RANGE, value: fahrenheit"
+                class="unit">
+              </select>
+              &#186;F
+              <a href="#" data-bind="if: $parent.fermentation_steps().length > 1 && $data == $parent.fermentation_steps()[$parent.fermentation_steps().length-1], click: $parent.removeFermentationStep">
+                <img class="close" src="/images/close.png" />
+              </a>
+            </li>
+          <!-- /ko -->
+          <li class="add-step">
+            <a href="#" data-bind="if: fermentation_steps().length < 3, click: addFermentationStep">
+              Add...
+            </a>
+          </li>
+        </ol>
       </%def>
     </%self:step>
 

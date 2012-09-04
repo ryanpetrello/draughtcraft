@@ -264,6 +264,52 @@ class TestRecipeSave(TestAuthenticatedApp):
         recipe = model.Recipe.query.first()
         assert recipe.boil_minutes == 90
 
+    def test_fermentation_steps_update(self):
+        model.Recipe(
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA'),
+                model.RecipeSlug(name='American IPA (Revised)')
+            ],
+            author=model.User.get(1)
+        )
+        model.commit()
+
+        response = self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={
+                'recipe': dumps({
+                    'fermentation_steps': [{
+                        'step': 'PRIMARY',
+                        'days': 7,
+                        'fahrenheit': 68
+                    }, {
+                        'step': 'SECONDARY',
+                        'days': 14,
+                        'fahrenheit': 62
+                    }, {
+                        'step': 'TERTIARY',
+                        'days': 60,
+                        'fahrenheit': 38
+                    }]
+                })
+            }
+        )
+        assert response.status_int == 200
+        recipe = model.Recipe.query.first()
+
+        steps = recipe.fermentation_steps
+        assert len(steps) == 3
+        assert steps[0].step == 'PRIMARY'
+        assert steps[0].days == 7
+        assert steps[0].fahrenheit == 68
+        assert steps[1].step == 'SECONDARY'
+        assert steps[1].days == 14
+        assert steps[1].fahrenheit == 62
+        assert steps[2].step == 'TERTIARY'
+        assert steps[2].days == 60
+        assert steps[2].fahrenheit == 38
+
     def test_notes_update(self):
         model.Recipe(
             name='American IPA',

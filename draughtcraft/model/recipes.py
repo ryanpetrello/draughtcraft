@@ -442,9 +442,6 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
             'ibu_method': ibu_method,
             'efficiency': self.efficiency,
 
-            # Step-specific settings
-            'boil_minutes': self.boil_minutes,
-
             # Inventory
             'inventory': {
                 'malts': inventory(
@@ -463,6 +460,8 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
             # Extras
             'mash_method': self.mash_method,
             'mash_instructions': self.mash_instructions,
+            'boil_minutes': self.boil_minutes,
+            'fermentation_steps': self.fermentation_steps,
             'notes': self.notes
         }
 
@@ -761,6 +760,14 @@ class FermentationStep(Entity, DeepCopyMixin):
     @celsius.setter  # noqa
     def celsius(self, v):
         self.fahrenheit = ((9 / 5.0) * v) + 32
+
+    def __json__(self):
+        json = {
+            'step': self.step,
+            'days': self.days,
+            'fahrenheit': self.fahrenheit
+        }
+        return json
 
 
 class RecipeView(Entity):
