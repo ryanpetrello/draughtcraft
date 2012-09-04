@@ -44,7 +44,7 @@
       <td>${fermentation_stage()}</td>
       <td></td>
       <td data-bind="with: ingredient()">
-        <a data-bind="text: name, attr: {href: '/ingredients/' + id, popup: true}" tabindex="9999"></a>
+        <a data-bind="text: name, attr: {href: '/ingredients/' + id}, popup: true" tabindex="9999"></a>
       </td>
       <td data-bind="text: ingredient().form">
       </td>
@@ -79,7 +79,7 @@
         <input data-bind="value: readable_amount, event: {keyup: delayedWrite}" type="text" />
       </td>
       <td data-bind="with: ingredient()">
-        <a data-bind="text: name, attr: {href: '/ingredients/' + id, popup: true}" tabindex="9999"></a>
+        <a data-bind="text: name, attr: {href: '/ingredients/' + id}, popup: true" tabindex="9999"></a>
       </td>
       <td>
         <select data-bind="options: $root.HOP_FORMS, value: form, optionsText: 'name', optionsValue: 'id'">
@@ -116,7 +116,7 @@
         <input data-bind="value: readable_amount, event: {keyup: delayedWrite}" type="text" />
       </td>
       <td data-bind="with: ingredient()">
-        <a data-bind="text: name, attr: {href: '/ingredients/' + id, popup: true}" tabindex="9999"></a>
+        <a data-bind="text: name, attr: {href: '/ingredients/' + id}, popup: true" tabindex="9999"></a>
       </td>
       <td />
       <td class="unit"></td>

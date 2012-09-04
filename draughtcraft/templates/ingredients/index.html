@@ -44,5 +44,5 @@
 
   <h2>${ingredient.printed_name}</h2>
   ${getattr(local, ingredient.row_type)()}
-  <p>${ingredient.description}</p>
+  <p>${ingredient.description or ''}</p>
 </div>
