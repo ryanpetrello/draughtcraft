@@ -33,8 +33,7 @@ class ServerThread(threading.Thread):
         except:
             import traceback
             traceback.print_exc()
-            # Failed to start
-            self.srv = None
+            raise
 
     def quit(self):
         if self.srv:
