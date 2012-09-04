@@ -1,21 +1,7 @@
-import contextlib
 import time
 
 from selenium.webdriver.support.ui import Select
 from draughtcraft.tests.selenium import TestSeleniumApp
-
-
-@contextlib.contextmanager
-def wait():
-    for i in range(500):
-        try:
-            yield
-            break
-        except:
-            pass
-        time.sleep(.01)
-    else:
-        raise 'time out'
 
 
 class TestAllGrainBuilder(TestSeleniumApp):
@@ -40,33 +26,32 @@ class TestAllGrainBuilder(TestSeleniumApp):
         self.b.find_element_by_css_selector(".logo").click()
 
     def test_defaults(self):
-        with wait():
-            b = self.b
-            self.assertEqual(
-                "DraughtCraft - Rocky Mountain River IPA",
-                b.title
-            )
-            self.assertEqual(
-                "Rocky Mountain River IPA",
-                b.find_element_by_name("name").get_attribute("value")
-            )
-            self.assertEqual(
-                "5",
-                b.find_element_by_name("volume").get_attribute("value")
-            )
-            assert b.find_element_by_css_selector('.step.mash') is not None
-            assert b.find_element_by_css_selector('.step.boil') is not None
-            assert b.find_element_by_css_selector('.step.ferment') \
-                is not None
+        self.wait.until(
+            lambda driver:
+                self.b.find_element_by_name("name").get_attribute("value") ==
+                "Rocky Mountain River IPA"
+        )
+        self.assertEqual(
+            "DraughtCraft - Rocky Mountain River IPA",
+            self.b.title
+        )
+        self.assertEqual(
+            "5",
+            self.b.find_element_by_name("volume").get_attribute("value")
+        )
+        assert self.b.find_element_by_css_selector('.step.mash') is not None
+        assert self.b.find_element_by_css_selector('.step.boil') is not None
+        assert self.b.find_element_by_css_selector('.step.ferment') \
+            is not None
 
     def test_name_change_save(self):
         self.b.find_element_by_name("name").send_keys("!")
         self.blur()
-        time.sleep(1)
+        time.sleep(2)
 
         self.b.refresh()
-        with wait():
-            self.assertEqual(
-                "Rocky Mountain River IPA!",
-                self.b.find_element_by_name("name").get_attribute("value")
-            )
+        self.wait.until(
+            lambda driver:
+                self.b.find_element_by_name("name").get_attribute("value") ==
+                "Rocky Mountain River IPA!"
+        )

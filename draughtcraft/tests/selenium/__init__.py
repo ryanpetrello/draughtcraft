@@ -3,6 +3,7 @@ from wsgiref.simple_server import make_server
 import multiprocessing
 
 from selenium import webdriver
+from selenium.webdriver.support import ui
 from pecan.deploy import deploy
 
 from draughtcraft.tests import TestApp
@@ -47,6 +48,10 @@ class TestSeleniumApp(TestApp):
 
     def load_test_app(self, config):
         return deploy(config)
+
+    @property
+    def wait(self):
+        return ui.WebDriverWait(self.browser, 5)
 
     def get(self, path):
         self.browser.get(self.HOST_BASE + path)
