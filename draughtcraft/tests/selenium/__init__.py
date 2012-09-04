@@ -1,6 +1,6 @@
 from urlparse import urlparse
 from wsgiref.simple_server import make_server
-import threading
+import multiprocessing
 
 from selenium import webdriver
 from pecan.deploy import deploy
@@ -8,39 +8,9 @@ from pecan.deploy import deploy
 from draughtcraft.tests import TestApp
 
 
-class ServerThread(threading.Thread):
-    """
-    Run WSGI server on a background thread.
-    Pass in WSGI app object and serve pages from it for Selenium browser.
-    """
+class TestSeleniumApp(TestApp):
 
     HOST_BASE = "http://localhost:8521"
-
-    def __init__(self, app):
-        threading.Thread.__init__(self)
-        self.app = app
-        self.srv = None
-
-    def run(self):
-        """
-        Open WSGI server to listen to HOST_BASE address
-        """
-        parts = urlparse(self.HOST_BASE)
-        domain, port = parts.netloc.split(":")
-        self.srv = make_server(domain, int(port), self.app)
-        try:
-            self.srv.serve_forever()
-        except:
-            import traceback
-            traceback.print_exc()
-            raise
-
-    def quit(self):
-        if self.srv:
-            self.srv.shutdown()
-
-
-class TestSeleniumApp(TestApp):
 
     @classmethod
     def setUpClass(cls):
@@ -61,15 +31,22 @@ class TestSeleniumApp(TestApp):
     def setUp(self):
         super(TestSeleniumApp, self).setUp()
 
-        self.server = ServerThread(self.app)
-        self.server.start()
+        # Start a server process
+        parts = urlparse(self.HOST_BASE)
+        domain, port = parts.netloc.split(":")
+        self.server_process = multiprocessing.Process(
+            target=make_server(domain, int(port), self.app).serve_forever
+        )
+        self.server_process.start()
 
     def tearDown(self):
         super(TestSeleniumApp, self).tearDown()
-        self.server.quit()
+        self.server_process.terminate()
+        self.server_process.join()
+        del(self.server_process)
 
     def load_test_app(self, config):
         return deploy(config)
 
     def get(self, path):
-        self.browser.get(ServerThread.HOST_BASE + path)
+        self.browser.get(self.HOST_BASE + path)
