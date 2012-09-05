@@ -107,6 +107,19 @@ class TestAllGrainBuilder(TestSeleniumApp):
                 "No Style Specified"
         )
 
+    def test_volume_change_save(self):
+        self.b.find_element_by_name("volume").clear()
+        self.b.find_element_by_name("volume").send_keys("10")
+        self.blur()
+        time.sleep(2)
+
+        self.b.refresh()
+        self.wait.until(
+            lambda driver:
+                self.b.find_element_by_name("volume").get_attribute("value") ==
+                "10"
+        )
+
     def test_add_malt(self):
         model.Fermentable(
             name='2-Row',
