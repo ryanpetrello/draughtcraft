@@ -1,6 +1,8 @@
 import time
 
 from selenium.webdriver.support.ui import Select
+
+from draughtcraft import model
 from draughtcraft.tests.selenium import TestSeleniumApp
 
 
@@ -8,6 +10,29 @@ class TestAllGrainBuilder(TestSeleniumApp):
 
     def setUp(self):
         super(TestAllGrainBuilder, self).setUp()
+
+        model.Style(
+            name='American IPA',
+            min_og=1.056,
+            max_og=1.075,
+            min_fg=1.01,
+            max_fg=1.018,
+            min_ibu=40,
+            max_ibu=70,
+            min_srm=6,
+            max_srm=15,
+            min_abv=.055,
+            max_abv=.075,
+            category_number=14,
+            style_letter='B'
+        )
+        model.Style(
+            name='Spice, Herb, or Vegetable Beer',
+            category_number=21,
+            style_letter='A'
+        )
+        model.commit()
+
         self.get("/")
         self.b.find_element_by_link_text("Create Your Own Recipe").click()
 
@@ -54,4 +79,29 @@ class TestAllGrainBuilder(TestSeleniumApp):
             lambda driver:
                 self.b.find_element_by_name("name").get_attribute("value") ==
                 "Rocky Mountain River IPA!"
+        )
+
+    def test_style_choose(self):
+        self.b.find_element_by_css_selector("span.selectBox-arrow").click()
+        self.b.find_element_by_link_text("American IPA").click()
+        self.blur()
+        time.sleep(2)
+
+        self.b.refresh()
+        self.wait.until(
+            lambda driver:
+                self.b.find_element_by_css_selector(".selectBox-label").text ==
+                "American IPA"
+        )
+
+        self.b.find_element_by_css_selector("span.selectBox-arrow").click()
+        self.b.find_element_by_link_text("No Style Specified").click()
+        self.blur()
+        time.sleep(2)
+
+        self.b.refresh()
+        self.wait.until(
+            lambda driver:
+                self.b.find_element_by_css_selector(".selectBox-label").text ==
+                "No Style Specified"
         )
