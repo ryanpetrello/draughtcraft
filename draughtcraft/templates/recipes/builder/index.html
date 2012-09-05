@@ -262,11 +262,11 @@
             <li>
               <span class="label" data-bind="html: step().toTitleCase() + ' for'"></span>
               <select data-bind="options: $root.FERMENTATION_DATE_RANGE, value: days"
-                class="unit" id="days">
+                class="unit days">
               </select>
               day(s) at
               <select data-bind="options: $root.FAHRENHEIT_RANGE, value: fahrenheit"
-                class="unit">
+                class="unit fahrenheit">
               </select>
               &#186;F
               <a href="#" data-bind="if: $parent.fermentation_steps().length > 1 && $data == $parent.fermentation_steps()[$parent.fermentation_steps().length-1], click: $parent.removeFermentationStep">

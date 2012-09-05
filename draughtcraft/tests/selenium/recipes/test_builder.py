@@ -266,3 +266,39 @@ class TestAllGrainBuilder(TestSeleniumApp):
                 self.b.find_element_by_name("boil_minutes").
                 get_attribute("value") == "90"
         )
+
+    def test_fermentation_schedule_change(self):
+        self.b.find_element_by_link_text('Ferment').click()
+
+        self.b.find_element_by_link_text("Add...").click()
+        self.b.find_element_by_link_text("Add...").click()
+
+        days = self.b.find_elements_by_css_selector('.process select.days')
+        temps = self.b.find_elements_by_css_selector(
+            '.process select.fahrenheit'
+        )
+        assert len(days) == 3
+        assert len(temps) == 3
+
+        for i, el in enumerate(days):
+            Select(el).select_by_visible_text(str(14 + (7 * i)))
+
+        for j, el in enumerate(temps):
+            Select(el).select_by_visible_text(str(68 + (2 * j)))
+
+        self.blur()
+        time.sleep(2)
+
+        self.b.refresh()
+
+        time.sleep(1)
+        days = self.b.find_elements_by_css_selector('.process select.days')
+        temps = self.b.find_elements_by_css_selector(
+            '.process select.fahrenheit'
+        )
+        assert len(days) == 3
+        assert len(temps) == 3
+        for i, d in enumerate(days):
+            assert d.get_attribute('value') == str(14 + (7 * i))
+        for j, t in enumerate(temps):
+            assert t.get_attribute('value') == str(68 + (2 * j))
