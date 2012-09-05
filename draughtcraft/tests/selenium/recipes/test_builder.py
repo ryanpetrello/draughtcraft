@@ -36,6 +36,7 @@ class TestAllGrainBuilder(TestSeleniumApp):
         self.get("/")
         self.b.find_element_by_link_text("Create Your Own Recipe").click()
 
+        time.sleep(.1)
         self.b.find_element_by_id("name").clear()
         self.b.find_element_by_id("name").send_keys("Rocky Mountain River IPA")
         Select(
@@ -116,18 +117,23 @@ class TestAllGrainBuilder(TestSeleniumApp):
             description='Sample Description'
         )
         model.commit()
-
         self.b.refresh()
-        assert len(self.b.find_elements_by_css_selector(
-            '.mash .ingredient-list .addition'
-        )) == 0
 
-        self.b.find_element_by_link_text("Add Malt/Fermentables...").click()
-        self.b.find_element_by_link_text("2-Row (US)").click()
+        for step in ('Mash', 'Boil'):
+            self.b.find_element_by_link_text(step).click()
 
-        assert len(self.b.find_elements_by_css_selector(
-            '.mash .ingredient-list .addition:not(:empty)'
-        )) == 1
+            assert len(self.b.find_elements_by_css_selector(
+                '.%s .ingredient-list .addition' % step.lower()
+            )) == 0
+
+            self.b.find_element_by_link_text(
+                "Add Malt/Fermentables..."
+            ).click()
+            self.b.find_element_by_link_text("2-Row (US)").click()
+
+            assert len(self.b.find_elements_by_css_selector(
+                '.%s .ingredient-list .addition:not(:empty)' % step.lower()
+            )) == 1
 
     def test_add_extract(self):
         model.Fermentable(
@@ -139,18 +145,23 @@ class TestAllGrainBuilder(TestSeleniumApp):
             description='Sample Description'
         )
         model.commit()
-
         self.b.refresh()
-        assert len(self.b.find_elements_by_css_selector(
-            '.mash .ingredient-list .addition'
-        )) == 0
 
-        self.b.find_element_by_link_text("Add Malt Extract...").click()
-        self.b.find_element_by_link_text("Cooper's Amber LME (Australian)").click()
+        for step in ('Mash', 'Boil'):
+            self.b.find_element_by_link_text(step).click()
 
-        assert len(self.b.find_elements_by_css_selector(
-            '.mash .ingredient-list .addition:not(:empty)'
-        )) == 1
+            assert len(self.b.find_elements_by_css_selector(
+                '.%s .ingredient-list .addition' % step.lower()
+            )) == 0
+
+            self.b.find_element_by_link_text("Add Malt Extract...").click()
+            self.b.find_element_by_link_text(
+                "Cooper's Amber LME (Australian)"
+            ).click()
+
+            assert len(self.b.find_elements_by_css_selector(
+                '.%s .ingredient-list .addition:not(:empty)' % step.lower()
+            )) == 1
 
     def test_add_hop(self):
         model.Hop(
@@ -160,18 +171,22 @@ class TestAllGrainBuilder(TestSeleniumApp):
             description='Sample Description'
         )
         model.commit()
-
         self.b.refresh()
-        assert len(self.b.find_elements_by_css_selector(
-            '.mash .ingredient-list .addition'
-        )) == 0
 
-        self.b.find_element_by_link_text("Add Hops...").click()
-        self.b.find_element_by_link_text("Simcoe (US)").click()
+        for step in ('Mash', 'Boil', 'Ferment'):
+            self.b.find_element_by_link_text(step).click()
 
-        assert len(self.b.find_elements_by_css_selector(
-            '.mash .ingredient-list .addition:not(:empty)'
-        )) == 1
+            assert len(self.b.find_elements_by_css_selector(
+                '.%s .ingredient-list .addition' % step.lower()
+            )) == 0
+
+            label = 'Add Dry Hops...' if step == 'Ferment' else 'Add Hops...'
+            self.b.find_element_by_link_text(label).click()
+            self.b.find_element_by_link_text("Simcoe (US)").click()
+
+            assert len(self.b.find_elements_by_css_selector(
+                '.%s .ingredient-list .addition:not(:empty)' % step.lower()
+            )) == 1
 
     def test_add_extra(self):
         model.Extra(
@@ -179,15 +194,18 @@ class TestAllGrainBuilder(TestSeleniumApp):
             description='Sample Description'
         )
         model.commit()
-
         self.b.refresh()
-        assert len(self.b.find_elements_by_css_selector(
-            '.mash .ingredient-list .addition'
-        )) == 0
 
-        self.b.find_element_by_link_text("Add Misc...").click()
-        self.b.find_element_by_link_text("Whirlfloc Tablet").click()
+        for step in ('Mash', 'Boil', 'Ferment'):
+            self.b.find_element_by_link_text(step).click()
 
-        assert len(self.b.find_elements_by_css_selector(
-            '.mash .ingredient-list .addition:not(:empty)'
-        )) == 1
+            assert len(self.b.find_elements_by_css_selector(
+                '.%s .ingredient-list .addition' % step.lower()
+            )) == 0
+
+            self.b.find_element_by_link_text("Add Misc...").click()
+            self.b.find_element_by_link_text("Whirlfloc Tablet").click()
+
+            assert len(self.b.find_elements_by_css_selector(
+                '.%s .ingredient-list .addition:not(:empty)' % step.lower()
+            )) == 1
