@@ -251,3 +251,18 @@ class TestAllGrainBuilder(TestSeleniumApp):
                 self.b.find_element_by_name("mash_instructions").
                 get_attribute("value") == "Testing 1 2 3"
         )
+
+    def test_boil_minutes(self):
+        self.b.find_element_by_link_text('Boil').click()
+
+        self.b.find_element_by_name('boil_minutes').clear()
+        self.b.find_element_by_name('boil_minutes').send_keys('90')
+        self.blur()
+        time.sleep(2)
+
+        self.b.refresh()
+        self.wait.until(
+            lambda driver:
+                self.b.find_element_by_name("boil_minutes").
+                get_attribute("value") == "90"
+        )
