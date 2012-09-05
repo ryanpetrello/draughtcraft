@@ -175,7 +175,7 @@
         <ol class='process'>
           <li>
             <span>Perform a </span>
-            <select data-bind="options: $root.MASH_METHODS, optionsText: 'name', optionsValue: 'id', value: mash_method" class="medium">
+            <select name="mash_method" data-bind="options: $root.MASH_METHODS, optionsText: 'name', optionsValue: 'id', value: mash_method" class="medium">
             </select>
             % if editable or recipe.mash_instructions:
               <span>mash according to the following instructions:</span>
@@ -184,7 +184,7 @@
             % endif
           </li>
           <li>
-            <textarea rows="6" cols="75" data-bind="value: mash_instructions">
+            <textarea rows="6" cols="75" name="mash_instructions" data-bind="value: mash_instructions">
             </textarea>
           </li>
         </ol>

@@ -222,3 +222,32 @@ class TestAllGrainBuilder(TestSeleniumApp):
             assert len(self.b.find_elements_by_css_selector(
                 '.%s .ingredient-list .addition:not(:empty)' % step.lower()
             )) == 1
+
+    def test_mash_method_change(self):
+        Select(
+            self.b.find_element_by_name('mash_method')
+        ).select_by_visible_text("Multi-Step")
+        self.blur()
+        time.sleep(2)
+
+        self.b.refresh()
+        self.wait.until(
+            lambda driver:
+                self.b.find_element_by_name("mash_method").
+                get_attribute("value") == "MULTISTEP"
+        )
+
+    def test_mash_instructions_change(self):
+        self.b.find_element_by_name('mash_instructions').clear()
+        self.b.find_element_by_name('mash_instructions').send_keys(
+            'Testing 1 2 3'
+        )
+        self.blur()
+        time.sleep(2)
+
+        self.b.refresh()
+        self.wait.until(
+            lambda driver:
+                self.b.find_element_by_name("mash_instructions").
+                get_attribute("value") == "Testing 1 2 3"
+        )
