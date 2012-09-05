@@ -54,8 +54,8 @@ class TestAllGrainBuilder(TestSeleniumApp):
     def test_defaults(self):
         self.wait.until(
             lambda driver:
-                self.b.find_element_by_name("name").get_attribute("value") ==
-                "Rocky Mountain River IPA"
+            self.b.find_element_by_name("name").get_attribute("value") ==
+            "Rocky Mountain River IPA"
         )
         self.assertEqual(
             "DraughtCraft - Rocky Mountain River IPA",
@@ -78,8 +78,8 @@ class TestAllGrainBuilder(TestSeleniumApp):
         self.b.refresh()
         self.wait.until(
             lambda driver:
-                self.b.find_element_by_name("name").get_attribute("value") ==
-                "Rocky Mountain River IPA!"
+            self.b.find_element_by_name("name").get_attribute("value") ==
+            "Rocky Mountain River IPA!"
         )
 
     def test_style_choose(self):
@@ -91,8 +91,8 @@ class TestAllGrainBuilder(TestSeleniumApp):
         self.b.refresh()
         self.wait.until(
             lambda driver:
-                self.b.find_element_by_css_selector(".selectBox-label").text ==
-                "American IPA"
+            self.b.find_element_by_css_selector(".selectBox-label").text ==
+            "American IPA"
         )
 
         self.b.find_element_by_link_text("American IPA").click()
@@ -103,8 +103,8 @@ class TestAllGrainBuilder(TestSeleniumApp):
         self.b.refresh()
         self.wait.until(
             lambda driver:
-                self.b.find_element_by_css_selector(".selectBox-label").text ==
-                "No Style Specified"
+            self.b.find_element_by_css_selector(".selectBox-label").text ==
+            "No Style Specified"
         )
 
     def test_volume_change_save(self):
@@ -116,8 +116,8 @@ class TestAllGrainBuilder(TestSeleniumApp):
         self.b.refresh()
         self.wait.until(
             lambda driver:
-                self.b.find_element_by_name("volume").get_attribute("value") ==
-                "10"
+            self.b.find_element_by_name("volume").get_attribute("value") ==
+            "10"
         )
 
     def test_add_malt(self):
@@ -233,8 +233,8 @@ class TestAllGrainBuilder(TestSeleniumApp):
         self.b.refresh()
         self.wait.until(
             lambda driver:
-                self.b.find_element_by_name("mash_method").
-                get_attribute("value") == "MULTISTEP"
+            self.b.find_element_by_name("mash_method").
+            get_attribute("value") == "MULTISTEP"
         )
 
     def test_mash_instructions_change(self):
@@ -248,8 +248,8 @@ class TestAllGrainBuilder(TestSeleniumApp):
         self.b.refresh()
         self.wait.until(
             lambda driver:
-                self.b.find_element_by_name("mash_instructions").
-                get_attribute("value") == "Testing 1 2 3"
+            self.b.find_element_by_name("mash_instructions").
+            get_attribute("value") == "Testing 1 2 3"
         )
 
     def test_boil_minutes(self):
@@ -263,8 +263,8 @@ class TestAllGrainBuilder(TestSeleniumApp):
         self.b.refresh()
         self.wait.until(
             lambda driver:
-                self.b.find_element_by_name("boil_minutes").
-                get_attribute("value") == "90"
+            self.b.find_element_by_name("boil_minutes").
+            get_attribute("value") == "90"
         )
 
     def test_fermentation_schedule_change(self):

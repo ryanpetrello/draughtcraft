@@ -51,7 +51,10 @@ class RecipeBuilderController(RestController):
         self.save_style(recipe, kw.get('style'))
         self.save_mash_settings(recipe, **kw)
         self.save_boil_settings(recipe, **kw)
-        self.save_fermentation_schedule(recipe, kw.get('fermentation_steps', []))
+        self.save_fermentation_schedule(
+            recipe,
+            kw.get('fermentation_steps', [])
+        )
         recipe.notes = kw.get('notes')
 
         # additions
