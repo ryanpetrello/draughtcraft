@@ -82,7 +82,7 @@ class TestAllGrainBuilder(TestSeleniumApp):
         )
 
     def test_style_choose(self):
-        self.b.find_element_by_css_selector("span.selectBox-arrow").click()
+        self.b.find_element_by_link_text("No Style Specified").click()
         self.b.find_element_by_link_text("American IPA").click()
         self.blur()
         time.sleep(2)
@@ -94,7 +94,7 @@ class TestAllGrainBuilder(TestSeleniumApp):
                 "American IPA"
         )
 
-        self.b.find_element_by_css_selector("span.selectBox-arrow").click()
+        self.b.find_element_by_link_text("American IPA").click()
         self.b.find_element_by_link_text("No Style Specified").click()
         self.blur()
         time.sleep(2)
@@ -105,3 +105,89 @@ class TestAllGrainBuilder(TestSeleniumApp):
                 self.b.find_element_by_css_selector(".selectBox-label").text ==
                 "No Style Specified"
         )
+
+    def test_add_malt(self):
+        model.Fermentable(
+            name='2-Row',
+            type='MALT',
+            origin='US',
+            ppg=36,
+            lovibond=2,
+            description='Sample Description'
+        )
+        model.commit()
+
+        self.b.refresh()
+        assert len(self.b.find_elements_by_css_selector(
+            '.mash .ingredient-list .addition'
+        )) == 0
+
+        self.b.find_element_by_link_text("Add Malt/Fermentables...").click()
+        self.b.find_element_by_link_text("2-Row (US)").click()
+
+        assert len(self.b.find_elements_by_css_selector(
+            '.mash .ingredient-list .addition:not(:empty)'
+        )) == 1
+
+    def test_add_extract(self):
+        model.Fermentable(
+            name="Cooper's Amber LME",
+            type='EXTRACT',
+            origin='AUSTRALIAN',
+            ppg=36,
+            lovibond=13.3,
+            description='Sample Description'
+        )
+        model.commit()
+
+        self.b.refresh()
+        assert len(self.b.find_elements_by_css_selector(
+            '.mash .ingredient-list .addition'
+        )) == 0
+
+        self.b.find_element_by_link_text("Add Malt Extract...").click()
+        self.b.find_element_by_link_text("Cooper's Amber LME (Australian)").click()
+
+        assert len(self.b.find_elements_by_css_selector(
+            '.mash .ingredient-list .addition:not(:empty)'
+        )) == 1
+
+    def test_add_hop(self):
+        model.Hop(
+            name="Simcoe",
+            origin='US',
+            alpha_acid=13,
+            description='Sample Description'
+        )
+        model.commit()
+
+        self.b.refresh()
+        assert len(self.b.find_elements_by_css_selector(
+            '.mash .ingredient-list .addition'
+        )) == 0
+
+        self.b.find_element_by_link_text("Add Hops...").click()
+        self.b.find_element_by_link_text("Simcoe (US)").click()
+
+        assert len(self.b.find_elements_by_css_selector(
+            '.mash .ingredient-list .addition:not(:empty)'
+        )) == 1
+
+    def test_add_extra(self):
+        model.Extra(
+            name="Whirlfloc Tablet",
+            description='Sample Description'
+        )
+        model.commit()
+
+        self.b.refresh()
+        assert len(self.b.find_elements_by_css_selector(
+            '.mash .ingredient-list .addition'
+        )) == 0
+
+        self.b.find_element_by_link_text("Add Misc...").click()
+        self.b.find_element_by_link_text("Whirlfloc Tablet").click()
+
+        assert len(self.b.find_elements_by_css_selector(
+            '.mash .ingredient-list .addition:not(:empty)'
+        )) == 1
