@@ -302,3 +302,172 @@ class TestAllGrainBuilder(TestSeleniumApp):
             assert d.get_attribute('value') == str(14 + (7 * i))
         for j, t in enumerate(temps):
             assert t.get_attribute('value') == str(68 + (2 * j))
+
+    def test_change_fermentable_amount(self):
+        model.Fermentable(
+            name='2-Row',
+            type='MALT',
+            origin='US',
+            ppg=36,
+            lovibond=2,
+            description='Sample Description'
+        )
+        model.commit()
+        self.b.refresh()
+
+        for step in ('Mash', 'Boil'):
+            self.b.find_element_by_link_text(step).click()
+
+            self.b.find_element_by_link_text(
+                "Add Malt/Fermentables..."
+            ).click()
+            self.b.find_element_by_link_text("2-Row (US)").click()
+
+            i = self.b.find_element_by_css_selector(
+                '.%s .addition .amount input' % step.lower()
+            )
+            i.clear()
+            i.send_keys('10 lb')
+            self.blur()
+            time.sleep(2)
+
+            self.b.refresh()
+
+            i = self.b.find_element_by_css_selector(
+                '.%s .addition .amount input' % step.lower()
+            )
+            assert i.get_attribute('value') == '10 lb'
+
+    def test_change_hop_form(self):
+        model.Hop(
+            name="Simcoe",
+            origin='US',
+            alpha_acid=13,
+            description='Sample Description'
+        )
+        model.commit()
+        self.b.refresh()
+
+        for step in ('Mash', 'Boil', 'Ferment'):
+            self.b.find_element_by_link_text(step).click()
+
+            label = 'Add Dry Hops...' if step == 'Ferment' else 'Add Hops...'
+            self.b.find_element_by_link_text(label).click()
+            self.b.find_element_by_link_text("Simcoe (US)").click()
+
+            s = Select(self.b.find_element_by_css_selector(
+                '.%s .addition .form select' % step.lower()
+            ))
+            s.select_by_visible_text('Pellet')
+            self.blur()
+            time.sleep(2)
+
+            self.b.refresh()
+
+            s = self.b.find_element_by_css_selector(
+                '.%s .addition .form select' % step.lower()
+            )
+            assert s.get_attribute('value') == 'PELLET'
+
+    def test_change_hop_aa(self):
+        model.Hop(
+            name="Simcoe",
+            origin='US',
+            alpha_acid=13,
+            description='Sample Description'
+        )
+        model.commit()
+        self.b.refresh()
+
+        for step in ('Mash', 'Boil', 'Ferment'):
+            self.b.find_element_by_link_text(step).click()
+
+            label = 'Add Dry Hops...' if step == 'Ferment' else 'Add Hops...'
+            self.b.find_element_by_link_text(label).click()
+            self.b.find_element_by_link_text("Simcoe (US)").click()
+
+            i = self.b.find_element_by_css_selector(
+                '.%s .addition .unit input' % step.lower()
+            )
+            i.clear()
+            i.send_keys('12')
+            self.blur()
+            time.sleep(2)
+
+            self.b.refresh()
+
+            i = self.b.find_element_by_css_selector(
+                '.%s .addition .unit input' % step.lower()
+            )
+            assert i.get_attribute('value') == '12'
+
+    def test_change_hop_boil_time(self):
+        model.Hop(
+            name="Simcoe",
+            origin='US',
+            alpha_acid=13,
+            description='Sample Description'
+        )
+        model.commit()
+        self.b.refresh()
+
+        self.b.find_element_by_link_text('Boil').click()
+
+        self.b.find_element_by_link_text('Add Hops...').click()
+        self.b.find_element_by_link_text("Simcoe (US)").click()
+
+        selects = self.b.find_elements_by_css_selector(
+            '.boil .addition .time select'
+        )
+        Select(selects[1]).select_by_visible_text('45 min')
+        self.blur()
+        time.sleep(2)
+
+        self.b.refresh()
+
+        selects = self.b.find_elements_by_css_selector(
+            '.boil .addition .time select'
+        )
+        assert selects[1].get_attribute('value') == '45'
+
+    def test_change_hop_first_wort(self):
+        model.Hop(
+            name="Simcoe",
+            origin='US',
+            alpha_acid=13,
+            description='Sample Description'
+        )
+        model.commit()
+        self.b.refresh()
+
+        self.b.find_element_by_link_text('Boil').click()
+
+        self.b.find_element_by_link_text('Add Hops...').click()
+        self.b.find_element_by_link_text("Simcoe (US)").click()
+
+        selects = self.b.find_elements_by_css_selector(
+            '.boil .addition .time select'
+        )
+        Select(selects[0]).select_by_visible_text('First Wort')
+        assert not selects[1].is_displayed()
+
+    def test_change_hop_flameout(self):
+        model.Hop(
+            name="Simcoe",
+            origin='US',
+            alpha_acid=13,
+            description='Sample Description'
+        )
+        model.commit()
+        self.b.refresh()
+
+        self.b.find_element_by_link_text('Boil').click()
+
+        self.b.find_element_by_link_text('Add Hops...').click()
+        self.b.find_element_by_link_text("Simcoe (US)").click()
+
+        selects = self.b.find_elements_by_css_selector(
+            '.boil .addition .time select'
+        )
+        Select(selects[0]).select_by_visible_text('Flame Out')
+        assert not selects[1].is_displayed()
