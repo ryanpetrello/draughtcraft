@@ -519,3 +519,29 @@ class TestAllGrainBuilder(TestSeleniumApp):
         )
         Select(selects[0]).select_by_visible_text('Flame Out')
         assert not selects[1].is_displayed()
+
+    def test_yeast_step(self):
+        model.Yeast(
+            name='Wyeast 1056 - American Ale',
+            type='ALE',
+            form='LIQUID',
+            attenuation=.75,
+            flocculation='MEDIUM/HIGH'
+        )
+        model.commit()
+        self.b.refresh()
+
+        self.b.find_element_by_link_text('Ferment').click()
+        self.b.find_element_by_link_text('Add Yeast...').click()
+        self.b.find_element_by_link_text('Wyeast 1056 - American Ale').click()
+
+        Select(self.b.find_element_by_css_selector(
+            '.ferment .addition select'
+        )).select_by_visible_text('Secondary')
+        time.sleep(2)
+
+        self.b.refresh()
+
+        assert self.b.find_element_by_css_selector(
+            '.ferment .addition select'
+        ).get_attribute('value') == 'SECONDARY'
