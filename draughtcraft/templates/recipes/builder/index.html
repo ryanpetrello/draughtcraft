@@ -118,7 +118,9 @@
 
         <h2>
           <ul>
-            ${li('mash', name == 'mash')}
+            % if recipe.type in ('MASH', 'MINIMASH'):
+              ${li('mash', name == 'mash')}
+            % endif
             ${li('boil', name == 'boil')}
             ${li('ferment', name == 'ferment', True)}
           </ul>
@@ -141,55 +143,58 @@
       </div>
     </%def>
 
-    <%self:step name="mash">
-      <%def name="inventory()">
-        <h3>Add to Mash</h3>
 
-        <fieldset>
-          <select
-            data-bind="options: $parent.inventory().malts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt/Fermentables...', event: {change: addAddition}">
-          </select>
-        </fieldset>
+    % if recipe.type in ('MASH', 'MINIMASH'):
+      <%self:step name="mash">
+        <%def name="inventory()">
+          <h3>Add to Mash</h3>
 
-        <fieldset>
-          <select
-            data-bind="options: $parent.inventory().extracts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt Extract...', event: {change: addAddition}">
-          </select>
-        </fieldset>
-
-        <fieldset>
-          <select
-            data-bind="options: $parent.inventory().hops, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Hops...', event: {change: addAddition}">
-          </select>
-        </fieldset>
-
-        <fieldset>
-          <select
-            data-bind="options: $parent.inventory().extras, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Misc...', event: {change: addAddition}">
-          </select>
-        </fieldset>
-      </%def>
-      <%def name="extra()">
-        <h3 class="ribbon">Mash Procedure</h3>
-
-        <ol class='process'>
-          <li>
-            <span>Perform a </span>
-            <select name="mash_method" data-bind="options: $root.MASH_METHODS, optionsText: 'name', optionsValue: 'id', value: mash_method" class="medium">
+          <fieldset>
+            <select
+              data-bind="options: $parent.inventory().malts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt/Fermentables...', event: {change: addAddition}">
             </select>
-            % if editable or recipe.mash_instructions:
-              <span>mash according to the following instructions:</span>
-            % else:
-              <span>mash.</span>
-            % endif
-          </li>
-          <li>
-            <textarea rows="6" cols="75" name="mash_instructions" data-bind="value: mash_instructions">
-            </textarea>
-          </li>
-        </ol>
-      </%def>
-    </%self:step>
+          </fieldset>
+
+          <fieldset>
+            <select
+              data-bind="options: $parent.inventory().extracts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt Extract...', event: {change: addAddition}">
+            </select>
+          </fieldset>
+
+          <fieldset>
+            <select
+              data-bind="options: $parent.inventory().hops, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Hops...', event: {change: addAddition}">
+            </select>
+          </fieldset>
+
+          <fieldset>
+            <select
+              data-bind="options: $parent.inventory().extras, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Misc...', event: {change: addAddition}">
+            </select>
+          </fieldset>
+        </%def>
+        <%def name="extra()">
+          <h3 class="ribbon">Mash Procedure</h3>
+
+          <ol class='process'>
+            <li>
+              <span>Perform a </span>
+              <select name="mash_method" data-bind="options: $root.MASH_METHODS, optionsText: 'name', optionsValue: 'id', value: mash_method" class="medium">
+              </select>
+              % if editable or recipe.mash_instructions:
+                <span>mash according to the following instructions:</span>
+              % else:
+                <span>mash.</span>
+              % endif
+            </li>
+            <li>
+              <textarea rows="6" cols="75" name="mash_instructions" data-bind="value: mash_instructions">
+              </textarea>
+            </li>
+          </ol>
+        </%def>
+      </%self:step>
+    % endif
 
     <%self:step name="boil">
       <%def name="inventory()">
