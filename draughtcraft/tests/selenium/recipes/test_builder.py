@@ -120,6 +120,18 @@ class TestAllGrainBuilder(TestSeleniumApp):
             "10"
         )
 
+    def test_notes_change_save(self):
+        self.b.find_element_by_css_selector('.notes textarea').send_keys("ABC")
+        self.blur()
+        time.sleep(2)
+
+        self.b.refresh()
+        self.wait.until(
+            lambda driver:
+            self.b.find_element_by_css_selector('.notes textarea')
+                .get_attribute("value") == "ABC"
+        )
+
     def test_add_malt(self):
         model.Fermentable(
             name='2-Row',
