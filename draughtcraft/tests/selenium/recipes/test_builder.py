@@ -132,6 +132,42 @@ class TestAllGrainBuilder(TestSeleniumApp):
                 .get_attribute("value") == "ABC"
         )
 
+    def test_remove_addition(self):
+        model.Hop(
+            name="Simcoe",
+            origin='US',
+            alpha_acid=13,
+            description='Sample Description'
+        )
+        model.commit()
+        self.b.refresh()
+
+        for step in ('Mash', 'Boil', 'Ferment'):
+            self.b.find_element_by_link_text(step).click()
+
+            assert len(self.b.find_elements_by_css_selector(
+                '.%s .ingredient-list .addition' % step.lower()
+            )) == 0
+
+            label = 'Add Dry Hops...' if step == 'Ferment' else 'Add Hops...'
+            self.b.find_element_by_link_text(label).click()
+            self.b.find_element_by_link_text("Simcoe (US)").click()
+            time.sleep(2)
+
+            assert len(self.b.find_elements_by_css_selector(
+                '.%s .ingredient-list .addition:not(:empty)' % step.lower()
+            )) == 1
+
+            self.b.find_element_by_css_selector(
+                '.%s .ingredient-list .addition .close a' % step.lower()
+            ).click()
+            time.sleep(2)
+            self.b.refresh()
+
+            assert len(self.b.find_elements_by_css_selector(
+                '.%s .ingredient-list .addition' % step.lower()
+            )) == 0
+
     def test_add_malt(self):
         model.Fermentable(
             name='2-Row',
