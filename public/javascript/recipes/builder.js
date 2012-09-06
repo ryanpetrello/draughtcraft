@@ -526,7 +526,7 @@ String.prototype.toTitleCase = function () {
             // Display the UI after data has been fetched via AJAX.
             $('.builder-loading').hide();
             var last = window.location.hash.replace('#', '');
-            this.activateStep(last || $('.step a').html().toLowerCase());
+            this.activateStep(last || $('.step h2 a').html().toLowerCase());
             $('.step.results').css('display', 'block');
         }, this);
 

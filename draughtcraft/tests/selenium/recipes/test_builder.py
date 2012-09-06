@@ -545,3 +545,27 @@ class TestAllGrainBuilder(TestSeleniumApp):
         assert self.b.find_element_by_css_selector(
             '.ferment .addition select'
         ).get_attribute('value') == 'SECONDARY'
+
+
+class TestExtractBuilder(TestSeleniumApp):
+
+    def setUp(self):
+        super(TestExtractBuilder, self).setUp()
+
+        self.get("/")
+        self.b.find_element_by_link_text("Create Your Own Recipe").click()
+
+        time.sleep(.1)
+        self.b.find_element_by_id("name").clear()
+        self.b.find_element_by_id("name").send_keys("Rocky Mountain River IPA")
+        Select(
+            self.b.find_element_by_id("type")
+        ).select_by_visible_text("Extract")
+        self.b.find_element_by_css_selector("button.ribbon").click()
+
+    @property
+    def b(self):
+        return self.browser
+
+    def test_mash_missing(self):
+        assert len(self.b.find_elements_by_css_selector('.step.boil h2 a')) == 2
