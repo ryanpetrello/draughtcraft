@@ -621,12 +621,26 @@ String.prototype.toTitleCase = function () {
 
     };
 
+    ns.xhr = ns.xhr || {};
+    ns.xhr.semaphore = false;
+    ns.xhr.callback;
+
     ns.save = function(json){
+        if(ns.xhr.semaphore == true)
+            return ns.xhr.callback = $.proxy(ns.save, this, [json]);
+        ns.xhr.semaphore = true;
         $.ajax({
             type: 'POST',
             url: window.location.pathname.toString() + '?_method=PUT',
             data: {
                 recipe: json
+            },
+            complete: function(){
+                ns.xhr.semaphore = false;
+                if(ns.xhr.callback){
+                    ns.xhr.callback();
+                    ns.xhr.callback = undefined;
+                }
             }
         });
     };
