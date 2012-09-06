@@ -17,7 +17,6 @@ setup(
     install_requires=[
         "pecan >= 0.2.0a",
         "pecan_wtforms",
-        "wtforms",
         "elixir",
         "beaker",
         "genshi",
