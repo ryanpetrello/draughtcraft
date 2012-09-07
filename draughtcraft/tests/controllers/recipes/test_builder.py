@@ -165,7 +165,7 @@ class TestRecipeSave(TestAuthenticatedApp):
         response = self.post(
             '/recipes/1/american-ipa/builder?_method=PUT',
             params={
-                'recipe': dumps({'volume': 10})
+                'recipe': dumps({'gallons': 10})
             }
         )
         assert response.status_int == 200
@@ -581,15 +581,6 @@ class TestFermentationAdditions(TestAuthenticatedApp):
 
 class TestRecipePublish(TestAuthenticatedApp):
 
-    def test_publish_get(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.commit()
-
-        self.get(
-            '/recipes/1/rocky-mountain-river-ipa/builder/publish',
-            status=404
-        ).status_int == 404
-
     def test_simple_publish(self):
         model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.Fermentable(
@@ -601,5 +592,5 @@ class TestRecipePublish(TestAuthenticatedApp):
         model.commit()
 
         assert model.Recipe.query.first().state == "DRAFT"
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/publish')
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/publish/')
         assert model.Recipe.query.first().state == "PUBLISHED"

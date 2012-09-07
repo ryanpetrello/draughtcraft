@@ -988,22 +988,20 @@ class TestRecipeCopy(TestModel):
         r1, r2 = model.Recipe.get(1), model.Recipe.get(2)
         assert len(r1.additions) == len(r2.additions) == 8
 
-        assert r1.additions[0].fermentable == r2.additions[
-            0].fermentable == model.Fermentable.query.first()
-        assert r1.additions[1].hop == r2.additions[
-            1].hop == model.Hop.query.first()
-        assert r1.additions[2].hop == r2.additions[
-            2].hop == model.Hop.query.first()
-        assert r1.additions[3].hop == r2.additions[
-            3].hop == model.Hop.query.first()
-        assert r1.additions[4].hop == r2.additions[
-            4].hop == model.Hop.query.first()
-        assert r1.additions[5].hop == r2.additions[
-            5].hop == model.Hop.query.all()[-1]
-        assert r1.additions[6].yeast == r2.additions[
-            6].yeast == model.Yeast.query.first()
-        assert r1.additions[7].yeast == r2.additions[
-            7].yeast == model.Yeast.query.all()[-1]
+        for f in model.Fermentable.query.all():
+            assert f in [a.ingredient for a in r1.additions]
+            assert f in [a.ingredient for a in r2.additions]
+            assert len(set([a.recipe for a in f.additions])) == 2
+
+        for h in model.Hop.query.all():
+            assert h in [a.ingredient for a in r1.additions]
+            assert h in [a.ingredient for a in r2.additions]
+            assert len(set([a.recipe for a in h.additions])) == 2
+
+        for y in model.Yeast.query.all():
+            assert y in [a.ingredient for a in r1.additions]
+            assert y in [a.ingredient for a in r2.additions]
+            assert len(set([a.recipe for a in y.additions])) == 2
 
     def test_additions_copy_with_overrides(self):
         recipe = model.Recipe(name=u'Sample Recipe')
