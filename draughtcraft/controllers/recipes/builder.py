@@ -67,6 +67,13 @@ class RecipeBuilderController(RestController):
         )
 
         recipe.touch()
+
+        # adjust the metric setting (if necessary)
+        if request.context['user'] is None:
+            session = request.environ['beaker.session']
+            session['metric'] = kw.get('metric')
+            session.save()
+
         return dict()
 
     def save_name(self, recipe, name):

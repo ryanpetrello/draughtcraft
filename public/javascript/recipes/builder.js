@@ -478,7 +478,9 @@ String.prototype.toTitleCase = function () {
             mash_method: this.mash_method,
             mash_instructions: this.mash_instructions,
             fermentation_steps: this.fermentation_steps,
-            notes: this.notes
+            notes: this.notes,
+
+            metric: this.metric
         };
     };
 

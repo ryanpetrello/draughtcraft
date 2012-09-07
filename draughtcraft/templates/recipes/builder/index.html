@@ -72,7 +72,7 @@
     </fieldset>
 
     <fieldset>
-      <input name="volume" data-bind="value: volume" type="text" class="unit" />
+      <input name="volume" data-bind="value: gallons" type="text" class="unit" />
       ${'L.' if recipe.metric else 'Gal.'}
     </fieldset>
 
@@ -95,7 +95,7 @@
     % else:
       <div id="actions">
         <ul>
-          <li class="intl submit" title="Switch to ${'U.S.' if recipe.metric else 'Metric'} Units">
+          <li class="intl" title="Switch to ${'U.S.' if recipe.metric else 'Metric'} Units" data-bind="click: function(){ metric(!metric()) }">
           </li>
         </ul>
       </div>
