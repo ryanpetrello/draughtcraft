@@ -694,6 +694,8 @@ String.prototype.toTitleCase = function () {
         if(ns.xhr.semaphore == true)
             return ns.xhr.callback = $.proxy(ns.save, this, [json]);
         ns.xhr.semaphore = true;
+
+        $('.publish-btn').attr('disabled', true).text('Saving...');
         $.ajax({
             type: 'POST',
             url: window.location.pathname.toString() + '?_method=PUT',
@@ -701,6 +703,7 @@ String.prototype.toTitleCase = function () {
                 recipe: json
             },
             complete: function(){
+                $('.publish-btn').attr('disabled', false).text('Publish Changes');
                 ns.xhr.semaphore = false;
                 if(ns.xhr.callback){
                     ns.xhr.callback();
