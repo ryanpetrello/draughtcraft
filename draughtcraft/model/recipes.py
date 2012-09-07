@@ -462,7 +462,9 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
             'mash_instructions': self.mash_instructions,
             'boil_minutes': self.boil_minutes,
             'fermentation_steps': self.fermentation_steps,
-            'notes': self.notes
+            'notes': self.notes,
+
+            'metric': self.metric
         }
 
 

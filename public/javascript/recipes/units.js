@@ -281,6 +281,35 @@
         return result;
     };
 
+    ns.to_metric = function(amount, unit){
+        /*
+         * Used to convert common (amount, unit) pairs to metric versions, e.g.,
+         * (5, 'GALLON') -> (18.9270589, 'LITER')
+         */
+        if(unit == 'POUND'){
+            amount = amount * 0.45359237;
+            unit = 'KILOGRAM';
+            if(amount < 1.0){
+                amount = amount * 1000;
+                unit = 'GRAM';
+            }
+        }
+        if(unit == 'OUNCE')
+            amount = amount * 28.3495231, unit = 'GRAM';
+        if(unit == 'GALLON')
+            amount = amount * 3.78541178, unit = 'LITER';
+        if(unit == 'TEASPOON')
+            amount = amount * 0.00492892159, unit = 'LITER';
+        if(unit == 'TABLESPOON')
+            amount = amount * 0.0147867648, unit = 'LITER';
+
+        // Thanks, floating point math...
+        if(Math.ceil(amount) - amount <= .00001)
+            amount = parseInt(amount);
+
+        return [amount, unit];
+    };
+
     (function test_pairs(){
         var eq = function(a, b){
             chai.expect(__pairs__(a)).to.deep.equal(b);

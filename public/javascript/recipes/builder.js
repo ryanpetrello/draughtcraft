@@ -53,8 +53,16 @@ String.prototype.toTitleCase = function () {
 
         this.readable_amount = ko.computed({
             read: function(){
-                if(this.amount())
-                    return n.recipes.units.to_str(this.amount(), this.unit());
+                if(this.amount()){
+                    var amount = this.amount();
+                    var unit = this.unit()
+                    if(ns.recipe.metric() == true){
+                        var pair = n.recipes.units.to_metric(amount, unit);
+                        amount = pair[0];
+                        unit = pair[1];
+                    }
+                    return n.recipes.units.to_str(amount, unit);
+                }
             },
             write: write,
             owner: this
@@ -214,6 +222,8 @@ String.prototype.toTitleCase = function () {
             deferEvaluation: true
         }).extend({throttle: 500});
 
+        this.metric = ko.observable();
+
         this.name = ko.observable();
         this.volume = ko.observable();
         this.style = ko.observable();
@@ -292,6 +302,13 @@ String.prototype.toTitleCase = function () {
             this.STYLE_MAP[style.id] = style;
         }, this));
 
+        this.gallons = ko.computed(function(){
+            if(this.metric() == false)
+                return this.volume();
+
+            return this.volume() * 0.264172052;
+        }, this);
+
         // Calculations
         this.og = ko.computed(function(){
             var points = 0;
@@ -315,7 +332,7 @@ String.prototype.toTitleCase = function () {
                     if(type == 'EXTRACT')
                         efficiency = 1.0;
 
-                    points += (a.pounds() * a.ingredient().ppg * efficiency) / this.volume();
+                    points += (a.pounds() * a.ingredient().ppg * efficiency) / this.gallons();
                 }, this)
             );
 
@@ -380,7 +397,7 @@ String.prototype.toTitleCase = function () {
 
                     // IBU = Utilization * ((Ounces * AAU * 7490) / Gallons)
                     var alpha_acid = h.alpha_acid() / 100;
-                    total += utilization * ((ounces * alpha_acid * 7490) / this.volume());
+                    total += utilization * ((ounces * alpha_acid * 7490) / this.gallons());
 
                 }, this));
 
@@ -401,7 +418,7 @@ String.prototype.toTitleCase = function () {
                     this.fermentation.fermentables()
                 ),
                 $.proxy(function(_, a){
-                    var mcu = (a.pounds() * a.ingredient().lovibond) / this.volume();
+                    var mcu = (a.pounds() * a.ingredient().lovibond) / this.gallons();
                     total += mcu;
                 }, this)
             );
@@ -450,7 +467,7 @@ String.prototype.toTitleCase = function () {
     ns.model.Recipe.prototype.toJSON = function() {
         return {
             name: this.name,
-            volume: this.volume,
+            volume: this.gallons,
             style: this.style,
 
             mash: this.mash,
