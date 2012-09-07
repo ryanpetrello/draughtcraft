@@ -457,16 +457,14 @@ String.prototype.toTitleCase = function () {
             return 'srm-' + Math.min(parseInt(this.srm()), 30);
         }, this);
 
-        this.printable_srm = ko.computed(function(){
+        this.color = ko.computed(function(){
+            if(this.metric() == true)
+                return this.printable_ebc();
             return this.srm() + ' <span class="unit">&#186; SRM</span>';
         }, this);
 
         this.printable_ebc = ko.computed(function(){
-            return this.srm() + ' <span class="unit">EBC</span>';
-        }, this);
-
-        this.color = ko.computed(function(){
-            return this.printable_srm();
+            return roundTo(this.srm() * 1.97, 1) + ' <span class="unit">EBC</span>';
         }, this);
 
         this.addFermentationStep = function(){
