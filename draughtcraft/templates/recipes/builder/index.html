@@ -36,7 +36,9 @@
           "min_ibu": ${s.min_ibu if s.defined('ibu') else "null"},
           "max_ibu": ${s.max_ibu if s.defined('ibu') else "null"},
           "min_srm": ${s.min_srm if s.defined('srm') else "null"},
-          "max_srm": ${s.max_srm if s.defined('srm') else "null"}
+          "max_srm": ${s.max_srm if s.defined('srm') else "null"},
+          "min_ebc": ${round(s.min_srm * 1.97, 1) if s.defined('srm') else "null"},
+          "max_ebc": ${round(s.max_srm * 1.97, 1) if s.defined('srm') else "null"}
         },
       % endfor
       ];

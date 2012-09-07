@@ -266,6 +266,10 @@ String.prototype.toTitleCase = function () {
 
         // Style attributes
         this.style_range = $.proxy(function(attr){
+
+            if(this.metric() && attr == 'srm')
+                attr = 'ebc';
+
             var min = this.STYLE_MAP[this.style()]['min_'+attr];
             var max = this.STYLE_MAP[this.style()]['max_'+attr];
 
@@ -284,6 +288,8 @@ String.prototype.toTitleCase = function () {
                 var range = min + ' - ' + max
                 if(attr == 'srm')
                     range += ' <span class="unit">&#186 SRM</span>';
+                if(attr == 'ebc')
+                    range += ' <span class="unit">EBC</span>';
                 if(attr == 'ibu')
                     range += ' <span class="unit">IBU</span>';
                 return range;
@@ -295,6 +301,9 @@ String.prototype.toTitleCase = function () {
         this.style_matches = $.proxy(function(attr){
             if(!this.style())
                 return "</span>";
+
+            if(this.metric() && attr == 'srm')
+                attr = 'ebc';
 
             var min = this.STYLE_MAP[this.style()]['min_'+attr];
             var max = this.STYLE_MAP[this.style()]['max_'+attr];
@@ -453,6 +462,10 @@ String.prototype.toTitleCase = function () {
 
         }, this);
 
+        this.ebc = ko.computed(function(){
+            return roundTo(this.srm() * 1.97, 1);
+        }, this);
+
         this.srmClass = ko.computed(function(){
             return 'srm-' + Math.min(parseInt(this.srm()), 30);
         }, this);
@@ -464,7 +477,7 @@ String.prototype.toTitleCase = function () {
         }, this);
 
         this.printable_ebc = ko.computed(function(){
-            return roundTo(this.srm() * 1.97, 1) + ' <span class="unit">EBC</span>';
+            return this.ebc() + ' <span class="unit">EBC</span>';
         }, this);
 
         this.addFermentationStep = function(){
