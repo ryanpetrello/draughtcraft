@@ -303,7 +303,7 @@
 
   <div id="builder-buttons">
     % if recipe.author:
-      ${h.form('publish')}
+      ${h.form('builder/publish/', method='POST')}
         <button class="publish-btn">Publish Changes</button>
         <span class="sep">or</span> <a href="/profile/${recipe.author.username}">Cancel</a>
       ${h.end_form()}

@@ -6,11 +6,22 @@ from pecan import (expose, request, abort, redirect)
 from pecan.rest import RestController
 
 
+class RecipePublishController(object):
+
+    @expose(generic=True)
+    def index(self):
+        pass  # pragma: nocover
+
+    @index.when(method='POST')
+    def do_index(self):
+        recipe = request.context['recipe']
+        recipe.publish()
+        redirect('/profile/%s' % recipe.author.username)
+
+
 class RecipeBuilderController(RestController):
 
-    _custom_actions = {
-        'publish': ['POST']
-    }
+    publish = RecipePublishController()
 
     @classmethod
     def check_permissions(cls):
@@ -140,13 +151,3 @@ class RecipeBuilderController(RestController):
     save_mash = save_step
     save_boil = save_step
     save_fermentation = save_step
-
-    @expose(generic=True)
-    def publish(self):
-        pass  # pragma: nocover
-
-    @publish.when(method='POST')
-    def do_publish(self):
-        recipe = request.context['recipe']
-        recipe.publish()
-        redirect('/profile/%s' % recipe.author.username)
