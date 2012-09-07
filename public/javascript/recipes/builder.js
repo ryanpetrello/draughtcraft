@@ -22,6 +22,17 @@ String.prototype.toTitleCase = function () {
         this.step = ko.observable();
         this.days = ko.observable();
         this.fahrenheit = ko.observable();
+
+        this.celsius = ko.computed({
+            read: function(){
+                return Math.round((this.fahrenheit() - 32) / 1.8);
+            },
+            write: function(celsius){
+                this.fahrenheit(Math.round((celsius * 1.8) + 32));
+            },
+            owner: this
+        });
+
     };
 
     ns.model.RecipeAddition = function(){
@@ -550,6 +561,15 @@ String.prototype.toTitleCase = function () {
             var temps = [];
             var i = 100;
             while(i >= 32){
+                temps.push(i);
+                i--;
+            }
+            return temps;
+        }();
+        this.CELSIUS_RANGE = function(){
+            var temps = [];
+            var i = 35;
+            while(i >= 0){
                 temps.push(i);
                 i--
             }

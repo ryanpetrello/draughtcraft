@@ -277,10 +277,10 @@
                 class="unit days">
               </select>
               day(s) at
-              <select data-bind="options: $root.FAHRENHEIT_RANGE, value: fahrenheit"
+              <select data-bind="options: $parent.metric() ? $root.CELSIUS_RANGE : $root.FAHRENHEIT_RANGE, value: $parent.metric() ? celsius : fahrenheit"
                 class="unit fahrenheit">
               </select>
-              &#186;F
+              <span data-bind="text: $parent.metric() ? '&#186;C' : '&#186;F'"></span>
               <a href="#" data-bind="if: $parent.fermentation_steps().length > 1 && $data == $parent.fermentation_steps()[$parent.fermentation_steps().length-1], click: $parent.removeFermentationStep">
                 <img class="close" src="/images/close.png" />
               </a>
