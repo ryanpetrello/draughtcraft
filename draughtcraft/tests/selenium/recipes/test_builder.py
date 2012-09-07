@@ -386,6 +386,41 @@ class TestAllGrainBuilder(TestSeleniumApp):
             )
             assert i.get_attribute('value') == '10 lb'
 
+    def test_metric_entry(self):
+        model.Fermentable(
+            name='2-Row',
+            type='MALT',
+            origin='US',
+            ppg=36,
+            lovibond=2,
+            description='Sample Description'
+        )
+        model.commit()
+        self.b.refresh()
+
+        for step in ('Mash', 'Boil'):
+            self.b.find_element_by_link_text(step).click()
+
+            self.b.find_element_by_link_text(
+                "Add Malt/Fermentables..."
+            ).click()
+            self.b.find_element_by_link_text("2-Row (US)").click()
+
+            i = self.b.find_element_by_css_selector(
+                '.%s .addition .amount input' % step.lower()
+            )
+            i.clear()
+            i.send_keys('1 kg')
+            self.blur()
+            time.sleep(2)
+
+            self.b.refresh()
+
+            i = self.b.find_element_by_css_selector(
+                '.%s .addition .amount input' % step.lower()
+            )
+            assert i.get_attribute('value') == '2.204 lb'
+
     def test_change_hop_form(self):
         model.Hop(
             name="Simcoe",
@@ -568,4 +603,135 @@ class TestExtractBuilder(TestSeleniumApp):
         return self.browser
 
     def test_mash_missing(self):
-        assert len(self.b.find_elements_by_css_selector('.step.boil h2 a')) == 2
+        assert len(
+            self.b.find_elements_by_css_selector('.step.boil h2 a')
+        ) == 2
+
+
+class TestMetricBuilder(TestSeleniumApp):
+
+    def setUp(self):
+        super(TestMetricBuilder, self).setUp()
+
+        self.get("/")
+        self.b.find_element_by_link_text("Create Your Own Recipe").click()
+
+        self.b.find_element_by_link_text("Want Metric Units?").click()
+
+        time.sleep(.1)
+        self.b.find_element_by_id("name").clear()
+        self.b.find_element_by_id("name").send_keys("Rocky Mountain River IPA")
+        Select(
+            self.b.find_element_by_id("type")
+        ).select_by_visible_text("All Grain")
+        self.b.find_element_by_css_selector("button.ribbon").click()
+
+    @property
+    def b(self):
+        return self.browser
+
+    def blur(self):
+        self.b.find_element_by_css_selector(".logo").click()
+
+    def test_defaults(self):
+        self.wait.until(
+            lambda driver:
+            self.b.find_element_by_name("name").get_attribute("value") ==
+            "Rocky Mountain River IPA"
+        )
+        self.assertEqual(
+            "DraughtCraft - Rocky Mountain River IPA",
+            self.b.title
+        )
+        self.assertEqual(
+            "20",
+            self.b.find_element_by_name("volume").get_attribute("value")
+        )
+        assert self.b.find_element_by_css_selector('.step.mash') is not None
+        assert self.b.find_element_by_css_selector('.step.boil') is not None
+        assert self.b.find_element_by_css_selector('.step.ferment') \
+            is not None
+
+    def test_volume_change_save(self):
+        self.b.find_element_by_name("volume").clear()
+        self.b.find_element_by_name("volume").send_keys("10")
+        self.blur()
+        time.sleep(2)
+
+        self.b.refresh()
+        self.wait.until(
+            lambda driver:
+            self.b.find_element_by_name("volume").get_attribute("value") ==
+            "10"
+        )
+
+    def test_metric_ingredient_amount(self):
+        model.Fermentable(
+            name='2-Row',
+            type='MALT',
+            origin='US',
+            ppg=36,
+            lovibond=2,
+            description='Sample Description'
+        )
+        model.commit()
+        self.b.refresh()
+
+        for step in ('Mash', 'Boil'):
+            self.b.find_element_by_link_text(step).click()
+
+            self.b.find_element_by_link_text(
+                "Add Malt/Fermentables..."
+            ).click()
+            self.b.find_element_by_link_text("2-Row (US)").click()
+
+            i = self.b.find_element_by_css_selector(
+                '.%s .addition .amount input' % step.lower()
+            )
+            i.clear()
+            i.send_keys('1 kg')
+            self.blur()
+            time.sleep(2)
+
+            self.b.refresh()
+
+            i = self.b.find_element_by_css_selector(
+                '.%s .addition .amount input' % step.lower()
+            )
+            assert i.get_attribute('value') == '1 kg'
+
+    def test_fermentation_schedule_change(self):
+        self.b.find_element_by_link_text('Ferment').click()
+
+        self.b.find_element_by_link_text("Add...").click()
+        self.b.find_element_by_link_text("Add...").click()
+
+        days = self.b.find_elements_by_css_selector('.process select.days')
+        temps = self.b.find_elements_by_css_selector(
+            '.process select.fahrenheit'
+        )
+        assert len(days) == 3
+        assert len(temps) == 3
+
+        for i, el in enumerate(days):
+            Select(el).select_by_visible_text(str(14 + (7 * i)))
+
+        for j, el in enumerate(temps):
+            Select(el).select_by_visible_text(str(20 + (2 * j)))
+
+        self.blur()
+        time.sleep(2)
+
+        self.b.refresh()
+
+        time.sleep(1)
+        days = self.b.find_elements_by_css_selector('.process select.days')
+        temps = self.b.find_elements_by_css_selector(
+            '.process select.fahrenheit'
+        )
+        assert len(days) == 3
+        assert len(temps) == 3
+        for i, d in enumerate(days):
+            assert d.get_attribute('value') == str(14 + (7 * i))
+        for j, t in enumerate(temps):
+            assert t.get_attribute('value') == str(20 + (2 * j))
