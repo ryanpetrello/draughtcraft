@@ -47,7 +47,7 @@ class RecipeBuilderController(RestController):
 
         # recipe metadata
         self.save_name(recipe, kw.get('name'))
-        self.save_volume(recipe, kw.get('volume'))
+        self.save_volume(recipe, kw.get('gallons'))
         self.save_style(recipe, kw.get('style'))
         self.save_mash_settings(recipe, **kw)
         self.save_boil_settings(recipe, **kw)

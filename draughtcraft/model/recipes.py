@@ -423,7 +423,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
             # Basic attributes
             'name': self.name,
             'style': self.style.id if self.style else None,
-            'volume': self.liters if self.metric else self.gallons,
+            'gallons': self.gallons,
 
             # Ingredients
             'mash': filter(

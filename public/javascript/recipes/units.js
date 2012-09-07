@@ -305,7 +305,7 @@
 
         // Thanks, floating point math...
         if(Math.ceil(amount) - amount <= .00001)
-            amount = parseInt(amount);
+            amount = Math.ceil(amount);
 
         return [amount, unit];
     };

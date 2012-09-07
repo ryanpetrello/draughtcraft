@@ -225,7 +225,7 @@ String.prototype.toTitleCase = function () {
         this.metric = ko.observable();
 
         this.name = ko.observable();
-        this.volume = ko.observable();
+        this.gallons = ko.observable();
         this.style = ko.observable();
 
         this.mash = new ns.model.RecipeStep();
@@ -302,12 +302,27 @@ String.prototype.toTitleCase = function () {
             this.STYLE_MAP[style.id] = style;
         }, this));
 
-        this.gallons = ko.computed(function(){
-            if(this.metric() == false)
-                return this.volume();
+        this.volume = ko.computed({
+            read: function(){
+                amount = this.gallons();
+                if(!amount) return '';
 
-            return this.volume() * 0.264172052;
-        }, this);
+                if(this.metric() == true)
+                    amount *= 3.78541178;
+
+                // Thanks, floating point math...
+                if(Math.ceil(amount) - amount <= .00001)
+                    amount = Math.ceil(amount);
+
+                return roundTo(amount, 2);
+            },
+            write: function(amount){
+                if(this.metric() == true)
+                    amount *= .264172052637296;
+                this.gallons(amount);
+            },
+            owner: this
+        });
 
         // Calculations
         this.og = ko.computed(function(){
@@ -467,7 +482,7 @@ String.prototype.toTitleCase = function () {
     ns.model.Recipe.prototype.toJSON = function() {
         return {
             name: this.name,
-            volume: this.gallons,
+            gallons: this.gallons,
             style: this.style,
 
             mash: this.mash,
