@@ -30,7 +30,8 @@ class SlugController(object):
                 abort(404)
 
         # Log a view for the recipe (if the viewer *is not* the author)
-        if recipe.author != request.context['user']:
+        if recipe.author != request.context['user'] and \
+                request.pecan.get('content_type') == 'application/json':
             model.RecipeView(recipe=recipe)
 
         return dict(

@@ -635,8 +635,9 @@ String.prototype.toTitleCase = function () {
 
         ($.proxy(function(){
             // Fetch recipe data via AJAX and render the UI
-            $.getJSON(
+            $.post(
                 n.recipes.builder.callback,
+                {},
                 ($.proxy(function(data){
                     show();
 

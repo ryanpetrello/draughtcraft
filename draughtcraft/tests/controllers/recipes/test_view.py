@@ -22,6 +22,15 @@ class TestRecipePublish(TestAuthenticatedApp):
 
         response = self.get('/recipes/1/rocky-mountain-river-ipa/', status=200)
         assert response.status_int == 200
+        assert len(model.Recipe.query.first().views) == 0
+
+        response = self.get(
+            '/recipes/1/rocky-mountain-river-ipa/index.json',
+            status=200
+        )
+        assert response.status_int == 200
+
+        assert len(model.Recipe.query.first().views) == 0
 
     def test_invalid_primary_key(self):
         """
@@ -62,3 +71,23 @@ class TestRecipeView(TestApp):
 
         response = self.get('/recipes/1/rocky-mountain-river-ipa/', status=404)
         assert response.status_int == 404
+
+    def test_view_published_recipe(self):
+        model.User(email='ryan@example.com')
+        model.Recipe(
+            name='Rocky Mountain River IPA',
+            author=model.User.get(1),
+            state="PUBLISHED"
+        )
+        model.commit()
+
+        response = self.get('/recipes/1/rocky-mountain-river-ipa/')
+        assert response.status_int == 200
+        assert len(model.Recipe.query.first().views) == 0
+
+        response = self.post(
+            '/recipes/1/rocky-mountain-river-ipa/index.json',
+            status=200
+        )
+        assert response.status_int == 200
+        assert len(model.Recipe.query.first().views) == 1

@@ -35,8 +35,14 @@ class RecipeBuilderController(RestController):
         return False
 
     @expose('recipes/builder/index.html')
-    @expose('json', content_type='application/json')
     def get_all(self):
+        return dict(
+            recipe=request.context['recipe'],
+            editable=True
+        )
+
+    @expose('json', content_type='application/json')
+    def post(self):
         return dict(
             recipe=request.context['recipe'],
             editable=True
