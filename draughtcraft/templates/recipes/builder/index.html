@@ -148,6 +148,14 @@
     <%def name="step(name)">
       <div class="step clearfix ${name}">
 
+        <%
+          def printable_step(step):
+            return ({
+              'ferment': 'Fermentation'
+            }).get(step, step.title())
+            return step
+        %>
+
         <h2>
           <ul>
             % if recipe.type in ('MASH', 'MINIMASH'):
@@ -160,7 +168,7 @@
 
         <div class="ingredient-list">
           <h3 class="ribbon">
-            Ingredients
+            <span class="step-help">${printable_step(name)} </span>Ingredients
           </h3>
 
           <%include file="steps/${name}.html"/>

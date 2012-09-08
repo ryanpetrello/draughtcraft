@@ -11,6 +11,14 @@
   </tbody>
 </%def>
 
+% if not editable:
+  <p class="instruction">
+    If necessary, crush grains.
+
+    Dough in the following fermentable ingredients:
+  </p>
+% endif
+
 <!-- Empty Placeholder -->
 <table data-bind="visible: mash.additions().length == 0">
   <tr>

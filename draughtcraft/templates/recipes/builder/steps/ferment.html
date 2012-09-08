@@ -15,6 +15,19 @@
   <select data-bind="options: [{'id': 'PRIMARY', 'name': 'Primary'}, {'id': 'SECONDARY', 'name': 'Secondary'}, {'id': 'TERTIARY', 'name': 'Tertiary'}], value: use, optionsText: 'name', optionsValue: 'id', hasfocus: editing"></select>
 </%def>
 
+% if not editable:
+  <p class="instruction">
+    Chill the wort to the appropriate pitching temperature and transfer
+    it to your fermenter.
+    <br /><br />
+    % if recipe.type != 'MASH':
+      If necessary, top up the fermenter with water to ${int(recipe.gallons)} gallons.
+      <br /><br />
+    % endif
+    Add yeast to your fermenter as indicated below.
+  </p>
+% endif
+
 <!-- Empty Placeholder -->
 <table data-bind="visible: fermentation.additions().length == 0">
   <tr>

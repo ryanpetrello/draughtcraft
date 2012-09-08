@@ -16,6 +16,26 @@
   <select data-bind="options: $root.BOIL_TIMES(), value: minutes, optionsText: 'name', optionsValue: 'id', visible: use() == 'BOIL'"></select>
 </%def>
 
+
+% if not editable:
+  <p class="instruction">
+    % if recipe.type in ('EXTRACT', 'EXTRACTSTEEP'):
+      Begin by boiling <span data-bind="text: gallons"> gallons of water (or as much as your brew kettle will hold).
+      <br /><br />
+      % if recipe.type == 'EXTRACTSTEEP':
+        When the water temperature reaches 150&#186; F - 170&#186; F, steep any specialty grains for at least 15 minutes.<br />
+        After steeping, continue heating until boiling.
+        <br /><br />
+      % endif
+      Once the boil starts, add malt extract and begin to stir.
+    % else:
+      Collect the wort and bring it to a boil.
+      <br /><br />
+    % endif
+    Add hops and any other ingredients at the indicated times:
+  </p>
+% endif
+
 <!-- Empty Placeholder -->
 <table data-bind="visible: boil.additions().length == 0">
   <tr>
