@@ -796,7 +796,12 @@ $(function(){
     // Apply a "fancybox" popup
     ko.bindingHandlers.popup = {
         init: function(el){
-            if(el) $(el).fancybox();
+            if(el) $(el).fancybox({
+                centerOnScroll: true,
+                onComplete: function(links, index) {
+                    $.fancybox.center(true);
+                }
+            });
         }
     };
     ko.bindingHandlers.titleUpdate = {
