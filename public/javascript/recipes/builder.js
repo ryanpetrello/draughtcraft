@@ -721,6 +721,13 @@ String.prototype.toTitleCase = function () {
                         $(this).closest('a').removeAttr('title');
                     });
 
+
+                    // Register submit events on form submission buttons
+                    $('#actions li.submit').click(function(e){
+                        e.preventDefault();
+                        $(this).closest('form').submit();
+                    });
+
                 }, this))
 
             );

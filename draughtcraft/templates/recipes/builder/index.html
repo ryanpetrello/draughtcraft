@@ -78,13 +78,13 @@
 
     <h1>
       <input name="name" data-bind="value: name" type="text" class_="name" />
+      % if recipe.copied_from:
+        <span class="copied_from">
+          based on 
+          <a href="${recipe.copied_from.url()}">${recipe.copied_from.author.username}'s recipe</a>
+        </span>
+      % endif
     </h1>
-    % if recipe.copied_from:
-      <span class="copied_from">
-        based on 
-        <a href="${recipe.copied_from.url()}">${recipe.copied_from.author.username}'s recipe</a>
-      </span>
-    % endif
 
     <fieldset>
       <select
@@ -164,6 +164,9 @@
             ${li('boil', name == 'boil')}
             ${li('ferment', name == 'ferment', True)}
           </ul>
+          % if editable and recipe.author == h.request.context['user']:
+            <a href="${recipe.url()}"><span class="preview">Preview</span></a>
+          % endif
         </h2>
 
         <div class="ingredient-list">
