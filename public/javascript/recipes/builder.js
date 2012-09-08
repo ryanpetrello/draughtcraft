@@ -612,9 +612,6 @@ String.prototype.toTitleCase = function () {
             var last = window.location.hash.replace('#', '');
             this.activateStep(last || $('.step h2 a').html().toLowerCase());
             $('.step.results').css('display', 'block');
-
-            // Register a JS tooltip on the author's thumbnail (if there is one).
-            $('img.gravatar').tipTip({'delay': 50});
         }, this);
 
         this.activateStep = function(step){
@@ -702,6 +699,27 @@ String.prototype.toTitleCase = function () {
                     this.recipe.initDropDowns();
                     this.recipe.dirtyFlag.reset();
                     $('h1 input').trigger('update');
+
+                    // Register a JS tooltip on the author's thumbnail (if there is one).
+                    $('img.gravatar').tipTip({'delay': 50});
+
+                    // Register tooltips for the recipe actions
+                    $('div#actions li').each(function(){
+                        $(this).tipTip({
+                            'delay'     : 25,
+                            'edgeOffset': 20
+                        });
+                    });
+
+                    // Register tooltips for each of the `results` settings buttons
+                    $('div.results a.recipe-setting img').each(function(){
+                        $(this).tipTip({
+                            'delay'     : 25,
+                            'edgeOffset': 20,
+                            'content'   : $(this).closest('a').attr('title')
+                        });
+                        $(this).closest('a').removeAttr('title');
+                    });
 
                 }, this))
 
