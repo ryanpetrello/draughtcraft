@@ -82,6 +82,12 @@ class TestAllGrainBuilder(TestSeleniumApp):
             "Rocky Mountain River IPA!"
         )
 
+    def test_name_change_updates_page_title(self):
+        self.b.find_element_by_name("name").send_keys("!")
+        self.blur()
+
+        assert self.b.title == 'DraughtCraft - Rocky Mountain River IPA!'
+
     def test_style_choose(self):
         self.b.find_element_by_link_text("No Style Specified").click()
         self.b.find_element_by_link_text("American IPA").click()

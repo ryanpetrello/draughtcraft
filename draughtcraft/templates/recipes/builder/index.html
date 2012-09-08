@@ -77,7 +77,7 @@
   <div id="header" data-bind="if: editable() != undefined">
 
     <h1>
-      <input name="name" data-bind="value: name" type="text" class_="name" />
+      <input name="name" data-bind="value: name, titleUpdate: true" type="text" class_="name" />
       % if recipe.copied_from:
         <span class="copied_from">
           based on 

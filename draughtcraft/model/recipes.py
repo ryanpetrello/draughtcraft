@@ -422,6 +422,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
         return {
             # Basic attributes
             'name': self.name,
+            'author': self.author.username if self.author else '',
             'style': self.style.id if self.style else None,
             'gallons': self.gallons,
 

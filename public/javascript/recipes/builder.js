@@ -237,6 +237,7 @@ String.prototype.toTitleCase = function () {
         this.metric = ko.observable();
 
         this.name = ko.observable();
+        this.author = ko.observable();
         this.gallons = ko.observable();
         this.style = ko.observable();
 
@@ -796,6 +797,14 @@ $(function(){
     ko.bindingHandlers.popup = {
         init: function(el){
             if(el) $(el).fancybox();
+        }
+    };
+    ko.bindingHandlers.titleUpdate = {
+        update: function(el){
+            var ns = $.draughtcraft.recipes.builder.recipe;
+            document.title = 'DraughtCraft - ' + ns.name();
+            if(ns.author())
+                document.title += ' - ' + ns.author();
         }
     };
 
