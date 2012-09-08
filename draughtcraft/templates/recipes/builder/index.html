@@ -1,3 +1,13 @@
+<%
+  def printable_type(type):
+    return ({
+      'MASH'          : 'All-Grain',
+      'MINIMASH'      : 'Extract w/ Mini-Mash',
+      'EXTRACTSTEEP'  : 'Extract w/ Steeped Grains',
+      'EXTRACT'       : 'Extract'
+    })[type]
+%>
+
 <%inherit file="../../layout.html" />
 
 <%def name="title()">
@@ -9,15 +19,24 @@
 
 <%def name="style()">
     ${h.css('/css/recipes/builder.css')}
+    % if not editable:
+      ${h.css('/css/recipes/viewer.css')}
+    % endif
     ${h.css('/css/jquery.selectbox.css')}
     <link rel="stylesheet" type="text/css" media="print" href="${h.stamp('/css/recipes/builder.print.css')}" />
 </%def>
 
 <%def name="javascript()">
+
+  <%
+    import urlparse
+  %>
+
   <script type="text/javascript">
 
     (function(ns, $){
       ns.recipes = ns.recipes || {}, ns.recipes.builder = ns.recipes.builder || {};
+      ns.recipes.builder.callback = "${urlparse.urljoin(*(h.request.path, 'builder.json' if editable else 'index.json'))}";
       ns.recipes.builder.STYLES = [
         {
           "id": null,
@@ -55,7 +74,7 @@
 
 <div id="builder" data-bind="with: recipe">
 
-  <div id="header">
+  <div id="header" data-bind="if: editable() != undefined">
 
     <h1>
       <input name="name" data-bind="value: name" type="text" class_="name" />
@@ -69,13 +88,17 @@
 
     <fieldset>
       <select
-        data-bind="options: $root.STYLES, value: style, optionsText: 'name', optionsValue: 'id'">
+        data-bind="visible: editable, options: $root.STYLES, value: style, optionsText: 'name', optionsValue: 'id'">
       </select>
     </fieldset>
 
     <fieldset>
       <input name="volume" data-bind="value: volume" type="text" class="unit" />
       <span data-bind="text: metric() ? 'L.' : 'Gal.'"></span>
+    </fieldset>
+
+    <fieldset class="type">
+      <span>${printable_type(recipe.type)}</span>
     </fieldset>
 
     % if recipe.author:
@@ -283,13 +306,13 @@
                 class="unit fahrenheit">
               </select>
               <span data-bind="text: $parent.metric() ? '&#186;C' : '&#186;F'"></span>
-              <a href="#" data-bind="if: $parent.fermentation_steps().length > 1 && $data == $parent.fermentation_steps()[$parent.fermentation_steps().length-1], click: $parent.removeFermentationStep">
+              <a href="#" data-bind="if: $parent.fermentation_steps().length > 1 && $data == $parent.fermentation_steps()[$parent.fermentation_steps().length-1] && $parent.editable(), click: $parent.removeFermentationStep">
                 <img class="close" src="/images/close.png" />
               </a>
             </li>
           <!-- /ko -->
           <li class="add-step">
-            <a href="#" data-bind="if: fermentation_steps().length < 3, click: addFermentationStep">
+            <a href="#" data-bind="if: fermentation_steps().length < 3 && editable(), click: addFermentationStep">
               Add...
             </a>
           </li>

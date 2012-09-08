@@ -22,11 +22,16 @@ class SlugController(object):
             abort(404)
 
     @expose('recipes/builder/index.html')
+    @expose('json', content_type='application/json')
     def index(self):
         recipe = request.context['recipe']
         if recipe.state == "DRAFT":
             if recipe.author and recipe.author != request.context['user']:
                 abort(404)
+
+        # Log a view for the recipe (if the viewer *is not* the author)
+        if recipe.author != request.context['user']:
+            model.RecipeView(recipe=recipe)
 
         return dict(
             recipe=recipe,
@@ -43,26 +48,6 @@ class SlugController(object):
         response.headers['Content-Disposition'] = \
             'attachment; filename="%s.xml"' % self.slug
         return export.to_xml([request.context['recipe']])
-
-    @expose(generic=True)
-    def async(self):
-        abort(405)
-
-    @async.when(
-        method='POST',
-        template='recipes/builder/async.html'
-    )
-    def do_async(self):
-        recipe = request.context['recipe']
-        if recipe.state == "DRAFT":
-            if recipe.author and recipe.author != request.context['user']:
-                abort(404)
-
-        # Log a view for the recipe (if the viewer *is not* the author)
-        if recipe.author != request.context['user']:
-            model.RecipeView(recipe=recipe)
-
-        return dict(recipe=recipe)
 
     @expose(generic=True)
     def draft(self):

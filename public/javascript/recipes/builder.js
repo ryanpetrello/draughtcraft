@@ -233,6 +233,7 @@ String.prototype.toTitleCase = function () {
             deferEvaluation: true
         }).extend({throttle: 500});
 
+        this.editable = ko.observable();
         this.metric = ko.observable();
 
         this.name = ko.observable();
@@ -264,8 +265,26 @@ String.prototype.toTitleCase = function () {
             });
         };
 
+        this.initReadOnly = function(){
+            $('.step').addClass('active');
+
+            // Replace all fields with static <span>'s
+            $('input, textarea').replaceWith(function(){
+                return '<span>'+$(this).val().replace(
+                    /([^>\r\n]?)(\r\n|\n\r|\r|\n)/g,
+                    '$1<br />$2'
+                )+'</span>';
+            });
+            $('select').replaceWith(function(){
+                return '<span>'+$(this).find('option:selected').text()+'</span>';
+            });
+        };
+
         // Style attributes
         this.style_range = $.proxy(function(attr){
+
+            if(!this.style())
+                return '-';
 
             if(this.metric() && attr == 'srm')
                 attr = 'ebc';
@@ -593,6 +612,9 @@ String.prototype.toTitleCase = function () {
             var last = window.location.hash.replace('#', '');
             this.activateStep(last || $('.step h2 a').html().toLowerCase());
             $('.step.results').css('display', 'block');
+
+            // Register a JS tooltip on the author's thumbnail (if there is one).
+            $('img.gravatar').tipTip({'delay': 50});
         }, this);
 
         this.activateStep = function(step){
@@ -614,10 +636,11 @@ String.prototype.toTitleCase = function () {
         ($.proxy(function(){
             // Fetch recipe data via AJAX and render the UI
             $.getJSON(
-                window.location.pathname.toString()+'.json',
+                n.recipes.builder.callback,
                 ($.proxy(function(data){
                     show();
 
+                    var editable = data['editable'];
                     var data = data['recipe'];
                     var pop = function(obj, key){
                         var v = obj[key];
@@ -666,11 +689,14 @@ String.prototype.toTitleCase = function () {
                     });
                     this.recipe.inventory().map = _map;
 
-                    // Render select boxes
-                    $("#header select").selectBox({
-                        'menuTransition'    : 'fade',
-                        'menuSpeed'         : 'fast'
-                    });
+                    this.recipe.editable(editable);
+                    if(editable)
+                        $("#header select").selectBox({
+                            'menuTransition'    : 'fade',
+                            'menuSpeed'         : 'fast'
+                        });
+                    else
+                        this.recipe.initReadOnly();
 
                     this.recipe.initDropDowns();
                     this.recipe.dirtyFlag.reset();
@@ -746,9 +772,6 @@ $(function(){
             if(el) $(el).fancybox();
         }
     };
-
-    // Register a JS tooltip on the author's thumbnail (if there is one).
-    $('img.gravatar').tipTip({'delay': 50});
 
     // Make the recipe name grow as the user types
     $('h1 input').autogrow({
