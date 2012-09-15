@@ -180,7 +180,7 @@ String.prototype.toTitleCase = function () {
             var a = new ns.model.RecipeAddition();
 
             a.amount('0');
-            a.unit('POUND');
+            a.unit(ingredient.default_unit || 'POUND');
             a.ingredient(ingredient);
 
             // Hop-specific

@@ -47,7 +47,8 @@ class Ingredient(Entity, ShallowCopyMixin):
         return {
             'id': self.id,
             'class': self.__class__.__name__,
-            'name': self.printed_name
+            'name': self.printed_name,
+            'default_unit': self.default_unit
         }
 
 
