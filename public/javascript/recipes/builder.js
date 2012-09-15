@@ -812,6 +812,14 @@ $(function(){
                 document.title += ' - ' + ns.author();
         }
     };
+    ko.bindingHandlers.hasfocus['update'] = function(element, valueAccessor) {
+        if (!element['__ko_hasfocusUpdating']) {
+            var value = ko.utils.unwrapObservable(valueAccessor());
+            value ? element.focus() : element.blur();
+            if(value)
+                $(element).select();
+        }
+    };
 
     // Make the recipe name grow as the user types
     $('h1 input').autogrow({
