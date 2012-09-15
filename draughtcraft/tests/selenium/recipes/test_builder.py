@@ -610,7 +610,7 @@ class TestExtractBuilder(TestSeleniumApp):
 
     def test_mash_missing(self):
         assert len(
-            self.b.find_elements_by_css_selector('.step.boil h2 a')
+            self.b.find_elements_by_css_selector('.step.boil h2 li a')
         ) == 2
 
 
