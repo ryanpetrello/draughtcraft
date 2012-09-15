@@ -510,6 +510,75 @@ String.prototype.toTitleCase = function () {
                 return Math.round(total);
             }, this);
 
+            formulas['daniels'] = $.proxy(function(){
+                /*
+                 * IBU as calculated with Ray Daniels' formula in
+                 * "Designing Great Beers".
+                 */
+                var total = 0;
+                var gallons = this.gallons();
+
+                $.each(this.boil.hops(), $.proxy(function(_, h){
+                    var minutes = h.minutes();
+
+                    var utilization = .05;
+
+                    // Generic utilization values for hops
+                    var utilization_table;
+                    if(h.form() == 'PELLET')
+                        utilization_table = [
+                            [75, .34],
+                            [60, .30],
+                            [45, .27],
+                            [30, .24],
+                            [20, .19],
+                            [10, .15],
+                            [0, .06]
+                        ];
+                    else
+                        utilization_table = [
+                            [75, .27],
+                            [60, .24],
+                            [45, .22],
+                            [30, .19],
+                            [20, .15],
+                            [10, .12],
+                            [0, .05]
+                        ];
+
+                    /*
+                     * From the highest time range in the list working down,
+                     * loop through until we find a range the recipe's boil duration
+                     * fits into.  Once we've found the highest matched range,
+                     * we know the utilization value.
+                     */
+                    $.each(utilization_table, function(_, i){
+                        var time = i[0];
+                        var ratio = i[1];
+                        if(minutes > time){
+                            utilization = ratio;
+                            return false;
+                        }
+                    });
+
+                    var ounces = h.pounds() * 16.0;
+
+                    // Convert AA rating to a decimal
+                    var alpha_acid = h.alpha_acid() / 100;
+
+                    // If the estimated OG exceeds 1.050, make an adjustment
+                    var gravity_adjustment = 1;
+                    if(this.og() > 1.050)
+                        gravity_adjustment += ((this.og() - 1.050) / 0.2);
+
+                    total += (ounces * utilization * alpha_acid *
+                              7462) / (gallons * gravity_adjustment);
+
+                }, this));
+
+                return Math.round(total);
+            }, this);
+
             if(this.ibu_method())
                 return formulas[this.ibu_method()]()
 
