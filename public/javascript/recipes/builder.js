@@ -459,6 +459,57 @@ String.prototype.toTitleCase = function () {
                 return Math.round(total);
             }, this);
 
+            formulas['rager'] = $.proxy(function(){
+                /*
+                 * IBU as calculated with Jakie Rager's formula:
+                 * http://www.realbeer.com/hops/FAQ.html
+                 */
+
+                var total = 0;
+                var gallons = this.gallons();
+
+                $.each(this.boil.hops(), $.proxy(function(_, h){
+                    var minutes = h.minutes();
+
+                    function tanh(arg) {
+                        // Returns the hyperbolic tangent of the number,
+                        // defined as sinh(number)/cosh(number)
+                        return (
+                            (Math.exp(arg) - Math.exp(-arg)) /
+                            (Math.exp(arg) + Math.exp(-arg))
+                        );
+                    };
+
+                    // Calculate utilization as a decimal
+                    var utilization = 18.11 + 13.86 * tanh(
+                        (minutes - 31.32) / 18.27
+                    );
+                    utilization /= 100;
+
+                    /*
+                     * If the hops are in pellet form,
+                     * increase utilization by 15%
+                     */
+                    if(h.form() == 'PELLET')
+                        utilization *= 1.15;
+
+                    // If the estimated OG exceeds 1.050, make an adjustment
+                    var gravity_adjustment = 1;
+                    if(this.og() > 1.050)
+                        gravity_adjustment += ((this.og() - 1.050) / 0.2);
+
+                    var ounces = h.pounds() * 16.0;
+
+                    // Convert AA rating to a decimal
+                    var alpha_acid = h.alpha_acid() / 100;
+
+                    total += (ounces * utilization * alpha_acid *
+                              7462) / (gallons * gravity_adjustment);
+                }, this));
+
+                return Math.round(total);
+            }, this);
+
             if(this.ibu_method())
                 return formulas[this.ibu_method()]()
 
