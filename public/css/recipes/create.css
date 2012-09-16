@@ -1,0 +1,14 @@
+h1{font-size:20px;padding-top:.33em;padding-bottom:.33em;text-align:left;}
+#content-inner div.info{float:left;display:inline-block;padding:25px;padding-top:25px;width:200px;}#content-inner div.info h4{font-size:14px;padding-bottom:10px;}
+#content-inner h2 .difficulty{color:#999;}
+#content-inner form{float:left;padding:25px 0 0 0;display:inline-block;}
+#content-inner fieldset{padding-right:35px;border-right:1px dotted #CCC;display:inline-block;}
+#content-inner dt,#content-inner dd{padding:0 0 20px 20px;vertical-align:middle;}
+#content-inner dt{clear:left;font-size:14px;font-weight:bold;padding-bottom:10px;}#content-inner dt a.question{font-size:11px;padding-left:5px;color:#7F9F3E;}#content-inner dt a.question:hover{color:#9FBF5E;}
+#content-inner dd br{display:none;}
+#content-inner dd input{width:250px;padding:5px;font-size:12px;}#content-inner dd input.unit{width:40px;}
+#content-inner dd input.default{color:#888;}
+#content-inner dd small{display:block;padding:8px 0 0 0;color:#777;}
+#content-inner dd select{font-size:13px !important;}
+button.ribbon{padding-left:30px;padding-right:25px;}
+div.buttons{clear:left;}

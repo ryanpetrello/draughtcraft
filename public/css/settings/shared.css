@@ -1,0 +1,16 @@
+h1{font-size:20px;padding-top:.5em;padding-bottom:.5em;text-align:left;}h1 img{padding:2px;background:#FFF;border:1px solid #CCC;vertical-align:middle;margin-right:.25em;}
+nav.settings{margin:0;width:auto;}nav.settings ul{display:block;padding-top:0;background:#F8F8F8;float:none;}nav.settings ul li{line-height:30px;padding:3px 12px;}nav.settings ul li a{color:#145B74;}
+nav.settings ul li.current{background:#FFF;border:1px solid #E8E8E8;border-bottom:0;border-top:0;}nav.settings ul li.current a{text-decoration:none;color:#000;}
+#content-inner div.info{padding:25px;padding-top:25px;width:200px;}#content-inner div.info h4{font-size:14px;padding-bottom:10px;}
+#content-inner form{padding:25px 0 0 0;}
+#content-inner fieldset{padding-right:35px;display:inline-block;}
+#content-inner dt,#content-inner dd{padding:0 0 20px 20px;vertical-align:middle;}
+#content-inner dt{clear:left;font-size:14px;font-weight:bold;padding-bottom:10px;}
+#content-inner dd br{display:none;}
+#content-inner dd input{width:250px;padding:5px;font-size:12px;}#content-inner dd input.short{width:125px;}
+#content-inner dd input.unit{width:40px;}
+#content-inner dd textarea{padding:3px;font-size:12px;}
+#content-inner dd small{display:inline-block;padding:8px 0 0 0;color:#777;}#content-inner dd small.first{width:130px;}
+#content-inner dd select{font-size:18px;}
+button.ribbon{padding-left:30px;padding-right:25px;}
+div.buttons{clear:left;}

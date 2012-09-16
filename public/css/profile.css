@@ -1,0 +1,25 @@
+nav.user,#topnav,#content{width:900px;}
+#content{}#content h1{padding:.5em;line-height:60px;text-align:left !important;vertical-align:middle;}#content h1 img{padding:2px;background:#FFF;border:1px solid #CCC;vertical-align:middle;margin-right:.25em;}
+#content #content-inner{padding:0;}
+#content #content-inner>div{background:#FFF;padding:0;border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px;-webkit-background-clip:padding;-moz-background-clip:padding;background-clip:padding-box;border-top-right-radius:0;border-top-left-radius:0;-moz-border-radius-topright:0;-moz-border-radius-topleft:0;-webkit-border-top-right-radius:0;-webkit-border-top-left-radius:0;}
+#content h2{position:relative;top:5px;left:15px;}
+#content dl.profile{padding:15px;padding-right:0;width:225px;max-width:225px;display:block;float:left;}#content dl.profile dt,#content dl.profile dd{float:left;padding-bottom:10px;}
+#content dl.profile dt{color:#999;width:100px;clear:left;}#content dl.profile dt.edit{width:inherit;max-width:inherit;}
+#content dl.profile dt.bio{width:inherit;max-width:inherit;color:#000;}
+#content div.recipe-container{float:left;}
+#content dl.recipes{padding:15px;}#content dl.recipes dt.recipe{width:625px;margin-bottom:15px;position:relative;}#content dl.recipes dt.recipe span.srm{padding:10px 0 0 10px;margin-right:15px;background:#55AEC7;display:inline-block;float:left;border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px;-webkit-background-clip:padding;-moz-background-clip:padding;background-clip:padding-box;}
+#content dl.recipes dt.recipe img{margin:0 10px 10px 0;}
+#content dl.recipes dt.recipe div.heading{overflow:hidden;}
+#content dl.recipes dt.recipe h3{font-size:1.35em;line-height:1.5em;float:left;}
+#content dl.recipes dt.recipe h4{font-weight:normal;font-size:1em;color:#707070;line-height:1em;}
+#content dl.recipes dt.recipe h4.dates{font-size:.85em;color:#A9A9A9;padding-bottom:10px;}
+#content dl.recipes dt.recipe ul.badge{list-style-type:none;float:right;width:auto;margin-left:8px;border:1px solid #DDD;border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;-webkit-background-clip:padding;-moz-background-clip:padding;background-clip:padding-box;}#content dl.recipes dt.recipe ul.badge form{display:inline-block;}
+#content dl.recipes dt.recipe ul.badge li{display:inline-block;margin-right:5px;min-height:24px;line-height:24px;border-left:1px solid #DDD;vertical-align:middle;}#content dl.recipes dt.recipe ul.badge li.first{border-left:0;}
+#content dl.recipes dt.recipe ul.badge li.btn{cursor:pointer;min-width:24px;margin-right:0;}
+#content dl.recipes dt.recipe ul.badge li.views{background:url(/images/views.png) 5px center no-repeat;padding-left:25px;}
+#content dl.recipes dt.recipe ul.badge li.copies{background:url(/images/copies.png) 5px center no-repeat;padding-left:25px;}
+#content dl.recipes dt.recipe ul.badge li.copy{background:url(/images/copy.png) 6px center no-repeat;}
+#content dl.recipes dt.recipe ul.badge li.publish{background:url(/images/publish.png) 6px center no-repeat;}
+#content dl.recipes dt.recipe ul.badge li.delete{background:url(/images/delete.png) 4px center no-repeat;}
+#content dl.recipes dt.recipe ul.badge li.preview{background:url(/images/preview.png) 6px center no-repeat;}
+#content dl.recipes dt.recipe ul.badge li.xml{background:url(/images/xml.png) 6px center no-repeat;}

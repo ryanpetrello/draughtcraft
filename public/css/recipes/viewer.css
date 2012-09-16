@@ -1,0 +1,16 @@
+nav.user,#topnav,#content{width:950px;}
+#content h1{padding-right:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-o-text-overflow:ellipsis;max-width:375px;}#content h1 .copied_from{left:0;}
+#content #header fieldset{border-radius:8px;-moz-border-radius:8px;-webkit-border-radius:8px;-webkit-background-clip:padding;-moz-background-clip:padding;background-clip:padding-box;padding:3px 10px;background:#4C9EBE;color:#FFF;display:inline-block !important;}
+#content #header input[name="volume"]{display:none;}
+#content #builder-ajax{position:relative;}
+#content div.step{background:#FFF;}#content div.step h2{display:none;}
+#content div.step .addition .close a{display:none !important;}#content div.step .addition .close a:hover{display:none !important;}
+#content div.step div.inventory{display:none;}
+#content div.step div.ingredient-list{width:910px !important;}#content div.step div.ingredient-list table{width:910px;}
+#content div.step div.ingredient-list p.instruction{display:block !important;padding-left:1em;padding-top:1em;}
+#content div.step div.ingredient-list td.time p.instruction{display:inline !important;padding-left:0;}
+#content div.step div.ingredient-list ol.process span{width:auto !important;}
+div#builder-buttons form{visibility:hidden;}
+div.ingredient-info{max-width:500px;margin:auto 10px;}div.ingredient-info ul{margin-bottom:15px;}
+div.notes p{padding:25px 15px;}
+img.glass{left:-150px;}
