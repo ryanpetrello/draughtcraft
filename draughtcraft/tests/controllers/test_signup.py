@@ -1,6 +1,6 @@
-from pecan                  import conf, abort
-from draughtcraft.tests     import TestApp
-from draughtcraft           import model
+from pecan import conf, abort
+from draughtcraft.tests import TestApp
+from draughtcraft import model
 
 import fudge
 
@@ -14,10 +14,10 @@ class TestSignup(TestApp):
 
     def test_schema_validation(self):
         params = {
-            'username'          : 'testing',
-            'password'          : 'secret',
-            'password_confirm'  : 'secret',
-            'email'             : 'ryan@example.com'
+            'username': 'testing',
+            'password': 'secret',
+            'password_confirm': 'secret',
+            'email': 'ryan@example.com'
         }
         for k in params:
             copy = params.copy()
@@ -25,7 +25,7 @@ class TestSignup(TestApp):
 
             response = self.post('/signup/', params=copy)
             assert response.status_int == 200
-            assert 'validation_errors' in response.request.pecan
+            assert len(response.request.pecan['form'].errors)
 
         assert model.User.query.count() == 0
 
@@ -35,15 +35,15 @@ class TestSignup(TestApp):
             'ryan@example.com',
             'signup',
             'Welcome to DraughtCraft',
-            {'username':'test'},
-            bcc = [conf.signups.bcc]
+            {'username': 'test'},
+            bcc=[conf.signups.bcc]
         ))
 
         params = {
-            'username'          : 'test',
-            'password'          : 'secret',
-            'password_confirm'  : 'secret',
-            'email'             : 'ryan@example.com'
+            'username': 'test',
+            'password': 'secret',
+            'password_confirm': 'secret',
+            'email': 'ryan@example.com'
         }
 
         assert model.User.query.count() == 0
@@ -75,10 +75,10 @@ class TestSignup(TestApp):
         (fake_send.is_callable().times_called(0))
 
         params = {
-            'username'          : 'test',
-            'password'          : 'secret',
-            'password_confirm'  : 'secret',
-            'email'             : 'ryan@example.com'
+            'username': 'test',
+            'password': 'secret',
+            'password_confirm': 'secret',
+            'email': 'ryan@example.com'
         }
 
         assert model.User.query.count() == 0
@@ -91,10 +91,10 @@ class TestSignup(TestApp):
         Usernames should be >= 4 chars
         """
         params = {
-            'username'          : 'test',
-            'password'          : 'secret',
-            'password_confirm'  : 'secret',
-            'email'             : 'ryan@example.com'
+            'username': 'test',
+            'password': 'secret',
+            'password_confirm': 'secret',
+            'email': 'ryan@example.com'
         }
 
         assert model.User.query.count() == 0
@@ -103,10 +103,10 @@ class TestSignup(TestApp):
         assert model.User.query.count() == 1
 
         params = {
-            'username'          : 'tes',
-            'password'          : 'secret',
-            'password_confirm'  : 'secret',
-            'email'             : 'ryan@example.com'
+            'username': 'tes',
+            'password': 'secret',
+            'password_confirm': 'secret',
+            'email': 'ryan@example.com'
         }
 
         self.post('/signup/', params=params)
@@ -118,10 +118,10 @@ class TestSignup(TestApp):
         Usernames should be globally unique
         """
         params = {
-            'username'          : 'test',
-            'password'          : 'secret',
-            'password_confirm'  : 'secret',
-            'email'             : 'ryan@example.com'
+            'username': 'test',
+            'password': 'secret',
+            'password_confirm': 'secret',
+            'email': 'ryan@example.com'
         }
 
         assert model.User.query.count() == 0
@@ -129,10 +129,10 @@ class TestSignup(TestApp):
         assert model.User.query.count() == 1
 
         params = {
-            'username'          : 'test',
-            'password'          : 'secret',
-            'password_confirm'  : 'secret',
-            'email'             : 'ryan2@example.com'
+            'username': 'test',
+            'password': 'secret',
+            'password_confirm': 'secret',
+            'email': 'ryan2@example.com'
         }
 
         self.post('/signup/', params=params)
@@ -143,10 +143,10 @@ class TestSignup(TestApp):
         Usernames should only contain numbers, letters, and underscores
         """
         params = {
-            'username'          : 'testing_023456789_TESTING_',
-            'password'          : 'secret',
-            'password_confirm'  : 'secret',
-            'email'             : 'ryan@example.com'
+            'username': 'testing_023456789_TESTING_',
+            'password': 'secret',
+            'password_confirm': 'secret',
+            'email': 'ryan@example.com'
         }
 
         assert model.User.query.count() == 0
@@ -162,23 +162,23 @@ class TestSignup(TestApp):
             'testing_023456789_TESTING_$',
         ]:
             params = {
-                'username'          : username,
-                'password'          : 'secret',
-                'password_confirm'  : 'secret',
-                'email'             : 'ryan@example.com'
+                'username': username,
+                'password': 'secret',
+                'password_confirm': 'secret',
+                'email': 'ryan@example.com'
             }
             self.post('/signup/', params=params)
             assert model.User.query.count() == 1
-            
+
     def test_password_match(self):
         """
         Passwords should match exactly
         """
         params = {
-            'username'          : 'test',
-            'password'          : 'secret',
-            'password_confirm'  : 'secret2',
-            'email'             : 'ryan@example.com'
+            'username': 'test',
+            'password': 'secret',
+            'password_confirm': 'secret2',
+            'email': 'ryan@example.com'
         }
 
         assert model.User.query.count() == 0
@@ -190,10 +190,10 @@ class TestSignup(TestApp):
         Passwords should be at least 4 characters in length.
         """
         params = {
-            'username'          : 'test',
-            'password'          : 'foo',
-            'password_confirm'  : 'foo',
-            'email'             : 'ryan@example.com'
+            'username': 'test',
+            'password': 'foo',
+            'password_confirm': 'foo',
+            'email': 'ryan@example.com'
         }
 
         assert model.User.query.count() == 0
@@ -212,10 +212,10 @@ class TestSignup(TestApp):
             'ryan@example.x',
         ]:
             params = {
-                'username'          : 'test',
-                'password'          : 'secret',
-                'password_confirm'  : 'secret',
-                'email'             : email
+                'username': 'test',
+                'password': 'secret',
+                'password_confirm': 'secret',
+                'email': email
             }
 
             assert model.User.query.count() == 0
@@ -227,10 +227,10 @@ class TestSignup(TestApp):
         Emails should be globally unique
         """
         params = {
-            'username'          : 'test',
-            'password'          : 'secret',
-            'password_confirm'  : 'secret',
-            'email'             : 'ryan@example.com'
+            'username': 'test',
+            'password': 'secret',
+            'password_confirm': 'secret',
+            'email': 'ryan@example.com'
         }
 
         assert model.User.query.count() == 0
@@ -238,10 +238,10 @@ class TestSignup(TestApp):
         assert model.User.query.count() == 1
 
         params = {
-            'username'          : 'testing',
-            'password'          : 'secret',
-            'password_confirm'  : 'secret',
-            'email'             : 'ryan@example.com'
+            'username': 'testing',
+            'password': 'secret',
+            'password_confirm': 'secret',
+            'email': 'ryan@example.com'
         }
 
         self.post('/signup/', params=params)
@@ -257,21 +257,21 @@ class TestRecipeConversion(TestApp):
         """
 
         params = {
-            'name'      : 'Rocky Mountain River IPA',
-            'type'      : 'MASH',
-            'volume'    : 25,
-            'unit'      : 'GALLON'
+            'name': 'Rocky Mountain River IPA',
+            'type': 'MASH',
+            'volume': 25,
+            'unit': 'GALLON'
         }
 
         self.post('/recipes/create', params=params)
         assert model.Recipe.query.count() == 1
-        assert model.Recipe.get(1).author == None
+        assert model.Recipe.get(1).author is None
 
         params = {
-            'username'          : 'test',
-            'password'          : 'secret',
-            'password_confirm'  : 'secret',
-            'email'             : 'ryan@example.com'
+            'username': 'test',
+            'password': 'secret',
+            'password_confirm': 'secret',
+            'email': 'ryan@example.com'
         }
 
         assert model.User.query.count() == 0
@@ -289,4 +289,5 @@ class TestRecipeConversion(TestApp):
         # `trial_recipe_id` record should have been removed from the session.
         #
         assert len(user.recipes) == 1
-        assert 'trial_recipe_id' not in response.environ['beaker.session']
+        assert 'trial_recipe_id' not in response.request.environ[
+            'beaker.session']

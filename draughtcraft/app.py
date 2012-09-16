@@ -1,14 +1,14 @@
-from pecan                      import make_app
-from pecan.hooks                import TransactionHook
-from draughtcraft               import model
-from draughtcraft.lib.auth      import AuthenticationHook
-from draughtcraft.lib.csrf      import CSRFPreventionHook 
-from draughtcraft.lib.minify    import ResourceLookupMiddleware
-from draughtcraft.templates     import helpers
-from lesspy                     import Less
-from beaker.middleware          import SessionMiddleware, CacheMiddleware
+from pecan import make_app
+from pecan.hooks import TransactionHook
+from draughtcraft import model
+from draughtcraft.lib.auth import AuthenticationHook
+from draughtcraft.lib.minify import ResourceLookupMiddleware
+from draughtcraft.templates import helpers
+from lesspy import Less
+from beaker.middleware import SessionMiddleware, CacheMiddleware
 
 import os
+
 
 def setup_app(config):
 
@@ -18,7 +18,7 @@ def setup_app(config):
         app = CacheMiddleware(app, **options)
         options = getattr(config, 'session', {})
         return SessionMiddleware(app, **options)
-    
+
     model.init_model()
 
     config.app.errors = {
@@ -29,21 +29,21 @@ def setup_app(config):
     }
 
     # Compile .less resources
-    Less(
-        os.path.join(config.app.static_root, '_precompile'), 
-        os.path.join(config.app.static_root, 'css')
-    ).compile()
-    
+    if getattr(config, 'redis', {}):
+        Less(
+            os.path.join(config.app.static_root, '_precompile'),
+            os.path.join(config.app.static_root, 'css')
+        ).compile()
+
     return make_app(
         config.app.root,
-        static_root     = config.app.static_root,
-        debug           = config.app.debug,
-        wrap_app        = add_middleware,
-        logging         = config.app.logging,
-        template_path   = config.app.template_path,
-        force_canonical = config.app.force_canonical,
-        errorcfg        = getattr(config, 'error', {}),
-        hooks           = [
+        static_root=config.app.static_root,
+        template_path=config.app.template_path,
+        wrap_app=add_middleware,
+        logging=config.app.logging,
+        debug=getattr(config.app, 'debug', False),
+        force_canonical=getattr(config.app, 'force_canonical', True),
+        hooks=[
             TransactionHook(
                 model.start,
                 model.start,
@@ -51,10 +51,9 @@ def setup_app(config):
                 model.rollback,
                 model.clear
             ),
-            AuthenticationHook(),
-            CSRFPreventionHook() 
-        ],   
-        extra_template_vars = dict(
-            h           = helpers
+            AuthenticationHook()
+        ],
+        extra_template_vars=dict(
+            h=helpers
         )
     )

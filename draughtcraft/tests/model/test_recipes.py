@@ -1,17 +1,19 @@
-import pecan
-from draughtcraft               import model
-from draughtcraft.lib.units     import InvalidUnitException
-from draughtcraft.tests         import TestModel
-from datetime                   import timedelta
-from webob                      import Request
-from sys                        import maxint
-
+from datetime import timedelta
+from sys import maxint
 import unittest
+
+from webob import Request
+from sqlalchemy import null
+import pecan
+
+from draughtcraft import model
+from draughtcraft.lib.units import InvalidUnitException
+from draughtcraft.tests import TestModel
 
 
 class TestRecipeAddition(unittest.TestCase):
 
-    def test_fermentable_ingredient(self): 
+    def test_fermentable_ingredient(self):
         addition = model.RecipeAddition()
         fermentable = model.Fermentable()
 
@@ -19,7 +21,7 @@ class TestRecipeAddition(unittest.TestCase):
 
         assert addition.ingredient == fermentable
 
-    def test_hop_ingredient(self): 
+    def test_hop_ingredient(self):
         addition = model.RecipeAddition()
         hop = model.Hop()
 
@@ -27,7 +29,7 @@ class TestRecipeAddition(unittest.TestCase):
 
         assert addition.ingredient == hop
 
-    def test_yeast_ingredient(self): 
+    def test_yeast_ingredient(self):
         addition = model.RecipeAddition()
         yeast = model.Yeast()
 
@@ -37,113 +39,113 @@ class TestRecipeAddition(unittest.TestCase):
 
     def test_printable_amount(self):
         addition = model.RecipeAddition(
-            amount  = 5,
-            unit    = 'POUND'
+            amount=5,
+            unit='POUND'
         )
 
         assert addition.printable_amount == '5 lb'
 
     def test_international_printable_pound_conversion(self):
         pecan.core.state.request = Request.blank('/')
-        pecan.request.context = {'metric':True}
+        pecan.request.context = {'metric': True}
 
         r = model.Recipe()
         addition = model.RecipeAddition(
-            amount  = 5,
-            unit    = 'POUND',
-            recipe  = r
+            amount=5,
+            unit='POUND',
+            recipe=r
         )
 
         assert addition.printable_amount == '2.268 kg'
 
     def test_international_printable_ounce_conversion(self):
         pecan.core.state.request = Request.blank('/')
-        pecan.request.context = {'metric':True}
+        pecan.request.context = {'metric': True}
 
         r = model.Recipe()
         addition = model.RecipeAddition(
-            amount  = 5,
-            unit    = 'OUNCE',
-            recipe  = r
+            amount=5,
+            unit='OUNCE',
+            recipe=r
         )
 
         assert addition.printable_amount == '141.748 g'
 
     def test_international_printable_gallon_conversion(self):
         pecan.core.state.request = Request.blank('/')
-        pecan.request.context = {'metric':True}
+        pecan.request.context = {'metric': True}
 
         r = model.Recipe()
         addition = model.RecipeAddition(
-            amount  = 5,
-            unit    = 'GALLON',
-            recipe  = r
+            amount=5,
+            unit='GALLON',
+            recipe=r
         )
 
         assert addition.printable_amount == '18.927 L'
 
     def test_printable_hop_amount(self):
         addition = model.HopAddition(
-            amount  = 0.0625, # 1 oz
-            unit    = 'POUND'
+            amount=0.0625,  # 1 oz
+            unit='POUND'
         )
 
         assert addition.printable_amount == '1 oz'
 
         addition = model.HopAddition(
-            amount  = 0,
-            unit    = 'POUND'
+            amount=0,
+            unit='POUND'
         )
 
         assert addition.printable_amount == '0 oz'
 
     def test_printable_metric_hop_amount(self):
         pecan.core.state.request = Request.blank('/')
-        pecan.request.context = {'metric':True}
+        pecan.request.context = {'metric': True}
 
         r = model.Recipe()
         addition = model.HopAddition(
-            amount  = 0.0625, # 1 oz
-            unit    = 'POUND',
-            recipe  = r
+            amount=0.0625,  # 1 oz
+            unit='POUND',
+            recipe=r
         )
 
         assert addition.printable_amount == '28.35 g'
 
         addition = model.HopAddition(
-            amount  = 0,
-            unit    = 'POUND',
-            recipe  = r
+            amount=0,
+            unit='POUND',
+            recipe=r
         )
 
         assert addition.printable_amount == '0 g'
 
     def test_percentage(self):
         recipe = model.Recipe()
-        
+
         a1 = model.RecipeAddition(
-            use         = 'MASH',
-            amount      = 6,
-            unit        = 'POUND',
-            fermentable = model.Fermentable()
+            use='MASH',
+            amount=6,
+            unit='POUND',
+            fermentable=model.Fermentable()
         )
         a2 = model.RecipeAddition(
-            use         = 'MASH',
-            amount      = 2,
-            unit        = 'POUND',
-            fermentable = model.Fermentable()
+            use='MASH',
+            amount=2,
+            unit='POUND',
+            fermentable=model.Fermentable()
         )
         a3 = model.RecipeAddition(
-            use         = 'BOIL',
-            amount      = .046875, # .75 oz
-            unit        = 'POUND',
-            hop         = model.Hop()
+            use='BOIL',
+            amount=.046875,  # .75 oz
+            unit='POUND',
+            hop=model.Hop()
         )
         a4 = model.RecipeAddition(
-            use         = 'BOIL',
-            amount      = .015625, # .25 oz
-            unit        = 'POUND',
-            hop         = model.Hop()
+            use='BOIL',
+            amount=.015625,  # .25 oz
+            unit='POUND',
+            hop=model.Hop()
         )
         recipe.additions = [a1, a2, a3, a4]
 
@@ -154,18 +156,18 @@ class TestRecipeAddition(unittest.TestCase):
 
     def test_zero_percentage(self):
         recipe = model.Recipe()
-        
+
         a1 = model.RecipeAddition(
-            use         = 'MASH',
-            amount      = 0,
-            unit        = 'POUND',
-            fermentable = model.Fermentable()
+            use='MASH',
+            amount=0,
+            unit='POUND',
+            fermentable=model.Fermentable()
         )
         a2 = model.RecipeAddition(
-            use         = 'MASH',
-            amount      = 0,
-            unit        = 'POUND',
-            fermentable = model.Fermentable()
+            use='MASH',
+            amount=0,
+            unit='POUND',
+            fermentable=model.Fermentable()
         )
         recipe.additions = [a1, a2]
 
@@ -173,17 +175,19 @@ class TestRecipeAddition(unittest.TestCase):
         assert a2.percentage == 0
 
     def test_pounds(self):
-        a = model.RecipeAddition(amount = 1, unit = 'POUND')
+        a = model.RecipeAddition(amount=1, unit='POUND')
         assert a.pounds == 1
 
-        a = model.RecipeAddition(amount = 16, unit = 'OUNCE')
+        a = model.RecipeAddition(amount=16, unit='OUNCE')
         assert a.pounds == 1
 
-        a = model.RecipeAddition(amount = 2, unit = 'TEASPOON')
+        a = model.RecipeAddition(amount=2, unit='TEASPOON')
         try:
             assert a.pounds
-        except InvalidUnitException: pass
-        else: raise AssertionError('Teaspoons cannot be converted to pounds.')
+        except InvalidUnitException:
+            pass
+        else:
+            raise AssertionError('Teaspoons cannot be converted to pounds.')
 
     def test_minutes(self):
         a = model.RecipeAddition()
@@ -193,29 +197,31 @@ class TestRecipeAddition(unittest.TestCase):
         assert a.minutes == 2
 
     def test_sortable_minutes(self):
-        a = model.RecipeAddition(use = 'FIRST WORT')
+        a = model.RecipeAddition(use='FIRST WORT')
         assert a.sortable_minutes == maxint
 
-        a = model.RecipeAddition(use = 'POST BOIL')
+        a = model.RecipeAddition(use='POST BOIL')
         assert a.sortable_minutes == -1
 
-        a = model.RecipeAddition(use = 'FLAME-OUT')
+        a = model.RecipeAddition(use='FLAME-OUT')
         assert a.sortable_minutes == -1
 
-        a = model.RecipeAddition(use = 'BOIL', duration=timedelta(seconds=3600))
+        a = model.RecipeAddition(
+            use='BOIL', duration=timedelta(seconds=3600))
         assert a.sortable_minutes == 60
 
     def test_eta(self):
-        r = model.Recipe(boil_minutes = 60)
+        r = model.Recipe(boil_minutes=60)
 
-        a = model.HopAddition(recipe = r, duration=timedelta(seconds=3600))
+        a = model.HopAddition(recipe=r, duration=timedelta(seconds=3600))
         assert a.eta == '0m'
 
-        a = model.HopAddition(recipe = r, duration=timedelta(seconds=1800))
+        a = model.HopAddition(recipe=r, duration=timedelta(seconds=1800))
         assert a.eta == '30m'
 
-        a = model.HopAddition(recipe = r, duration=timedelta(seconds=0))
+        a = model.HopAddition(recipe=r, duration=timedelta(seconds=0))
         assert a.eta == '60m'
+
 
 class TestRecipe(unittest.TestCase):
 
@@ -224,36 +230,36 @@ class TestRecipe(unittest.TestCase):
 
         recipe.additions = [
             model.RecipeAddition(
-                use         = 'MASH',
-                fermentable = model.Fermentable()
+                use='MASH',
+                fermentable=model.Fermentable()
             ),
             model.RecipeAddition(
-                use         = 'MASH',
-                hop         = model.Hop()
+                use='MASH',
+                hop=model.Hop()
             ),
             model.RecipeAddition(
-                use         = 'FIRST WORT',
-                hop         = model.Hop()
+                use='FIRST WORT',
+                hop=model.Hop()
             ),
             model.RecipeAddition(
-                use         = 'BOIL',
-                hop         = model.Hop()
+                use='BOIL',
+                hop=model.Hop()
             ),
             model.RecipeAddition(
-                use         = 'POST-BOIL',
-                hop         = model.Hop()
+                use='POST-BOIL',
+                hop=model.Hop()
             ),
             model.RecipeAddition(
-                use         = 'FLAME OUT',
-                hop         = model.Hop()
+                use='FLAME OUT',
+                hop=model.Hop()
             ),
             model.RecipeAddition(
-                use         = 'PRIMARY',
-                yeast       = model.Yeast()
+                use='PRIMARY',
+                yeast=model.Yeast()
             ),
             model.RecipeAddition(
-                use         = 'SECONDARY',
-                yeast       = model.Yeast()
+                use='SECONDARY',
+                yeast=model.Yeast()
             )
         ]
 
@@ -268,10 +274,10 @@ class TestRecipe(unittest.TestCase):
         model.Recipe.metric == True
         """
         pecan.core.state.request = Request.blank('/')
-        pecan.request.context = {'metric':True}
+        pecan.request.context = {'metric': True}
 
         recipe = model.Recipe()
-        assert recipe.metric == True
+        assert recipe.metric is True
 
     def test_metric_false(self):
         """
@@ -279,13 +285,13 @@ class TestRecipe(unittest.TestCase):
         model.Recipe.metric == False
         """
         pecan.core.state.request = Request.blank('/')
-        pecan.request.context = {'metric':False}
+        pecan.request.context = {'metric': False}
 
         recipe = model.Recipe()
-        assert recipe.metric == False
+        assert recipe.metric is False
 
     def test_recipe_international_volume(self):
-        recipe = model.Recipe(gallons = 5)
+        recipe = model.Recipe(gallons=5)
         recipe.liters = 10
         assert recipe.gallons == 2.6417205199999998
         assert recipe.liters == 10
@@ -299,12 +305,12 @@ class TestRecipe(unittest.TestCase):
         recipe = model.Recipe()
         recipe.additions = [
             model.RecipeAddition(
-                use         = 'MASH',
-                fermentable = model.Fermentable()
+                use='MASH',
+                fermentable=model.Fermentable()
             ),
             model.RecipeAddition(
-                use         = 'MASH',
-                hop         = model.Hop()
+                use='MASH',
+                hop=model.Hop()
             )
         ]
         partitions = recipe._partition(recipe.additions)
@@ -313,20 +319,20 @@ class TestRecipe(unittest.TestCase):
 
         recipe.additions = [
             model.RecipeAddition(
-                use         = 'FIRST WORT',
-                hop         = model.Hop()
+                use='FIRST WORT',
+                hop=model.Hop()
             ),
             model.RecipeAddition(
-                use         = 'BOIL',
-                hop         = model.Hop()
+                use='BOIL',
+                hop=model.Hop()
             ),
             model.RecipeAddition(
-                use         = 'POST-BOIL',
-                hop         = model.Hop()
+                use='POST-BOIL',
+                hop=model.Hop()
             ),
             model.RecipeAddition(
-                use         = 'FLAME OUT',
-                hop         = model.Hop()
+                use='FLAME OUT',
+                hop=model.Hop()
             )
         ]
         partitions = recipe._partition(recipe.additions)
@@ -334,12 +340,12 @@ class TestRecipe(unittest.TestCase):
 
         recipe.additions = [
             model.RecipeAddition(
-                use         = 'PRIMARY',
-                yeast       = model.Yeast()
+                use='PRIMARY',
+                yeast=model.Yeast()
             ),
             model.RecipeAddition(
-                use         = 'SECONDARY',
-                yeast       = model.Yeast()
+                use='SECONDARY',
+                yeast=model.Yeast()
             )
         ]
         partitions = recipe._partition(recipe.additions)
@@ -347,35 +353,35 @@ class TestRecipe(unittest.TestCase):
 
     def test_ingredient_percent(self):
         recipe = model.Recipe()
-        
+
         a1 = model.RecipeAddition(
-            use         = 'MASH',
-            amount      = 6,
-            unit        = 'POUND',
-            fermentable = model.Fermentable()
+            use='MASH',
+            amount=6,
+            unit='POUND',
+            fermentable=model.Fermentable()
         )
         a2 = model.RecipeAddition(
-            use         = 'MASH',
-            amount      = 2,
-            unit        = 'POUND',
-            fermentable = model.Fermentable()
+            use='MASH',
+            amount=2,
+            unit='POUND',
+            fermentable=model.Fermentable()
         )
         a3 = model.RecipeAddition(
-            use         = 'MASH',
-            amount      = .046875, # .75 oz
-            unit        = 'POUND',
-            hop         = model.Hop()
+            use='MASH',
+            amount=.046875,  # .75 oz
+            unit='POUND',
+            hop=model.Hop()
         )
         a4 = model.RecipeAddition(
-            use         = 'MASH',
-            amount      = .015625, # .25 oz
-            unit        = 'POUND',
-            hop         = model.Hop()
+            use='MASH',
+            amount=.015625,  # .25 oz
+            unit='POUND',
+            hop=model.Hop()
         )
 
         percent = recipe._percent({
-            'Fermentable'   : [a1, a2],
-            'Hop'           : [a3, a4]
+            'Fermentable': [a1, a2],
+            'Hop': [a3, a4]
         })
 
         assert percent[a1] == .75
@@ -397,36 +403,36 @@ class TestRecipe(unittest.TestCase):
 
         recipe.additions = [
             model.RecipeAddition(
-                use         = 'MASH',
-                fermentable = f1
+                use='MASH',
+                fermentable=f1
             ),
             model.RecipeAddition(
-                use         = 'MASH',
-                hop         = h1
+                use='MASH',
+                hop=h1
             ),
             model.RecipeAddition(
-                use         = 'FIRST WORT',
-                hop         = h2
+                use='FIRST WORT',
+                hop=h2
             ),
             model.RecipeAddition(
-                use         = 'BOIL',
-                hop         = h3
+                use='BOIL',
+                hop=h3
             ),
             model.RecipeAddition(
-                use         = 'POST-BOIL',
-                hop         = h4
+                use='POST-BOIL',
+                hop=h4
             ),
             model.RecipeAddition(
-                use         = 'FLAME OUT',
-                hop         = h5
+                use='FLAME OUT',
+                hop=h5
             ),
             model.RecipeAddition(
-                use         = 'PRIMARY',
-                yeast       = y1
+                use='PRIMARY',
+                yeast=y1
             ),
             model.RecipeAddition(
-                use         = 'SECONDARY',
-                yeast       = y2
+                use='SECONDARY',
+                yeast=y2
             )
         ]
 
@@ -475,9 +481,9 @@ class TestRecipe(unittest.TestCase):
         recipe = model.Recipe()
         recipe.fermentation_steps.append(
             model.FermentationStep(
-                step = 'PRIMARY',
-                days = 7,
-                fahrenheit = 50
+                step='PRIMARY',
+                days=7,
+                fahrenheit=50
             )
         )
 
@@ -485,9 +491,9 @@ class TestRecipe(unittest.TestCase):
 
         recipe.fermentation_steps.append(
             model.FermentationStep(
-                step = 'SECONDARY',
-                days = 14,
-                fahrenheit = 35
+                step='SECONDARY',
+                days=14,
+                fahrenheit=35
             )
         )
 
@@ -495,54 +501,57 @@ class TestRecipe(unittest.TestCase):
 
         recipe.fermentation_steps.append(
             model.FermentationStep(
-                step = 'TERTIARY',
-                days = 31,
-                fahrenheit = 35
+                step='TERTIARY',
+                days=31,
+                fahrenheit=35
             )
         )
 
-        assert recipe.next_fermentation_step == None
+        assert recipe.next_fermentation_step is None
 
     def test_efficiency(self):
         assert model.Recipe().efficiency == .75
 
         user = model.User()
         model.UserSetting(
-            user = user,
-            name = 'brewhouse_efficiency',
-            value = .80
+            user=user,
+            name='brewhouse_efficiency',
+            value=.80
         )
-        assert model.Recipe(author = user).efficiency == .80
+        assert model.Recipe(author=user).efficiency == .80
 
     def test_url(self):
         recipe = model.Recipe(
-            id      = 1,
-            name    = u'Rocky Mountain River IPA'
-        )        
+            id=1,
+            name=u'Rocky Mountain River IPA'
+        )
         assert recipe.url() == '/recipes/1/rocky-mountain-river-ipa/'
-        assert recipe.url(False) == '/recipes/1/rocky-mountain-river-ipa/builder/'
+        assert recipe.url(
+            False) == '/recipes/1/rocky-mountain-river-ipa/builder'
 
     def test_url_is_hex(self):
         for i in range(128):
             recipe = model.Recipe(
-                id      = i,
-                name    = u'Rocky Mountain River IPA'
+                id=i,
+                name=u'Rocky Mountain River IPA'
             )
-            assert recipe.url() == '/recipes/%s/rocky-mountain-river-ipa/' % ('%x' % i)
-            assert recipe.url(False) == '/recipes/%s/rocky-mountain-river-ipa/builder/' % ('%x' % i)
+            assert recipe.url(
+            ) == '/recipes/%s/rocky-mountain-river-ipa/' % ('%x' % i)
+            assert recipe.url(False) == \
+                '/recipes/%s/rocky-mountain-river-ipa/builder' % ('%x' % i)
 
     def test_printable_type(self):
         assert model.Recipe(
-            type = u'MASH'
+            type=u'MASH'
         ).printable_type == 'All Grain'
         assert model.Recipe(
-            type = u'EXTRACT'
+            type=u'EXTRACT'
         ).printable_type == 'Extract'
         assert model.Recipe(
-            type = u'EXTRACTSTEEP'
+            type=u'EXTRACTSTEEP'
         ).printable_type == 'Extract w/ Steeped Grains'
         assert model.Recipe(
-            type = u'MINIMASH'
+            type=u'MINIMASH'
         ).printable_type == 'Mini-Mash'
 
 
@@ -552,19 +561,19 @@ class TestFermentationStep(unittest.TestCase):
         recipe = model.Recipe()
         recipe.fermentation_steps.extend([
             model.FermentationStep(
-                step = 'PRIMARY',
-                days = 7,
-                fahrenheit = 50
+                step='PRIMARY',
+                days=7,
+                fahrenheit=50
             ),
             model.FermentationStep(
-                step = 'SECONDARY',
-                days = 14,
-                fahrenheit = 35
+                step='SECONDARY',
+                days=14,
+                fahrenheit=35
             ),
             model.FermentationStep(
-                step = 'TERTIARY',
-                days = 31,
-                fahrenheit = 35
+                step='TERTIARY',
+                days=31,
+                fahrenheit=35
             )
         ])
 
@@ -588,12 +597,12 @@ class TestFermentationStep(unittest.TestCase):
         recipe = model.Recipe()
         recipe.fermentation_steps.extend([
             model.FermentationStep(
-                step = 'PRIMARY',
-                days = 7,
-                fahrenheit = 50
+                step='PRIMARY',
+                days=7,
+                fahrenheit=50
             )
         ])
-        
+
         steps = recipe.fermentation_steps
         s = steps[0]
         assert s.celsius == 10
@@ -611,15 +620,16 @@ class TestFermentationStep(unittest.TestCase):
             s.celsius = i
             assert s.celsius == i
 
+
 class TestRecipeCopy(TestModel):
 
     def test_simple_copy(self):
         model.Recipe(
-            type            = 'MASH',
-            name            = 'Rocky Mountain River IPA',
-            gallons         = 5,
-            boil_minutes    = 60,
-            notes           = u'This is my favorite recipe.'
+            type='MASH',
+            name='Rocky Mountain River IPA',
+            gallons=5,
+            boil_minutes=60,
+            notes=u'This is my favorite recipe.'
         )
         model.commit()
 
@@ -640,17 +650,18 @@ class TestRecipeCopy(TestModel):
 
         assert len(r1.slugs) == len(r2.slugs) == 1
         assert r1.slugs[0] != r2.slugs[0]
-        assert r1.slugs[0].slug == r2.slugs[0].slug == 'rocky-mountain-river-ipa'
+        assert r1.slugs[0].slug == r2.slugs[
+            0].slug == 'rocky-mountain-river-ipa'
 
     def test_copy_multiple_slugs(self):
         r = model.Recipe(
-            type            = 'MASH',
-            name            = 'Rocky Mountain River IPA',
-            gallons         = 5,
-            boil_minutes    = 60,
-            notes           = u'This is my favorite recipe.'
+            type='MASH',
+            name='Rocky Mountain River IPA',
+            gallons=5,
+            boil_minutes=60,
+            notes=u'This is my favorite recipe.'
         )
-        model.RecipeSlug(slug='secondary-slug', recipe = r)
+        model.RecipeSlug(slug='secondary-slug', recipe=r)
         model.commit()
 
         recipe = model.Recipe.query.first()
@@ -670,27 +681,28 @@ class TestRecipeCopy(TestModel):
 
         assert len(r1.slugs) == len(r2.slugs) == 2
         assert r1.slugs[0] != r2.slugs[0]
-        assert r1.slugs[0].slug == r2.slugs[0].slug == 'rocky-mountain-river-ipa'
+        assert r1.slugs[0].slug == r2.slugs[
+            0].slug == 'rocky-mountain-river-ipa'
         assert r1.slugs[1] != r2.slugs[1]
         assert r1.slugs[1].slug == r2.slugs[1].slug == 'secondary-slug'
 
     def test_simple_copy_with_overrides(self):
         model.Recipe(
-            type            = 'MASH',
-            name            = 'Rocky Mountain River IPA',
-            gallons         = 5,
-            boil_minutes    = 60,
-            notes           = u'This is my favorite recipe.'
+            type='MASH',
+            name='Rocky Mountain River IPA',
+            gallons=5,
+            boil_minutes=60,
+            notes=u'This is my favorite recipe.'
         )
         model.commit()
 
         recipe = model.Recipe.query.first()
         recipe.duplicate({
-            'type'          : 'EXTRACT',
-            'name'          : 'Simcoe IPA',
-            'gallons'       : 10,
-            'boil_minutes'  : 90,
-            'notes'         : u'This is a duplicate.'
+            'type': 'EXTRACT',
+            'name': 'Simcoe IPA',
+            'gallons': 10,
+            'boil_minutes': 90,
+            'notes': u'This is a duplicate.'
         })
         model.commit()
 
@@ -707,8 +719,8 @@ class TestRecipeCopy(TestModel):
 
     def test_author_copy(self):
         model.Recipe(
-            name    = 'Rocky Mountain River IPA',
-            author  = model.User()
+            name='Rocky Mountain River IPA',
+            author=model.User()
         )
         model.commit()
 
@@ -724,14 +736,14 @@ class TestRecipeCopy(TestModel):
 
     def test_author_copy_with_overrides(self):
         model.Recipe(
-            name    = 'Rocky Mountain River IPA',
-            author  = model.User()
+            name='Rocky Mountain River IPA',
+            author=model.User()
         )
         model.commit()
 
         recipe = model.Recipe.query.first()
         recipe.duplicate({
-            'author' : model.User()
+            'author': model.User()
         })
         model.commit()
 
@@ -744,8 +756,8 @@ class TestRecipeCopy(TestModel):
 
     def test_style_copy(self):
         model.Recipe(
-            name    = 'Rocky Mountain River IPA',
-            style   = model.Style(name = u'American IPA')
+            name='Rocky Mountain River IPA',
+            style=model.Style(name=u'American IPA')
         )
         model.commit()
 
@@ -761,14 +773,14 @@ class TestRecipeCopy(TestModel):
 
     def test_style_copy_with_overrides(self):
         model.Recipe(
-            name    = 'Rocky Mountain River IPA',
-            style   = model.Style(name = u'American IPA')
+            name='Rocky Mountain River IPA',
+            style=model.Style(name=u'American IPA')
         )
         model.commit()
 
         recipe = model.Recipe.query.first()
         recipe.duplicate({
-            'style' : model.Style(name = u'Baltic Porter')
+            'style': model.Style(name=u'Baltic Porter')
         })
         model.commit()
 
@@ -781,8 +793,8 @@ class TestRecipeCopy(TestModel):
 
     def test_slugs_copy(self):
         model.Recipe(
-            name    = 'Rocky Mountain River IPA',
-            slugs   = [
+            name='Rocky Mountain River IPA',
+            slugs=[
                 model.RecipeSlug(slug=u'rocky-mountain-river-ipa'),
                 model.RecipeSlug(slug=u'my-favorite-ipa')
             ]
@@ -800,15 +812,16 @@ class TestRecipeCopy(TestModel):
         assert len(r1.slugs) == len(r2.slugs) == 2
 
         assert r1.slugs[0] != r2.slugs[0]
-        assert r1.slugs[0].slug == r2.slugs[0].slug == 'rocky-mountain-river-ipa'
+        assert r1.slugs[0].slug == r2.slugs[
+            0].slug == 'rocky-mountain-river-ipa'
 
         assert r1.slugs[1] != r2.slugs[1]
         assert r1.slugs[1].slug == r2.slugs[1].slug == 'my-favorite-ipa'
 
     def test_slugs_copy_with_overrides(self):
         model.Recipe(
-            name    = 'Rocky Mountain River IPA',
-            slugs   = [
+            name='Rocky Mountain River IPA',
+            slugs=[
                 model.RecipeSlug(slug=u'rocky-mountain-river-ipa'),
                 model.RecipeSlug(slug=u'my-favorite-ipa')
             ]
@@ -834,17 +847,17 @@ class TestRecipeCopy(TestModel):
 
     def test_fermentation_steps_copy(self):
         model.Recipe(
-            name                    = 'Rocky Mountain River IPA',
-            fermentation_steps      = [
+            name='Rocky Mountain River IPA',
+            fermentation_steps=[
                 model.FermentationStep(
-                    step        = 'PRIMARY',
-                    days        = 14,
-                    fahrenheit  = 65
+                    step='PRIMARY',
+                    days=14,
+                    fahrenheit=65
                 ),
                 model.FermentationStep(
-                    step        = 'SECONDARY',
-                    days        = 90,
-                    fahrenheit  = 45
+                    step='SECONDARY',
+                    days=90,
+                    fahrenheit=45
                 )
             ]
         )
@@ -859,28 +872,34 @@ class TestRecipeCopy(TestModel):
 
         r1, r2 = model.Recipe.get(1), model.Recipe.get(2)
         assert len(r1.fermentation_steps) == len(r2.fermentation_steps) == 2
-        
-        assert r1.fermentation_steps[0].step == r2.fermentation_steps[0].step == 'PRIMARY'
-        assert r1.fermentation_steps[0].days == r2.fermentation_steps[0].days == 14
-        assert r1.fermentation_steps[0].fahrenheit == r2.fermentation_steps[0].fahrenheit == 65
 
-        assert r1.fermentation_steps[1].step == r2.fermentation_steps[1].step == 'SECONDARY'
-        assert r1.fermentation_steps[1].days == r2.fermentation_steps[1].days == 90
-        assert r1.fermentation_steps[1].fahrenheit == r2.fermentation_steps[1].fahrenheit == 45
+        assert r1.fermentation_steps[
+            0].step == r2.fermentation_steps[0].step == 'PRIMARY'
+        assert r1.fermentation_steps[
+            0].days == r2.fermentation_steps[0].days == 14
+        assert r1.fermentation_steps[
+            0].fahrenheit == r2.fermentation_steps[0].fahrenheit == 65
+
+        assert r1.fermentation_steps[
+            1].step == r2.fermentation_steps[1].step == 'SECONDARY'
+        assert r1.fermentation_steps[
+            1].days == r2.fermentation_steps[1].days == 90
+        assert r1.fermentation_steps[
+            1].fahrenheit == r2.fermentation_steps[1].fahrenheit == 45
 
     def test_fermentation_steps_copy_with_override(self):
         model.Recipe(
-            name                    = 'Rocky Mountain River IPA',
-            fermentation_steps      = [
+            name='Rocky Mountain River IPA',
+            fermentation_steps=[
                 model.FermentationStep(
-                    step        = 'PRIMARY',
-                    days        = 14,
-                    fahrenheit  = 65
+                    step='PRIMARY',
+                    days=14,
+                    fahrenheit=65
                 ),
                 model.FermentationStep(
-                    step        = 'SECONDARY',
-                    days        = 90,
-                    fahrenheit  = 45
+                    step='SECONDARY',
+                    days=90,
+                    fahrenheit=45
                 )
             ]
         )
@@ -888,10 +907,10 @@ class TestRecipeCopy(TestModel):
 
         recipe = model.Recipe.query.first()
         recipe.duplicate({
-            'fermentation_steps' : [model.FermentationStep(
-                step        = 'PRIMARY',
-                days        = 21,
-                fahrenheit  = 75
+            'fermentation_steps': [model.FermentationStep(
+                step='PRIMARY',
+                days=21,
+                fahrenheit=75
             )]
         })
         model.commit()
@@ -902,50 +921,50 @@ class TestRecipeCopy(TestModel):
         r1, r2 = model.Recipe.get(1), model.Recipe.get(2)
         assert len(r1.fermentation_steps) == 2
         assert len(r2.fermentation_steps) == 1
-        
+
         assert r2.fermentation_steps[0].step == 'PRIMARY'
         assert r2.fermentation_steps[0].days == 21
         assert r2.fermentation_steps[0].fahrenheit == 75
 
     def test_additions_copy(self):
-        recipe = model.Recipe(name = u'Sample Recipe')
+        recipe = model.Recipe(name=u'Sample Recipe')
 
-        grain           = model.Fermentable()
-        primary_hop     = model.Hop()
-        bittering_hop   = model.Hop()
-        yeast           = model.Yeast()
+        grain = model.Fermentable()
+        primary_hop = model.Hop()
+        bittering_hop = model.Hop()
+        yeast = model.Yeast()
         recipe.additions = [
             model.RecipeAddition(
-                use         = 'MASH',
-                fermentable = grain
+                use='MASH',
+                fermentable=grain
             ),
             model.RecipeAddition(
-                use         = 'MASH',
-                hop         = primary_hop
+                use='MASH',
+                hop=primary_hop
             ),
             model.RecipeAddition(
-                use         = 'FIRST WORT',
-                hop         = primary_hop
+                use='FIRST WORT',
+                hop=primary_hop
             ),
             model.RecipeAddition(
-                use         = 'BOIL',
-                hop         = primary_hop,
+                use='BOIL',
+                hop=primary_hop,
             ),
             model.RecipeAddition(
-                use         = 'POST-BOIL',
-                hop         = primary_hop
+                use='POST-BOIL',
+                hop=primary_hop
             ),
             model.RecipeAddition(
-                use         = 'FLAME OUT',
-                hop         = bittering_hop
+                use='FLAME OUT',
+                hop=bittering_hop
             ),
             model.RecipeAddition(
-                use         = 'PRIMARY',
-                yeast       = yeast
+                use='PRIMARY',
+                yeast=yeast
             ),
             model.RecipeAddition(
-                use         = 'SECONDARY',
-                yeast       = yeast
+                use='SECONDARY',
+                yeast=yeast
             )
         ]
         model.commit()
@@ -969,54 +988,60 @@ class TestRecipeCopy(TestModel):
         r1, r2 = model.Recipe.get(1), model.Recipe.get(2)
         assert len(r1.additions) == len(r2.additions) == 8
 
-        assert r1.additions[0].fermentable == r2.additions[0].fermentable == model.Fermentable.query.first()
-        assert r1.additions[1].hop == r2.additions[1].hop == model.Hop.query.first()
-        assert r1.additions[2].hop == r2.additions[2].hop == model.Hop.query.first()
-        assert r1.additions[3].hop == r2.additions[3].hop == model.Hop.query.first()
-        assert r1.additions[4].hop == r2.additions[4].hop == model.Hop.query.first()
-        assert r1.additions[5].hop == r2.additions[5].hop == model.Hop.query.all()[-1]
-        assert r1.additions[6].yeast == r2.additions[6].yeast == model.Yeast.query.first()
-        assert r1.additions[7].yeast == r2.additions[7].yeast == model.Yeast.query.all()[-1]
+        for f in model.Fermentable.query.all():
+            assert f in [a.ingredient for a in r1.additions]
+            assert f in [a.ingredient for a in r2.additions]
+            assert len(set([a.recipe for a in f.additions])) == 2
+
+        for h in model.Hop.query.all():
+            assert h in [a.ingredient for a in r1.additions]
+            assert h in [a.ingredient for a in r2.additions]
+            assert len(set([a.recipe for a in h.additions])) == 2
+
+        for y in model.Yeast.query.all():
+            assert y in [a.ingredient for a in r1.additions]
+            assert y in [a.ingredient for a in r2.additions]
+            assert len(set([a.recipe for a in y.additions])) == 2
 
     def test_additions_copy_with_overrides(self):
-        recipe = model.Recipe(name = u'Sample Recipe')
+        recipe = model.Recipe(name=u'Sample Recipe')
 
-        grain           = model.Fermentable()
-        primary_hop     = model.Hop()
-        bittering_hop   = model.Hop()
-        yeast           = model.Yeast()
+        grain = model.Fermentable()
+        primary_hop = model.Hop()
+        bittering_hop = model.Hop()
+        yeast = model.Yeast()
         recipe.additions = [
             model.RecipeAddition(
-                use         = 'MASH',
-                fermentable = grain
+                use='MASH',
+                fermentable=grain
             ),
             model.RecipeAddition(
-                use         = 'MASH',
-                hop         = primary_hop
+                use='MASH',
+                hop=primary_hop
             ),
             model.RecipeAddition(
-                use         = 'FIRST WORT',
-                hop         = primary_hop
+                use='FIRST WORT',
+                hop=primary_hop
             ),
             model.RecipeAddition(
-                use         = 'BOIL',
-                hop         = primary_hop,
+                use='BOIL',
+                hop=primary_hop,
             ),
             model.RecipeAddition(
-                use         = 'POST-BOIL',
-                hop         = primary_hop
+                use='POST-BOIL',
+                hop=primary_hop
             ),
             model.RecipeAddition(
-                use         = 'FLAME OUT',
-                hop         = bittering_hop
+                use='FLAME OUT',
+                hop=bittering_hop
             ),
             model.RecipeAddition(
-                use         = 'PRIMARY',
-                yeast       = yeast
+                use='PRIMARY',
+                yeast=yeast
             ),
             model.RecipeAddition(
-                use         = 'SECONDARY',
-                yeast       = yeast
+                use='SECONDARY',
+                yeast=yeast
             )
         ]
         model.commit()
@@ -1029,9 +1054,9 @@ class TestRecipeCopy(TestModel):
 
         recipe = model.Recipe.query.first()
         recipe.duplicate({
-            'additions' : [model.RecipeAddition(
-                use         = 'MASH',
-                fermentable = model.Fermentable.query.first()
+            'additions': [model.RecipeAddition(
+                use='MASH',
+                fermentable=model.Fermentable.query.first()
             )]
         })
         model.commit()
@@ -1053,12 +1078,12 @@ class TestDrafts(TestModel):
 
     def test_draft_creation(self):
         model.Recipe(
-            type            = 'MASH',
-            name            = 'Rocky Mountain River IPA',
-            gallons         = 5,
-            boil_minutes    = 60,
-            notes           = u'This is my favorite recipe.',
-            state           = u'PUBLISHED'
+            type='MASH',
+            name='Rocky Mountain River IPA',
+            gallons=5,
+            boil_minutes=60,
+            notes=u'This is my favorite recipe.',
+            state=u'PUBLISHED'
         )
         model.commit()
 
@@ -1066,8 +1091,12 @@ class TestDrafts(TestModel):
         model.commit()
 
         assert model.Recipe.query.count() == 2
-        source = model.Recipe.query.filter(model.Recipe.published_version == None).first()
-        draft = model.Recipe.query.filter(model.Recipe.published_version != None).first()
+        source = model.Recipe.query.filter(
+            model.Recipe.published_version == null()
+        ).first()  # noqa
+        draft = model.Recipe.query.filter(
+            model.Recipe.published_version != null()
+        ).first()  # noqa
 
         assert source != draft
         assert source.type == draft.type == 'MASH'
@@ -1080,12 +1109,12 @@ class TestDrafts(TestModel):
 
     def test_draft_merge(self):
         source = model.Recipe(
-            type            = 'MASH',
-            name            = 'Rocky Mountain River IPA',
-            gallons         = 5,
-            boil_minutes    = 60,
-            notes           = u'This is my favorite recipe.',
-            state           = u'PUBLISHED'
+            type='MASH',
+            name='Rocky Mountain River IPA',
+            gallons=5,
+            boil_minutes=60,
+            notes=u'This is my favorite recipe.',
+            state=u'PUBLISHED'
         )
         source.flush()
         primary_key = source.id
@@ -1099,7 +1128,8 @@ class TestDrafts(TestModel):
         assert model.Recipe.query.count() == 2
 
         # Make a change to the draft
-        draft = model.Recipe.query.filter(model.Recipe.state == 'DRAFT').first()
+        draft = model.Recipe.query.filter(
+            model.Recipe.state == 'DRAFT').first()
         draft.name = 'Simcoe IPA'
         draft.slugs = [model.RecipeSlug(name='simcoe-ipa')]
         draft.gallons = 10
@@ -1108,7 +1138,8 @@ class TestDrafts(TestModel):
         model.commit()
 
         # Merge the draft back into its origin recipe.
-        draft = model.Recipe.query.filter(model.Recipe.state == 'DRAFT').first()
+        draft = model.Recipe.query.filter(
+            model.Recipe.state == 'DRAFT').first()
         draft.publish()
         model.commit()
 
@@ -1119,8 +1150,8 @@ class TestDrafts(TestModel):
 
         assert published.id == primary_key
         assert published.name == 'Simcoe IPA'
-        assert published.state == 'PUBLISHED' # not modified
-        assert published.creation_date == creation_date # not modified
+        assert published.state == 'PUBLISHED'  # not modified
+        assert published.creation_date == creation_date  # not modified
         assert len(published.slugs) == 1
         assert published.slugs[0].slug == 'simcoe-ipa'
         assert published.gallons == 10
@@ -1129,9 +1160,9 @@ class TestDrafts(TestModel):
 
     def test_draft_merge_style(self):
         model.Recipe(
-            name    = 'Rocky Mountain River IPA',
-            style   = model.Style(name='American IPA'),
-            state   = u'PUBLISHED'
+            name='Rocky Mountain River IPA',
+            style=model.Style(name='American IPA'),
+            state=u'PUBLISHED'
         )
         model.commit()
 
@@ -1142,12 +1173,14 @@ class TestDrafts(TestModel):
         assert model.Recipe.query.count() == 2
 
         # Change the style of the draft
-        draft = model.Recipe.query.filter(model.Recipe.state == 'DRAFT').first()
+        draft = model.Recipe.query.filter(
+            model.Recipe.state == 'DRAFT').first()
         draft.style = model.Style(name='Baltic Porter')
         model.commit()
 
         # Merge the draft back into its origin recipe.
-        draft = model.Recipe.query.filter(model.Recipe.state == 'DRAFT').first()
+        draft = model.Recipe.query.filter(
+            model.Recipe.state == 'DRAFT').first()
         draft.publish()
         model.commit()
 
@@ -1160,20 +1193,20 @@ class TestDrafts(TestModel):
 
     def test_draft_merge_fermentation_steps(self):
         model.Recipe(
-            name    = 'Rocky Mountain River IPA',
-            fermentation_steps      = [
+            name='Rocky Mountain River IPA',
+            fermentation_steps=[
                 model.FermentationStep(
-                    step        = 'PRIMARY',
-                    days        = 14,
-                    fahrenheit  = 65
+                    step='PRIMARY',
+                    days=14,
+                    fahrenheit=65
                 ),
                 model.FermentationStep(
-                    step        = 'SECONDARY',
-                    days        = 90,
-                    fahrenheit  = 45
+                    step='SECONDARY',
+                    days=90,
+                    fahrenheit=45
                 )
             ],
-            state   = u'PUBLISHED'
+            state=u'PUBLISHED'
         )
         model.commit()
 
@@ -1184,16 +1217,18 @@ class TestDrafts(TestModel):
         assert model.Recipe.query.count() == 2
 
         # Change the fermentation schedule of the draft
-        draft = model.Recipe.query.filter(model.Recipe.state == 'DRAFT').first()
+        draft = model.Recipe.query.filter(
+            model.Recipe.state == 'DRAFT').first()
         draft.fermentation_steps = [model.FermentationStep(
-            step        = 'PRIMARY',
-            days        = 21,
-            fahrenheit  = 75
+            step='PRIMARY',
+            days=21,
+            fahrenheit=75
         )]
         model.commit()
 
         # Merge the draft back into its origin recipe.
-        draft = model.Recipe.query.filter(model.Recipe.state == 'DRAFT').first()
+        draft = model.Recipe.query.filter(
+            model.Recipe.state == 'DRAFT').first()
         draft.publish()
         model.commit()
 
@@ -1201,54 +1236,54 @@ class TestDrafts(TestModel):
         assert model.Recipe.query.count() == 1
         assert model.FermentationStep.query.count() == 1
         published = model.Recipe.query.first()
-        
+
         assert published.fermentation_steps[0].step == 'PRIMARY'
         assert published.fermentation_steps[0].days == 21
         assert published.fermentation_steps[0].fahrenheit == 75
 
     def test_draft_merge_additions(self):
         recipe = model.Recipe(
-            name    = 'Rocky Mountain River IPA',
-            state   = u'PUBLISHED'
+            name='Rocky Mountain River IPA',
+            state=u'PUBLISHED'
         )
 
         # Add some ingredients
-        grain           = model.Fermentable()
-        primary_hop     = model.Hop()
-        bittering_hop   = model.Hop()
-        yeast           = model.Yeast()
+        grain = model.Fermentable()
+        primary_hop = model.Hop()
+        bittering_hop = model.Hop()
+        yeast = model.Yeast()
         recipe.additions = [
             model.RecipeAddition(
-                use         = 'MASH',
-                fermentable = grain
+                use='MASH',
+                fermentable=grain
             ),
             model.RecipeAddition(
-                use         = 'MASH',
-                hop         = primary_hop
+                use='MASH',
+                hop=primary_hop
             ),
             model.RecipeAddition(
-                use         = 'FIRST WORT',
-                hop         = primary_hop
+                use='FIRST WORT',
+                hop=primary_hop
             ),
             model.RecipeAddition(
-                use         = 'BOIL',
-                hop         = primary_hop,
+                use='BOIL',
+                hop=primary_hop,
             ),
             model.RecipeAddition(
-                use         = 'POST-BOIL',
-                hop         = primary_hop
+                use='POST-BOIL',
+                hop=primary_hop
             ),
             model.RecipeAddition(
-                use         = 'FLAME OUT',
-                hop         = bittering_hop
+                use='FLAME OUT',
+                hop=bittering_hop
             ),
             model.RecipeAddition(
-                use         = 'PRIMARY',
-                yeast       = yeast
+                use='PRIMARY',
+                yeast=yeast
             ),
             model.RecipeAddition(
-                use         = 'SECONDARY',
-                yeast       = yeast
+                use='SECONDARY',
+                yeast=yeast
             )
         ]
         model.commit()
@@ -1260,15 +1295,17 @@ class TestDrafts(TestModel):
         assert model.Recipe.query.count() == 2
 
         # Change the ingredients of the draft
-        draft = model.Recipe.query.filter(model.Recipe.state == 'DRAFT').first()
+        draft = model.Recipe.query.filter(
+            model.Recipe.state == 'DRAFT').first()
         draft.additions = [model.RecipeAddition(
-            use         = 'MASH',
-            fermentable = model.Fermentable.query.first()
+            use='MASH',
+            fermentable=model.Fermentable.query.first()
         )]
         model.commit()
 
         # Merge the draft back into its origin recipe.
-        draft = model.Recipe.query.filter(model.Recipe.state == 'DRAFT').first()
+        draft = model.Recipe.query.filter(
+            model.Recipe.state == 'DRAFT').first()
         draft.publish()
         model.commit()
 
@@ -1277,16 +1314,17 @@ class TestDrafts(TestModel):
         assert model.RecipeAddition.query.count() == 1
         published = model.Recipe.query.first()
 
-        assert published.additions[0].fermentable == model.Fermentable.query.first()
+        assert published.additions[
+            0].fermentable == model.Fermentable.query.first()
 
     def test_simple_publish(self):
         source = model.Recipe(
-            type            = 'MASH',
-            name            = 'Rocky Mountain River IPA',
-            gallons         = 5,
-            boil_minutes    = 60,
-            notes           = u'This is my favorite recipe.',
-            state           = u'DRAFT'
+            type='MASH',
+            name='Rocky Mountain River IPA',
+            gallons=5,
+            boil_minutes=60,
+            notes=u'This is my favorite recipe.',
+            state=u'DRAFT'
         )
         source.flush()
         primary_key = source.id
@@ -1302,12 +1340,12 @@ class TestDrafts(TestModel):
 
     def test_primary_slug(self):
         source = model.Recipe(
-            type            = 'MASH',
-            name            = 'Rocky Mountain River IPA',
-            gallons         = 5,
-            boil_minutes    = 60,
-            notes           = u'This is my favorite recipe.',
-            state           = u'DRAFT'
+            type='MASH',
+            name='Rocky Mountain River IPA',
+            gallons=5,
+            boil_minutes=60,
+            notes=u'This is my favorite recipe.',
+            state=u'DRAFT'
         )
         source.flush()
         primary_key = source.id
@@ -1327,12 +1365,12 @@ class TestDrafts(TestModel):
 
     def test_secondary_slug(self):
         source = model.Recipe(
-            type            = 'MASH',
-            name            = 'Rocky Mountain River IPA',
-            gallons         = 5,
-            boil_minutes    = 60,
-            notes           = u'This is my favorite recipe.',
-            state           = u'DRAFT'
+            type='MASH',
+            name='Rocky Mountain River IPA',
+            gallons=5,
+            boil_minutes=60,
+            notes=u'This is my favorite recipe.',
+            state=u'DRAFT'
         )
         source.flush()
         primary_key = source.id
@@ -1362,12 +1400,12 @@ class TestDrafts(TestModel):
         stored on a cached column so the values can be queried.
         """
         model.Recipe(
-            type            = 'MASH',
-            name            = 'Rocky Mountain River IPA',
-            gallons         = 5,
-            boil_minutes    = 60,
-            notes           = u'This is my favorite recipe.',
-            state           = u'DRAFT'
+            type='MASH',
+            name='Rocky Mountain River IPA',
+            gallons=5,
+            boil_minutes=60,
+            notes=u'This is my favorite recipe.',
+            state=u'DRAFT'
         )
         model.commit()
 

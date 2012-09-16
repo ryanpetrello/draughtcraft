@@ -1,5 +1,5 @@
-from pecan          import expose, abort
-from draughtcraft   import model
+from pecan import expose, abort
+from draughtcraft import model
 
 
 class ProfileController(object):
@@ -11,7 +11,7 @@ class ProfileController(object):
 
     @expose('profile/index.html')
     def index(self):
-        return dict(user = self.user)
+        return dict(user=self.user)
 
 
 class ProfilesController(object):

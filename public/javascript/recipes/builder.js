@@ -1,497 +1,956 @@
-$.draughtcraft.recipes.builder._delay = (function(){
-  var timer = 0;
-  return function(callback, ms){
-    $.draughtcraft.recipes.builder._changes_in_queue = ms != 0;
-    clearTimeout (timer);
-    timer = setTimeout(callback, ms);
-  };
-})();
-
-$.draughtcraft.recipes.builder._first_focus = true;
-$.draughtcraft.recipes.builder._changes_in_queue = false;
-
-/*
- * Used to fetch and redraw the current recipe via AJAX.
- */
-$.draughtcraft.recipes.builder.fetchRecipe = function(){
-    $.ajax({
-        url: window.location.pathname+'/async/ingredients',
-        cache: false,
-        success: function(html){
-            $.draughtcraft.recipes.builder.__injectRecipeContent__(html);
+String.prototype.toTitleCase = function () {
+    return this.replace(
+        /\w\S*/g,
+        function(txt){
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
         }
-    });
-};
-
-/*
- * Copies the inventory lists into the injected AJAX builder content.
- */
-$.draughtcraft.recipes.builder.injectInventories = function(){
-    $('#inventories > div').each(function(){
-        var type = this.className;
-        $('.inventory.'+type).html($(this).html());
-    });
-};
-
-/*
- * After builder content is fetched, inject it into the appropriate
- * container.
- * @param {String} html - The HTML content to inject
- */
-$.draughtcraft.recipes.builder.__injectRecipeContent__ = function(html){
-
-    //
-    // For performance reasons, we should clean up all previously 
-    // rendered jQuery select widgets.
-    //
-    $(".step fieldset select").selectBox('destroy');
-
-    //
-    // Look for tr.addition in the DOM
-    // and keep track of all unique DOM ID's.
-    //
-    var before = $.map($('tr.addition[id]'), function(x){
-        return $(x).attr('id');
-    });
-
-    $("#builder-ajax").html(html);
-
-    $.draughtcraft.recipes.builder.handleAnchor();
-
-    //
-    // Look for tr.additions that didn't exist *before* content injection.
-    //
-    var after = $.map($('tr.addition[id]'), function(x){
-        return $(x).attr('id');
-    });
-    var difference = after.filter(function(i){
-        return before.indexOf(i) < 0;
-    });
-
-    //
-    // Visually stripe the recipe ingredients
-    // 
-    $('tr.addition').each(function(index){
-        if(index % 2 == 0)
-            $(this).addClass('even');
-    });
-
-    $.draughtcraft.recipes.builder.__afterRecipeInject();
-
-    //
-    // If a new row exists, focus on its first form element.
-    //
-    if($.draughtcraft.recipes.builder._first_focus)
-        $.draughtcraft.recipes.builder._first_focus = false;
-    else if(difference.length){
-        $('#'+difference[0]).find('input, select').eq(0).focus();
-    }
-
-};
-
-/*
- * After recipe content is injected into the builder container, there are a
- * variety of listeners and state settings (e.g., current tab, last 
- * focused field) we need to persist.
- */
-$.draughtcraft.recipes.builder.__afterRecipeInject = function(){
-
-    // Re-initialize all event listeners
-    $.draughtcraft.recipes.builder.injectInventories();
-    $.draughtcraft.recipes.builder.initListeners();
-
-    // Re-choose the "last chosen" tab
-    $.draughtcraft.recipes.builder.selectTab(
-        $.draughtcraft.recipes.builder.currentTab 
     );
-
-    //
-    // Initialize forms in the newly replaced DOM with Ajax versions
-    // On successful Ajax submission, we inject the response body into
-    // the DOM.
-    //
-    $('#builder form:not(.name)').each(function(){
-        $(this).ajaxForm({
-            'success' : $.proxy(function(responseText){
-                $('.publish-btn').prop('disabled', false);
-                $('.publish-btn').text('Publish Changes');
-                $.draughtcraft.recipes.builder._delay($.noop, 0);
-                if(!$(this).hasClass('no-inject'))
-                    $.draughtcraft.recipes.builder.__injectRecipeContent__(responseText);
-                $.draughtcraft.recipes.builder._changes_in_queue = false;
-            }, this),
-            'error' : $.proxy(function(jqXHR, textStatus, errorThrown){
-                $('.publish-btn').prop('disabled', false);
-                $('.publish-btn').text('Publish Changes');
-                $.draughtcraft.recipes.builder._delay($.noop, 0);
-                if(!$(this).hasClass('no-inject'))
-                    $.draughtcraft.recipes.builder.__injectRecipeContent__(jqXHR.responseText);
-                $.draughtcraft.recipes.builder._changes_in_queue = false;
-            }, this)
-        });
-    });
-
-    //
-    // As the user is changing values, we're instantly pushing data to a
-    // controller, and redrawing the editing UI again.
-    //
-    // If the user is moving between fields using tab or the mouse,
-    // we might potentially overwrite the DOM element that they're
-    // focused on, so we need to do our best to maintain the currently
-    // focused field.
-    //
-    if($.draughtcraft.recipes.builder.lastFocus){
-        var n = $.draughtcraft.recipes.builder.lastFocus;
-        $('input#'+n+', select#'+n+', textarea#'+n).focus();
-    }
-
-    //
-    // If error messages are embedded on the page,
-    // pull them from the DOM and apply the error messages as "title"
-    // attributes on the appropriate elements.
-    //
-    $('span.error-message').each(function(){
-        $(this).prev('input, select, textarea').attr('title', $(this).html()+'.').tipTip({'delay': 200});
-        $(this).remove();
-    });
-
-    $("#tiptip_holder").fadeOut();
-
-    // Draw jQuery-powered replacements for native <select>'s.
-    $(".step fieldset select").selectBox({
-        'menuTransition'    : 'fade',
-        'menuSpeed'         : 'fast'
-    });
-
-    // Register tooltips for the recipe actions
-    $('div#actions li').each(function(){
-        $(this).tipTip({
-            'delay'     : 25,
-            'edgeOffset': 20
-        });
-    });
-
-    // Register tooltips for each of the `results` settings buttons
-    $('div.results a.recipe-setting img').each(function(){
-        $(this).tipTip({
-            'delay'     : 25,
-            'edgeOffset': 20,
-            'content'   : $(this).closest('a').attr('title')
-        });
-        $(this).closest('a').removeAttr('title');
-    });
-
-    // Register fancybox popups for ingredient links
-    $("a[href^='/ingredients/']").fancybox();
-
-    // Hide unnecessary verbiage helpers
-    $('h3 span.step-help').remove();
 };
 
-$.draughtcraft.recipes.builder.currentTab = 0;
-/*
- * Initializes listeners for the "tabs" (e.g.,
- * Mash, Boil, Ferment...)
- */
-$.draughtcraft.recipes.builder.initTabs = function(){
-    $('.step h2 li a').click(function(e){
-        // Determine the index of the chosen tab
-        var index = $('.step.active h2 li a').index(this);
+(function(n, $){
 
-        // Actually choose the tab
-        $.draughtcraft.recipes.builder.selectTab(index);
-    });
-};
+    n.recipes = n.recipes || {}, n.recipes.builder = n.recipes.builder || {};
+    ns = n.recipes.builder;
+    ns.model = ns.model || {};
 
-// The DOM ID of the last focused form field
-$.draughtcraft.recipes.builder.lastFocus;
+    var roundTo = function(number, to) {
+        to = Math.pow(10, to);
+        return Math.round(number * to) / to;
+    };
 
-/*
- * Initialize event listeners for input field focus/blur
- * so that we can keep track of the "last focused field".
- */
-$.draughtcraft.recipes.builder.initFocusListeners = function(){
-    // When a field gains focus, store its id.
-    var fields = $('input, select, textarea'); 
-    fields.focus(function(){
-        $.draughtcraft.recipes.builder.lastFocus = $(this).attr('id');
-    });
-    // When a field loses focus, unset its id.
-    fields.blur(function(){
-        if($(this).attr('id') && $.draughtcraft.recipes.builder.lastFocus == $(this).attr('id'))
-            $.draughtcraft.recipes.builder.lastFocus = null;
-    });
-};
+    ns.model.FermentationStep = function(){
+        this.step = ko.observable();
+        this.days = ko.observable();
+        this.fahrenheit = ko.observable();
 
-/*
- * Initializes event listeners for input field changes
- * for recipe components.
- */
-$.draughtcraft.recipes.builder.initUpdateListeners = function(){
+        this.celsius = ko.computed({
+            read: function(){
+                return Math.round((this.fahrenheit() - 32) / 1.8);
+            },
+            write: function(celsius){
+                this.fahrenheit(Math.round((celsius * 1.8) + 32));
+            },
+            owner: this
+        });
 
-    //
-    // For each text input, monitor the keyup event.
-    //
-    // If more than 2s passes since the last keyup, submit the changed
-    // form value asynchronously.
-    //
-    var save = function(){
-        // Stop listening for mouse movements...
-        $('body').unbind('mousemove');
+    };
 
-        // Clear any previously queued form submissions
-        $.draughtcraft.recipes.builder._delay($.noop, 0);
-        
-        // Remove any input field `blur` listeners
-        $(this).unbind('blur');
+    ns.model.RecipeAddition = function(){
 
-        // Find the closest form to submit
-        var form = $(this).closest('form');
+        var writeTimeoutInstance = null;
+        this.editing = ko.observable(false);
 
-        // Actually submit the form.
-        form.submit();
+        this.amount = ko.observable();
+        this.unit = ko.observable();
+        this.use = ko.observable();
+        this.minutes = ko.observable();
 
-        // Temporarily disable the publish button
-        $('.publish-btn').prop('disabled', true);
-        $('.publish-btn').text('Saving Changes...');
+        this.form = ko.observable();
+        this.alpha_acid = ko.observable();
 
-        //
-        // Find any adjacent input fields (for the form) and temporarily
-        // disable them (disallow edits while saving) for the duration
-        // of the Ajax save.
-        //
-        if(!$(form).hasClass('no-inject')){
-            $(form).find('input, select').prop('disabled', true);
-            $(".step fieldset select").selectBox('disable');
+        this.ingredient = ko.observable();
+
+        var write = $.proxy(function(value){
+            clearTimeout(writeTimeoutInstance);
+            var amount = 0, unit = 'POUND';
+
+            var result = n.recipes.units.from_str(value);
+            if(result && !isNaN(result[0]))
+                amount = result[0], unit = result[1];
+
+            console.log(amount);
+            console.log(unit);
+
+            this.amount(amount);
+            this.unit(unit);
+        }, this);
+
+        this.readable_amount = ko.computed({
+            read: function(){
+                if(this.amount()){
+                    var amount = this.amount();
+                    var unit = this.unit()
+                    if(ns.recipe.metric() == true){
+                        var pair = n.recipes.units.to_metric(amount, unit);
+                        amount = pair[0];
+                        unit = pair[1];
+                    }
+                    return n.recipes.units.to_str(amount, unit);
+                }
+            },
+            write: write,
+            owner: this
+        });
+
+        this.pounds = ko.computed(function(){
+            if(this.unit() == 'POUND')
+                return this.amount();
+            if(this.unit() == 'OUNCE')
+                return this.amount() / 16.0;
+            return 0;
+        }, this);
+
+        this.sortable_minutes = ko.computed(function(){
+            if(this.use() == 'FIRST WORT')
+                return 60 * 60;
+            if(this.use() == 'POST BOIL' || this.use() == 'FLAME-OUT')
+                return -1;
+            return this.minutes();
+        }, this);
+
+        this.delayedWrite = $.proxy(function(obj, evt){
+            clearTimeout(writeTimeoutInstance);
+            var value = evt.currentTarget.value;
+            writeTimeoutInstance = setTimeout(write, 1750, value);
+        }, this);
+
+        this.removeAddition = $.proxy(function(addition) {
+            this.recipe.mash.additions.remove(addition);
+            this.recipe.boil.additions.remove(addition);
+            this.recipe.fermentation.additions.remove(addition);
+        }, ns);
+
+        this.mash_percentage = ko.computed({
+            read: function(){
+                var sum = 0.0;
+                $.each(ns.recipe.mash.additions(), function(_, a){
+                    var type = (a.ingredient().printed_type || '').toUpperCase();
+                    if(type != 'GRAIN' && type != 'EXTRACT')
+                        return;
+                    sum += a.pounds();
+                });
+
+                if(isNaN(this.pounds() / sum))
+                    return '0%'; // Avoid zero division
+
+                return roundTo((this.pounds() / sum) * 100, 1) + '%';
+            },
+            owner: this
+        });
+
+    };
+
+    ns.model.RecipeAddition.prototype.toJSON = function() {
+        return {
+            amount: this.amount,
+            unit: this.unit,
+            use: this.use,
+            duration: this.minutes,
+
+            form: this.form,
+            alpha_acid: this.alpha_acid,
+
+            ingredient: this.ingredient
+        };
+    };
+
+    ns.model.RecipeStep = function(){
+        this.additions = ko.observableArray();
+        this.sortedAdditions = ko.computed(function(){
+            return this.additions().sort(function(a, b){
+                if (
+                    a.ingredient().class.toUpperCase() == 'HOP' &&
+                    b.ingredient().class.toUpperCase() == 'HOP'
+                )
+                    return a.sortable_minutes() > b.sortable_minutes() ? -1 : 0;
+
+                return a.pounds() > b.pounds() ? -1 : 0;
+            });
+        }, this);
+
+        var partition = function(cls){
+            return ko.utils.arrayFilter(this.additions(), function(item) {
+                return item.ingredient().class == cls;
+            });
+        }
+
+        this.fermentables = ko.computed($.proxy(partition, this, 'Fermentable'), this);
+        this.hops = ko.computed($.proxy(partition, this, 'Hop'), this);
+        this.yeast = ko.computed($.proxy(partition, this, 'Yeast'), this);
+        this.extra = ko.computed($.proxy(partition, this, 'Extra'), this);
+
+        this.addAddition = $.proxy(function(obj, evt){
+            var field = evt.currentTarget;
+            var id = field.value;
+            // Deep copy
+            var ingredient = $.extend(
+                true,
+                {},
+                ns.recipe.inventory().map[id]
+            );
+
+            // Create the new addition
+            var a = new ns.model.RecipeAddition();
+
+            a.amount('0');
+            a.unit(ingredient.default_unit || 'POUND');
+            a.ingredient(ingredient);
+
+            // Hop-specific
+            if(a.ingredient().class.toUpperCase() == 'HOP'){
+                a.alpha_acid(a.ingredient().alpha_acid);
+                a.unit('OUNCE');
+                a.form('LEAF');
+            }
+
+            if(this == ns.recipe.mash)
+                a.use('MASH');
+            else if(this == ns.recipe.boil){
+                a.use('BOIL');
+                a.minutes(60);
+            }else if(this == ns.recipe.fermentation)
+                a.use('PRIMARY');
+
+            // Fermentation-specific
+            if(this == ns.recipe.fermentation)
+                a.use('PRIMARY');
+
+            this.additions.push(a);
+            a.editing(true);
+
+            // Reset all of the select boxes
+            field.selectedIndex = 0;
+            ns.recipe.initDropDowns();
+        }, this);
+
+    };
+
+    ns.model.RecipeStep.prototype.toJSON = function() {
+        return {
+            additions: this.additions
+        };
+    };
+
+    ns.model.Recipe = function(){
+
+        // Set up auto-save bindings
+        this.dirtyFlag = new ko.dirtyFlag(this, false);
+        ko.computed({
+            read: function(){
+                if(this.dirtyFlag.dirty()){
+                    this.dirtyFlag.reset();
+                    ns.save(ko.toJSON(this));
+                }
+            },
+            owner: this,
+            deferEvaluation: true
+        }).extend({throttle: 500});
+
+        this.editable = ko.observable();
+        this.metric = ko.observable();
+
+        this.name = ko.observable();
+        this.author = ko.observable();
+        this.gallons = ko.observable();
+        this.style = ko.observable();
+
+        this.mash = new ns.model.RecipeStep();
+        this.boil = new ns.model.RecipeStep();
+        this.fermentation = new ns.model.RecipeStep();
+
+        this.efficiency = ko.observable();
+        this.ibu_method = ko.observable();
+
+        // Inventory
+        this.inventory = ko.observableArray();
+
+        // Extra
+        this.mash_method = ko.observable();
+        this.mash_instructions = ko.observable();
+        this.boil_minutes = ko.observable();
+        this.fermentation_steps = ko.observableArray();
+        this.notes = ko.observable();
+
+        this.initDropDowns = function(){
+            var selects = $(".inventory select");
+            selects.selectBox('destroy').selectBox({
+                'menuTransition'    : 'fade',
+                'menuSpeed'         : 'fast'
+            });
+        };
+
+        this.initReadOnly = function(){
+            $('.step').addClass('active');
+
+            // Replace all fields with static <span>'s
+            $('input, textarea').replaceWith(function(){
+                return '<span>'+$(this).val().replace(
+                    /([^>\r\n]?)(\r\n|\n\r|\r|\n)/g,
+                    '$1<br />$2'
+                )+'</span>';
+            });
+            $('select').replaceWith(function(){
+                return '<span>'+$(this).find('option:selected').text()+'</span>';
+            });
+        };
+
+        // Style attributes
+        this.style_range = $.proxy(function(attr){
+
+            if(!this.style())
+                return '-';
+
+            if(this.metric() && attr == 'srm')
+                attr = 'ebc';
+
+            var min = this.STYLE_MAP[this.style()]['min_'+attr];
+            var max = this.STYLE_MAP[this.style()]['max_'+attr];
+
+            if(min && max){
+                if(attr == 'abv'){
+                    min = roundTo(min, 1) + '%';
+                    max = roundTo(max, 1) + '%';
+                } else if (attr == 'ibu' || attr == 'srm'){
+                    min = Math.round(min);
+                    max = Math.round(max);
+                } else {
+                    min = roundTo(min, 3);
+                    max = roundTo(max, 3);
+                }
+
+                var range = min + ' - ' + max
+                if(attr == 'srm')
+                    range += ' <span class="unit">&#186 SRM</span>';
+                if(attr == 'ebc')
+                    range += ' <span class="unit">EBC</span>';
+                if(attr == 'ibu')
+                    range += ' <span class="unit">IBU</span>';
+                return range;
+            }
+
+            return '-';
+        }, this);
+
+        this.style_matches = $.proxy(function(attr){
+            if(!this.style())
+                return "</span>";
+
+            if(this.metric() && attr == 'srm')
+                attr = 'ebc';
+
+            var min = this.STYLE_MAP[this.style()]['min_'+attr];
+            var max = this.STYLE_MAP[this.style()]['max_'+attr];
+
+            if(!min || !max)
+                return "</span>";
+
+            if(min && max && this[attr]() <= max && this[attr]() >= min)
+                return "<img src='/images/yes.png' />";
+
+            return "<img src='/images/no.png' />";
+        }, this);
+
+        this.STYLE_MAP = {};
+        $.each(ns.STYLES, $.proxy(function(_, style){
+            this.STYLE_MAP[style.id] = style;
+        }, this));
+
+        this.volume = ko.computed({
+            read: function(){
+                amount = this.gallons();
+                if(!amount) return '';
+
+                if(this.metric() == true)
+                    amount *= 3.78541178;
+
+                // Thanks, floating point math...
+                if(Math.ceil(amount) - amount <= .00001)
+                    amount = Math.ceil(amount);
+
+                return roundTo(amount, 2);
+            },
+            write: function(amount){
+                if(this.metric() == true)
+                    amount *= .264172052637296;
+                this.gallons(amount);
+            },
+            owner: this
+        });
+
+        // Calculations
+        this.og = ko.computed(function(){
+            var points = 0;
+
+            $.each(
+                this.mash.fermentables().concat(
+                    this.boil.fermentables(),
+                    this.fermentation.fermentables()
+                ),
+                $.proxy(function(_, a){
+                    var type = (a.ingredient().printed_type || '').toUpperCase();
+
+                    // Default to the mash efficiency specified by the recipe.
+                    var efficiency = this.efficiency();
+
+                    /*
+                     * If the fermentable is extract, we don't take mash
+                     * efficiency into account - instead, we just use the
+                     * potential on record for the ingredient.
+                     */
+                    if(type == 'EXTRACT')
+                        efficiency = 1.0;
+
+                    points += (a.pounds() * a.ingredient().ppg * efficiency) / this.gallons();
+                }, this)
+            );
+
+            return roundTo((points / 1000 + 1), 3);
+
+        }, this);
+
+        this.fg = ko.computed(function(){
+
+            // Default attenuation to 75%;
+            var attenuation = 0.75;
+
+            $.each(this.fermentation.yeast(), function(_, a){
+                // For more than one yeast addition, choose the highest attenuation
+                attenuation = Math.max(attenuation, a.ingredient().attenuation);
+            });
+
+            var points = (this.og() - 1) * 1000;
+            var fg = points - (points * attenuation);
+            return roundTo(fg / 1000 + 1, 3);
+
+        }, this);
+
+        this.abv = ko.computed(function(){
+            var abv = (this.og() - this.fg()) * 131;
+            return abv;
+        }, this);
+
+        this.ibu = ko.computed(function(){
+            var formulas = {};
+            formulas['tinseth'] = $.proxy(function(){
+                /*
+                 * IBU as calculated with Glenn Tinseth's formula:
+                 * http://www.realbeer.com/hops/FAQ.html
+                 */
+                var total = 0;
+
+                $.each(this.boil.hops(), $.proxy(function(_, h){
+
+                    /*
+                     * Start by calculating utilization
+                     * Bigness factor * Boil Time factor
+                     */
+                    //
+                    // Calculate the bigness factor
+                    var bigness = 1.65 * (Math.pow(0.000125, (this.og() - 1)));
+
+                    // Calculate the boil time factor
+                    var boiltime = (1 - Math.exp(-0.04 * h.minutes())) / 4.15;
+
+                    // Calculate utilization
+                    utilization = bigness * boiltime;
+
+                    /*
+                     * If the hops are in pellet form,
+                     * increase utilization by 15%
+                     */
+                    if(h.form() == 'PELLET')
+                        utilization *= 1.15;
+
+                    var ounces = h.pounds() * 16.0;
+
+                    // IBU = Utilization * ((Ounces * AAU * 7490) / Gallons)
+                    var alpha_acid = h.alpha_acid() / 100;
+                    total += utilization * ((ounces * alpha_acid * 7490) / this.gallons());
+
+                }, this));
+
+                return Math.round(total);
+            }, this);
+
+            formulas['rager'] = $.proxy(function(){
+                /*
+                 * IBU as calculated with Jakie Rager's formula:
+                 * http://www.realbeer.com/hops/FAQ.html
+                 */
+
+                var total = 0;
+                var gallons = this.gallons();
+
+                $.each(this.boil.hops(), $.proxy(function(_, h){
+                    var minutes = h.minutes();
+
+                    function tanh(arg) {
+                        // Returns the hyperbolic tangent of the number,
+                        // defined as sinh(number)/cosh(number)
+                        return (
+                            (Math.exp(arg) - Math.exp(-arg)) /
+                            (Math.exp(arg) + Math.exp(-arg))
+                        );
+                    };
+
+                    // Calculate utilization as a decimal
+                    var utilization = 18.11 + 13.86 * tanh(
+                        (minutes - 31.32) / 18.27
+                    );
+                    utilization /= 100;
+
+                    /*
+                     * If the hops are in pellet form,
+                     * increase utilization by 15%
+                     */
+                    if(h.form() == 'PELLET')
+                        utilization *= 1.15;
+
+                    // If the estimated OG exceeds 1.050, make an adjustment
+                    var gravity_adjustment = 1;
+                    if(this.og() > 1.050)
+                        gravity_adjustment += ((this.og() - 1.050) / 0.2);
+
+                    var ounces = h.pounds() * 16.0;
+
+                    // Convert AA rating to a decimal
+                    var alpha_acid = h.alpha_acid() / 100;
+
+                    total += (ounces * utilization * alpha_acid *
+                              7462) / (gallons * gravity_adjustment);
+                }, this));
+
+                return Math.round(total);
+            }, this);
+
+            formulas['daniels'] = $.proxy(function(){
+                /*
+                 * IBU as calculated with Ray Daniels' formula in
+                 * "Designing Great Beers".
+                 */
+                var total = 0;
+                var gallons = this.gallons();
+
+                $.each(this.boil.hops(), $.proxy(function(_, h){
+                    var minutes = h.minutes();
+
+                    var utilization = .05;
+
+                    // Generic utilization values for hops
+                    var utilization_table;
+                    if(h.form() == 'PELLET')
+                        utilization_table = [
+                            [75, .34],
+                            [60, .30],
+                            [45, .27],
+                            [30, .24],
+                            [20, .19],
+                            [10, .15],
+                            [0, .06]
+                        ];
+                    else
+                        utilization_table = [
+                            [75, .27],
+                            [60, .24],
+                            [45, .22],
+                            [30, .19],
+                            [20, .15],
+                            [10, .12],
+                            [0, .05]
+                        ];
+
+                    /*
+                     * From the highest time range in the list working down,
+                     * loop through until we find a range the recipe's boil duration
+                     * fits into.  Once we've found the highest matched range,
+                     * we know the utilization value.
+                     */
+                    $.each(utilization_table, function(_, i){
+                        var time = i[0];
+                        var ratio = i[1];
+                        if(minutes > time){
+                            utilization = ratio;
+                            return false;
+                        }
+                    });
+
+                    var ounces = h.pounds() * 16.0;
+
+                    // Convert AA rating to a decimal
+                    var alpha_acid = h.alpha_acid() / 100;
+
+                    // If the estimated OG exceeds 1.050, make an adjustment
+                    var gravity_adjustment = 1;
+                    if(this.og() > 1.050)
+                        gravity_adjustment += ((this.og() - 1.050) / 0.2);
+
+                    total += (ounces * utilization * alpha_acid *
+                              7462) / (gallons * gravity_adjustment);
+
+                }, this));
+
+                return Math.round(total);
+            }, this);
+
+            if(this.ibu_method())
+                return formulas[this.ibu_method()]()
+
+        }, this);
+
+        this.srm = ko.computed(function(){
+            var total = 0;
+
+            $.each(
+                this.mash.fermentables().concat(
+                    this.boil.fermentables(),
+                    this.fermentation.fermentables()
+                ),
+                $.proxy(function(_, a){
+                    var mcu = (a.pounds() * a.ingredient().lovibond) / this.gallons();
+                    total += mcu;
+                }, this)
+            );
+
+            return roundTo(1.4922 * Math.pow(total, 0.6859), 1)
+
+        }, this);
+
+        this.ebc = ko.computed(function(){
+            return roundTo(this.srm() * 1.97, 1);
+        }, this);
+
+        this.srmClass = ko.computed(function(){
+            return 'srm-' + Math.min(parseInt(this.srm()), 30);
+        }, this);
+
+        this.color = ko.computed(function(){
+            if(this.metric() == true)
+                return this.printable_ebc();
+            return this.srm() + ' <span class="unit">&#186; SRM</span>';
+        }, this);
+
+        this.printable_ebc = ko.computed(function(){
+            return this.ebc() + ' <span class="unit">EBC</span>';
+        }, this);
+
+        this.addFermentationStep = function(){
+            var step = [
+                'PRIMARY',
+                'SECONDARY',
+                'TERTIARY'
+            ][ns.recipe.fermentation_steps().length];
+
+            var e = new ns.model.FermentationStep();
+            e.step(step);
+            e.days(7);
+            e.fahrenheit(70);
+            ns.recipe.fermentation_steps.push(e);
+            ns.recipe.initDropDowns();
+        };
+
+        this.removeFermentationStep = function(step){
+            ns.recipe.fermentation_steps.remove(step);
+        };
+
+    };
+
+    ns.model.Recipe.prototype.toJSON = function() {
+        return {
+            name: this.name,
+            gallons: this.gallons,
+            style: this.style,
+
+            mash: this.mash,
+            boil: this.boil,
+            fermentation: this.fermentation,
+
+            boil_minutes: this.boil_minutes,
+            mash_method: this.mash_method,
+            mash_instructions: this.mash_instructions,
+            fermentation_steps: this.fermentation_steps,
+            notes: this.notes,
+
+            metric: this.metric
+        };
+    };
+
+    ns.RecipeViewModel = function(){
+        ns.recipe = this.recipe = new ns.model.Recipe();
+
+        this.STYLES = ns.STYLES;
+        this.MASH_METHODS = [
+            {'id': 'SINGLESTEP', 'name': 'Single Step Infusion'},
+            {'id': 'TEMPERATURE', 'name': 'Temperature'},
+            {'id': 'DECOCTION', 'name': 'Decoction'},
+            {'id': 'MULTISTEP', 'name': 'Multi-Step'}
+        ];
+
+        this.HOP_USES = [
+            {'id': 'FIRST WORT', 'name': 'First Wort'},
+            {'id': 'BOIL', 'name': 'Boil'},
+            {'id': 'FLAME OUT', 'name': 'Flame Out'}
+        ];
+        this.HOP_FORMS = [
+            {'id': 'LEAF', 'name': 'Leaf'},
+            {'id': 'PELLET', 'name': 'Pellet'},
+            {'id': 'PLUG', 'name': 'Plug'}
+        ];
+
+        this.BOIL_TIMES = $.proxy(function(){
+            var minutes = this.recipe.boil_minutes() || 60;
+            var times = [];
+            while(minutes >= 5){
+                times.push({'id': minutes, 'name': minutes + ' min'});
+                minutes -= 5;
+            }
+            times.push({'id': 4, 'name': '4 min'});
+            times.push({'id': 3, 'name': '3 min'});
+            times.push({'id': 2, 'name': '2 min'});
+            times.push({'id': 1, 'name': '1 min'});
+            times.push({'id': 0, 'name': '0 min'});
+            return times;
+        }, this);
+
+
+        this.FERMENTATION_DATE_RANGE = function(){
+            var temps = [];
+            var i = 1;
+            while(i <= 90){
+                temps.push(i);
+                i++;
+            }
+            return temps;
+        }();
+        this.FAHRENHEIT_RANGE = function(){
+            var temps = [];
+            var i = 100;
+            while(i >= 32){
+                temps.push(i);
+                i--;
+            }
+            return temps;
+        }();
+        this.CELSIUS_RANGE = function(){
+            var temps = [];
+            var i = 35;
+            while(i >= 0){
+                temps.push(i);
+                i--
+            }
+            return temps;
+        }();
+
+        var show = $.proxy(function(){
+            // Display the UI after data has been fetched via AJAX.
+            $('.builder-loading').hide();
+            var last = window.location.hash.replace('#', '');
+            this.activateStep(last || $('.step h2 a').html().toLowerCase());
+            $('.step.results').css('display', 'block');
+        }, this);
+
+        this.activateStep = function(step){
+            $('.step').removeClass('active');
+            $('.step.'+step).addClass('active');
+            window.location = '#'+step;
+        };
+
+        this.stripe = function(table){
+            var rows = $(table).find("tr:not(:empty):not(.header)")
+            rows.each(function(i, row){
+                if(i % 2 == 0)
+                    $(row).addClass('even');
+                else
+                    $(row).removeClass('even');
+            });
+        };
+
+        ($.proxy(function(){
+            // Fetch recipe data via AJAX and render the UI
+            $.post(
+                n.recipes.builder.callback,
+                {},
+                ($.proxy(function(data){
+                    show();
+
+                    var editable = data['editable'];
+                    var data = data['recipe'];
+                    var pop = function(obj, key){
+                        var v = obj[key];
+                        if(v)
+                            delete obj[key]
+                        return v;
+                    };
+
+                    var appendAdditions = $.proxy(function(key){
+                        var additions = pop(data, key);
+                        for(var i in additions){
+                            var a = new ns.model.RecipeAddition();
+                            for(var k in additions[i]){
+                                if(a[k])
+                                    a[k](additions[i][k]);
+                            }
+                            this.recipe[key].additions.push(a);
+                        }
+                    }, this);
+                    appendAdditions('mash');
+                    appendAdditions('boil');
+                    appendAdditions('fermentation');
+
+                    // Fermentation steps
+                    var steps = pop(data, 'fermentation_steps');
+                    for(var i in steps){
+                        var s = new ns.model.FermentationStep();
+                        s['step'](steps[i]['step']);
+                        s['days'](steps[i]['days']);
+                        s['fahrenheit'](steps[i]['fahrenheit']);
+                        this.recipe.fermentation_steps.push(s);
+                    }
+
+                    // Recipe attributes
+                    for(var k in data){
+                        if(this.recipe[k])
+                            this.recipe[k](data[k]);
+                    }
+
+                    // For speed, build a map of ingredients indexed by ID
+                    var _map = {};
+                    $.each(this.recipe.inventory(), function(type, ingredients){
+                        $.each(ingredients, function(_, ingredient){
+                            _map[ingredient.id] = ingredient;
+                        });
+                    });
+                    this.recipe.inventory().map = _map;
+
+                    this.recipe.editable(editable);
+                    if(editable)
+                        $("#header select").selectBox({
+                            'menuTransition'    : 'fade',
+                            'menuSpeed'         : 'fast'
+                        });
+                    else
+                        this.recipe.initReadOnly();
+
+                    this.recipe.initDropDowns();
+                    this.recipe.dirtyFlag.reset();
+                    $('h1 input').trigger('update');
+
+                    // Register a JS tooltip on the author's thumbnail (if there is one).
+                    $('img.gravatar').tipTip({'delay': 50});
+
+                    // Register tooltips for the recipe actions
+                    $('div#actions li').each(function(){
+                        $(this).tipTip({
+                            'delay'     : 25,
+                            'edgeOffset': 20
+                        });
+                    });
+
+                    // Register tooltips for each of the `results` settings buttons
+                    $('div.results a.recipe-setting img').each(function(){
+                        $(this).tipTip({
+                            'delay'     : 25,
+                            'edgeOffset': 20,
+                            'content'   : $(this).closest('a').attr('title')
+                        });
+                        $(this).closest('a').removeAttr('title');
+                    });
+
+
+                    // Register submit events on form submission buttons
+                    $('#actions li.submit').click(function(e){
+                        e.preventDefault();
+                        $(this).closest('form').submit();
+                    });
+
+                }, this))
+
+            );
+
+        }, this))();
+
+        ko.bindingHandlers.stripe = {update: this.stripe};
+
+    };
+
+    ns.xhr = ns.xhr || {};
+    ns.xhr.semaphore = false;
+    ns.xhr.callback;
+
+    ns.save = function(json){
+        if(ns.xhr.semaphore == true)
+            return ns.xhr.callback = $.proxy(ns.save, this, [json]);
+        ns.xhr.semaphore = true;
+
+        $('.publish-btn').attr('disabled', true).text('Saving...');
+        $.ajax({
+            type: 'POST',
+            url: window.location.pathname.toString() + '?_method=PUT',
+            data: {
+                recipe: json
+            },
+            complete: function(){
+                $('.publish-btn').attr('disabled', false).text('Publish Changes');
+                ns.xhr.semaphore = false;
+                if(ns.xhr.callback){
+                    ns.xhr.callback();
+                    ns.xhr.callback = undefined;
+                }
+            }
+        });
+    };
+
+})($.draughtcraft = $.draughtcraft || {}, $);
+
+$(function(){
+
+    /*
+     * An observable "dirty flag".
+     * http://www.knockmeout.net/2011/05/creating-smart-dirty-flag-in-knockoutjs.html
+     */
+    ko.dirtyFlag = function(root, isInitiallyDirty) {
+        var result = function() {},
+            _initialState = ko.observable(ko.toJSON(root)),
+            _isInitiallyDirty = ko.observable(isInitiallyDirty);
+
+        result.dirty = ko.computed(function() {
+            return _isInitiallyDirty() || _initialState() !== ko.toJSON(root);
+        }).extend({throttle: 500});
+
+        result.reset = function() {
+            _initialState(ko.toJSON(root));
+            _isInitiallyDirty(false);
+        };
+
+        return result;
+    };
+
+    ko.applyBindings(new $.draughtcraft.recipes.builder.RecipeViewModel());
+
+    // Apply a "fancybox" popup
+    ko.bindingHandlers.popup = {
+        init: function(el){
+            if(el) $(el).fancybox({
+                centerOnScroll: true,
+                onComplete: function(links, index) {
+                    $.fancybox.center(true);
+                }
+            });
+        }
+    };
+    ko.bindingHandlers.titleUpdate = {
+        update: function(el){
+            var ns = $.draughtcraft.recipes.builder.recipe;
+            document.title = 'DraughtCraft - ' + ns.name();
+            if(ns.author())
+                document.title += ' - ' + ns.author();
+        }
+    };
+    ko.bindingHandlers.hasfocus['update'] = function(element, valueAccessor) {
+        if (!element['__ko_hasfocusUpdating']) {
+            var value = ko.utils.unwrapObservable(valueAccessor());
+            value ? element.focus() : element.blur();
+            if(value)
+                $(element).select();
         }
     };
 
-    // Any time an <input> or <textarea> triggers a `keyup`...
-    $('.step input, .step textarea, .results textarea').keyup(function(e){
-        // Ignore Tab or Shift-Tab keypresses...
-        if(e.keyCode == 9 || e.keyCode == 16) return;
-
-        // Start a timer to auto-save soon.
-        $.draughtcraft.recipes.builder._delay($.proxy(save, this), 500);
-
-        //
-        // Listen for any mouse movement. If movement occurs, go ahead and save.
-        // This usually signals that the user is moving their mouse to add
-        // another ingredient or change some setting.
-        //
-        $('body').mousemove($.proxy(function(){
-            // Stop listening for mouse movements...
-            $('body').unbind('mousemove');
-            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 250);
-        }, this));
-
-    });
-
-    //
-    // If any field receives focus, cancel any queued saves and let the changes
-    // get rolled into the next save attempt.
-    //
-    // In this way, if a user tabs from field to field, editing along the way,
-    // the changes will be saved in bulk once:
-    //
-    // 1.  They move their mouse.
-    //            - or -
-    // 2.  They change a value and wait past the auto-save threshold.
-    //
-    $('.step input, .step select').focus(function(){
-        if(!$.draughtcraft.recipes.builder._changes_in_queue) return;
-        if($(this).hasClass('selectBox')) return;
-        $.draughtcraft.recipes.builder._delay($.noop, 0);
-    });
-
-    //
-    // If we're *about* to save, and any field is *hovered over*, prolong
-    // the save for an additional second.  In this way, if the user
-    // is moving the mouse around after changing a field value, it won't
-    // save (and disable some field they're about to potentially focus on).
-    //
-    $('.step input, .step select').mouseenter(function(){
-        if($.draughtcraft.recipes.builder._changes_in_queue){
-            $.draughtcraft.recipes.builder._delay($.proxy(save, this), 1000);
-        }
-    });
-
-    // Any time a <select>'s value changes, save immediately.
-    $('.step select').change(save);
-};
-
-/*
- * To enhance user experience, we should automatically
- * add sequentual `tabindex` attributes to the ingredient
- * editing fields.  This will make it so that users can
- * easily tab through form fields as they're live-editing.
- */
-$.draughtcraft.recipes.builder.initTabIndexes = function(){
-
-    $('.step input, .step select').each(function(index){
-        $(this).attr('tabindex', index);
-    });
-
-    //
-    // Links should have the lowest possible tab precedence - while
-    // you're tabbing through the ingredient editing form,
-    // we don't want to stop on links to ingredients, but instead
-    // want to move easily from field to field.
-    //
-    $('.step tr.addition a').attr('tabindex', "9999");
-};
-
-/*
- * Initializes all event listeners
- */
-$.draughtcraft.recipes.builder.initListeners = function(){
-    $.draughtcraft.recipes.builder.initTabs();
-    $.draughtcraft.recipes.builder.initTabIndexes();
-    $.draughtcraft.recipes.builder.initUpdateListeners();
-    $.draughtcraft.recipes.builder.initFocusListeners();
-};
-
-/*
- * Used to remove an addition/ingredient from a recipe.
- * @param {Integer} model.RecipeAddition.id
- */
-$.draughtcraft.recipes.builder.removeAddition = function(addition, el){
-    if(confirm('Are you sure you want to remove this?')){
-        $(el).closest('tr').remove();
-        $.ajax({
-            url: window.location.pathname+'/async/ingredients/'+addition,
-            type: 'DELETE',
-            cache: false,
-            success: function(html){
-                $.draughtcraft.recipes.builder.__injectRecipeContent__(html);
-            }
-        });
-    }
-};
-
-/*
- * Chooses and displays a specific tab/section.
- * @param {Integer} index
- */
-$.draughtcraft.recipes.builder.selectTab = function(index){
-    // Hide all steps
-    $('.step').removeClass('active');
-
-    // Display the step at the correct index
-    $('.step').eq(index).addClass('active');
-
-    // Store the "current" step index for reference
-    $.draughtcraft.recipes.builder.currentTab = index;
-
-    // Force the sidebar to scroll down with the page
-    $('.inventory:visible').scrollToFixed({ marginTop: 10 });
-
-    // Safari bug: force the browser window to repaint by quickly scrolling
-    var pos = $('body').scrollTop();
-    window.scrollTo(0, pos+1);
-    window.scrollTo(0, pos);
-}; 
-
-/*
- * Render jQuery replacements for recipe-level settings,
- * and listen on form submissions.
- */
-$.draughtcraft.recipes.builder.initRecipeSettings = function(){
-    // Draw jQuery-powered replacements for native <select>'s.
-    $("#builder fieldset select").selectBox({
-        'menuTransition'    : 'fade',
-        'menuSpeed'         : 'fast'
-    });
-    // For each setting, monitor changes and submit the containing form
-    $('#builder fieldset select').change(function(){
-        var form = $(this).closest('form');
-        form.submit();
-    });
-};
-
-/*
- * If a specific step is specified in the page anchor
- * (e.g., #mash, #boil), select the appropriate tab.
- */
-$.draughtcraft.recipes.builder.handleAnchor = function(){
-    var anchor = window.location.hash;
-    if(anchor){
-        var tab = $('li.active a[href$='+anchor+']').closest('.step');
-        $.draughtcraft.recipes.builder.selectTab($('.step').index(tab));
-    }
-};
-
-/*
- * Register tooltip listeners on the name field, and cause it to autogrow
- * as text is added and removed.
- */
-$.draughtcraft.recipes.builder.handleNameField = function(){
-    var msg = 'Click here to edit the recipe name.';
-    $('h1').tipTip({
-        'delay'     : 50,
-        'content'   : msg
-    });
-    $('h1 input').focus(function(){
-        $('h1').tipTip('hide').tipTip('destroy');
-    }).blur(function(){
-        $('h1').tipTip({
-            'delay'     : 50,
-            'content'   : msg
-        })
-    }).autogrow({
+    // Make the recipe name grow as the user types
+    $('h1 input').autogrow({
         'minWidth'      : 150,
         'maxWidth'      : 535,
         'comfortZone'   : 25
-    }).change(function(){
-        $(this).closest('form').submit();   
     });
-
-    /*
-     * When the name field is changed, submit its containing form via ajax.
-     */
-    $('#builder div.header > form.name').ajaxForm({
-        'success' : function(responseText){
-            $('.publish-btn').prop('disabled', false);
-            $('.publish-btn').text('Publish Changes');
-            $.draughtcraft.recipes.builder._delay($.noop, 0);
-            $.draughtcraft.recipes.builder._changes_in_queue = false;
-        },
-        'error' : function(jqXHR, textStatus, errorThrown){
-            $('.publish-btn').prop('disabled', false);
-            $('.publish-btn').text('Publish Changes');
-            $.draughtcraft.recipes.builder._delay($.noop, 0);
-            $.draughtcraft.recipes.builder._changes_in_queue = false;
-        }
-    });
-};
-
-/*
- * Register form listeners on the volume field
- */
-$.draughtcraft.recipes.builder.handleVolumeField = function(){
-    /*
-     * When the volume field is changed, submit its containing form via ajax.
-     */
-    $('#builder div.header form.volume input').keyup(function(){
-        // Start a timer to auto-save 2 seconds from now.
-        $.draughtcraft.recipes.builder._delay($.proxy(function(){
-
-            var value = $(this).val();
-            if(!parseFloat(value) || isNaN(parseFloat(value))){
-                $(this).val(this.defaultValue);
-                return;
-            }
-            this.defaultValue = value;
-
-            // Temporarily disable the publish button
-            $('.publish-btn').prop('disabled', true);
-            $('.publish-btn').text('Saving Changes...');
-
-            $(this).closest('form').submit();  
-            
-        }, this), 1000);
-    });
-};
+});
 
 (function($){
 
@@ -553,16 +1012,3 @@ $.draughtcraft.recipes.builder.handleVolumeField = function(){
     };
 
 })(jQuery);
-
-$(document).ready(function(){
-    $.draughtcraft.recipes.builder.initRecipeSettings();
-    $.draughtcraft.recipes.builder.fetchRecipe();
-    $.draughtcraft.recipes.builder.handleNameField();
-    $.draughtcraft.recipes.builder.handleVolumeField();
-
-    // Register a JS tooltip on the author's thumbnail (if there is one).
-    $('img.gravatar').tipTip({'delay': 50});
-});
-
-// Disabling Safari's annoying form warning - the builder auto-saves for you.
-window.onbeforeunload=function(e){}

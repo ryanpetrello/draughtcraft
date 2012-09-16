@@ -1,7 +1,7 @@
 /*
  * Mixins
  */
-.box-shadow () {
+.box-shadow (@x: 0, @y: 0, @blur: 1px, @color: #000) {
   box-shadow: @arguments;
   -moz-box-shadow: @arguments;
   -webkit-box-shadow: @arguments;
@@ -146,9 +146,6 @@ h3  {
   padding-top: 8px;
   display: block;
   color: #990000;
-  &:after  {
-    content: "." /* htmlfill errors don't tend to have punctuation. */
-  }
 }
 input.error  {
   border-color: #FFAAAA;
@@ -347,7 +344,12 @@ div#about-box  {
     height: 16px;
   }
 }
-.srm.srm-0  { .srm-mixin(#F3F993) }
+.srm.srm-0  {
+  .srm-mixin(#FFFFFF);
+  img.glass  {
+    background: transparent !important;
+  }
+}
 .srm.srm-1  { .srm-mixin(#F3F993) }
 .srm.srm-2  { .srm-mixin(#F5F75C) }
 .srm.srm-3  { .srm-mixin(#F6F513) }

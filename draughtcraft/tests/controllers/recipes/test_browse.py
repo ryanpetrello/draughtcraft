@@ -1,12 +1,14 @@
-from draughtcraft.tests     import TestApp
-from draughtcraft           import model
-from datetime               import datetime, timedelta
-from urllib                 import urlencode
+from draughtcraft.tests import TestApp
+from draughtcraft import model
+from datetime import datetime, timedelta
+from urllib import urlencode
+
 
 def R(kwargs):
     recipe = model.Recipe(**kwargs)
     if 'author' not in kwargs:
-        recipe.author = model.User.query.first() or model.User(email = 'ryan@example.com')
+        recipe.author = model.User.query.first(
+        ) or model.User(email='ryan@example.com')
     return recipe
 
 
@@ -16,14 +18,14 @@ class TestRecipeBrowser(TestApp):
     """
 
     _default = {
-        'page'      : '1',
-        'order_by'  : 'last_updated',
-        'direction' : 'DESC',
-        'style'     : '',
-        'color'     : '',
-        'mash'      : 'true',
-        'minimash'  : 'true',
-        'extract'   : 'true'
+        'page': '1',
+        'order_by': 'last_updated',
+        'direction': 'DESC',
+        'style': '',
+        'color': '',
+        'mash': 'on',
+        'minimash': 'on',
+        'extract': 'on'
     }
 
     def _get(self, args={}, **kwargs):
@@ -43,7 +45,7 @@ class TestRecipeBrowser(TestApp):
 class TestRecipeBrowse(TestRecipeBrowser):
 
     def test_browse_index(self):
-        model.Style(name = 'American IPA')
+        model.Style(name='American IPA')
         model.commit()
 
         response = self.get('/recipes/')
@@ -51,8 +53,8 @@ class TestRecipeBrowse(TestRecipeBrowser):
         assert len(response.namespace.get('styles')) == 1
 
     def test_browse_ajax(self):
-        response = self.get('/recipes/recipes', status=400)
-        assert response.status_int == 400
+        response = self.get('/recipes/recipes', status=200)
+        assert response.status_int == 200
 
 
 class TestRecipeBase(TestRecipeBrowser):
@@ -76,9 +78,6 @@ class TestRecipeBase(TestRecipeBrowser):
         self._eq('direction', 'DESC')
         self._eq('recipes', [])
 
-    def test_schema_failure(self):
-        self._get({'style': 500}, status=400) # Invalid model.Style
-        assert self._ns.status_int == 400
 
 class TestPaging(TestRecipeBrowser):
     """
@@ -149,7 +148,7 @@ class TestPaging(TestRecipeBrowser):
 class TestFiltering(TestRecipeBrowser):
 
     def test_filter_by_style(self):
-        style = model.Style(name = 'American IPA')
+        style = model.Style(name='American IPA')
         R({'name': 'Simple Recipe', 'state': 'PUBLISHED', 'style': style})
         model.commit()
 
@@ -173,76 +172,10 @@ class TestFiltering(TestRecipeBrowser):
         self._eq('direction', 'DESC')
         assert self._ns['recipes'][0].id == model.Recipe.query.first().id
 
-        model.Style(name = 'American Stout')
+        model.Style(name='American Stout')
         model.commit()
 
         self._get({'style': '2'})
-        self._eq('pages', 1)
-        self._eq('current_page', 1)
-        self._eq('offset', 0)
-        self._eq('perpage', 15)
-        self._eq('total', 0)
-        self._eq('order_by', 'last_updated')
-        self._eq('direction', 'DESC')
-        assert len(self._ns['recipes']) == 0
-
-    def test_filter_by_type(self):
-        R({'name': 'MASH', 'state': 'PUBLISHED', 'type': 'MASH'})
-        R({'name': 'MINIMASH', 'state': 'PUBLISHED', 'type': 'MINIMASH'})
-        R({'name': 'EXTRACTSTEEP', 'state': 'PUBLISHED', 'type': 'EXTRACTSTEEP'})
-        R({'name': 'EXTRACT', 'state': 'PUBLISHED', 'type': 'EXTRACT'})
-        model.commit()
-
-        self._get()
-        self._eq('pages', 1)
-        self._eq('current_page', 1)
-        self._eq('offset', 0)
-        self._eq('perpage', 15)
-        self._eq('total', 4)
-        self._eq('order_by', 'last_updated')
-        self._eq('direction', 'DESC')
-        assert len(self._ns['recipes']) == 4
-
-        # Mash Only
-        self._get({'minimash': 'false', 'extract': 'false'})
-        self._eq('pages', 1)
-        self._eq('current_page', 1)
-        self._eq('offset', 0)
-        self._eq('perpage', 15)
-        self._eq('total', 1)
-        self._eq('order_by', 'last_updated')
-        self._eq('direction', 'DESC')
-        assert len(self._ns['recipes']) == 1
-        assert self._ns['recipes'][0].id == model.Recipe.get_by(name='MASH').id
-
-        # Mini-Mash Only
-        self._get({'mash': 'false', 'extract': 'false'})
-        self._eq('pages', 1)
-        self._eq('current_page', 1)
-        self._eq('offset', 0)
-        self._eq('perpage', 15)
-        self._eq('total', 1)
-        self._eq('order_by', 'last_updated')
-        self._eq('direction', 'DESC')
-        assert len(self._ns['recipes']) == 1
-        assert self._ns['recipes'][0].id == model.Recipe.get_by(name='MINIMASH').id
-
-        # Extracts
-        self._get({'mash': 'false', 'minimash': 'false'})
-        self._eq('pages', 1)
-        self._eq('current_page', 1)
-        self._eq('offset', 0)
-        self._eq('perpage', 15)
-        self._eq('total', 2)
-        self._eq('order_by', 'last_updated')
-        self._eq('direction', 'DESC')
-        assert len(self._ns['recipes']) == 2
-        identifiers = [r.id for r in self._ns['recipes']]
-        for recipe in model.Recipe.query.filter(model.Recipe.type.like('EXTRACT%')).all():
-            assert recipe.id in identifiers
-
-        # All three types disabled
-        self._get({'mash': 'false', 'minimash': 'false', 'extract': 'false'})
         self._eq('pages', 1)
         self._eq('current_page', 1)
         self._eq('offset', 0)
@@ -313,6 +246,87 @@ class TestFiltering(TestRecipeBrowser):
         assert len(self._ns['recipes']) == 2
 
 
+class TestFilteringByType(TestRecipeBrowser):
+
+    _default = {
+        'page': '1',
+        'order_by': 'last_updated',
+        'direction': 'DESC',
+        'style': '',
+        'color': ''
+    }
+
+    def test_filter_by_type(self):
+        R({'name': 'MASH', 'state': 'PUBLISHED', 'type': 'MASH'})
+        R({'name': 'MINIMASH', 'state': 'PUBLISHED', 'type': 'MINIMASH'})
+        R({'name': 'EXTRACTSTEEP', 'state': 'PUBLISHED', 'type':
+          'EXTRACTSTEEP'})
+        R({'name': 'EXTRACT', 'state': 'PUBLISHED', 'type': 'EXTRACT'})
+        model.commit()
+
+        self._get({'mash': 'on', 'minimash': 'on', 'extract': 'on'})
+        self._eq('pages', 1)
+        self._eq('current_page', 1)
+        self._eq('offset', 0)
+        self._eq('perpage', 15)
+        self._eq('total', 4)
+        self._eq('order_by', 'last_updated')
+        self._eq('direction', 'DESC')
+        assert len(self._ns['recipes']) == 4
+
+        # Mash Only
+        self._get({'mash': 'on'})
+        self._eq('pages', 1)
+        self._eq('current_page', 1)
+        self._eq('offset', 0)
+        self._eq('perpage', 15)
+        self._eq('total', 1)
+        self._eq('order_by', 'last_updated')
+        self._eq('direction', 'DESC')
+        assert len(self._ns['recipes']) == 1
+        assert self._ns['recipes'][0].id == model.Recipe.get_by(name='MASH').id
+
+        # Mini-Mash Only
+        self._get({'minimash': 'on'})
+        self._eq('pages', 1)
+        self._eq('current_page', 1)
+        self._eq('offset', 0)
+        self._eq('perpage', 15)
+        self._eq('total', 1)
+        self._eq('order_by', 'last_updated')
+        self._eq('direction', 'DESC')
+        assert len(self._ns['recipes']) == 1
+        assert self._ns['recipes'][0].id == model.Recipe.get_by(
+            name='MINIMASH').id
+
+        # Extracts
+        self._get({'extract': 'on'})
+        self._eq('pages', 1)
+        self._eq('current_page', 1)
+        self._eq('offset', 0)
+        self._eq('perpage', 15)
+        self._eq('total', 2)
+        self._eq('order_by', 'last_updated')
+        self._eq('direction', 'DESC')
+        assert len(self._ns['recipes']) == 2
+        identifiers = [r.id for r in self._ns['recipes']]
+        for recipe in model.Recipe.query.filter(
+            model.Recipe.type.like('EXTRACT%')
+        ).all():
+            assert recipe.id in identifiers
+
+        # All three types disabled
+        self._get({})
+        self._eq('pages', 1)
+        self._eq('current_page', 1)
+        self._eq('offset', 0)
+        self._eq('perpage', 15)
+        self._eq('total', 0)
+        self._eq('order_by', 'last_updated')
+        self._eq('direction', 'DESC')
+        assert len(self._ns['recipes']) == 0
+
+
 class TestSorting(TestRecipeBrowser):
 
     def test_sort_by_type(self):
@@ -328,7 +342,7 @@ class TestSorting(TestRecipeBrowser):
         #   'EXTRACT'       : 'Extract',
         #   'EXTRACTSTEEP'  : 'Extract w/ Steeped Grains',
         #   'MINIMASH'      : 'Mini-Mash'
-        # 
+        #
         self._get({'order_by': 'type'})
         self._eq('pages', 1)
         self._eq('current_page', 1)
@@ -349,7 +363,7 @@ class TestSorting(TestRecipeBrowser):
         #   'EXTRACT'       : 'Extract',
         #   'EXTRACTSTEEP'  : 'Extract w/ Steeped Grains',
         #   'MINIMASH'      : 'Mini-Mash'
-        # 
+        #
         self._get({'order_by': 'type', 'direction': 'ASC'})
         self._eq('pages', 1)
         self._eq('current_page', 1)
@@ -436,43 +450,43 @@ class TestSorting(TestRecipeBrowser):
 
     def test_sort_by_author_name(self):
         R({
-            'name': 'Recipe 1', 
-            'state': 'PUBLISHED', 
+            'name': 'Recipe 1',
+            'state': 'PUBLISHED',
             'author': model.User(
-                username    = 'andy',
-                email       = 'one@example.com'
+                username='andy',
+                email='one@example.com'
             )
         })
         R({
-            'name': 'Recipe 2', 
-            'state': 'PUBLISHED', 
+            'name': 'Recipe 2',
+            'state': 'PUBLISHED',
             'author': model.User(
-                username    = 'tommy',
-                email       = 'two@example.com'
+                username='tommy',
+                email='two@example.com'
             )
         })
         R({
-            'name': 'Recipe 3', 
-            'state': 'PUBLISHED', 
+            'name': 'Recipe 3',
+            'state': 'PUBLISHED',
             'author': model.User(
-                username    = 'zeek',
-                email       = 'three@example.com'
+                username='zeek',
+                email='three@example.com'
             )
         })
         R({
-            'name': 'Recipe 4', 
-            'state': 'PUBLISHED', 
+            'name': 'Recipe 4',
+            'state': 'PUBLISHED',
             'author': model.User(
-                username    = 'phil',
-                email       = 'four@example.com'
+                username='phil',
+                email='four@example.com'
             )
         })
         R({
-            'name': 'Recipe 5', 
-            'state': 'PUBLISHED', 
+            'name': 'Recipe 5',
+            'state': 'PUBLISHED',
             'author': model.User(
-                username    = 'rob',
-                email       = 'five@example.com'
+                username='rob',
+                email='five@example.com'
             )
         })
         model.commit()
@@ -508,10 +522,14 @@ class TestSorting(TestRecipeBrowser):
         assert self._ns['recipes'][4].name == 'Recipe 3'
 
     def test_sort_by_style(self):
-        R({'name': 'Recipe 1', 'state': 'PUBLISHED', 'style': model.Style(name='Baltic Porter')})
-        R({'name': 'Recipe 2', 'state': 'PUBLISHED', 'style': model.Style(name='American IPA')})
-        R({'name': 'Recipe 3', 'state': 'PUBLISHED', 'style': model.Style(name='Schwarzbier')})
-        R({'name': 'Recipe 4', 'state': 'PUBLISHED', 'style': model.Style(name='Belgian Golden Ale')})
+        R({'name': 'Recipe 1', 'state': 'PUBLISHED', 'style':
+          model.Style(name='Baltic Porter')})
+        R({'name': 'Recipe 2', 'state': 'PUBLISHED', 'style':
+          model.Style(name='American IPA')})
+        R({'name': 'Recipe 3', 'state': 'PUBLISHED', 'style':
+          model.Style(name='Schwarzbier')})
+        R({'name': 'Recipe 4', 'state': 'PUBLISHED', 'style':
+          model.Style(name='Belgian Golden Ale')})
         model.commit()
 
         self._get({'order_by': 'style'})
@@ -584,19 +602,19 @@ class TestSorting(TestRecipeBrowser):
     def test_sort_by_views(self):
         r = R({'name': 'Recipe 1', 'state': 'PUBLISHED'})
         for i in range(10):
-            model.RecipeView(recipe = r)
+            model.RecipeView(recipe=r)
 
         r = R({'name': 'Recipe 2', 'state': 'PUBLISHED'})
         for i in range(15):
-            model.RecipeView(recipe = r)
+            model.RecipeView(recipe=r)
 
         r = R({'name': 'Recipe 3', 'state': 'PUBLISHED'})
         for i in range(3):
-            model.RecipeView(recipe = r)
+            model.RecipeView(recipe=r)
 
         r = R({'name': 'Recipe 4', 'state': 'PUBLISHED'})
         for i in range(12):
-            model.RecipeView(recipe = r)
+            model.RecipeView(recipe=r)
 
         model.commit()
 

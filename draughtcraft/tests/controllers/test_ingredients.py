@@ -1,17 +1,17 @@
-from draughtcraft.tests     import TestApp, TestAuthenticatedApp
-from draughtcraft           import model
+from draughtcraft.tests import TestApp, TestAuthenticatedApp
+from draughtcraft import model
 
 
 class TestUnauthenticatedIngredientLookup(TestApp):
 
     def test_lookup(self):
         model.Fermentable(
-            name        = '2-Row',
-            type        = 'MALT',
-            origin      = 'US',
-            ppg         = 36,
-            lovibond    = 2,
-            description = 'Sample Description'
+            name='2-Row',
+            type='MALT',
+            origin='US',
+            ppg=36,
+            lovibond=2,
+            description='Sample Description'
         )
         model.commit()
 
@@ -23,12 +23,12 @@ class TestAuthenticatedIngredientLookup(TestAuthenticatedApp):
 
     def test_lookup(self):
         model.Fermentable(
-            name        = '2-Row',
-            type        = 'MALT',
-            origin      = 'US',
-            ppg         = 36,
-            lovibond    = 2,
-            description = 'Sample Description'
+            name='2-Row',
+            type='MALT',
+            origin='US',
+            ppg=36,
+            lovibond=2,
+            description='Sample Description'
         )
         model.commit()
 

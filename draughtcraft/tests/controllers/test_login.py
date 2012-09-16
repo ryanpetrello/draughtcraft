@@ -1,5 +1,5 @@
-from draughtcraft.tests     import TestApp
-from draughtcraft           import model
+from draughtcraft.tests import TestApp
+from draughtcraft import model
 
 
 class TestLogin(TestApp):
@@ -9,69 +9,69 @@ class TestLogin(TestApp):
 
     def test_empty_username(self):
         response = self.post('/login', params={
-            'username'  : '',
-            'password'  : 'secret'
+            'username': '',
+            'password': 'secret'
         })
 
         assert response.status_int == 200
-        assert 'validation_errors' in response.request.pecan
-        assert 'user_id' not in response.environ['beaker.session']
+        assert len(response.request.pecan['form'].errors)
+        assert 'user_id' not in response.request.environ['beaker.session']
 
     def test_empty_password(self):
         response = self.post('/login', params={
-            'username'  : 'ryanpetrello',
-            'password'  : ''
+            'username': 'ryanpetrello',
+            'password': ''
         })
 
         assert response.status_int == 200
-        assert 'validation_errors' in response.request.pecan
-        assert 'user_id' not in response.environ['beaker.session']
+        assert len(response.request.pecan['form'].errors)
+        assert 'user_id' not in response.request.environ['beaker.session']
 
     def test_invalid_credentials(self):
         model.User(
-            username = 'ryanpetrello',
-            password = 'secret'
+            username='ryanpetrello',
+            password='secret'
         )
         model.commit()
 
         response = self.post('/login', params={
-            'username'  : 'ryanpetrello',
-            'password'  : 'password'
+            'username': 'ryanpetrello',
+            'password': 'password'
         })
 
         assert response.status_int == 200
-        assert 'validation_errors' in response.request.pecan
-        assert 'user_id' not in response.environ['beaker.session']
+        assert len(response.request.pecan['form'].errors)
+        assert 'user_id' not in response.request.environ['beaker.session']
 
     def test_valid_login(self):
         model.User(
-            username = 'ryanpetrello',
-            password = 'secret'
+            username='ryanpetrello',
+            password='secret'
         )
         model.commit()
 
         response = self.post('/login', params={
-            'username'  : 'ryanpetrello',
-            'password'  : 'secret'
+            'username': 'ryanpetrello',
+            'password': 'secret'
         })
 
-        assert response.environ['beaker.session']['user_id'] == 1
+        assert response.request.environ['beaker.session']['user_id'] == 1
 
     def test_valid_logout(self):
         model.User(
-            username = 'ryanpetrello',
-            password = 'secret'
+            username='ryanpetrello',
+            password='secret'
         )
         model.commit()
 
         response = self.post('/login', params={
-            'username'  : 'ryanpetrello',
-            'password'  : 'secret'
+            'username': 'ryanpetrello',
+            'password': 'secret'
         })
 
-        assert response.environ['beaker.session']['user_id'] == 1
+        assert response.request.environ['beaker.session']['user_id'] == 1
         response = self.get('/logout')
-        assert 'user_id' not in response.environ['beaker.session']
+        assert 'user_id' not in response.request.environ['beaker.session']
 
 
 class TestRecipeConversion(TestApp):
@@ -83,34 +83,35 @@ class TestRecipeConversion(TestApp):
         """
 
         params = {
-            'name'      : 'Rocky Mountain River IPA',
-            'type'      : 'MASH',
-            'volume'    : 25,
-            'unit'      : 'GALLON'
+            'name': 'Rocky Mountain River IPA',
+            'type': 'MASH',
+            'volume': 25,
+            'unit': 'GALLON'
         }
 
         self.post('/recipes/create', params=params)
         assert model.Recipe.query.count() == 1
-        assert model.Recipe.get(1).author == None
+        assert model.Recipe.get(1).author is None
 
         # Create a new user
         model.User(
-            username = 'ryanpetrello',
-            password = 'secret'
+            username='ryanpetrello',
+            password='secret'
         )
         model.commit()
 
         # Log in as the new user
         assert len(model.User.get(1).recipes) == 0
         response = self.post('/login', params={
-            'username'  : 'ryanpetrello',
-            'password'  : 'secret'
+            'username': 'ryanpetrello',
+            'password': 'secret'
         })
-        assert response.environ['beaker.session']['user_id'] == 1
+        assert response.request.environ['beaker.session']['user_id'] == 1
 
         #
         # The recipe should have been attached to the new user, and the
         # `trial_recipe_id` record should have been removed from the session.
         #
         assert len(model.User.get(1).recipes) == 1
-        assert 'trial_recipe_id' not in response.environ['beaker.session']
+        assert 'trial_recipe_id' not in response.request.environ[
+            'beaker.session']

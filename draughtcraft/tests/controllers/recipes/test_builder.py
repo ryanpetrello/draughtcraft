@@ -1,869 +1,8 @@
-import pecan    
-from draughtcraft.tests                         import TestApp, TestAuthenticatedApp
-from draughtcraft                               import model
-from draughtcraft.lib.schemas.recipes.builder   import (AmountValidator,
-                                                        TimeDeltaValidator,
-                                                        HopValidator)
-from formencode                                 import Invalid
-from webob                                      import Request
-from datetime                                   import timedelta
-from unittest                                   import TestCase
-
-
-class TestMashAdditions(TestAuthenticatedApp):
-
-    def test_index(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.Fermentable(
-            name        = '2-Row',
-            origin      = 'US',
-            ppg         = 36,
-            lovibond    = 2
-        )
-        model.commit()
-
-        assert self.get(
-            '/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients'
-        ).status_int == 200
-
-    def test_fermentable(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.Fermentable(
-            name        = '2-Row',
-            origin      = 'US',
-            ppg         = 36,
-            lovibond    = 2
-        )
-        model.commit()
-
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params={
-            'type'          : 'RecipeAddition',
-            'ingredient'    : 1,
-            'use'           : 'MASH',
-            'amount'        : '0 lb'
-        })
-
-        assert model.RecipeAddition.query.count() == 1
-        a = model.RecipeAddition.get(1)
-        assert a.recipe == model.Recipe.get(1)
-        assert a.use == 'MASH'
-        assert a.amount == 0
-        assert a.unit == 'POUND'
-        assert a.fermentable == model.Fermentable.get(1)
-
-    def test_hop(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.Hop(name = 'Cascade', origin = 'US')
-        model.commit()
-
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params={
-            'type'          : 'HopAddition',
-            'ingredient'    : 1,
-            'use'           : 'MASH',
-            'amount'        : '0 lb'
-        })
-
-        assert model.HopAddition.query.count() == 1
-        a = model.HopAddition.get(1)
-        assert a.recipe == model.Recipe.get(1)
-        assert a.use == 'MASH'
-        assert a.amount == 0
-        assert a.unit == 'POUND'
-        assert a.hop == model.Hop.get(1)
-
-    def test_schema_failure(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.Fermentable(name = '2-Row', origin='US')
-        model.commit()
-       
-        params = {
-            'type'          : 'RecipeAddition',
-            'ingredient'    : 1,
-            'use'           : 'MASH',
-            'amount'        : '0 lb'
-        }        
-
-        for k in params:
-            copy = params.copy()
-            del copy[k]
-
-            response = self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params=copy, status=400)
-            assert response.status_int == 400
-
-        assert model.RecipeAddition.query.count() == 0
-
-
-class TestRecipeValidators(TestCase):
-
-    def test_timedelta_validation(self):
-        try:
-            TimeDeltaValidator.to_python('dog')
-        except Invalid: pass
-        else: raise AssertionError('`dog` is not a valid timedelta')
-
-        assert TimeDeltaValidator.from_python(timedelta(seconds=60)) == 1
-
-    def test_amount_validation(self):
-        try:
-            AmountValidator.to_python('1 rb')
-        except Invalid: pass
-        else: raise AssertionError('`rb` is not a valid unit')
-
-        try:
-            AmountValidator.to_python('1.24.2')
-        except Invalid: pass
-        else: raise AssertionError('`stanley-dollar` is not a valid unit')
-
-        AmountValidator.from_python((5, 'POUND')) == '5 lb'
-
-    def test_hop_form_alph_acid_validation(self):
-        try:
-            HopValidator().validate_python({
-                'type'  : 'HopAddition'
-            }, {})
-        except Invalid: pass
-        else: raise AssertionError('A hop form must be specified.')
-
-        try:
-            HopValidator().validate_python({
-                'type'          : 'HopAddition',
-                'form'          : 'PELLET',
-                'alpha_acid'    : 'dog'
-            }, {})
-        except Invalid: pass
-        else: raise AssertionError('A hop form must be specified.')
-
-class TestBoilAdditions(TestAuthenticatedApp):
-
-    def test_fermentable(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.Fermentable(
-            name        = '2-Row',
-            origin      = 'US',
-            ppg         = 36,
-            lovibond    = 2
-        )
-        model.commit()
-
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params={
-            'type'          : 'RecipeAddition',
-            'ingredient'    : 1,
-            'use'           : 'BOIL',
-            'amount'        : '0 lb'
-        })
-
-        assert model.RecipeAddition.query.count() == 1
-        a = model.RecipeAddition.get(1)
-        assert a.recipe == model.Recipe.get(1)
-        assert a.use == 'BOIL'
-        assert a.amount == 0
-        assert a.unit == 'POUND'
-        assert a.fermentable == model.Fermentable.get(1)
-
-    def test_hop(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.Hop(
-            name        = 'Cascade', 
-            alpha_acid  = 5.5,
-            origin      = 'US'
-        )
-        model.commit()
-
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params={
-            'type'          : 'HopAddition',
-            'ingredient'    : 1,
-            'use'           : 'BOIL',
-            'amount'        : '0 lb',
-            'duration'      : 30
-        })
-
-        assert model.HopAddition.query.count() == 1
-        a = model.HopAddition.get(1)
-        assert a.recipe == model.Recipe.get(1)
-        assert a.use == 'BOIL'
-        assert a.amount == 0
-        assert a.unit == 'POUND'
-        assert a.hop == model.Hop.get(1)
-        assert a.minutes == 30
-        assert a.alpha_acid == 5.5
-
-    def test_schema_failure(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.Fermentable(name = '2-Row', origin='US')
-        model.commit()
-       
-        params = {
-            'type'          : 'RecipeAddition',
-            'ingredient'    : 1,
-            'use'           : 'BOIL',
-            'amount'        : '0 lb'
-        }        
-
-        for k in params:
-            copy = params.copy()
-            del copy[k]
-
-            response = self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params=copy, status=400)
-            assert response.status_int == 400
-
-        assert model.RecipeAddition.query.count() == 0
-
-
-class TestFermentationAdditions(TestAuthenticatedApp):
-
-    def test_hop(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.Hop(
-            name        = 'Cascade', 
-            alpha_acid  = 5.5,
-            origin      = 'US'
-        )
-        model.commit()
-
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params={
-            'type'          : 'HopAddition',
-            'ingredient'    : 1,
-            'use'           : 'SECONDARY',
-            'amount'        : '0 lb'
-        })
-
-        assert model.HopAddition.query.count() == 1
-        a = model.HopAddition.get(1)
-        assert a.recipe == model.Recipe.get(1)
-        assert a.use == 'SECONDARY'
-        assert a.amount == 0
-        assert a.unit == 'POUND'
-        assert a.hop == model.Hop.get(1)
-        assert a.alpha_acid == 5.5
-
-    def test_yeast(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.Yeast(
-            name = 'Wyeast 1056 - American Ale',
-            form = 'LIQUID',
-            attenuation = .75
-        )
-        model.commit()
-
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params={
-            'type'          : 'RecipeAddition',
-            'ingredient'    : 1,
-            'use'           : 'PRIMARY',
-            'amount'        : '1'
-        })
-
-        assert model.RecipeAddition.query.count() == 1
-        a = model.RecipeAddition.get(1)
-        assert a.recipe == model.Recipe.get(1)
-        assert a.use == 'PRIMARY'
-        assert a.yeast == model.Yeast.get(1)
-
-    def test_schema_failure(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.Hop(
-            name        = 'Cascade', 
-            alpha_acid  = 5.5
-        )
-        model.commit()
-       
-        params = {
-            'type'          : 'HopAddition',
-            'ingredient'    : 1,
-            'use'           : 'PRIMARY',
-            'amount'        : '0 lb'
-        }        
-
-        for k in params:
-            copy = params.copy()
-            del copy[k]
-
-            response = self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params=copy, status=400)
-            assert response.status_int == 400
-
-        assert model.RecipeAddition.query.count() == 0
-
-
-class TestRecipeSettings(TestAuthenticatedApp):
-
-    def test_style_get(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.commit()
-
-        self.get(
-            '/recipes/1/rocky-mountain-river-ipa/builder/async/settings/style',
-            status = 405
-        ).status_int == 405
-
-    def test_style_change(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.Style(name = u'American Ale')
-        model.commit()
-
-        assert model.Recipe.get(1).style is None
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/settings/style', params={
-            'target': 1
-        })
-        
-        assert model.Recipe.get(1).style == model.Style.get(1)
-
-    def test_style_remove(self):
-        recipe = model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        recipe.style = model.Style(name = u'American Ale')
-        model.commit()
-
-        assert model.Recipe.get(1).style == model.Style.get(1)
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/settings/style', params={
-            'target': '' 
-        })
-        
-        assert model.Recipe.get(1).style is None
-
-    def test_boil_duration_get(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.commit()
-
-        self.get(
-            '/recipes/1/rocky-mountain-river-ipa/builder/async/settings/boil_minutes',
-            status = 405
-        ).status_int == 405
-
-    def test_boil_duration_change(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.commit()
-
-        assert model.Recipe.get(1).boil_minutes == 60
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/settings/boil_minutes', params={
-            'minutes'    : 90
-        })
-        
-        assert model.Recipe.get(1).boil_minutes == 90
-
-    def test_volume_get(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.commit()
-
-        self.get(
-            '/recipes/1/rocky-mountain-river-ipa/builder/async/settings/volume',
-            status = 405
-        ).status_int == 405
-
-    def test_volume_change(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.commit()
-
-        assert model.Recipe.get(1).gallons == 5.0
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/settings/volume', params={
-            'volume'    : 10.0,
-            'unit'      : 'GALLON' 
-        })
-        
-        assert model.Recipe.get(1).gallons == 10.0
-
-    def test_international_volume_change(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.commit()
-
-        assert model.Recipe.get(1).gallons == 5.0
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/settings/volume', params={
-            'volume'    : 10.0,
-            'unit'      : 'LITER' 
-        })
-        
-        assert model.Recipe.get(1).gallons == 2.6417205199999998
-        assert model.Recipe.get(1).liters == 10.0
-
-    def test_mash_settings_get(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.commit()
-
-        self.get(
-            '/recipes/1/rocky-mountain-river-ipa/builder/async/settings/mash',
-            status = 405
-        ).status_int == 405
-
-    def test_mash_settings_change(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.commit()
-
-        assert model.Recipe.query.first().mash_method == 'SINGLESTEP'
-        assert model.Recipe.query.first().mash_instructions == None
-
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/settings/mash', params={
-            'method'        : 'DECOCTION',
-            'instructions'  : 'Testing 1 2 3' 
-        })
-        
-        assert model.Recipe.query.first().mash_method == 'DECOCTION'
-        assert model.Recipe.query.first().mash_instructions == 'Testing 1 2 3'
-
-    def test_mash_settings_change_for_non_mash_recipe(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1), type='EXTRACT')
-        model.commit()
-
-        assert model.Recipe.query.first().mash_method == 'SINGLESTEP'
-        assert model.Recipe.query.first().mash_instructions == None
-
-        assert self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/settings/mash', params={
-            'method'        : 'DECOCTION',
-            'instructions'  : 'Testing 1 2 3' 
-        }, status=405).status_int == 405
-        
-        assert model.Recipe.query.first().mash_method == 'SINGLESTEP'
-        assert model.Recipe.query.first().mash_instructions == None
-
-    def test_notes_get(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.commit()
-
-        self.get(
-            '/recipes/1/rocky-mountain-river-ipa/builder/async/settings/notes',
-            status = 405
-        ).status_int == 405
-
-    def test_notes_update(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.commit()
-
-        assert model.Recipe.get(1).notes is None
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/settings/notes', params={
-            'notes'    : u'Testing 1 2 3...'
-        })
-        
-        assert model.Recipe.get(1).notes == u'Testing 1 2 3...'
-
-
-class TestFermentationStepChange(TestAuthenticatedApp):
-
-    def test_fermentation_step_add(self):
-        recipe = model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        recipe.fermentation_steps.append(
-            model.FermentationStep(
-                step = 'PRIMARY',
-                days = 7,
-                fahrenheit = 65
-            )
-        )
-        model.commit()
-
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/fermentation_steps')
-
-        recipe = model.Recipe.get(1)
-        assert len(recipe.fermentation_steps) == 2
-        assert recipe.fermentation_steps[0].step == 'PRIMARY'
-        assert recipe.fermentation_steps[0].days == 7
-        assert recipe.fermentation_steps[0].fahrenheit == 65
-        assert recipe.fermentation_steps[1].step == 'SECONDARY'
-        assert recipe.fermentation_steps[1].days == 7
-        assert recipe.fermentation_steps[1].fahrenheit == 65
-
-    def test_fermentation_step_update(self):
-        recipe = model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        recipe.fermentation_steps.append(
-            model.FermentationStep(
-                step = 'PRIMARY',
-                days = 7,
-                fahrenheit = 65
-            )
-        )
-        model.commit()
-
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/fermentation_steps?_method=put', params={
-            'step'          : 1,
-            'days'          : 14,
-            'temperature'   : 68
-        })
-
-        recipe = model.Recipe.get(1)
-        assert model.FermentationStep.query.count() == 1
-        assert len(recipe.fermentation_steps) == 1
-        assert recipe.fermentation_steps[0].step == 'PRIMARY'
-        assert recipe.fermentation_steps[0].days == 14
-        assert recipe.fermentation_steps[0].fahrenheit == 68
-
-    def test_fermentation_step_metric_update(self):
-        author = model.User.get(1)
-        author.settings['unit_system'] = 'METRIC'
-        recipe = model.Recipe(name='Rocky Mountain River IPA', author=author)
-        recipe.fermentation_steps.append(
-            model.FermentationStep(
-                step = 'PRIMARY',
-                days = 7,
-                fahrenheit = 65
-            )
-        )
-        model.commit()
-
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/fermentation_steps?_method=put', params={
-            'step'          : 1,
-            'days'          : 14,
-            'temperature'   : 0
-        })
-
-        recipe = model.Recipe.get(1)
-        assert model.FermentationStep.query.count() == 1
-        assert len(recipe.fermentation_steps) == 1
-        assert recipe.fermentation_steps[0].step == 'PRIMARY'
-        assert recipe.fermentation_steps[0].days == 14
-        assert recipe.fermentation_steps[0].fahrenheit == 32
-
-    def test_fermentation_step_delete(self):
-        recipe = model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        recipe.fermentation_steps.extend([
-            model.FermentationStep(
-                step = 'PRIMARY',
-                days = 7,
-                fahrenheit = 65
-            ),
-            model.FermentationStep(
-                step = 'SECONDARY',
-                days = 14,
-                fahrenheit = 50
-            )
-        ])
-        model.commit()
-
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/fermentation_steps?_method=delete')
-
-        recipe = model.Recipe.get(1)
-        assert len(recipe.fermentation_steps) == 1
-        assert recipe.fermentation_steps[0].step == 'PRIMARY'
-        assert recipe.fermentation_steps[0].days == 7
-        assert recipe.fermentation_steps[0].fahrenheit == 65
-
-
-class TestRecipeChange(TestAuthenticatedApp):
-
-    def test_mash_change(self):
-        model.RecipeAddition(
-            recipe      = model.Recipe(
-                name='Rocky Mountain River IPA', 
-                author=model.User.get(1)
-            ),
-            fermentable = model.Fermentable(
-                name        = '2-Row',
-                origin      = 'US',
-                ppg         = 36,
-                lovibond    = 2
-            ),
-            amount      = 12,
-            unit        = 'POUND',
-            use         = 'MASH'
-        )
-        model.commit()
-
-        self.put('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params={
-            'mash_additions-0.type'          : 'RecipeAddition',
-            'mash_additions-0.amount'        : '10 lb',
-            'mash_additions-0.use'           : 'MASH',
-            'mash_additions-0.addition'      : 1
-        })
-
-        a = model.RecipeAddition.get(1)
-        assert a.use == 'MASH'
-        assert a.amount == 10
-        assert a.unit == 'POUND'
-        assert a.ingredient == model.Fermentable.get(1)
-
-    def test_unitless_mash_change(self):
-        model.RecipeAddition(
-            recipe      = model.Recipe(
-                name='Rocky Mountain River IPA', 
-                author=model.User.get(1)
-            ),
-            fermentable = model.Fermentable(
-                name            = '2-Row',
-                origin          = 'US',
-                ppg             = 36,
-                lovibond        = 2,
-                default_unit    = 'POUND'
-            ),
-            amount      = 12,
-            unit        = 'GALLON', # This doesn't make sense, but it's just 
-                                    # for illustration
-            use         = 'MASH'
-        )
-        model.commit()
-
-        #
-        # If an amount is specified without a unit,
-        # the unit should fall back to the ingredient's
-        # default unit.
-        #
-        self.put('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params={
-            'mash_additions-0.type'          : 'RecipeAddition',
-            'mash_additions-0.amount'        : '5',
-            'mash_additions-0.use'           : 'MASH',
-            'mash_additions-0.addition'      : 1
-        })
-
-        a = model.RecipeAddition.get(1)
-        assert a.use == 'MASH'
-        assert a.amount == 5
-        assert a.unit == 'POUND'
-        assert a.ingredient == model.Fermentable.get(1)
-
-    def test_boil_hop_change(self):
-        recipe = model.Recipe(
-            name        = 'Rocky Mountain River IPA', 
-            author      = model.User.get(1)
-        )
-        model.HopAddition(
-            recipe      = recipe,
-            hop         = model.Hop(name = 'Cascade', origin = 'US'),
-            amount      = .0625, # 1 oz
-            unit        = 'POUND',
-            duration    = timedelta(minutes=30),
-            alpha_acid  = 5.5,
-            form        = 'LEAF',
-            use         = 'BOIL'
-        )
-        model.HopAddition(
-            recipe      = recipe,
-            hop         = model.Hop(name = 'Centennial', origin = 'US'),
-            amount      = .0625, # 1 oz
-            unit        = 'POUND',
-            duration    = timedelta(minutes=60),
-            alpha_acid  = 5.5,
-            form        = 'LEAF',
-            use         = 'BOIL'
-        )
-        model.commit()
-
-        self.put('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params={
-            'boil_additions-0.type'          : 'HopAddition',
-            'boil_additions-0.amount'        : '2 oz',
-            'boil_additions-0.use'           : 'BOIL',
-            'boil_additions-0.alpha_acid'    : 7,
-            'boil_additions-0.duration'      : 10,
-            'boil_additions-0.addition'      : 1,
-            'boil_additions-0.form'          : 'PELLET',
-            'boil_additions-1.type'          : 'HopAddition',
-            'boil_additions-1.amount'        : '.5 oz',
-            'boil_additions-1.use'           : 'BOIL',
-            'boil_additions-1.alpha_acid'    : 4,
-            'boil_additions-1.duration'      : 45,
-            'boil_additions-1.addition'      : 2,
-            'boil_additions-1.form'          : 'PLUG'
-        })
-
-        a = model.RecipeAddition.get(1)
-        assert a.use == 'BOIL'
-        assert a.amount == .125
-        assert a.unit == 'POUND'
-        assert a.ingredient == model.Hop.get(1)
-        assert a.alpha_acid == 7
-        assert a.duration == timedelta(minutes=10)
-        assert a.form == 'PELLET'
-
-        a = model.RecipeAddition.get(2)
-        assert a.use == 'BOIL'
-        assert a.amount == .03125
-        assert a.unit == 'POUND'
-        assert a.ingredient == model.Hop.get(2)
-        assert a.alpha_acid == 4
-        assert a.duration == timedelta(minutes=45)
-        assert a.form == 'PLUG'
-
-    def test_boil_hop_change_first_wort(self):
-        """
-        If hops are added a "FIRST WORT",
-        then the duration (for calculation purposes)
-        should forcibly be set to the recipe-specified
-        boil duration (by default, this is 60 minutes).
-        """
-        model.HopAddition(
-            recipe      = model.Recipe(
-                name='Rocky Mountain River IPA', 
-                author=model.User.get(1)
-            ),
-            hop         = model.Hop(name = 'Cascade', origin = 'US'),
-            amount      = .0625, # 1 oz
-            unit        = 'POUND',
-            duration    = timedelta(minutes=30),
-            alpha_acid  = 5.5,
-            form        = 'LEAF',
-            use         = 'BOIL'
-        )
-        model.commit()
-
-        self.put('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params={
-            'boil_additions-0.type'          : 'HopAddition',
-            'boil_additions-0.amount'        : '2 oz',
-            'boil_additions-0.use'           : 'FIRST WORT',
-            'boil_additions-0.alpha_acid'    : 7,
-            'boil_additions-0.duration'      : 30,
-            'boil_additions-0.addition'      : 1,
-            'boil_additions-0.form'          : 'PELLET'
-        })
-
-        a = model.RecipeAddition.get(1)
-        assert a.use == 'FIRST WORT'
-        assert a.amount == .125
-        assert a.unit == 'POUND'
-        assert a.ingredient == model.Hop.get(1)
-        assert a.alpha_acid == 7
-        assert a.duration == timedelta(minutes=60)
-        assert a.form == 'PELLET'
-
-    def test_boil_hop_change_flame_out(self):
-        """
-        If hops are added a "FLAME OUT",
-        then the duration (for calculation purposes)
-        should forcibly be set zero minutes. 
-        """
-        model.HopAddition(
-            recipe      = model.Recipe(
-                name='Rocky Mountain River IPA', 
-                author=model.User.get(1)
-            ),
-            hop         = model.Hop(name = 'Cascade', origin = 'US'),
-            amount      = .0625, # 1 oz
-            unit        = 'POUND',
-            duration    = timedelta(minutes=30),
-            alpha_acid  = 5.5,
-            form        = 'LEAF',
-            use         = 'BOIL'
-        )
-        model.commit()
-
-        self.put('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params={
-            'boil_additions-0.type'          : 'HopAddition',
-            'boil_additions-0.amount'        : '2 oz',
-            'boil_additions-0.use'           : 'FLAME OUT',
-            'boil_additions-0.alpha_acid'    : 7,
-            'boil_additions-0.duration'      : 30,
-            'boil_additions-0.addition'      : 1,
-            'boil_additions-0.form'          : 'PELLET'
-        })
-
-        a = model.RecipeAddition.get(1)
-        assert a.use == 'FLAME OUT'
-        assert a.amount == .125
-        assert a.unit == 'POUND'
-        assert a.ingredient == model.Hop.get(1)
-        assert a.alpha_acid == 7
-        assert a.duration == timedelta(minutes=0)
-        assert a.form == 'PELLET'
-
-    def test_yeast_change(self):
-        model.RecipeAddition(
-            recipe      = model.Recipe(
-                name='Rocky Mountain River IPA', 
-                author=model.User.get(1)
-            ),
-            yeast       = model.Yeast(
-                name = 'Wyeast 1056 - American Ale',
-                form = 'LIQUID',
-                attenuation = .75
-            ),
-            amount      = 1,
-            use         = 'PRIMARY'
-        )
-        model.commit()
-
-        self.put('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params={
-            'fermentation_additions-0.type'      : 'RecipeAddition',
-            'fermentation_additions-0.use'       : 'SECONDARY',
-            'fermentation_additions-0.amount'    : 1,
-            'fermentation_additions-0.addition'  : 1
-        })
-
-        a = model.RecipeAddition.get(1)
-        assert a.use == 'SECONDARY'
-
-    def test_schema_failure(self):
-        model.RecipeAddition(
-            recipe      = model.Recipe(
-                name='Rocky Mountain River IPA', 
-                author=model.User.get(1)
-            ),
-            fermentable = model.Fermentable(
-                name        = '2-Row',
-                origin      = 'US',
-                ppg         = 36,
-                lovibond    = 2
-            ),
-            amount      = 12,
-            unit        = 'POUND',
-            use         = 'MASH'
-        )
-        model.commit()
-       
-        params = {
-            'additions-0.type'          : 'RecipeAddition',
-            'additions-0.amount'        : '10 lb',
-            'additions-0.use'           : 'MASH',
-            'additions-0.addition'      : 1
-        }            
-
-        for k in params:
-            copy = params.copy()
-            del copy[k]
-
-            response = self.put('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params=copy, status=200)
-            assert response.status_int == 200
-
-        a = model.RecipeAddition.get(1)
-        assert a.amount == 12
-        assert a.unit == 'POUND'
-
-    def test_hop_schema_failure(self):
-        model.HopAddition(
-            recipe      = model.Recipe(
-                name='Rocky Mountain River IPA', 
-                author=model.User.get(1)
-            ),
-            hop         = model.Hop(name = 'Cascade', alpha_acid=5.5, origin = 'US'),
-            amount      = 0.0625,
-            unit        = 'POUND',
-            use         = 'BOIL',
-            duration    = timedelta(minutes=60),
-            form        = 'PELLET',
-            alpha_acid  = 5.5
-        )
-        model.commit()
-       
-        params = {
-            'additions-0.type'          : 'HopAddition',
-            'additions-0.amount'        : '2 oz',
-            'additions-0.use'           : 'BOIL',
-            'additions-0.addition'      : 1,
-            'additions-0.form'          : 'LEAF',
-            'additions-0.alpha_acid'    : 7
-        }            
-
-        for k in params:
-            copy = params.copy()
-            del copy[k]
-
-            response = self.put('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients', params=copy, status=200)
-            assert response.status_int == 200
-
-        a = model.HopAddition.get(1)
-        assert a.amount == 0.0625
-        assert a.unit == 'POUND'
-        assert a.form == 'PELLET'
-        assert a.alpha_acid == 5.5
-
-
-class TestRecipeRemoval(TestAuthenticatedApp):
-
-    def test_addition_removal(self):
-        model.RecipeAddition(
-            recipe      = model.Recipe(
-                name='Rocky Mountain River IPA', 
-                author=model.User.get(1)
-            ),
-            fermentable = model.Fermentable(name = '2-Row', origin='US'),
-            amount      = 12,
-            unit        = 'POUND',
-            use         = 'MASH'
-        )
-        model.commit()
-
-        self.delete('/recipes/1/rocky-mountain-river-ipa/builder/async/ingredients/1')
-
-        assert model.RecipeAddition.query.count() == 0
+from json import dumps
+from datetime import timedelta
+
+from draughtcraft.tests import TestApp, TestAuthenticatedApp
+from draughtcraft import model
 
 
 class TestAuthenticatedUserRecipeLookup(TestAuthenticatedApp):
@@ -874,25 +13,25 @@ class TestAuthenticatedUserRecipeLookup(TestAuthenticatedApp):
         we should have access to edit the recipe.
         """
         model.Recipe(
-            name    = 'American IPA',
-            slugs   = [
-                model.RecipeSlug(name = 'American IPA'),
-                model.RecipeSlug(name = 'American IPA (Revised)')
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA'),
+                model.RecipeSlug(name='American IPA (Revised)')
             ],
-            author  = model.User.get(1)
+            author=model.User.get(1)
         )
         model.commit()
 
-        response = self.get('/recipes/500/american-ipa/builder/', status=404)
+        response = self.get('/recipes/500/american-ipa/builder', status=404)
         assert response.status_int == 404
 
-        response = self.get('/recipes/1/american-ipa/builder/')
+        response = self.get('/recipes/1/american-ipa/builder')
         assert response.status_int == 200
 
-        response = self.get('/recipes/1/american-ipa-revised/builder/')
+        response = self.get('/recipes/1/american-ipa-revised/builder')
         assert response.status_int == 200
 
-        response = self.get('/recipes/1/invalid_slug/builder/', status=404)
+        response = self.get('/recipes/1/invalid_slug/builder', status=404)
         assert response.status_int == 404
 
     def test_unauthorized_lookup_trial_recipe(self):
@@ -901,14 +40,14 @@ class TestAuthenticatedUserRecipeLookup(TestAuthenticatedApp):
         we should *not* have access to edit the recipe.
         """
         model.Recipe(
-            name    = 'American IPA',
-            slugs   = [
-                model.RecipeSlug(name = 'American IPA')
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA')
             ]
         )
         model.commit()
 
-        response = self.get('/recipes/1/american-ipa/builder/', status=401)
+        response = self.get('/recipes/1/american-ipa/builder', status=401)
         assert response.status_int == 401
 
     def test_unauthorized_lookup_draft(self):
@@ -917,16 +56,16 @@ class TestAuthenticatedUserRecipeLookup(TestAuthenticatedApp):
         we should *not* have access to edit the recipe in published form.
         """
         model.Recipe(
-            name    = 'American IPA',
-            slugs   = [
-                model.RecipeSlug(name = 'American IPA')
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA')
             ],
-            author  = model.User.get(1),
-            state   = 'PUBLISHED'
+            author=model.User.get(1),
+            state='PUBLISHED'
         )
         model.commit()
 
-        response = self.get('/recipes/1/american-ipa/builder/', status=401)
+        response = self.get('/recipes/1/american-ipa/builder', status=401)
         assert response.status_int == 401
 
     def test_unauthorized_lookup_other_user(self):
@@ -935,15 +74,15 @@ class TestAuthenticatedUserRecipeLookup(TestAuthenticatedApp):
         we should *not* have access to edit the recipe.
         """
         model.Recipe(
-            name    = 'American IPA',
-            slugs   = [
-                model.RecipeSlug(name = 'American IPA')
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA')
             ],
-            author  = model.User()
+            author=model.User()
         )
         model.commit()
 
-        response = self.get('/recipes/1/american-ipa/builder/', status=401)
+        response = self.get('/recipes/1/american-ipa/builder', status=401)
         assert response.status_int == 401
 
 
@@ -955,80 +94,503 @@ class TestTrialRecipeLookup(TestApp):
         we should *not* have access to edit the recipe.
         """
         model.Recipe(
-            name    = 'American IPA',
-            slugs   = [
-                model.RecipeSlug(name = 'American IPA')
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA')
             ],
-            author  = model.User.get(1)
+            author=model.User.get(1)
         )
         model.commit()
 
-        response = self.get('/recipes/1/american-ipa/builder/', status=401)
+        response = self.get('/recipes/1/american-ipa/builder', status=401)
         assert response.status_int == 401
 
-    def test_unauthorized_lookup_trial_user(self):
+    def test_unauthorized_lookup_trial_other_user(self):
         """
         If the recipe is a trial recipe, but is not *our* trial recipe,
         we should *not* have access to edit the recipe.
         """
         model.Recipe(
-            name    = 'American IPA',
-            slugs   = [
-                model.RecipeSlug(name = 'American IPA')
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA')
             ]
         )
         model.commit()
 
-        response = self.get('/recipes/1/american-ipa/builder/', status=401)
+        response = self.get('/recipes/1/american-ipa/builder', status=401)
         assert response.status_int == 401
+
+
+class TestRecipeSave(TestAuthenticatedApp):
+
+    def test_name_update(self):
+        model.Recipe(
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA'),
+                model.RecipeSlug(name='American IPA (Revised)')
+            ],
+            author=model.User.get(1)
+        )
+        model.commit()
+
+        response = self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={
+                'recipe': dumps({'name': 'Some Recipe'})
+            }
+        )
+        assert response.status_int == 200
+        recipe = model.Recipe.query.first()
+        assert recipe.name == 'Some Recipe'
+
+        slugs = recipe.slugs
+        assert len(slugs) == 3
+        assert slugs[0].slug == 'american-ipa'
+        assert slugs[1].slug == 'american-ipa-revised'
+        assert slugs[2].slug == 'some-recipe'
+
+    def test_volume_update(self):
+        model.Recipe(
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA'),
+                model.RecipeSlug(name='American IPA (Revised)')
+            ],
+            author=model.User.get(1)
+        )
+        model.commit()
+
+        response = self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={
+                'recipe': dumps({'gallons': 10})
+            }
+        )
+        assert response.status_int == 200
+        recipe = model.Recipe.query.first()
+        assert recipe.gallons == 10
+
+    def test_style_save(self):
+        model.Style(name='Some Style')
+        model.Recipe(
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA'),
+                model.RecipeSlug(name='American IPA (Revised)')
+            ],
+            author=model.User.get(1)
+        )
+        model.commit()
+
+        response = self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={
+                'recipe': dumps({'style': 1})
+            }
+        )
+        assert response.status_int == 200
+        recipe = model.Recipe.query.first()
+        assert recipe.style.name == 'Some Style'
+
+    def test_style_remove(self):
+        model.Recipe(
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA'),
+                model.RecipeSlug(name='American IPA (Revised)')
+            ],
+            style=model.Style(name='Some Style'),
+            author=model.User.get(1)
+        )
+        model.commit()
+
+        response = self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={
+                'recipe': dumps({'style': None})
+            }
+        )
+        assert response.status_int == 200
+        recipe = model.Recipe.query.first()
+        assert recipe.style is None
+
+    def test_mash_settings_update(self):
+        model.Recipe(
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA'),
+                model.RecipeSlug(name='American IPA (Revised)')
+            ],
+            author=model.User.get(1)
+        )
+        model.commit()
+
+        response = self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={
+                'recipe': dumps({
+                    'mash_method': 'TEMPERATURE',
+                    'mash_instructions': 'Mash for an hour.'
+                })
+            }
+        )
+        assert response.status_int == 200
+        recipe = model.Recipe.query.first()
+        assert recipe.mash_method == 'TEMPERATURE'
+        assert recipe.mash_instructions == 'Mash for an hour.'
+
+    def test_boil_settings_update(self):
+        model.Recipe(
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA'),
+                model.RecipeSlug(name='American IPA (Revised)')
+            ],
+            author=model.User.get(1)
+        )
+        model.commit()
+
+        response = self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={
+                'recipe': dumps({
+                    'boil_minutes': 90
+                })
+            }
+        )
+        assert response.status_int == 200
+        recipe = model.Recipe.query.first()
+        assert recipe.boil_minutes == 90
+
+    def test_fermentation_steps_update(self):
+        model.Recipe(
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA'),
+                model.RecipeSlug(name='American IPA (Revised)')
+            ],
+            author=model.User.get(1)
+        )
+        model.commit()
+
+        response = self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={
+                'recipe': dumps({
+                    'fermentation_steps': [{
+                        'step': 'PRIMARY',
+                        'days': 7,
+                        'fahrenheit': 68
+                    }, {
+                        'step': 'SECONDARY',
+                        'days': 14,
+                        'fahrenheit': 62
+                    }, {
+                        'step': 'TERTIARY',
+                        'days': 60,
+                        'fahrenheit': 38
+                    }]
+                })
+            }
+        )
+        assert response.status_int == 200
+        recipe = model.Recipe.query.first()
+
+        steps = recipe.fermentation_steps
+        assert len(steps) == 3
+        assert steps[0].step == 'PRIMARY'
+        assert steps[0].days == 7
+        assert steps[0].fahrenheit == 68
+        assert steps[1].step == 'SECONDARY'
+        assert steps[1].days == 14
+        assert steps[1].fahrenheit == 62
+        assert steps[2].step == 'TERTIARY'
+        assert steps[2].days == 60
+        assert steps[2].fahrenheit == 38
+
+    def test_notes_update(self):
+        model.Recipe(
+            name='American IPA',
+            slugs=[
+                model.RecipeSlug(name='American IPA'),
+                model.RecipeSlug(name='American IPA (Revised)')
+            ],
+            author=model.User.get(1)
+        )
+        model.commit()
+
+        response = self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={
+                'recipe': dumps({'notes': 'ABC123'})
+            }
+        )
+        assert response.status_int == 200
+        recipe = model.Recipe.query.first()
+        assert recipe.notes == 'ABC123'
+
+
+class TestMashAdditions(TestAuthenticatedApp):
+
+    def test_fermentable(self):
+        model.Recipe(
+            name='American IPA',
+            author=model.User.get(1)
+        )
+        model.Fermentable(
+            name='2-Row',
+            origin='US',
+            ppg=36,
+            lovibond=2
+        )
+        model.commit()
+
+        data = {
+            u'mash': {
+                u'additions': [{
+                    u'amount': 5,
+                    u'unit': u'POUND',
+                    u'ingredient': {
+                        u'id': 1,
+                        u'class': 'Fermentable'
+                    }
+                }]
+            }
+        }
+
+        self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={'recipe': dumps(data)}
+        )
+
+        assert model.RecipeAddition.query.count() == 1
+        a = model.RecipeAddition.get(1)
+        assert a.recipe == model.Recipe.get(1)
+        assert a.amount == 5
+        assert a.unit == 'POUND'
+        assert a.fermentable == model.Fermentable.get(1)
+
+    def test_hop(self):
+        model.Recipe(
+            name='American IPA',
+            author=model.User.get(1)
+        )
+        model.Hop(name='Cascade', origin='US')
+        model.commit()
+
+        data = {
+            u'mash': {
+                u'additions': [{
+                    u'use': u'MASH',
+                    u'form': u'PELLET',
+                    u'alpha_acid': 8,
+                    u'amount': 16,
+                    u'duration': 60,
+                    u'unit': u'OUNCE',
+                    u'ingredient': {
+                        u'id': 1,
+                        u'class': u'Hop'
+                    }
+                }]
+            }
+        }
+
+        self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={'recipe': dumps(data)}
+        )
+
+        assert model.HopAddition.query.count() == 1
+        a = model.HopAddition.get(1)
+        assert a.recipe == model.Recipe.get(1)
+        assert a.amount == 16
+        assert a.duration == timedelta(minutes=60)
+        assert a.unit == 'OUNCE'
+        assert a.form == 'PELLET'
+        assert a.alpha_acid == 8
+        assert a.hop == model.Hop.get(1)
+
+
+class TestHopAdditions(TestAuthenticatedApp):
+
+    def test_fermentable(self):
+        model.Recipe(
+            name='American IPA',
+            author=model.User.get(1)
+        )
+        model.Fermentable(
+            name='2-Row',
+            origin='US',
+            ppg=36,
+            lovibond=2
+        )
+        model.commit()
+
+        data = {
+            u'boil': {
+                u'additions': [{
+                    u'amount': 5,
+                    u'use': 'BOIL',
+                    u'duration': 15,
+                    u'unit': u'POUND',
+                    u'ingredient': {
+                        u'id': 1,
+                        u'class': 'Fermentable'
+                    }
+                }]
+            }
+        }
+
+        self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={'recipe': dumps(data)}
+        )
+
+        assert model.RecipeAddition.query.count() == 1
+        a = model.RecipeAddition.get(1)
+        assert a.recipe == model.Recipe.get(1)
+        assert a.amount == 5
+        assert a.use == 'BOIL'
+        assert a.duration == timedelta(minutes=15)
+        assert a.unit == 'POUND'
+        assert a.fermentable == model.Fermentable.get(1)
+
+    def test_hop(self):
+        model.Recipe(
+            name='American IPA',
+            author=model.User.get(1)
+        )
+        model.Hop(name='Cascade', origin='US')
+        model.commit()
+
+        data = {
+            u'boil': {
+                u'additions': [{
+                    u'use': u'BOIL',
+                    u'form': u'PELLET',
+                    u'alpha_acid': 8,
+                    u'amount': 16,
+                    u'duration': 60,
+                    u'unit': u'OUNCE',
+                    u'ingredient': {
+                        u'id': 1,
+                        u'class': u'Hop'
+                    }
+                }]
+            }
+        }
+
+        self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={'recipe': dumps(data)}
+        )
+
+        assert model.HopAddition.query.count() == 1
+        a = model.HopAddition.get(1)
+        assert a.recipe == model.Recipe.get(1)
+        assert a.amount == 16
+        assert a.use == 'BOIL'
+        assert a.duration == timedelta(minutes=60)
+        assert a.unit == 'OUNCE'
+        assert a.form == 'PELLET'
+        assert a.alpha_acid == 8
+        assert a.hop == model.Hop.get(1)
+
+
+class TestFermentationAdditions(TestAuthenticatedApp):
+
+    def test_hop(self):
+        model.Recipe(
+            name='American IPA',
+            author=model.User.get(1)
+        )
+        model.Hop(name='Cascade', origin='US')
+        model.commit()
+
+        data = {
+            u'fermentation': {
+                u'additions': [{
+                    u'use': u'SECONDARY',
+                    u'form': u'PELLET',
+                    u'alpha_acid': 8,
+                    u'amount': 16,
+                    u'unit': u'OUNCE',
+                    u'ingredient': {
+                        u'id': 1,
+                        u'class': u'Hop'
+                    }
+                }]
+            }
+        }
+
+        self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={'recipe': dumps(data)}
+        )
+
+        assert model.HopAddition.query.count() == 1
+        a = model.HopAddition.get(1)
+        assert a.recipe == model.Recipe.get(1)
+        assert a.amount == 16
+        assert a.use == 'SECONDARY'
+        assert a.unit == 'OUNCE'
+        assert a.form == 'PELLET'
+        assert a.alpha_acid == 8
+        assert a.hop == model.Hop.get(1)
+
+    def test_yeast(self):
+        model.Recipe(
+            name='American IPA',
+            author=model.User.get(1)
+        )
+        model.Yeast(
+            name='Wyeast 1056 - American Ale',
+            form='LIQUID',
+            attenuation=.75
+        )
+        model.commit()
+
+        data = {
+            u'mash': {
+                u'additions': [{
+                    u'use': u'MASH',
+                    u'amount': 1,
+                    u'use': 'PRIMARY',
+                    u'ingredient': {
+                        u'id': 1,
+                        u'class': u'Yeast'
+                    }
+                }]
+            }
+        }
+
+        self.post(
+            '/recipes/1/american-ipa/builder?_method=PUT',
+            params={'recipe': dumps(data)}
+        )
+
+        assert model.RecipeAddition.query.count() == 1
+        a = model.RecipeAddition.get(1)
+        assert a.recipe == model.Recipe.get(1)
+        assert a.amount == 1
+        assert a.use == 'PRIMARY'
+        assert a.yeast == model.Yeast.get(1)
 
 
 class TestRecipePublish(TestAuthenticatedApp):
 
-    def test_publish_get(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.commit()
-
-        self.get(
-            '/recipes/1/rocky-mountain-river-ipa/builder/publish',
-            status = 405
-        ).status_int == 405
-
     def test_simple_publish(self):
         model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
         model.Fermentable(
-            name        = '2-Row',
-            origin      = 'US',
-            ppg         = 36,
-            lovibond    = 2
+            name='2-Row',
+            origin='US',
+            ppg=36,
+            lovibond=2
         )
         model.commit()
 
         assert model.Recipe.query.first().state == "DRAFT"
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/publish')
+        self.post('/recipes/1/rocky-mountain-river-ipa/builder/publish/')
         assert model.Recipe.query.first().state == "PUBLISHED"
-
-
-class TestRecipeNameChange(TestAuthenticatedApp):
-
-    def test_name_get(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.commit()
-
-        self.get(
-            '/recipes/1/rocky-mountain-river-ipa/builder/async/name',
-            status = 405
-        ).status_int == 405
-
-    def test_simple_name_change(self):
-        model.Recipe(name='Rocky Mountain River IPA', author=model.User.get(1))
-        model.commit()
-
-        self.post('/recipes/1/rocky-mountain-river-ipa/builder/async/name', params={
-            'name': u'Simcoe IPA'
-        })
-        assert model.Recipe.query.first().name == "Simcoe IPA"
-        slugs = model.Recipe.query.first().slugs
-        assert len(slugs) == 2
-        assert slugs[0].slug == 'rocky-mountain-river-ipa'
-        assert slugs[1].slug == 'simcoe-ipa'

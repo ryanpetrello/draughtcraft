@@ -1,5 +1,4 @@
 <%
-  from draughtcraft.lib.units import to_metric
   from draughtcraft.lib.csrf import auth_token_pair
   key, token = auth_token_pair()
 %>
@@ -66,13 +65,13 @@
     </div>
   </div>
   ${h.form('')}
+    ${form.csrf_token}
     <fieldset>
       <dl class="clearfix">
-        <dt><label for="name">Recipe Name</label></dt>
+        <dt><label for="name">${form.name.label}</label></dt>
         <dd>
-          ${h.text(
-            'name', 
-            'e.g., Rocky Mountain River IPA', 
+          ${form.name(
+            value = 'e.g., Rocky Mountain River IPA', 
             tabindex = '1', 
             size = '256',
             class_ = 'default'
@@ -80,47 +79,20 @@
           <small>You can change your recipe's name later.</small>
         </dd>
         <dt>
-          <label for="type">Recipe Type</label>
+          <label for="type">${form.type.label}</label>
           <a href="#recipe-types" class="question">Which should I choose?</a>
         </dt>
         <dd>
-            ${h.select('type', 
-            h.request.context['user'].settings['default_recipe_type'] if h.request.context['user'] else None, [
-                ('EXTRACT', 'Extract'),
-                ('EXTRACTSTEEP', 'Extract w/ Steeped Grains'),
-                ('MINIMASH', 'Partial/Mini-Mash'),
-                ('MASH', 'All Grain')
-            ], tabindex='2')}
+          ${form.type(tabindex='2')}
         </dd>
-        <dt><label for="gallons">Final Volume</label></dt>
+        <dt><label for="gallons">${form.volume.label}</label></dt>
         <dd>
-          % if h.request.context['metric'] == True:
-            ${h.text(
-              'volume', 
-              h.format_volume(round(to_metric(*(h.request.context['user'].settings['default_recipe_volume'], "GALLON"))[0], 3)) if h.request.context['user'] else 20,
-              tabindex='3',
-              class_='unit'
-            )}
-            ${h.hidden(
-              'unit',
-              'LITER'
-            )}
-            Liter(s)
-          % else:
-            ${h.text(
-              'volume', 
-              h.format_volume(h.request.context['user'].settings['default_recipe_volume']) if h.request.context['user'] else 5,
-              tabindex='3',
-              class_='unit'
-            )}
-            ${h.hidden(
-              'unit',
-              'GALLON'
-            )}
-            Gallon(s)
-            % if h.request.context['user'] is None:
-              <small><a href="#" onclick="$.draughtcraft.toggleUnits('${key}', '${token}');">Want Metric Units?</a></small>
-            % endif
+          <% metric = h.request.context['metric'] == True %>
+          ${form.volume(tabindex='3', class_='unit')}
+          ${form.unit()}
+          ${'Liter(s)' if metric else 'Gallon(s)'}
+          % if not metric and h.request.context['user'] is None:
+            <small><a href="#" onclick="$.draughtcraft.toggleUnits('${key}', '${token}');">Want Metric Units?</a></small>
           % endif
         </dd>
       </dl>
@@ -140,7 +112,7 @@
       <h4>Become a Member</h4>
       <p>
         DraughtCraft members can save, share, and organize their recipes online.
-        Best all of, signing up is easy and free!
+        Best of all, signing up is easy and free!
       </p>
       <p>
         <a href="/signup" tabindex="6">Sign Up Now</a>

@@ -1,6 +1,5 @@
-from draughtcraft       import model
+from draughtcraft import model
 
-import pytest
 import unittest
 
 
@@ -8,12 +7,12 @@ class TestSlugGeneration(unittest.TestCase):
 
     def test_custom_slug(self):
         slug = model.RecipeSlug(
-            name = 'American Ale',
-            slug = 'custom'
+            name='American Ale',
+            slug='custom'
         )
         assert slug.slug == 'custom'
 
-    def test_slug_generation(self): 
+    def test_slug_generation(self):
         slug = model.RecipeSlug(name='Beer')
         assert slug.slug == 'beer'
 

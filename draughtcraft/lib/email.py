@@ -1,8 +1,9 @@
-from pecan              import conf
-from pecan.templating   import RendererFactory
-from mako               import exceptions
-
+from mako import exceptions
 import postmark
+
+from pecan import conf
+from pecan.templating import RendererFactory
+
 
 __all__ = ['send']
 
@@ -19,13 +20,16 @@ class EmailTemplate(object):
 
     * templates/email/signup.html
     * templates/email/signup.txt
-    
+
     ...for generating both an HTML and plain/text version of the email.
     """
 
     __html_wrap__ = u'''
         <html>
-        <body bgcolor="#ffffff" link="#0099cc" alink="#0099cc" vlink="#0099cc" leftmargin="0" topmargin="0" style="padding: 15px; font-family: Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.3em; text-align: left;">
+        <body bgcolor="#ffffff" link="#0099cc" alink="#0099cc" vlink="#0099cc"
+        leftmargin="0" topmargin="0" style="padding: 15px; font-family:
+        Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.3em;
+        text-align: left;">
             %s
         </body>
         </html>
@@ -44,7 +48,7 @@ class EmailTemplate(object):
                 ns
             )
         except exceptions.TopLevelLookupException:
-            pass # This will cause the `__render__` call to return `None`
+            pass  # This will cause the `__render__` call to return `None`
 
     def html(self, ns):
         body = self.__render__('html', ns)
@@ -58,7 +62,7 @@ class EmailTemplate(object):
 
 
 def send(to, template, subject, ns={}, sender='notify@draughtcraft.com',
-        cc=[], bcc=[]):
+         cc=[], bcc=[]):
     """
     Used to send a transactional email through Postmark's API.
 
@@ -78,13 +82,13 @@ def send(to, template, subject, ns={}, sender='notify@draughtcraft.com',
         return ','.join(s) if isinstance(s, list) else s
 
     mail = postmark.PMMail(
-        api_key     = conf.postmark.api_key,
-        to          = _flatten(to),
-        cc          = _flatten(cc),
-        bcc         = _flatten(bcc),
-        subject     = subject,
-        sender      = sender,
-        html_body   = email.html(ns),
-        text_body   = email.text(ns)
+        api_key=conf.postmark.api_key,
+        to=_flatten(to),
+        cc=_flatten(cc),
+        bcc=_flatten(bcc),
+        subject=subject,
+        sender=sender,
+        html_body=email.html(ns),
+        text_body=email.text(ns)
     )
     mail.send()

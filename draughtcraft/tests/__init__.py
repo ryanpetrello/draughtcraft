@@ -1,71 +1,106 @@
-from pecan              import conf
-from draughtcraft       import model as dcmodel
-from webtest            import TestApp as WebTestApp
-from unittest           import TestCase
+from copy import deepcopy
+from unittest import TestCase
+import subprocess
+import os
 
-import py.test
+from pecan import conf
+from pecan.testing import load_test_app
+from sqlalchemy import create_engine
+from sqlalchemy.pool import NullPool
+
+from draughtcraft import model as dcmodel
+
+__bind__ = 'postgresql+psycopg2://localhost'
+
 
 class TestModel(TestCase):
 
+    config = {
+        'app': {
+            'root': 'draughtcraft.controllers.root.RootController',
+            'modules': ['draughtcraft'],
+            'static_root': '%s/../../public' % os.path.dirname(__file__),
+            'template_path': '%s/../templates' % os.path.dirname(__file__),
+            'stamp': 'XYZ',
+            'reload': False,
+            'debug': True,
+            'logging': False
+        },
+        'signups': {
+            'bcc': 'ryan@example.com'
+        },
+        'postmark': {
+            'api_key': 'POSTMARK_API_TEST'
+        },
+        'cache': {
+            'key': 'resources_to_compile',
+            '__force_dict__': True
+        },
+        'redis': {
+            '__force_dict__': True
+        }
+    }
+
+    __db__ = None
+
+    @classmethod
+    def setUpClass(cls):
+        if TestModel.__db__ is None:
+            TestModel.__db__ = 'draughtcrafttest'
+            # Connect and create the temporary database
+            print "=" * 80
+            print "CREATING TEMPORARY DATABASE FOR TESTS"
+            print "=" * 80
+            subprocess.call(['createdb', TestModel.__db__])
+
+            # Bind and create the database tables
+            dcmodel.clear()
+            dcmodel.bind(create_engine(
+                '%s/%s' % (__bind__, TestModel.__db__), **{
+                    'encoding': 'utf-8',
+                    'poolclass': NullPool
+                }
+            ))
+            dcmodel.metadata.create_all()
+            dcmodel.commit()
+            dcmodel.clear()
+
     def setUp(self):
+        config = deepcopy(self.config)
+
+        # Add the appropriate connection string to the app config.
+        config['sqlalchemy'] = {
+            'url': '%s/%s' % (__bind__, TestModel.__db__),
+            'encoding': 'utf-8',
+            'poolclass': NullPool
+        }
+
         # Set up a fake app
-        self.app = WebTestApp(py.test.wsgi_app)
-        
-        # Create the database tables
+        self.app = self.load_test_app(config)
         dcmodel.clear()
-        dcmodel.start()
-        dcmodel.metadata.create_all()
-        dcmodel.commit()
-        dcmodel.clear()
+
+    def load_test_app(self, config):
+        return load_test_app(config)
 
     def tearDown(self):
         from sqlalchemy.engine import reflection
-        from sqlalchemy import create_engine
-        from sqlalchemy.schema import (
-            MetaData,
-            Table,
-            DropTable,
-            ForeignKeyConstraint,
-            DropConstraint,
-        )
-        
+
         # Tear down and dispose the DB binding
         dcmodel.clear()
 
+        # start a transaction
         engine = conf.sqlalchemy.sa_engine
         conn = engine.connect()
-
-        # start at transaction
         trans = conn.begin()
 
         inspector = reflection.Inspector.from_engine(engine)
 
         # gather all data first before dropping anything.
-        # some DBs lock after things have been dropped in 
+        # some DBs lock after things have been dropped in
         # a transaction.
-
-        metadata = MetaData()
-
-        tbs = []
-        all_fks = []
-
-        for table_name in inspector.get_table_names():
-            fks = []
-            for fk in inspector.get_foreign_keys(table_name):
-                if not fk['name']:
-                    continue
-                fks.append(
-                    ForeignKeyConstraint((),(),name=fk['name'])
-                    )
-            t = Table(table_name,metadata,*fks)
-            tbs.append(t)
-            all_fks.extend(fks)
-
-        for fkc in all_fks:
-            conn.execute(DropConstraint(fkc))
-
-        for table in tbs:
-            conn.execute(DropTable(table))
+        conn.execute("TRUNCATE TABLE %s RESTART IDENTITY CASCADE" % (
+            ', '.join(inspector.get_table_names())
+        ))
 
         trans.commit()
         conn.close()
@@ -78,12 +113,6 @@ class TestApp(TestModel):
     """
 
     __headers__ = {}
-
-    def setUp(self):
-        # Set up a fake app
-        self.app = WebTestApp(py.test.wsgi_app)
-
-        super(TestApp, self).setUp()
 
     def _do_request(self, url, method='GET', **kwargs):
         methods = {
@@ -136,13 +165,13 @@ class TestAuthenticatedApp(TestApp):
         # Make a user and authenticate as them.
         #
         dcmodel.User(
-            username = 'ryanpetrello',
-            password = 'secret',
-            email    = 'ryan@example.com'
+            username='ryanpetrello',
+            password='secret',
+            email='ryan@example.com'
         )
         dcmodel.commit()
         response = self.post('/login', params={
-            'username'  : 'ryanpetrello',
-            'password'  : 'secret'
+            'username': 'ryanpetrello',
+            'password': 'secret'
         })
-        assert 'user_id' in response.environ['beaker.session']
+        assert 'user_id' in response.request.environ['beaker.session']

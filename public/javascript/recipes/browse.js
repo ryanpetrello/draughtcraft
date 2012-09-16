@@ -1,3 +1,5 @@
+$.draughtcraft.recipes.browse.COOKIENAME = 'dc-3-searchbar';
+
 $.draughtcraft.recipes.browse.__injectRecipes__ = function(html){
     /*
      * Inject search results into the page.
@@ -27,14 +29,14 @@ $.draughtcraft.recipes.browse.restoreLastFormValues = function(){
      * Load a cookie representing the "last form values", and reconfigure
      * the form to match.
      */
-    var values = $.cookie('searchbar');
+    var values = $.cookie($.draughtcraft.recipes.browse.COOKIENAME);
     if(values){
         $('#searchbar > form').deserialize(decodeURIComponent(values).replace(/\+/g, ' '));
 
         // Store the "last state" for on/off toggle buttons
         $('#searchbar > form li.btn input').each(function(){
             var li = $(this).closest('li');
-            var enabled = $(this).val() == 'true';
+            var enabled = $(this).prop('checked');
             li.addClass(enabled ? 'enabled' : 'disabled');
             li.removeClass(enabled ? 'disabled' : 'enabled');
         });
@@ -56,8 +58,10 @@ $.draughtcraft.recipes.browse.saveFormValues = function(){
      * Store the most recent form values in a cookie so that they're
      * automatically used on page load.
     */
+    if(!$('#searchbar > form input[name="page"]').val())
+        $('#searchbar > form input[name="page"]').val(1);
     var values = $('#searchbar > form').serialize();
-    $.cookie('searchbar', values, {expires: 7});
+    $.cookie($.draughtcraft.recipes.browse.COOKIENAME, values, {expires: 7});
 
     // Show a loading bar...
     $('#results').html([
@@ -78,8 +82,8 @@ $.draughtcraft.recipes.browse.prepareFormValues = function(){
 
     // For each "toggle" button...
     $('#searchbar ul.primary li.btn').each(function(){
-        // Store true/false in the hidden input field
-        $(this).children('input').val($(this).hasClass('enabled'));
+        // Check/uncheck the hidden input field
+        $(this).children('input').prop('checked', $(this).hasClass('enabled'));
     });
 
     // For each "dropdown"

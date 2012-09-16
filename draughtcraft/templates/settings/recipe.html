@@ -18,62 +18,50 @@
   ${h.notices.render()}
 
   ${h.form('')}
+    ${form.csrf_token}
     <fieldset>
       <dl class="clearfix">
 
-        <dt><label for="name">Display Recipes Using</label></dt>
+        <dt><label for="name">${form.unit_system.label}</label></dt>
         <dd>
-          ${h.select('unit_system', user.settings.get('unit_system', 'US'), [
-            ('US', 'U.S. units (lb, oz, gallon)'),
-            ('METRIC', 'Metric units (kg, g, liter)'),
-          ], tabindex='4')}
+          ${form.unit_system(tabindex='1')}
         </dd>
 
-        <dt><label for="name">Default Recipe Type</label></dt>
+        <dt><label for="name">${form.default_recipe_type.label}</label></dt>
         <dd>
-          ${h.select('default_recipe_type', user.settings['default_recipe_type'], [
-            ('MASH', 'All Grain'),
-            ('EXTRACT', 'Extract'),
-            ('EXTRACTSTEEP', 'Extract w/ Steeped Grains'),
-            ('MINIMASH', 'Extract with Mini-Mash')
-          ], tabindex='1')}
+          ${form.default_recipe_type(tabindex='2')}
         </dd>
 
-        <dt><label for="name">Default Batch Size</label></dt>
+        <dt><label for="name">${form.default_recipe_volume.label}</label></dt>
         <dd>
           % if h.request.context['metric'] == True:
-            ${h.text(
-              'default_recipe_volume', 
-              h.format_volume(round(to_metric(*(user.settings['default_recipe_volume'], "GALLON"))[0], 3)),
-              tabindex='2',
+            ${form.default_recipe_volume(
+              value=h.format_volume(round(to_metric(
+                *(user.settings['default_recipe_volume'], "GALLON")
+              )[0], 3)),
+              tabindex='3',
               class_='unit'
             )}
             Liter(s)
           % else:
-            ${h.text(
-              'default_recipe_volume', 
-              h.format_volume(user.settings['default_recipe_volume']),
-              tabindex='2',
+            ${form.default_recipe_volume(
+              value=h.format_volume(user.settings['default_recipe_volume']),
+              tabindex='3',
               class_='unit'
             )}
             Gallon(s)
           % endif
         </dd>
 
-        <dt><label for="name">Preferred IBU Calculation</label></dt>
+        <dt><label for="name">${form.default_ibu_formula.label}</label></dt>
         <dd>
-          ${h.select('default_ibu_formula', user.settings['default_ibu_formula'], [
-            ('tinseth', 'Tinseth Formula'),
-            ('rager', 'Rager Formula'),
-            ('daniels', 'Daniels Formula')
-          ], tabindex='3')}
+          ${form.default_ibu_formula(tabindex='4')}
         </dd>
 
-        <dt><label for="name">Brewhouse Efficiency</label></dt>
+        <dt><label for="name">${form.brewhouse_efficiency.label}</label></dt>
         <dd>
-          ${h.text(
-            'brewhouse_efficiency', 
-            int(user.settings['brewhouse_efficiency'] * 100),
+          ${form.brewhouse_efficiency(
+            value=int(user.settings['brewhouse_efficiency'] * 100),
             class_="unit",
             tabindex='5'
           )} %

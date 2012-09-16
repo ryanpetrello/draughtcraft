@@ -25,20 +25,17 @@
   ${h.notices.render()}
 
   ${h.form('')}
+    ${form.csrf_token}
     <fieldset>
       <dl class="clearfix">
 
         <dt><label for="first_name">Full Name</label></dt>
         <dd>
-          ${h.text(
-            'first_name', 
-            user.first_name,
+          ${form.first_name(
             tabindex = '1',
             class_ = 'short'
           )}
-          ${h.text(
-            'last_name', 
-            user.last_name,
+          ${form.last_name(
             tabindex = '2',
             class_ = 'short'
           )}
@@ -48,21 +45,17 @@
           </div>
         </dd>
 
-        <dt><label for="email">Email</label></dt>
+        <dt><label for="email">${form.email.label}</label></dt>
         <dd>
-          ${h.text(
-            'email', 
-            user.email,
+          ${form.email(
             tabindex = '3', 
             size = '256'
           )}
         </dd>
 
-        <dt><label for="location">Location</label></dt>
+        <dt><label for="location">${form.location.label}</label></dt>
         <dd>
-          ${h.text(
-            'location', 
-            user.location,
+          ${form.location(
             tabindex = '4', 
             size = '256'
           )}
@@ -71,11 +64,9 @@
           </div>
         </dd>
 
-        <dt><label for="bio">Bio</label></dt>
+        <dt><label for="bio">${form.bio.label}</label></dt>
         <dd>
-          ${h.textarea(
-            'bio', 
-            user.bio,
+          ${form.bio(
             tabindex = '5',
             rows = 8,
             cols = 33

@@ -1,4 +1,4 @@
-from draughtcraft.tests     import TestAuthenticatedApp
+from draughtcraft.tests import TestAuthenticatedApp
 
 
 class TestRoot(TestAuthenticatedApp):

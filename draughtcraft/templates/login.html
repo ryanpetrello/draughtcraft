@@ -37,31 +37,23 @@
     </div>
   % endif
 
-  ${h.form('')}
+  ${h.form('/login')}
+    ${form.csrf_token}
     <fieldset>
       <dl class="clearfix">
-        <dt><label for="name">Username</label></dt>
+        <dt>${form.username.label}</dt>
         <dd>
-          ${h.text(
-            'username', 
-            tabindex = '1', 
-            size = '256'
-          )}
+          ${form.username(tabindex = '1', size = '256')}
         </dd>
-        <dt><label for="name">Password</label></dt>
+        <dt><label for="name">${form.password.label}</label></dt>
         <dd>
-          ${h.password(
-            'password', 
-            tabindex = '2', 
-            value = static('password', ''),
-            size = '256'
-          )}
+          ${form.password(tabindex='2', size = '256')}
         </dd>
       </dl>
     </fieldset>
 
     <div class="buttons">
-      <button class="ribbon" tabindex="4">
+      <button class="ribbon" tabindex="3">
         Login
       </button>
       <a href="/forgot" tabindex="5">Forget Your Password?</a>
@@ -81,7 +73,7 @@
       <h4>Become a Member</h4>
       <p>
         DraughtCraft members can save, share, and organize their recipes online.
-        Best all of, signing up is easy and free!
+        Best of all, signing up is easy and free!
       </p>
       <p>
         <a href="/signup" tabindex="6">Sign Up Now</a>

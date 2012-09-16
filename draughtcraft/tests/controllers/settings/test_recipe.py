@@ -1,5 +1,5 @@
-from draughtcraft           import model
-from draughtcraft.tests     import TestApp, TestAuthenticatedApp
+from draughtcraft import model
+from draughtcraft.tests import TestApp, TestAuthenticatedApp
 
 
 class TestUnauthenticatedRecipeSettings(TestApp):
@@ -17,11 +17,11 @@ class TestRecipeSettings(TestAuthenticatedApp):
 
     def test_success(self):
         params = {
-            'default_recipe_type'       : 'EXTRACT',
-            'default_recipe_volume'     : '2.5',
-            'default_ibu_formula'       : 'daniels',
-            'unit_system'               : 'METRIC',
-            'brewhouse_efficiency'      : 75
+            'default_recipe_type': 'EXTRACT',
+            'default_recipe_volume': '2.5',
+            'default_ibu_formula': 'daniels',
+            'unit_system': 'METRIC',
+            'brewhouse_efficiency': 75
         }
         response = self.post('/settings/recipe/', params=params)
         assert response.status_int == 302
@@ -39,11 +39,11 @@ class TestRecipeSettings(TestAuthenticatedApp):
         model.commit()
 
         params = {
-            'default_recipe_type'       : 'EXTRACT',
-            'default_recipe_volume'     : '10', # (in liters)
-            'default_ibu_formula'       : 'daniels',
-            'unit_system'               : 'METRIC',
-            'brewhouse_efficiency'      : 75
+            'default_recipe_type': 'EXTRACT',
+            'default_recipe_volume': '10',  # (in liters)
+            'default_ibu_formula': 'daniels',
+            'unit_system': 'METRIC',
+            'brewhouse_efficiency': 75
         }
         response = self.post('/settings/recipe/', params=params)
         assert response.status_int == 302
@@ -63,26 +63,26 @@ class TestAnonymousVisitorSettings(TestApp):
 
     def test_unit_system_toggle(self):
         resp = self.get('/')
-        session = resp.environ['beaker.session']
+        session = resp.request.environ['beaker.session']
         assert 'metric' not in session
 
         # Toggle to metric
         self.post('/units')
 
         resp = self.get('/')
-        session = resp.environ['beaker.session']
-        assert session['metric'] == True
+        session = resp.request.environ['beaker.session']
+        assert session['metric'] is True
 
         # Toggle to US
         self.post('/units')
 
         resp = self.get('/')
-        session = resp.environ['beaker.session']
-        assert session['metric'] == False
+        session = resp.request.environ['beaker.session']
+        assert session['metric'] is False
 
         # Toggle back to metric
         self.post('/units')
 
         resp = self.get('/')
-        session = resp.environ['beaker.session']
-        assert session['metric'] == True
+        session = resp.request.environ['beaker.session']
+        assert session['metric'] is True

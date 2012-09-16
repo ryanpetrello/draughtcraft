@@ -1,0 +1,137 @@
+<%def name="tbody(cls)">
+  <tbody data-bind="if: $.grep($.draughtcraft.recipes.builder.recipe.mash.additions(), function(a){ return a.ingredient().class == '${cls}' }).length">
+    <tr class="header">
+      ${caller.header()}
+    </tr>
+  </tbody>
+  <tbody data-bind="foreach: sortedAdditions">
+    <tr data-bind="if: ingredient().class == '${cls}'" class="addition">
+      ${caller.row()}
+    </tr>
+  </tbody>
+</%def>
+
+% if not editable:
+  <p class="instruction">
+    If necessary, crush grains.
+
+    Dough in the following fermentable ingredients:
+  </p>
+% endif
+
+<!-- Empty Placeholder -->
+<table data-bind="visible: mash.additions().length == 0">
+  <tr>
+    <td>
+      Choose one or more fermentables for this recipe.
+    </td>
+  </tr>
+</table>
+
+<table data-bind="with: mash, stripe: mash.additions()">
+
+  <!-- Fermentables -->
+  <%self:tbody cls="Fermentable">
+    <%def name="header()">
+      <th class="type"></th>
+      <th class="percent">%</th>
+      <th class="amount">Amount</th>
+      <th>Fermentable</th>
+      <th>PPG</th>
+      <th class="unit">L</th>
+      <th class="close"></th>
+    </%def>
+    <%def name="row()">
+      <td data-bind="with: ingredient()" class="type grain">
+        <span data-bind="text: printed_type"></span>
+      </td>
+      <td class="percent" data-bind="text: mash_percentage()"></td>
+      <td class="amount">
+        <input data-bind="value: readable_amount, hasfocus: editing, event: {keyup: delayedWrite}" type="text" />
+      </td>
+      <td data-bind="with: ingredient()">
+        <a data-bind="text: name, attr: {href: '/ingredients/' + id}, popup: true" tabindex="9999"></a>
+      </td>
+      <td data-bind="with: ingredient()">
+        <span data-bind="text: ppg"></span>
+      </td>
+      <td class="unit" data-bind="with: ingredient()">
+        <span data-bind="text: lovibond"></span>
+      </td>
+      <td class="close">
+        <a data-bind="click: removeAddition" href="#" tabindex="9999">
+          <img src="/images/close.png">
+        </a>
+      </td>
+    </%def>
+  </%self:tbody>
+
+  <!-- Hops -->
+  <%self:tbody cls="Hop">
+    <%def name="header()">
+      <th class="type"></th>
+      <th class="percent"></th>
+      <th class="amount">Amount</th>
+      <th>Variety</th>
+      <th>Form</th>
+      <th class="unit">AA</th>
+      <th class="close"></th>
+    </%def>
+    <%def name="row()">
+      <td class="type hop">
+        <span>Hop</span>
+      </td>
+      <td class="percent"></td>
+      <td class="amount">
+        <input data-bind="value: readable_amount, hasfocus: editing, event: {keyup: delayedWrite}" type="text" />
+      </td>
+      <td data-bind="with: ingredient()">
+        <a data-bind="text: name, attr: {href: '/ingredients/' + id}, popup: true" tabindex="9999"></a>
+      </td>
+      <td class="form">
+        <select data-bind="options: $root.HOP_FORMS, value: form, optionsText: 'name', optionsValue: 'id'">
+        </select>
+      </td>
+      <td class="unit">
+        <input data-bind="value: alpha_acid" type="text" /></span>
+      </td>
+      <td class="close">
+        <a data-bind="click: removeAddition" href="#" tabindex="9999">
+          <img src="/images/close.png">
+        </a>
+      </td>
+    </%def>
+  </%self:tbody>
+
+  <!-- Extras -->
+  <%self:tbody cls="Extra">
+    <%def name="header()">
+      <th class="type"></th>
+      <th class="percent"></th>
+      <th class="amount">Amount</th>
+      <th>Name</th>
+      <th></th>
+      <th class="unit"></th>
+      <th class="close"></th>
+    </%def>
+    <%def name="row()">
+      <td data-bind="with: ingredient()" class="type extra">
+        <span>Extra</span>
+      </td>
+      <td class="percent"></td>
+      <td class="amount">
+        <input data-bind="value: readable_amount, hasfocus: editing, event: {keyup: delayedWrite}" type="text" />
+      </td>
+      <td data-bind="with: ingredient()">
+        <a data-bind="text: name, attr: {href: '/ingredients/' + id}, popup: true" tabindex="9999"></a>
+      </td>
+      <td />
+      <td class="unit"></td>
+      <td class="close">
+        <a data-bind="click: removeAddition" href="#" tabindex="9999">
+          <img src="/images/close.png">
+        </a>
+      </td>
+    </%def>
+  </%self:tbody>
+</table>

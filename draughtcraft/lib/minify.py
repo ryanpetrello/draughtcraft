@@ -1,9 +1,9 @@
 #
 # Copyright (c) 2005-2009 Ben Bangert, James Gardner, Philip Jenvey,
-#                         Mike Orr, Jon Rosenbaugh, Christoph Haas, 
+#                         Mike Orr, Jon Rosenbaugh, Christoph Haas,
 #                         and other contributors.
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
 # are met:
@@ -15,7 +15,7 @@
 # 3. The name of the author or contributors may not be used to endorse or
 #    promote products derived from this software without specific prior
 #    written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
 # ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,40 +27,41 @@
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
-# 
-# 
-# ------------------------------------------------------------------------------
-# 
-# 
+#
+#
+# -----------------------------------------------------------------------------
+#
+#
 # Portions of WebHelpers covered by the following license::
-# 
+#
 # Copyright (c) 2005, the Lawrence Journal-World
 # All rights reserved.
-# 
-# Redistribution and use in source and binary forms, with or without modification,
-# are permitted provided that the following conditions are met:
-# 
-#     1. Redistributions of source code must retain the above copyright notice, 
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+#     1. Redistributions of source code must retain the above copyright notice,
 #        this list of conditions and the following disclaimer.
-#     
-#     2. Redistributions in binary form must reproduce the above copyright 
+#
+#     2. Redistributions in binary form must reproduce the above copyright
 #        notice, this list of conditions and the following disclaimer in the
 #        documentation and/or other materials provided with the distribution.
-# 
-#     3. Neither the name of Django nor the names of its contributors may be used
-#        to endorse or promote products derived from this software without
+#
+#     3. Neither the name of Django nor the names of its contributors may be
+#        used to endorse or promote products derived from this software without
 #        specific prior written permission.
-# 
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-# ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
 #
 
 """Minification helpers.
@@ -95,6 +96,7 @@ from jsmin import JavascriptMinify
 __all__ = ['javascript_link', 'stylesheet_link', 'ResourceLookupMiddleware']
 log = logging.getLogger(__name__)
 
+
 def redis_connector():
     from pecan import conf
     from redis import Redis
@@ -113,7 +115,7 @@ class ResourceLookupMiddleware(object):
         from pecan import conf
         path = environ.get('PATH_INFO', '')
         if conf.cache.get('data_backend') == RedisResourceCache and \
-            (path.startswith('/javascript') or path.startswith('/css')):
+                (path.startswith('/javascript') or path.startswith('/css')):
                 cached = redis_connector().get(path)
                 if cached:
                     headers = [
@@ -140,6 +142,7 @@ class ResourceCache(object):
         fs_root = conf.app.static_root
 
         cache = request.environ['beaker.cache']
+
         @cache.cache(conf.cache['key'])
         def combine_sources(sources, ext, fs_root):
             if len(sources) < 2:
@@ -179,7 +182,8 @@ class ResourceCache(object):
             for source in sources:
                 # generate full path to source
                 no_ext_source = os.path.splitext(source)[0]
-                full_source = os.path.join(fs_root, (no_ext_source + ext).lstrip('/'))
+                full_source = os.path.join(
+                    fs_root, (no_ext_source + ext).lstrip('/'))
 
                 # generate minified source path
                 full_source = os.path.join(fs_root, (source).lstrip('/'))
@@ -213,15 +217,15 @@ class ResourceCache(object):
 
     @classmethod
     def write_combine(cls, buff, dest):
-        raise NotImplementedError() # pragma: no cover
+        raise NotImplementedError()  # pragma: no cover
 
     @classmethod
     def write_minify(cls, source, dest):
-        raise NotImplementedError() # pragma: no cover
+        raise NotImplementedError()  # pragma: no cover
 
     @classmethod
     def retrieve_readable(cls, filepath):
-        raise NotImplementedError() # pragma: no cover
+        raise NotImplementedError()  # pragma: no cover
 
     @classmethod
     def javascript_link(cls, *sources, **options):
@@ -276,7 +280,7 @@ class RedisResourceCache(ResourceCache):
         #
         # If the file already exists on disk (meaning it's a source file),
         # just use it.
-        # 
+        #
         if os.path.isfile(filepath):
             return FileSystemResourceCache.retrieve_readable(filepath)
 
@@ -299,6 +303,7 @@ def javascript_link(*sources, **options):
         conf.cache.get('data_backend', FileSystemResourceCache)
     )
     return impl.javascript_link(*sources, **options)
+
 
 def stylesheet_link(*sources, **options):
     from pecan import conf

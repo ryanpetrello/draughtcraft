@@ -1,4 +1,3 @@
-from formencode import validators, Invalid
 import re
 
 UNITS = [
@@ -13,31 +12,49 @@ UNITS = [
 ]
 
 UNIT_MAP = {
-    'lb'            : 'POUND',
-    'Lb'            : 'POUND',
-    'LB'            : 'POUND',
-    'oz'            : 'OUNCE',
-    'Oz'            : 'OUNCE',
-    'OZ'            : 'OUNCE',
-    'g'             : 'GRAM',
-    'kg'            : 'KILOGRAM',
-    't'             : 'TEASPOON',
-    'ts'            : 'TEASPOON',
-    'tsp'           : 'TEASPOON',
-    'Tsp'           : 'TEASPOON',
-    'tspn'          : 'TEASPOON',
-    'tbs'           : 'TABLESPOON',
-    'tbsp'          : 'TABLESPOON',
-    'tblsp'         : 'TABLESPOON',
-    'tblspn'        : 'TABLESPOON',
-    'Tbsp'          : 'TABLESPOON',
-    'T'             : 'TABLESPOON',
-    'G'             : 'GALLON',
-    'gal'           : 'GALLON',
-    'Gal'           : 'GALLON',
-    'l'             : 'LITER',
-    'L'             : 'LITER'
+    'lb': 'POUND',
+    'Lb': 'POUND',
+    'LB': 'POUND',
+    'oz': 'OUNCE',
+    'Oz': 'OUNCE',
+    'OZ': 'OUNCE',
+    'g': 'GRAM',
+    'kg': 'KILOGRAM',
+    't': 'TEASPOON',
+    'ts': 'TEASPOON',
+    'tsp': 'TEASPOON',
+    'Tsp': 'TEASPOON',
+    'tspn': 'TEASPOON',
+    'tbs': 'TABLESPOON',
+    'tbsp': 'TABLESPOON',
+    'tblsp': 'TABLESPOON',
+    'tblspn': 'TABLESPOON',
+    'Tbsp': 'TABLESPOON',
+    'T': 'TABLESPOON',
+    'G': 'GALLON',
+    'gal': 'GALLON',
+    'Gal': 'GALLON',
+    'l': 'LITER',
+    'L': 'LITER'
 }
+
+
+def to_num(value):
+    """
+    Coerce a string to a "Number". Adapted from
+    ``formencode.validators.Number``.
+    """
+    try:
+        value = float(value)
+        try:
+            int_value = int(value)
+        except OverflowError:
+            int_value = None
+        if value == int_value:
+            return int_value
+        return value
+    except ValueError:
+        return None
 
 
 class UnitException(Exception):
@@ -123,8 +140,8 @@ class PoundExpansion(object):
 
             # We're only interested in the fractional part.
             decimal = pounds - int(pounds)
-            if (decimal * 16) == i+1:
-                return [(int(pounds), "POUND"), (i+1, "OUNCE")]
+            if (decimal * 16) == i + 1:
+                return [(int(pounds), "POUND"), (i + 1, "OUNCE")]
 
         #
         # If we find no round fractions,
@@ -145,7 +162,6 @@ class UnitConvert(object):
 
     punctuationRe = re.compile('[^0-9a-zA-z.\s]')
     unitRe = re.compile('[a-zA-Z]+( \.)?')
-    amountRe = re.compile('[0-9]+')
 
     @classmethod
     def __pairs__(cls, val):
@@ -161,7 +177,7 @@ class UnitConvert(object):
         amounts = filter(lambda x: x != '.', amounts)
 
         # Build a regex that matches the amounts
-        partsRe = '(%s)' % '|'.join(amounts).replace('.', '\.') 
+        partsRe = '(%s)' % '|'.join(amounts).replace('.', '\.')
 
         #
         # Split on the regex, and filter out the amounts,
@@ -226,9 +242,9 @@ class UnitConvert(object):
         # value and return it.  If this fails, continue on
         # to normal "<amount> <unit>" parsing.
         #
-        try:
-            return validators.Number.to_python(stripped), None
-        except Invalid: pass
+        coerced = to_num(stripped)
+        if coerced is not None:
+            return coerced, None
 
         #
         # Split into pairs of (amount, unit), e.g.,
@@ -238,13 +254,13 @@ class UnitConvert(object):
 
         #
         # Now that we have a list of potential
-        # unit/amonut pairs, attempt to combine
+        # unit/amount pairs, attempt to combine
         # them into a single unit that makes sense, e.g.,
         #
         # [(5.0, 'POUND'), (8.0, 'OUNCE')] == (5.5, 'POUND')
         #
         units = [p[1] for p in pairs]
-        
+
         for mergecls in [
             PoundOunceMerge,
             OunceMerge,
@@ -265,14 +281,14 @@ class UnitConvert(object):
 
         unit = str(unit)
         _map = {
-            'GRAM'          : 'g',
-            'KILOGRAM'      : 'kg',
-            'OUNCE'         : 'oz',
-            'POUND'         : 'lb',
-            'TEASPOON'      : 't',
-            'TABLESPOON'    : 'T',
-            'GALLON'        : 'Gal',
-            'LITER'         : 'L'
+            'GRAM': 'g',
+            'KILOGRAM': 'kg',
+            'OUNCE': 'oz',
+            'POUND': 'lb',
+            'TEASPOON': 't',
+            'TABLESPOON': 'T',
+            'GALLON': 'Gal',
+            'LITER': 'L'
         }
         return _map.get(unit, '')
 
@@ -292,8 +308,8 @@ class UnitConvert(object):
 
         # Remove trailing decimal points
         if amount.endswith('.'):
-            amount = amount[:-1]      
-        
+            amount = amount[:-1]
+
         return amount
 
     @classmethod
@@ -316,7 +332,10 @@ class UnitConvert(object):
             if expandcls.signature == unit:
                 pairs = expandcls.expand(amount)
 
-        result = ' '.join(['%s %s' % (cls.__str_amount__(amount), cls.__str_abbr__(unit)) for amount, unit in pairs if amount])
+        result = ' '.join([
+            '%s %s' % (cls.__str_amount__(amount), cls.__str_abbr__(unit))
+            for amount, unit in pairs if amount
+        ])
 
         #
         # If result is an empty string,
@@ -367,11 +386,13 @@ def to_metric(amount, unit):
         return (amount * 0.0147867648, 'LITER')
     return (amount, unit)
 
+
 def to_kg(amount, unit):
-	amount, unit = to_metric(amount, unit)
-	if unit == 'GRAM':
-		amount /= 1000.00
-	return amount
+    amount, unit = to_metric(amount, unit)
+    if unit == 'GRAM':
+        amount /= 1000.00
+    return amount
+
 
 def to_l(amount, unit):
     if unit == 'OUNCE':

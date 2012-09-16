@@ -7,7 +7,7 @@
   -moz-background-clip: padding;
   background-clip: padding-box;
 }
-.box-shadow () {
+.box-shadow (@x: 0, @y: 0, @blur: 1px, @color: #000) {
   box-shadow: @arguments;
   -moz-box-shadow: @arguments;
   -webkit-box-shadow: @arguments;
@@ -30,9 +30,7 @@
 
   /* Content-level selectors */
 
-  div.header > form.name  { display: inline; }
-
-  .header  {
+  #header  {
     fieldset.type  {
       display: none;
     }
@@ -99,6 +97,7 @@
       color: #666;
       display: block;
       font-size: 12px;
+      font-weight: normal;
       line-height: 12px;
       position: relative;
       top: -15px;
@@ -115,6 +114,9 @@
   }
   .selectBox.unit  {
     width: 12px;
+  }
+  .selectBox.medium  {
+    width: 100px;
   }
   .selectBox.gallons, .selectBox.unit  {
     .selectBox-arrow  {
@@ -149,7 +151,7 @@
     }
     li  {
       float: left;
-      line-height: 2.3em;
+      line-height: 40px;
       color: #777;
     }  
     li a  {
@@ -193,7 +195,7 @@
     clear: both;
     background: url('/images/sidebar.png') top right repeat-y #FFF;
   }
-  .step.active, #content .step.results  {
+  .step.active  {
     display: block;
   }
 
@@ -306,18 +308,18 @@
         padding-right: 20px;
       }
 
-      ol.process li form > span  {
+      ol.process li span.label  {
         width: 100px;
         display: inline-block;
       }
 
-      ol.process li form img.close  {
+      ol.process li img.close  {
         vertical-align: top;
         padding: 1px 0 0 15px;
         visibility: hidden;
       }
 
-      ol.process li:hover form img.close  {
+      ol.process li:hover img.close  {
         visibility: visible;
       }
 
@@ -348,7 +350,7 @@
   div.step.results  {
     border-top: 1px solid #257E97;
     background: #358EA7;
-    display: block;
+    display: none;
     overflow: visible;
     table  {
       margin: 0 10px;
@@ -377,22 +379,17 @@
         background: transparent !important;
         color: #FFF;
 
-        form  {
+        textarea  {
+          border: 1px solid rgba(0, 0, 0, .10);
+          background: rgba(0, 0, 0, .10);
+          color: #FFF;
+          padding: 5px;
+          width: 100%;
+          height: inherit;
           min-height: 115px;
-
-          textarea  {
-            border: 1px solid rgba(0, 0, 0, .10);
-            background: rgba(0, 0, 0, .10);
-            color: #FFF;
-            padding: 5px;
-            width: 100%;
-            height: inherit;
-            min-height: inherit;
-            margin-top: 5px;
-            font-size: 12px;
-            resize: vertical;
-          }
-
+          margin-top: 5px;
+          font-size: 12px;
+          resize: vertical;
         }
 
         p.efficiency, p.ibu-formula  {
@@ -455,4 +452,8 @@ div.ingredient-info  {
   ul  {
     margin-bottom: 15px;
   }
+}
+
+#fancybox-wrap  {
+  margin-top: -150px;
 }

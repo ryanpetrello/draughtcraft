@@ -1,5 +1,5 @@
-from copy               import deepcopy
-from sqlalchemy.orm     import object_mapper, ColumnProperty, RelationshipProperty
+from copy import deepcopy
+from sqlalchemy.orm import object_mapper, ColumnProperty, RelationshipProperty
 
 
 class DeepCopyMixin(object):
@@ -17,16 +17,16 @@ class DeepCopyMixin(object):
 
     ------------------------
     class Store(Entity, DeepCopyMixin):
-        name        = Field(UnicodeText) 
+        name        = Field(UnicodeText)
         products    = OneToMany('Product')
 
     class Product(Entity, DeepCopyMixin):
-        name        = Field(UnicodeText) 
-        price       = Field(Float) 
+        name        = Field(UnicodeText)
+        price       = Field(Float)
         categories  = OneToMany('GlobalCategory')
 
     class GlobalCategory(Entity, ShallowCopyMixin):
-        category    = Field(UnicodeText) 
+        category    = Field(UnicodeText)
     ------------------------
 
     `copy.deepcopy(Store.get(N))` would produce a new `Store` row and a new
@@ -38,23 +38,28 @@ class DeepCopyMixin(object):
     def __deepcopy__(self, memo):
         # Instantiate a copy of the instance
         cls = self.__class__
-        newobj = getattr(self, '__copy_target__', None) or cls() 
+        newobj = getattr(self, '__copy_target__', None) or cls()
 
         # Store the copied reference in the memo to avoid back-references...
         memo[self] = newobj
 
         # Look at each property of the object, based on the mapper definition
-        for prop in object_mapper(self).iterate_properties: 
+        for prop in object_mapper(self).iterate_properties:
 
-            # If the property is the primary key, `id`, or is explicitly ignored, always skip it
-            if prop.key == 'id' or prop.key in getattr(self, '__ignored_properties__', []):
+            #
+            # If the property is the primary key, `id`, or is explicitly
+            # ignored, always skip it
+            #
+            if prop.key == 'id' or \
+                    prop.key in getattr(self, '__ignored_properties__', []):
                 continue
 
             #
             # ColumnProperties are easy.  As long as the property isn't a
             # foreign key (e.g., ends in `_id`), just copy the values directly.
             #
-            if isinstance(prop, ColumnProperty) and not prop.key.endswith('_id'):
+            if isinstance(prop, ColumnProperty) and \
+                    not prop.key.endswith('_id'):
                 setattr(newobj, prop.key, getattr(self, prop.key))
 
             # If the property is a relationship...
@@ -75,10 +80,10 @@ class DeepCopyMixin(object):
                         #
                         copies = []
                         for r in rel:
-                            assert r not in memo # avoid circular references
+                            assert r not in memo  # avoid circular references
                             # Otherwise, copy it
                             copies.append(deepcopy(r, memo))
-                        
+
                         #
                         # Once we've built the new list of copies,
                         # we assign them to the destination (clone) instance.

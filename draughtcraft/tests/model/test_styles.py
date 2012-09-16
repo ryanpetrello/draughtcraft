@@ -1,113 +1,116 @@
-from draughtcraft       import model
-
-import pytest
 import unittest
+
+from draughtcraft import model
 
 
 # Stubs
-class FakeCalculations(object): pass
+class FakeCalculations(object):
+    pass
+
+
 class FakeRecipe(object):
 
     def __init__(self, **kw):
         self.calculations = FakeCalculations()
-        for k,v in kw.items():
+        for k, v in kw.items():
             setattr(self.calculations, k, v)
 
 
 class TestStyleDefined(unittest.TestCase):
 
-    def test_og(self): 
+    def test_og(self):
         style = model.Style(
-            min_og = 1.050,
-            max_og = 1.060
+            min_og=1.050,
+            max_og=1.060
         )
-        assert style.defined('og') == True
+        assert style.defined('og') is True
         style = model.Style(
-            max_og = 1.060
+            max_og=1.060
         )
-        assert style.defined('og') == False
+        assert style.defined('og') is False
         style = model.Style(
-            min_og = 1.050
+            min_og=1.050
         )
-        assert style.defined('og') == False
+        assert style.defined('og') is False
 
-    def test_fg(self): 
+    def test_fg(self):
         style = model.Style(
-            min_fg = 1.050,
-            max_fg = 1.060
+            min_fg=1.050,
+            max_fg=1.060
         )
-        assert style.defined('fg') == True
+        assert style.defined('fg') is True
         style = model.Style(
-            max_fg = 1.060
+            max_fg=1.060
         )
-        assert style.defined('fg') == False
+        assert style.defined('fg') is False
         style = model.Style(
-            min_fg = 1.050
+            min_fg=1.050
         )
-        assert style.defined('fg') == False
+        assert style.defined('fg') is False
 
-    def test_ibu(self): 
+    def test_ibu(self):
         style = model.Style(
-            min_ibu = 1.050,
-            max_ibu = 1.060
+            min_ibu=1.050,
+            max_ibu=1.060
         )
-        assert style.defined('ibu') == True
+        assert style.defined('ibu') is True
         style = model.Style(
-            max_ibu = 1.060
+            max_ibu=1.060
         )
-        assert style.defined('ibu') == False
+        assert style.defined('ibu') is False
         style = model.Style(
-            min_ibu = 1.050
+            min_ibu=1.050
         )
-        assert style.defined('ibu') == False
+        assert style.defined('ibu') is False
 
-    def test_srm(self): 
+    def test_srm(self):
         style = model.Style(
-            min_srm = 1.050,
-            max_srm = 1.060
+            min_srm=1.050,
+            max_srm=1.060
         )
-        assert style.defined('srm') == True
+        assert style.defined('srm') is True
         style = model.Style(
-            max_srm = 1.060
+            max_srm=1.060
         )
-        assert style.defined('srm') == False
+        assert style.defined('srm') is False
         style = model.Style(
-            min_srm = 1.050
+            min_srm=1.050
         )
-        assert style.defined('srm') == False
+        assert style.defined('srm') is False
 
-    def test_abv(self): 
+    def test_abv(self):
         style = model.Style(
-            min_abv = 1.050,
-            max_abv = 1.060
+            min_abv=1.050,
+            max_abv=1.060
         )
-        assert style.defined('abv') == True
+        assert style.defined('abv') is True
         style = model.Style(
-            max_abv = 1.060
+            max_abv=1.060
         )
-        assert style.defined('abv') == False
+        assert style.defined('abv') is False
         style = model.Style(
-            min_abv = 1.050
+            min_abv=1.050
         )
-        assert style.defined('abv') == False
+        assert style.defined('abv') is False
 
     def test_invalid_statistic(self):
         style = model.Style(
-            min_og = 1.050,
-            max_og = 1.060
+            min_og=1.050,
+            max_og=1.060
         )
-        with pytest.raises(model.InvalidStatistic):
+        with self.assertRaises(model.InvalidStatistic):
             assert style.defined('invalid')
+
 
 class TestStyleMatches(unittest.TestCase):
 
     def test_og(self):
         recipe = FakeRecipe(**{
-            'og':   1.050
+            'og': 1.050
         })
         style = model.Style(
-            min_og = 1.050,
-            max_og = 1.060
+            min_og=1.050,
+            max_og=1.060
         )
         assert style.matches(recipe, 'og')
 
@@ -120,11 +123,11 @@ class TestStyleMatches(unittest.TestCase):
 
     def test_fg(self):
         recipe = FakeRecipe(**{
-            'fg':   1.050
+            'fg': 1.050
         })
         style = model.Style(
-            min_fg = 1.050,
-            max_fg = 1.060
+            min_fg=1.050,
+            max_fg=1.060
         )
         assert style.matches(recipe, 'fg')
 
@@ -137,11 +140,11 @@ class TestStyleMatches(unittest.TestCase):
 
     def test_abv(self):
         recipe = FakeRecipe(**{
-            'abv':   1.050
+            'abv': 1.050
         })
         style = model.Style(
-            min_abv = 1.050,
-            max_abv = 1.060
+            min_abv=1.050,
+            max_abv=1.060
         )
         assert style.matches(recipe, 'abv')
 
@@ -154,11 +157,11 @@ class TestStyleMatches(unittest.TestCase):
 
     def test_srm(self):
         recipe = FakeRecipe(**{
-            'srm':   1.050
+            'srm': 1.050
         })
         style = model.Style(
-            min_srm = 1.050,
-            max_srm = 1.060
+            min_srm=1.050,
+            max_srm=1.060
         )
         assert style.matches(recipe, 'srm')
 
@@ -171,11 +174,11 @@ class TestStyleMatches(unittest.TestCase):
 
     def test_ibu(self):
         recipe = FakeRecipe(**{
-            'ibu':   1.050
+            'ibu': 1.050
         })
         style = model.Style(
-            min_ibu = 1.050,
-            max_ibu = 1.060
+            min_ibu=1.050,
+            max_ibu=1.060
         )
         assert style.matches(recipe, 'ibu')
 
@@ -188,26 +191,26 @@ class TestStyleMatches(unittest.TestCase):
 
     def test_undefined(self):
         recipe = FakeRecipe(**{
-            'ibu':   1.050
+            'ibu': 1.050
         })
 
         style = model.Style(
-            min_ibu = 1.050
+            min_ibu=1.050
         )
         assert style.matches(recipe, 'ibu') is False
 
         style = model.Style(
-            max_ibu = 1.050
+            max_ibu=1.050
         )
         assert style.matches(recipe, 'ibu') is False
 
     def test_invalid(self):
         recipe = FakeRecipe(**{
-            'og':   1.050
+            'og': 1.050
         })
         style = model.Style(
-            min_og = 1.050,
-            max_og = 1.060
+            min_og=1.050,
+            max_og=1.060
         )
-        with pytest.raises(model.InvalidStatistic):
+        with self.assertRaises(model.InvalidStatistic):
             assert style.matches(recipe, 'invalid')

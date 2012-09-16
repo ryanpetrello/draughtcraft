@@ -1,7 +1,7 @@
-from draughtcraft.lib.units         import (UnitConvert, InvalidUnitException, PoundOunceMerge, 
-                                            OunceMerge, GramMerge, KilogramMerge, PoundExpansion,
-                                            to_us, to_metric, to_kg, to_l, UNIT_MAP)
-from pytest                         import raises
+from draughtcraft.lib.units import (
+    UnitConvert, InvalidUnitException, PoundOunceMerge,
+    OunceMerge, GramMerge, KilogramMerge, PoundExpansion,
+    to_us, to_metric, to_kg, to_l, UNIT_MAP)
 
 import unittest
 
@@ -9,7 +9,8 @@ import unittest
 class TestMergeImplementations(unittest.TestCase):
 
     def test_pound_ounce_merge(self):
-        assert PoundOunceMerge.merge((5.0, 'POUND'), (8.0, 'OUNCE')) == (5.5, 'POUND')
+        assert PoundOunceMerge.merge(
+            (5.0, 'POUND'), (8.0, 'OUNCE')) == (5.5, 'POUND')
 
     def test_ounce_merge(self):
         assert OunceMerge.merge((8.0, 'OUNCE')) == (.5, 'POUND')
@@ -19,6 +20,7 @@ class TestMergeImplementations(unittest.TestCase):
 
     def test_kilogram_merge(self):
         assert KilogramMerge.merge((0.45359237, 'KILOGRAM')) == (1, 'POUND')
+
 
 class TestExpansionImplementations(unittest.TestCase):
 
@@ -41,21 +43,31 @@ class TestExpansionImplementations(unittest.TestCase):
         assert PoundExpansion.expand(.875) == [(14.0, 'OUNCE')]
         assert PoundExpansion.expand(.9375) == [(15.0, 'OUNCE')]
 
-        assert PoundExpansion.expand(5.0625) == [(5.0, 'POUND'), (1.0, 'OUNCE')]
+        assert PoundExpansion.expand(
+            5.0625) == [(5.0, 'POUND'), (1.0, 'OUNCE')]
         assert PoundExpansion.expand(5.125) == [(5.0, 'POUND'), (2.0, 'OUNCE')]
-        assert PoundExpansion.expand(5.1875) == [(5.0, 'POUND'), (3.0, 'OUNCE')]
+        assert PoundExpansion.expand(
+            5.1875) == [(5.0, 'POUND'), (3.0, 'OUNCE')]
         assert PoundExpansion.expand(5.25) == [(5.0, 'POUND'), (4.0, 'OUNCE')]
-        assert PoundExpansion.expand(5.3125) == [(5.0, 'POUND'), (5.0, 'OUNCE')]
+        assert PoundExpansion.expand(
+            5.3125) == [(5.0, 'POUND'), (5.0, 'OUNCE')]
         assert PoundExpansion.expand(5.375) == [(5.0, 'POUND'), (6.0, 'OUNCE')]
-        assert PoundExpansion.expand(5.4375) == [(5.0, 'POUND'), (7.0, 'OUNCE')]
+        assert PoundExpansion.expand(
+            5.4375) == [(5.0, 'POUND'), (7.0, 'OUNCE')]
         assert PoundExpansion.expand(5.5) == [(5.0, 'POUND'), (8.0, 'OUNCE')]
-        assert PoundExpansion.expand(5.5625) == [(5.0, 'POUND'), (9.0, 'OUNCE')]
-        assert PoundExpansion.expand(5.625) == [(5.0, 'POUND'), (10.0, 'OUNCE')]
-        assert PoundExpansion.expand(5.6875) == [(5.0, 'POUND'), (11.0, 'OUNCE')]
+        assert PoundExpansion.expand(
+            5.5625) == [(5.0, 'POUND'), (9.0, 'OUNCE')]
+        assert PoundExpansion.expand(
+            5.625) == [(5.0, 'POUND'), (10.0, 'OUNCE')]
+        assert PoundExpansion.expand(
+            5.6875) == [(5.0, 'POUND'), (11.0, 'OUNCE')]
         assert PoundExpansion.expand(5.75) == [(5.0, 'POUND'), (12.0, 'OUNCE')]
-        assert PoundExpansion.expand(5.8125) == [(5.0, 'POUND'), (13.0, 'OUNCE')]
-        assert PoundExpansion.expand(5.875) == [(5.0, 'POUND'), (14.0, 'OUNCE')]
-        assert PoundExpansion.expand(5.9375) == [(5.0, 'POUND'), (15.0, 'OUNCE')]
+        assert PoundExpansion.expand(
+            5.8125) == [(5.0, 'POUND'), (13.0, 'OUNCE')]
+        assert PoundExpansion.expand(
+            5.875) == [(5.0, 'POUND'), (14.0, 'OUNCE')]
+        assert PoundExpansion.expand(
+            5.9375) == [(5.0, 'POUND'), (15.0, 'OUNCE')]
 
         assert PoundExpansion.expand(5.1713) == [(5.1713, 'POUND')]
 
@@ -173,7 +185,7 @@ class TestUnitConversionFromString(unittest.TestCase):
         assert UnitConvert.__coerce_units__(['Gallon']) == ['GALLON']
         assert UnitConvert.__coerce_units__(['gallons']) == ['GALLON']
         assert UnitConvert.__coerce_units__(['Gallons']) == ['GALLON']
-        
+
         assert UnitConvert.__coerce_units__(['l']) == ['LITER']
         assert UnitConvert.__coerce_units__(['L']) == ['LITER']
         assert UnitConvert.__coerce_units__(['liter']) == ['LITER']
@@ -181,7 +193,7 @@ class TestUnitConversionFromString(unittest.TestCase):
         assert UnitConvert.__coerce_units__(['liters']) == ['LITER']
         assert UnitConvert.__coerce_units__(['Liters']) == ['LITER']
 
-        with raises(InvalidUnitException):
+        with self.assertRaises(InvalidUnitException):
             UnitConvert.__coerce_units__(['Invalid'])
             UnitConvert.__coerce_units__([''])
 
@@ -231,7 +243,8 @@ class TestUnitConversionFromString(unittest.TestCase):
     def test_basic_conversion(self):
         for abbr, value in UNIT_MAP.items():
             if value not in ('OUNCE', 'GRAM', 'KILOGRAM'):
-                assert UnitConvert.from_str('5%s' % abbr) == (5, UNIT_MAP[abbr])
+                assert UnitConvert.from_str(
+                    '5%s' % abbr) == (5, UNIT_MAP[abbr])
 
     def test_ounce_conversion(self):
         assert UnitConvert.from_str('8oz') == (.5, 'POUND')
@@ -343,17 +356,17 @@ class TestMetricConversion(unittest.TestCase):
     def test_passthrough(self):
         assert to_metric(*(5, 'TSP')) == (5, 'TSP')
 
-	def test_ounces_to_kg(self):
-		assert to_kg(*(16, 'OUNCE')) == 2.2679618500000003
+        def test_ounces_to_kg(self):
+            assert to_kg(*(16, 'OUNCE')) == 2.2679618500000003
 
-	def test_pound_to_kg(self):
-		assert to_kg(*(5, 'POUND')) == 2.2679618500000003
+        def test_pound_to_kg(self):
+            assert to_kg(*(5, 'POUND')) == 2.2679618500000003
 
-	def test_gram_to_kg(self):
-		assert to_kg(*(5, 'GRAM')) == 0.005
+        def test_gram_to_kg(self):
+            assert to_kg(*(5, 'GRAM')) == 0.005
 
-	def test_kg_to_kg(self):
-		assert to_kg(*(5, 'KILOGRAM')) == 5
+        def test_kg_to_kg(self):
+            assert to_kg(*(5, 'KILOGRAM')) == 5
 
     def test_tsp_to_l(self):
         assert to_l(*(5, 'TEASPOON')) == 0.02464460795

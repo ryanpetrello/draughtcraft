@@ -1,7 +1,7 @@
-from genshi             import XML
-from genshi.builder     import Element
-from genshi.template    import MarkupTemplate
-from BeautifulSoup      import UnicodeDammit
+from genshi import XML
+from genshi.builder import Element
+from genshi.template import MarkupTemplate
+from BeautifulSoup import UnicodeDammit
 
 import unicodedata
 
@@ -25,7 +25,7 @@ class Field(object):
     def __init__(self, transform=None):
         self.name = None
         self.transform = transform
-    
+
     def get_value(self, value):
         #
         # This is called when XML is being rendered.
@@ -41,7 +41,7 @@ class Field(object):
         #
         if isinstance(value, basestring):
             value = unicodedata.normalize(
-                'NFKD', 
+                'NFKD',
                 UnicodeDammit(value).unicode
             ).encode('ascii', 'ignore')
 
@@ -93,7 +93,7 @@ class Node(object):
             for key, value in ns.items():
 
                 #
-                # If it's a field, store it in the fields list and save the 
+                # If it's a field, store it in the fields list and save the
                 # name of the field.
                 #
                 if isinstance(value, Field):
@@ -101,20 +101,20 @@ class Node(object):
                     value.name = key
 
                 #
-                # If it's a node set, store it in the fields list and save the 
+                # If it's a node set, store it in the fields list and save the
                 # name of the node set.
                 #
                 if isinstance(value, NodeSet):
                     cls.__nodesets__[key] = value
                     value.name = key
-    
+
     def __init__(self, entity=None, **kw):
         # Every node must specify <VERSION>1</VERSION>.
-        kw.update({'version':1})
+        kw.update({'version': 1})
 
         # Store the values passed to the constructor
         self.__values__ = kw
-    
+
     def render(self, xml=True):
         """
         Returns a genshi.builder.Element, or raw rendered XML, depending on the
@@ -151,189 +151,192 @@ class Node(object):
         name = self.__class__.__name__.upper()
 
         # Sort the keys for consistency
-        items = sorted(ns.items(), lambda x,y: cmp(x[0].lower(), y[0].lower()))
+        items = sorted(
+            ns.items(), lambda x, y: cmp(x[0].lower(), y[0].lower()))
 
         #
         # Create an `Element` for this node.
         # Its value should be the accumulated collection of its child
         # `Element`s.
         #
-        element = Element(name)(
-            *[v if isinstance(v, Element) else Element(k.upper())(v) for k,v in items]
-        )
+        element = Element(name)(*[
+            v if isinstance(v, Element) else Element(k.upper())(v)
+            for k, v in items
+        ])
 
         # Return xml or a raw `Element`.
-        if xml is False: return element
+        if xml is False:
+            return element
         return element.generate().render('xml')
 
 
 class Hop(Node):
 
-    name                = Field()
+    name = Field()
 
-    alpha               = Field() # Percent alpha of hops - for example "5.5"
+    alpha = Field()  # Percent alpha of hops - for example "5.5"
                                   # represents 5.5% alpha
 
-    amount              = Field() # Weight in Kilograms of the hops used in
+    amount = Field()  # Weight in Kilograms of the hops used in
                                   # the recipe.
 
-    use                 = Field() # May be "Boil", "Dry Hop", "Mash", 
+    use = Field()  # May be "Boil", "Dry Hop", "Mash",
                                   # "First Wort" or "Aroma".
 
-    time                = Field() #  The time as measured in minutes.  Meaning
-                                  #  is dependent on the "USE" field.  For 
-                                  #  "Boil" this is the boil time.  For "Mash" 
-                                  #  this is the mash time.  For "First Wort" 
-                                  #  this is the boil time.  For "Aroma" this 
-                                  #  is the steep time.  For "Dry Hop" this is 
+    time = Field()  # The time as measured in minutes.  Meaning
+                                  #  is dependent on the "USE" field.  For
+                                  #  "Boil" this is the boil time.  For "Mash"
+                                  #  this is the mash time.  For "First Wort"
+                                  #  this is the boil time.  For "Aroma" this
+                                  #  is the steep time.  For "Dry Hop" this is
                                   #  the amount of time to dry hop.
 
-    notes               = Field()
-    form                = Field() # May be "Pellet", "Plug" or "Leaf".
-    origin              = Field()
+    notes = Field()
+    form = Field()  # May be "Pellet", "Plug" or "Leaf".
+    origin = Field()
 
 
 class Fermentable(Node):
 
-    name                = Field()
+    name = Field()
 
-    type                = Field() # May be "Grain", "Sugar", "Extract", 
-                                  # "Dry Extract" or "Adjunct".  Extract 
+    type = Field()  # May be "Grain", "Sugar", "Extract",
+                                  # "Dry Extract" or "Adjunct".  Extract
                                   # refers to liquid extract.
 
-    amount              = Field() # Weight of the fermentable, extract or
+    amount = Field()  # Weight of the fermentable, extract or
                                   # sugar in Kilograms.
 
-    YIELD               = Field() # yield (lower) is a reserved keyword
+    YIELD = Field()  # yield (lower) is a reserved keyword
                                   # Percent dry yield (fine grain) for the
                                   # grain, or the raw yield by weight if This
                                   # is an extract adjunct or sugar.
 
-    color               = Field() # The color of the item in Lovibond Units
+    color = Field()  # The color of the item in Lovibond Units
                                   # (SRM for liquid extracts).
 
-    origin              = Field()
-    notes               = Field()
-    add_after_boil      = Field()
+    origin = Field()
+    notes = Field()
+    add_after_boil = Field()
 
 
 class Yeast(Node):
 
-    name                = Field()
+    name = Field()
 
-    type                = Field() # May be "Ale", "Lager", "Wheat", "Wine" or
+    type = Field()  # May be "Ale", "Lager", "Wheat", "Wine" or
                                   # "Champagne".
 
-    form                = Field() # May be "Liquid", "Dry", "Slant" or
+    form = Field()  # May be "Liquid", "Dry", "Slant" or
                                   # "Culture".
 
-    amount              = Field() # The amount of yeast, measured in liters.
-                                  # For a starter this is the size of the 
+    amount = Field()  # The amount of yeast, measured in liters.
+                                  # For a starter this is the size of the
                                   # starter.
 
-    amount_is_weight    = Field() # True if amount is weight (kg).
+    amount_is_weight = Field()  # True if amount is weight (kg).
 
-    attenuation         = Field()
-    add_to_secondary    = Field()
-    notes               = Field()
+    attenuation = Field()
+    add_to_secondary = Field()
+    notes = Field()
 
 
 class Misc(Node):
 
-    name                = Field()
+    name = Field()
 
-    type                = Field() # May be "Spice", "Fining", "Water Agent",
+    type = Field()  # May be "Spice", "Fining", "Water Agent",
                                   # "Herb", "Flavor" or "Other".
 
-    use                 = Field() # May be "Boil", "Mash", "Primary",
+    use = Field()  # May be "Boil", "Mash", "Primary",
                                   # "Secondary", "Bottling".
 
-    time                = Field() # Amount of time the misc was boiled,
+    time = Field()  # Amount of time the misc was boiled,
                                   # steeped, mashed, etc in minutes.
 
-    amount              = Field() #  Amount of item used.  The default
-                                  #  measurements are by weight, but this may 
-                                  #  be the measurement in volume units if 
-                                  #  AMOUNT_IS_WEIGHT is set to TRUE for this 
-                                  #  record.  If a liquid it is in liters, if a 
-                                  #  solid the weight is measured in 
+    amount = Field()  # Amount of item used.  The default
+                                  #  measurements are by weight, but this may
+                                  #  be the measurement in volume units if
+                                  #  AMOUNT_IS_WEIGHT is set to TRUE for this
+                                  #  record.  If a liquid it is in liters, if a
+                                  #  solid the weight is measured in
                                   #  kilograms.
 
-    amount_is_weight    = Field()
-    notes               = Field()
+    amount_is_weight = Field()
+    notes = Field()
 
 
 class Style(Node):
-    name                = Field()
+    name = Field()
 
-    category            = Field() #  Category that this style belongs to
-                                  #  - usually associated with a group of 
+    category = Field()  # Category that this style belongs to
+                                  #  - usually associated with a group of
                                   #  styles such as "English Ales" or
                                   #  "Amercian Lagers".
 
-    category_number     = Field() #  Number or identifier associated with this
-                                  #  style category.  For example in the BJCP 
-                                  #  style guide, the "American Lager" category 
+    category_number = Field()  # Number or identifier associated with this
+                                  #  style category.  For example in the BJCP
+                                  #  style guide, the "American Lager" category
                                   #  has a category number of "1".
 
-    style_letter        = Field() #  The specific style number or subcategory
-                                  #  letter associated with this particular 
-                                  #  style.  For example in the BJCP style 
-                                  #  guide, an American Standard Lager would be 
-                                  #  style letter "A" under the main category.  
+    style_letter = Field()  # The specific style number or subcategory
+                                  #  letter associated with this particular
+                                  #  style.  For example in the BJCP style
+                                  #  guide, an American Standard Lager would be
+                                  #  style letter "A" under the main category.
                                   #  Letters should be upper case.
 
-    style_guide         = Field() #  The name of the style guide that this
-                                  #  particular style or category belongs to.  
-                                  #  For example "BJCP" might denote the BJCP 
-                                  #  style guide, and "AHA" would be used for 
+    style_guide = Field()  # The name of the style guide that this
+                                  #  particular style or category belongs to.
+                                  #  For example "BJCP" might denote the BJCP
+                                  #  style guide, and "AHA" would be used for
                                   #  the AHA style guide.
 
-    type                = Field() #  May be "Lager", "Ale", "Mead", "Wheat",
-                                  #  "Mixed" or "Cider".  Defines the type of 
+    type = Field()  # May be "Lager", "Ale", "Mead", "Wheat",
+                                  #  "Mixed" or "Cider".  Defines the type of
                                   #  beverage associated with this category.
 
-    og_min              = Field()
-    og_max              = Field()
-    fg_min              = Field()
-    fg_max              = Field()
-    ibu_min             = Field()
-    ibu_max             = Field()
-    color_min           = Field()
-    color_max           = Field()
-    abv_min             = Field()
-    abv_max             = Field()
+    og_min = Field()
+    og_max = Field()
+    fg_min = Field()
+    fg_max = Field()
+    ibu_min = Field()
+    ibu_max = Field()
+    color_min = Field()
+    color_max = Field()
+    abv_min = Field()
+    abv_max = Field()
 
 
 class Recipe(Node):
 
-    name                = Field()
-    type                = Field()
-    style               = Field()
-    brewer              = Field()
-    batch_size          = Field()
-    boil_size           = Field()
-    boil_time           = Field()
-    efficiency          = Field()
+    name = Field()
+    type = Field()
+    style = Field()
+    brewer = Field()
+    batch_size = Field()
+    boil_size = Field()
+    boil_time = Field()
+    efficiency = Field()
 
-    hops                = NodeSet(Hop)
-    fermentables        = NodeSet(Fermentable)
-    miscs               = NodeSet(Misc)
-    yeasts              = NodeSet(Yeast)
+    hops = NodeSet(Hop)
+    fermentables = NodeSet(Fermentable)
+    miscs = NodeSet(Misc)
+    yeasts = NodeSet(Yeast)
 
-    notes               = Field()
+    notes = Field()
     fermentation_stages = Field()
-    primary_age         = Field()
-    primary_temp        = Field()
-    secondary_age       = Field()
-    secondary_temp      = Field()
-    tertiary_age        = Field()
-    tertiary_temp       = Field()
+    primary_age = Field()
+    primary_temp = Field()
+    secondary_age = Field()
+    secondary_temp = Field()
+    tertiary_age = Field()
+    tertiary_temp = Field()
 
 
 def to_xml(recipes):
     c = '<?xml version="1.0" encoding="ISO-8859-1"?><RECIPES>${xml}</RECIPES>'
     tmpl = MarkupTemplate(c)
     return tmpl.generate(
-        xml = XML(''.join([r.to_xml() for r in recipes])),
+        xml=XML(''.join([r.to_xml() for r in recipes])),
     ).render()

@@ -1,13 +1,14 @@
-from draughtcraft.model.deepcopy    import DeepCopyMixin
-from elixir                         import Entity, Field, Unicode, ManyToOne
+from draughtcraft.model.deepcopy import DeepCopyMixin
+from elixir import Entity, Field, Unicode, ManyToOne
 
 import re
 
+
 class RecipeSlug(Entity, DeepCopyMixin):
 
-    slug            = Field(Unicode(256))
+    slug = Field(Unicode(256))
 
-    recipe          = ManyToOne('Recipe', inverse='slugs')
+    recipe = ManyToOne('Recipe', inverse='slugs')
 
     def __init__(self, *args, **kwargs):
         super(RecipeSlug, self).__init__(*args, **kwargs)

@@ -1,13 +1,11 @@
-from draughtcraft.templates.helpers     import (stamp, format_date, format_age,
-                                                format_percentage, 
-                                                format_volume, alphanum_key)
-from unittest                           import TestCase
-from datetime                           import datetime, timedelta
+from draughtcraft.templates.helpers import (stamp, format_date, format_age,
+                                            format_percentage,
+                                            format_volume, alphanum_key)
+from unittest import TestCase
+from datetime import datetime, timedelta
+
 
 class TestHelpers(TestCase):
-
-    def test_stamp(self):
-        assert stamp('/javascript/foo.js') == '/javascript/foo.js?XYZ'
 
     def test_format_percentage(self):
         assert format_percentage(0) == '0%'
@@ -37,13 +35,20 @@ class TestHelpers(TestCase):
         assert format_date(datetime(2011, 5, 12), format='%Y') == '2011'
 
     def test_format_age(self):
-        assert format_age(datetime.utcnow() - timedelta(seconds = 5)) == 'just now'
-        assert format_age(datetime.utcnow() - timedelta(minutes = 1)) == '1 minute ago'
-        assert format_age(datetime.utcnow() - timedelta(minutes = 5)) == '5 minutes ago'
-        assert format_age(datetime.utcnow() - timedelta(minutes = 60)) == '1 hour ago'
-        assert format_age(datetime.utcnow() - timedelta(hours = 8)) == '8 hours ago'
-        assert format_age(datetime.utcnow() - timedelta(days = 1)) == 'yesterday'
-        assert format_age(datetime.utcnow() - timedelta(days = 3)) == '3 days ago'
+        assert format_age(
+            datetime.utcnow() - timedelta(seconds=5)) == 'just now'
+        assert format_age(
+            datetime.utcnow() - timedelta(minutes=1)) == '1 minute ago'
+        assert format_age(
+            datetime.utcnow() - timedelta(minutes=5)) == '5 minutes ago'
+        assert format_age(
+            datetime.utcnow() - timedelta(minutes=60)) == '1 hour ago'
+        assert format_age(
+            datetime.utcnow() - timedelta(hours=8)) == '8 hours ago'
+        assert format_age(
+            datetime.utcnow() - timedelta(days=1)) == 'yesterday'
+        assert format_age(
+            datetime.utcnow() - timedelta(days=3)) == '3 days ago'
 
         last_month = datetime.utcnow() - timedelta(days=28)
         assert format_age(last_month) == format_date(last_month)

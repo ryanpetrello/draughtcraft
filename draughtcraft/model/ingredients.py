@@ -3,8 +3,8 @@ from elixir import (
     UnicodeText, Boolean, Enum, using_options,
     OneToMany
 )
-from draughtcraft.model.deepcopy    import ShallowCopyMixin
-from draughtcraft.lib.units         import UNITS
+from draughtcraft.model.deepcopy import ShallowCopyMixin
+from draughtcraft.lib.units import UNITS
 
 ORIGINS = [
     'AUSTRALIAN',
@@ -25,11 +25,12 @@ ORIGINS = [
 class Ingredient(Entity, ShallowCopyMixin):
 
     using_options(inheritance='multi', polymorphic=True)
-    
-    uid                 = Field(Unicode(32), unique=True)
-    name                = Field(Unicode(256))
-    description         = Field(UnicodeText)
-    default_unit        = Field(Enum(*UNITS, native_enum=False), default='POUND', nullable=True)
+
+    uid = Field(Unicode(32), unique=True)
+    name = Field(Unicode(256))
+    description = Field(UnicodeText)
+    default_unit = Field(
+        Enum(*UNITS, native_enum=False), default='POUND', nullable=True)
 
     @property
     def printed_name(self):
@@ -41,6 +42,14 @@ class Ingredient(Entity, ShallowCopyMixin):
         if len(origin) > 2:
             origin = origin.title()
         return origin
+
+    def __json__(self):
+        return {
+            'id': self.id,
+            'class': self.__class__.__name__,
+            'name': self.printed_name,
+            'default_unit': self.default_unit
+        }
 
 
 class Fermentable(Ingredient):
@@ -54,13 +63,13 @@ class Fermentable(Ingredient):
         'EXTRACT',
         'SUGAR'
     ]
-    
-    type                = Field(Enum(*TYPES, native_enum=False))
-    ppg                 = Field(Integer)
-    lovibond            = Field(Float)
-    origin              = Field(Enum(*ORIGINS, native_enum=False))
 
-    additions           = OneToMany('RecipeAddition', inverse='fermentable')
+    type = Field(Enum(*TYPES, native_enum=False))
+    ppg = Field(Integer)
+    lovibond = Field(Float)
+    origin = Field(Enum(*ORIGINS, native_enum=False))
+
+    additions = OneToMany('RecipeAddition', inverse='fermentable')
 
     @property
     def printed_name(self):
@@ -71,26 +80,43 @@ class Fermentable(Ingredient):
         if self.type is None:
             return 'Grain'
         value = self.type.capitalize()
-        if value == 'Malt': value = 'Grain'
+        if value == 'Malt':
+            value = 'Grain'
         return value
 
     @property
     def percent_yield(self):
         return round((self.ppg / 46.00) * 100)
 
+    def __json__(self):
+        json = super(Fermentable, self).__json__()
+        json.update({
+            'ppg': self.ppg,
+            'lovibond': self.lovibond,
+            'printed_type': self.printed_type
+        })
+        return json
+
 
 class Hop(Ingredient):
 
     using_options(inheritance='multi', polymorphic=True)
 
-    alpha_acid          = Field(Float())
-    origin              = Field(Enum(*ORIGINS, native_enum=False))
+    alpha_acid = Field(Float())
+    origin = Field(Enum(*ORIGINS, native_enum=False))
 
-    additions           = OneToMany('RecipeAddition', inverse='hop')
+    additions = OneToMany('RecipeAddition', inverse='hop')
 
     @property
     def printed_name(self):
         return '%s (%s)' % (self.name, self.printed_origin)
+
+    def __json__(self):
+        json = super(Hop, self).__json__()
+        json.update({
+            'alpha_acid': self.alpha_acid
+        })
+        return json
 
 
 class Yeast(Ingredient):
@@ -119,12 +145,20 @@ class Yeast(Ingredient):
         'HIGH'
     ]
 
-    type                = Field(Enum(*TYPES, native_enum=False))
-    form                = Field(Enum(*FORMS, native_enum=False))
-    attenuation         = Field(Float())
-    flocculation        = Field(Enum(*FLOCCULATION_VALUES, native_enum=False))
+    type = Field(Enum(*TYPES, native_enum=False))
+    form = Field(Enum(*FORMS, native_enum=False))
+    attenuation = Field(Float())
+    flocculation = Field(Enum(*FLOCCULATION_VALUES, native_enum=False))
 
-    additions           = OneToMany('RecipeAddition', inverse='yeast')
+    additions = OneToMany('RecipeAddition', inverse='yeast')
+
+    def __json__(self):
+        json = super(Yeast, self).__json__()
+        json.update({
+            'form': self.form.capitalize(),
+            'attenuation': self.attenuation
+        })
+        return json
 
 
 class Extra(Ingredient):
@@ -140,7 +174,7 @@ class Extra(Ingredient):
         'OTHER'
     ]
 
-    additions           = OneToMany('RecipeAddition', inverse='extra')
+    additions = OneToMany('RecipeAddition', inverse='extra')
 
-    type                = Field(Enum(*TYPES, native_enum=False))
-    liquid              = Field(Boolean)
+    type = Field(Enum(*TYPES, native_enum=False))
+    liquid = Field(Boolean)

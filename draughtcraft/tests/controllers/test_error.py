@@ -1,4 +1,5 @@
-from draughtcraft.tests     import TestApp
+from draughtcraft.tests import TestApp
+
 
 class TestErrorHandler(TestApp):
 
@@ -6,4 +7,4 @@ class TestErrorHandler(TestApp):
         response = self.get('/missing', status=404)
         assert response.status_int == 404
 
-        assert 'Not Found' in response.body 
+        assert 'Not Found' in response.body

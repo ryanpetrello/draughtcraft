@@ -5,7 +5,7 @@
       'MINIMASH'      : 'Extract w/ Mini-Mash',
       'EXTRACTSTEEP'  : 'Extract w/ Steeped Grains',
       'EXTRACT'       : 'Extract'
-    })[type] 
+    })[type]
 %>
 
 <%inherit file="../../layout.html" />
@@ -22,136 +22,364 @@
     % if not editable:
       ${h.css('/css/recipes/viewer.css')}
     % endif
-    <link rel="stylesheet" type="text/css" media="print" href="${h.stamp('/css/recipes/builder.print.css')}" />
     ${h.css('/css/jquery.selectbox.css')}
+    <link rel="stylesheet" type="text/css" media="print" href="${h.stamp('/css/recipes/builder.print.css')}" />
 </%def>
 
 <%def name="javascript()">
-  ${h.js('/javascript/jquery.form.min.js')}
-  ${h.js('/javascript/jquery-scrolltofixed-min.js')}
-    % if editable:
-      ${h.js('/javascript/recipes/builder.js')}
-      ${h.js('/javascript/jquery.selectbox.min.js')}
-    % else:
-      ${h.js('/javascript/recipes/viewer.js')}
-    % endif
+
+  <%
+    import urlparse
+  %>
+
+  <script type="text/javascript">
+
+    (function(ns, $){
+      ns.recipes = ns.recipes || {}, ns.recipes.builder = ns.recipes.builder || {};
+      ns.recipes.builder.callback = "${urlparse.urljoin(*(h.request.path, 'builder.json' if editable else 'index.json'))}";
+      ns.recipes.builder.STYLES = [
+        {
+          "id": null,
+          "name": "No Style Specified"
+        },
+      % for s in h.model.Style.query.order_by(h.model.Style.name).all():
+        {
+          "id": ${s.id},
+          "name": "${s.name}",
+          "min_og": ${s.min_og if s.defined('og') else "null"},
+          "max_og": ${s.max_og if s.defined('og') else "null"},
+          "min_fg": ${s.min_fg if s.defined('fg') else "null"},
+          "max_fg": ${s.max_fg if s.defined('fg') else "null"},
+          "min_abv": ${s.min_abv * 100 if s.defined('abv') else "null"},
+          "max_abv": ${s.max_abv * 100 if s.defined('abv') else "null"},
+          "min_ibu": ${s.min_ibu if s.defined('ibu') else "null"},
+          "max_ibu": ${s.max_ibu if s.defined('ibu') else "null"},
+          "min_srm": ${s.min_srm if s.defined('srm') else "null"},
+          "max_srm": ${s.max_srm if s.defined('srm') else "null"},
+          "min_ebc": ${round(s.min_srm * 1.97, 1) if s.defined('srm') else "null"},
+          "max_ebc": ${round(s.max_srm * 1.97, 1) if s.defined('srm') else "null"}
+        },
+      % endfor
+      ];
+      
+    })($.draughtcraft = $.draughtcraft || {}, $);
+
+  </script>
+  <script type="text/javascript" src="/javascript/jquery.selectbox.min.js" ></script>
+  ${h.js('/javascript/chai.js')}
+  ${h.js('/javascript/knockout.js')}
+  ${h.js('/javascript/recipes/units.js')}
+  ${h.js('/javascript/recipes/builder.js')}
 </%def>
 
-% if not editable:
-  ${h.form('async', id='async', method='POST')}${h.end_form()}
-% endif
+<div id="builder" data-bind="with: recipe">
 
-<div id="builder">
+  <div id="header" data-bind="if: editable() != undefined">
 
-  <div class="header">
-    ${h.form('async/name', class_='name')}
-      <h1>
-        ${h.text('name', value=recipe.name)}
-        % if recipe.copied_from:
-          <span class="copied_from">  
-            based on <a href="${recipe.copied_from.url()}">${recipe.copied_from.author.username}'s recipe</a>
-          </span>
-        % endif
-      </h1> 
-    ${h.end_form()}
+    <h1>
+      <input name="name" data-bind="value: name, titleUpdate: true" type="text" class_="name" />
+      % if recipe.copied_from:
+        <span class="copied_from">
+          based on 
+          <a href="${recipe.copied_from.url()}">${recipe.copied_from.author.username}'s recipe</a>
+        </span>
+      % endif
+    </h1>
+
     <fieldset>
-      ${h.form('async/settings/style')}
-        ${h.select(
-          'target', 
-          recipe.style.id if recipe.style else None, 
-          [('', 'No Target Style Chosen')] + [(s.id, s.name) for s in h.model.Style.query.order_by(h.model.Style.name).all()],
-        )}
-      ${h.end_form()}
+      <select
+        data-bind="visible: editable, options: $root.STYLES, value: style, optionsText: 'name', optionsValue: 'id'">
+      </select>
     </fieldset>
 
-    % if recipe.metric:
-        <fieldset>
-          ${h.form('async/settings/volume', class_='volume')}
-            ${h.text(
-              'volume', 
-              h.format_volume(recipe.liters),
-              class_ = 'unit'
-            )}
-            ${h.hidden(
-              'unit',
-              'LITER'
-            )}
-            L.
-          ${h.end_form()}
-        </fieldset>
-    % else:
-        <fieldset>
-          ${h.form('async/settings/volume', class_='volume')}
-            ${h.text(
-              'volume', 
-              h.format_volume(recipe.gallons),
-              class_ = 'unit'
-            )}
-            ${h.hidden(
-              'unit',
-              'GALLON'
-            )}
-            Gal.
-          ${h.end_form()}
-        </fieldset>
-    % endif
+    <fieldset>
+      <input name="volume" data-bind="value: volume" type="text" class="unit" />
+      <span data-bind="text: metric() ? 'L.' : 'Gal.'"></span>
+    </fieldset>
 
     <fieldset class="type">
       <span>${printable_type(recipe.type)}</span>
     </fieldset>
 
     % if recipe.author:
-      <p class="author">By: ${recipe.author.full_name.strip() or recipe.author.username}</p>
+      <p class="author">
+        By: ${recipe.author.full_name.strip() or recipe.author.username}
+      </p>
       <a href="/profile/${recipe.author.username}" class="author">
-        <img 
-          src="${recipe.author.gravatar}&s=45" 
+        <img
+          src="${recipe.author.gravatar}&s=45"
           class="gravatar"
           title="${recipe.author.username}"
         />
       </a>
-      <img 
-        src="${recipe.author.gravatar}&s=100" 
+      <img
+        src="${recipe.author.gravatar}&s=100"
         class="gravatar fullsize"
         title="${recipe.author.username}"
       />
-    %else:
-      
-    <div id="actions">
-      <ul>
-        <li class="intl submit" title="Switch to ${'U.S.' if recipe.metric else 'Metric'} Units"></li>
-      </ul>
-    </div>
+    % else:
+      <div id="actions">
+        <ul>
+          <li class="intl" title="Switch US/Metric Units" data-bind="click: function(){ metric(!metric()) }">
+          </li>
+        </ul>
+      </div>
     % endif
+
   </div>
 
   <div id="builder-ajax">
+
     <div class="builder-loading">
-      <img src="/images/loading.gif" /> 
+      <img src="/images/loading.gif" />
     </div>
+
+    <%def name="li(name, active=False, last=False)">
+      <%
+        cls = 'active' if active else ''
+        if last:
+          cls += ' last'
+      %>
+      <li class="${cls}">
+        <a data-bind="click: function(d, e) { $root.activateStep('${name}', d, e) }" href="#">${name.capitalize()}</a>
+      </li>
+    </%def>
+
+    <%def name="step(name)">
+      <div class="step clearfix ${name}">
+
+        <%
+          def printable_step(step):
+            return ({
+              'ferment': 'Fermentation'
+            }).get(step, step.title())
+            return step
+        %>
+
+        <h2>
+          <ul>
+            % if recipe.type in ('MASH', 'MINIMASH'):
+              ${li('mash', name == 'mash')}
+            % endif
+            ${li('boil', name == 'boil')}
+            ${li('ferment', name == 'ferment', True)}
+          </ul>
+          % if editable and recipe.author == h.request.context['user']:
+            <a href="${recipe.url()}"><span class="preview">Preview</span></a>
+          % endif
+        </h2>
+
+        <div class="ingredient-list">
+          <h3 class="ribbon">
+            <span class="step-help">${printable_step(name)} </span>Ingredients
+          </h3>
+
+          <%include file="steps/${name}.html"/>
+
+          ${caller.extra()}
+        </div>
+
+        <div class="inventory ${name}" data-bind="with: ${{'ferment': 'fermentation'}.get(name, name)}">
+          ${caller.inventory()}
+        </div>
+
+      </div>
+    </%def>
+
+    <%
+      from draughtcraft.lib.csrf import auth_token_pair
+      key, token = auth_token_pair()
+    %>
+
+    % if recipe.author is None or not editable:
+      <div id="actions">
+        <ul>
+          % if not editable:
+            <li class="print" title="Print this Recipe" onclick="window.print();"></li>
+          % endif
+          % if h.request.context['user'] is None:
+            ${h.form('')}
+              <li class="intl submit ${'last' if editable else ''}" title="Switch US/Metric Units"  onclick="$.draughtcraft.toggleUnits('${key}', '${token}');">
+            ${h.end_form()}
+          % elif recipe.author and recipe.author == h.request.context['user'] and recipe.state == "PUBLISHED":
+            ${h.form("%sdraft" % recipe.url())}
+              <li class="edit submit ${'last' if editable else ''}" title="Make Changes"></li>
+            ${h.end_form()}
+          % elif recipe.author and recipe.author == h.request.context['user'] and recipe.state == "DRAFT":
+            <form method="GET" action="${recipe.url(false)}">
+              <li class="edit submit ${'last' if editable else ''}" title="Make Changes"></li>
+            </form>
+          % endif
+          % if not editable:
+            ${h.form("%sxml" % recipe.url())}
+              <li class="xml submit" title="Download BeerXML"></li>
+            ${h.end_form()}
+            ${h.form("%scopy" % recipe.url())}
+              <li class="copy submit last" title="Copy this Recipe"></li>
+            ${h.end_form()}
+          % endif
+        </ul>
+      </div>
+    % endif
+
+    % if recipe.type in ('MASH', 'MINIMASH'):
+      <%self:step name="mash">
+        <%def name="inventory()">
+          <h3>Add to Mash</h3>
+
+          <fieldset>
+            <select
+              data-bind="options: $parent.inventory().malts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt/Fermentables...', event: {change: addAddition}">
+            </select>
+          </fieldset>
+
+          <fieldset>
+            <select
+              data-bind="options: $parent.inventory().extracts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt Extract...', event: {change: addAddition}">
+            </select>
+          </fieldset>
+
+          <fieldset>
+            <select
+              data-bind="options: $parent.inventory().hops, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Hops...', event: {change: addAddition}">
+            </select>
+          </fieldset>
+
+          <fieldset>
+            <select
+              data-bind="options: $parent.inventory().extras, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Misc...', event: {change: addAddition}">
+            </select>
+          </fieldset>
+        </%def>
+        <%def name="extra()">
+          <h3 class="ribbon">Mash Procedure</h3>
+
+          <ol class='process'>
+            <li>
+              <span>Perform a </span>
+              <select name="mash_method" data-bind="options: $root.MASH_METHODS, optionsText: 'name', optionsValue: 'id', value: mash_method" class="medium">
+              </select>
+              % if editable or recipe.mash_instructions:
+                <span>mash according to the following instructions:</span>
+              % else:
+                <span>mash.</span>
+              % endif
+            </li>
+            <li>
+              <textarea rows="6" cols="75" name="mash_instructions" data-bind="value: mash_instructions">
+              </textarea>
+            </li>
+          </ol>
+        </%def>
+      </%self:step>
+    % endif
+
+    <%self:step name="boil">
+      <%def name="inventory()">
+        <h3>Add to Boil</h3>
+
+        <fieldset>
+          <select
+            data-bind="options: $parent.inventory().malts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt/Fermentables...', event: {change: addAddition}">
+          </select>
+        </fieldset>
+
+        <fieldset>
+          <select
+            data-bind="options: $parent.inventory().extracts, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Malt Extract...', event: {change: addAddition}">
+          </select>
+        </fieldset>
+
+        <fieldset>
+          <select
+            data-bind="options: $parent.inventory().hops, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Hops...', event: {change: addAddition}">
+          </select>
+        </fieldset>
+
+        <fieldset>
+          <select
+            data-bind="options: $parent.inventory().extras, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Misc...', event: {change: addAddition}">
+          </select>
+        </fieldset>
+      </%def>
+      <%def name="extra()">
+        <h3 class="ribbon">Boil Duration</h3>
+
+        <ol class='process'>
+          <li>
+            Boil for 
+            <input type="text" name="boil_minutes" data-bind="value: boil_minutes" class="unit" /> 
+            minutes.
+          </li>
+        </ol>
+      </%def>
+    </%self:step>
+
+    <%self:step name="ferment">
+      <%def name="inventory()">
+        <h3>Add to Fermenter</h3>
+
+        <fieldset>
+          <select
+            data-bind="options: $parent.inventory().yeast, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Yeast...', event: {change: addAddition}">
+          </select>
+        </fieldset>
+
+        <fieldset>
+          <select
+            data-bind="options: $parent.inventory().hops, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Dry Hops...', event: {change: addAddition}">
+          </select>
+        </fieldset>
+
+        <fieldset>
+          <select
+            data-bind="options: $parent.inventory().extras, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Add Misc...', event: {change: addAddition}">
+          </select>
+        </fieldset>
+      </%def>
+      <%def name="extra()">
+        <h3 class="ribbon">Fermentation Schedule</h3>
+
+        <ol class='process'>
+          <!-- ko foreach: fermentation_steps -->
+            <li>
+              <span class="label" data-bind="html: step().toTitleCase() + ' for'"></span>
+              <select data-bind="options: $root.FERMENTATION_DATE_RANGE, value: days"
+                class="unit days">
+              </select>
+              day(s) at
+              <select data-bind="options: $parent.metric() ? $root.CELSIUS_RANGE : $root.FAHRENHEIT_RANGE, value: $parent.metric() ? celsius : fahrenheit"
+                class="unit fahrenheit">
+              </select>
+              <span data-bind="text: $parent.metric() ? '&#186;C' : '&#186;F'"></span>
+              <a href="#" data-bind="if: $parent.fermentation_steps().length > 1 && $data == $parent.fermentation_steps()[$parent.fermentation_steps().length-1] && $parent.editable(), click: $parent.removeFermentationStep">
+                <img class="close" src="/images/close.png" />
+              </a>
+            </li>
+          <!-- /ko -->
+          <li class="add-step">
+            <a href="#" data-bind="if: fermentation_steps().length < 3 && editable(), click: addFermentationStep">
+              Add...
+            </a>
+          </li>
+        </ol>
+      </%def>
+    </%self:step>
+
+    <%include file="stats.html" />
+
   </div>
 
-</div>
-<div id="builder-buttons">
-  % if recipe.author:
-    ${h.form('publish')}
-      <button class="publish-btn">Publish Changes</button>
-      <span class="sep">or</span> <a href="/profile/${recipe.author.username}">Cancel</a>
-    ${h.end_form()}
-  % else:
-    ${h.form('/signup', method='GET')}
-      <button>Save Changes</button>
-    ${h.end_form()}
-  % endif
-</div>
-
-<div id="inventories">
-  <div class="mash">
-    <%include file="steps/mash/add.html" />
-  </div>
-  <div class="boil">
-    <%include file="steps/boil/add.html" />
-  </div>
-  <div class="ferment">
-    <%include file="steps/ferment/add.html" />
+  <div id="builder-buttons">
+    % if recipe.author:
+      ${h.form('builder/publish/', method='POST')}
+        <button class="publish-btn">Publish Changes</button>
+        <span class="sep">or</span> <a href="/profile/${recipe.author.username}">Cancel</a>
+      ${h.end_form()}
+    % else:
+      ${h.form('/signup', method='GET')}
+        <button>Save Changes</button>
+      ${h.end_form()}
+    % endif
   </div>
 </div>

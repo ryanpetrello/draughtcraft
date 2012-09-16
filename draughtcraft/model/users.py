@@ -1,33 +1,44 @@
-from elixir                             import (Entity, Field, Unicode, DateTime,
-                                                Enum, UnicodeText, OneToMany,
-                                                ManyToOne)
-from draughtcraft.model.deepcopy        import ShallowCopyMixin
-from pecan                              import conf
-from simplejson                         import loads, dumps
-from datetime                           import datetime
-from hashlib                            import sha256, md5
-from sqlalchemy.ext.associationproxy    import AssociationProxy
-from sqlalchemy.orm.collections         import attribute_mapped_collection
+from json import loads, dumps
+from datetime import datetime
+from hashlib import sha256, md5
+
+from elixir import (
+    Entity, Field, Unicode, DateTime,
+    UnicodeText, OneToMany, ManyToOne
+)
+from pecan import conf
+from sqlalchemy.ext.associationproxy import AssociationProxy
+from sqlalchemy.orm.collections import attribute_mapped_collection
+
+from draughtcraft.model.deepcopy import ShallowCopyMixin
 
 
 class User(Entity, ShallowCopyMixin):
 
-    first_name      = Field(Unicode(64), index=True)
-    last_name       = Field(Unicode(64), index=True)
+    first_name = Field(Unicode(64), index=True)
+    last_name = Field(Unicode(64), index=True)
 
-    username        = Field(Unicode(64), unique=True, index=True)
-    _password       = Field(Unicode(64), colname='password', synonym='password')
-    email           = Field(Unicode(64), index=True)
-    bio             = Field(Unicode(512))
-    signup_date     = Field(DateTime, default=datetime.utcnow)
+    username = Field(Unicode(64), unique=True, index=True)
+    _password = Field(
+        Unicode(64), colname='password', synonym='password')
+    email = Field(Unicode(64), index=True)
+    bio = Field(Unicode(512))
+    signup_date = Field(DateTime, default=datetime.utcnow)
 
-    location        = Field(Unicode(256))
+    location = Field(Unicode(256))
 
-    recipes         = OneToMany('Recipe', inverse='author', order_by='-last_updated')
-    user_settings   = OneToMany('UserSetting', cascade='all, delete-orphan',
-                                   collection_class=attribute_mapped_collection('name'))
-    settings        = AssociationProxy('user_settings', 'value', 
-                                          creator=lambda name, value: UserSetting(name=name, value=value))
+    recipes = OneToMany(
+        'Recipe', inverse='author', order_by='-last_updated')
+    user_settings = OneToMany(
+        'UserSetting',
+        cascade='all, delete-orphan',
+        collection_class=attribute_mapped_collection('name')
+    )
+    settings = AssociationProxy(
+        'user_settings',
+        'value',
+        creator=lambda name, value: UserSetting(name=name, value=value)
+    )
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)
@@ -62,7 +73,7 @@ class User(Entity, ShallowCopyMixin):
     def password(self):
         return self._password
 
-    @password.setter
+    @password.setter  # noqa
     def password(self, v):
         self._password = self.__hash_password__(v)
 
@@ -72,7 +83,10 @@ class User(Entity, ShallowCopyMixin):
 
     @property
     def drafts(self):
-        return filter(lambda r: r.state == "DRAFT" and r.published_version is None, self.recipes)
+        return filter(
+            lambda r: r.state == "DRAFT" and r.published_version is None,
+            self.recipes
+        )
 
     @property
     def gravatar(self):
@@ -83,24 +97,24 @@ class User(Entity, ShallowCopyMixin):
     @classmethod
     def __hash_password__(self, v):
         salt = getattr(
-            getattr(conf, 'session', None), 
-            'password_salt', 
+            getattr(conf, 'session', None),
+            'password_salt',
             'example'
         )
         return sha256(v + salt).hexdigest()
 
 
 class UserSetting(Entity):
-    user        = ManyToOne('User')
-    name        = Field(Unicode(64), index=True)
-    _value      = Field(UnicodeText)
+    user = ManyToOne('User')
+    name = Field(Unicode(64), index=True)
+    _value = Field(UnicodeText)
 
     __defaults__ = {
-        'default_ibu_formula'   : 'tinseth',
-        'default_recipe_volume' : 5,
-        'default_recipe_type'   : 'MASH',
-        'unit_system'           : 'US',
-        'brewhouse_efficiency'  : .75
+        'default_ibu_formula': 'tinseth',
+        'default_recipe_volume': 5,
+        'default_recipe_type': 'MASH',
+        'unit_system': 'US',
+        'brewhouse_efficiency': .75
     }
 
     @classmethod
@@ -116,13 +130,13 @@ class UserSetting(Entity):
     def value(self):
         return loads(self._value)
 
-    @value.setter
+    @value.setter  # noqa
     def value(self, v):
         self._value = dumps(v)
 
 
 class PasswordResetRequest(Entity):
-    code            = Field(Unicode(64), primary_key=True)
-    datetime        = Field(DateTime)
-    
-    user            = ManyToOne('User')
+    code = Field(Unicode(64), primary_key=True)
+    datetime = Field(DateTime)
+
+    user = ManyToOne('User')

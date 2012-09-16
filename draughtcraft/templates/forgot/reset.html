@@ -26,30 +26,22 @@
   <p style="padding: 15px 15px 0;">Use the form below to choose a new password.</p>
 
   ${h.form('')}
+    ${form.csrf_token}
     <fieldset style="border:0;">
       <dl class="clearfix">
-        <dt><label for="name">Email Address</label></dt>
+        <dt><label for="name">${form.email.label}</label></dt>
         <dd>
-          ${h.text(
-            'email', 
+          ${form.email(
             tabindex = '1', 
             size = '256'
           )}
         </dd>
         <dt><label for="name">New Password</label></dt>
         <dd>
-          ${h.password(
-            'password', 
-            tabindex = '2',
-            value = static('password', '')
-          )}
+          ${form.password(tabindex = '2')}
         </dd>
         <dd>
-          ${h.password(
-            'password_confirm', 
-            tabindex = '3',
-            value = static('password_confirm', '')
-          )}
+          ${form.password_confirm(tabindex = '3')}
           <div>
             <small>Please confirm your new password.</small>
           </div>

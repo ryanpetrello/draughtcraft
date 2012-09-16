@@ -1,6 +1,6 @@
-from pecan                  import expose, abort
-from pecan.rest             import RestController
-from draughtcraft           import model
+from pecan import expose, abort
+from pecan.rest import RestController
+from draughtcraft import model
 
 
 class IngredientsController(RestController):
