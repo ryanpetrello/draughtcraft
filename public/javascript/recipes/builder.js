@@ -52,12 +52,15 @@ String.prototype.toTitleCase = function () {
 
         var write = $.proxy(function(value){
             clearTimeout(writeTimeoutInstance);
-            var result = n.recipes.units.from_str(value), amount = result[0],
-                unit = result[1];
-            if(isNaN(amount)){
-                amount = 0;
-                unit = 'POUND';
-            }
+            var amount = 0, unit = 'POUND';
+
+            var result = n.recipes.units.from_str(value);
+            if(result && !isNaN(result[0]))
+                amount = result[0], unit = result[1];
+
+            console.log(amount);
+            console.log(unit);
+
             this.amount(amount);
             this.unit(unit);
         }, this);

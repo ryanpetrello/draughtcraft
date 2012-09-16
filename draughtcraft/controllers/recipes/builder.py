@@ -126,6 +126,9 @@ class RecipeBuilderController(RestController):
 
     def save_step(self, recipe, additions):
         for a in additions:
+            if not a['amount']:
+                continue
+
             # Look up the ingredient
             ingredient = a.pop('ingredient')
             cls = {'Hop': entities.HopAddition}.get(
