@@ -1,4 +1,4 @@
-from draughtcraft.lib.minify import RedisResourceCache
+from draughtcraft.lib.minify import FileSystemResourceCache
 
 # Server Specific Configurations
 server = {
@@ -39,14 +39,7 @@ session = {
 
 cache = {
     'key': 'resources_to_compile',
-    'data_backend': RedisResourceCache,  # Remove line to disable redis caching
-    '__force_dict__': True
-}
-
-redis = {
-    'host': 'localhost',
-    'port': 6379,
-    'db': 0,
+    'data_backend': FileSystemResourceCache,
     '__force_dict__': True
 }
 
