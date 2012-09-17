@@ -58,9 +58,6 @@ String.prototype.toTitleCase = function () {
             if(result && !isNaN(result[0]))
                 amount = result[0], unit = result[1];
 
-            console.log(amount);
-            console.log(unit);
-
             this.amount(amount);
             this.unit(unit);
         }, this);
