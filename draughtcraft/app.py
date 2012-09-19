@@ -29,11 +29,10 @@ def setup_app(config):
     }
 
     # Compile .less resources
-    if getattr(config, 'redis', {}):
-        Less(
-            os.path.join(config.app.static_root, '_precompile'),
-            os.path.join(config.app.static_root, 'css')
-        ).compile()
+    Less(
+        os.path.join(config.app.static_root, '_precompile'),
+        os.path.join(config.app.static_root, 'css')
+    ).compile()
 
     return make_app(
         config.app.root,
