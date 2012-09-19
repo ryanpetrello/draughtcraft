@@ -146,7 +146,7 @@ class RecipeBuilderController(RestController):
                 elif a['use'] == 'FLAME OUT':
                     a['duration'] = timedelta(minutes=0)
                 else:
-                    a['duration'] = timedelta(minutes=a['duration'])
+                    a['duration'] = timedelta(minutes=int(a['duration']))
 
             # Create a new RecipeAddition
             entity = cls(
