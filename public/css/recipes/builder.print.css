@@ -1,0 +1,30 @@
+@page {size:8.5in 11in;}body{font-size:1em;font-family:sans-serif;margin:0;background-color:#FFF;color:#000;font-family:Georgia,"Times New Roman",Times,serif;}body input,body select,body textarea{font-family:Georgia,"Times New Roman",Times,serif;}
+body img.gravatar{position:absolute;top:0;right:0;display:none;}body img.gravatar.fullsize{display:inline;}
+body #inventories{display:none;}
+body h1{font-size:1.3em;}body h1 input{font-size:1.3em;}
+body img.close{display:none;}
+body form{display:inline;page-break-inside:avoid;}
+body li{list-style-type:none;}
+body input{font-size:1em;border:0;}
+body #builder-ajax{border-top:1px solid #DDD;margin-top:25px;margin-bottom:35px;}body #builder-ajax input{width:60px;}
+body nav.user,body nav#topnav,body div.inventory{display:none;}
+body h2,body div.notes h3{font-weight:normal;font-size:1.1em;color:#000 !important;}body h2 ul,body div.notes h3 ul{padding-left:0;}body h2 ul li:not(.active),body div.notes h3 ul li:not(.active){display:none;}
+body h2 ul li a,body div.notes h3 ul li a{color:#000;}
+body div.notes h3{text-decoration:underline;padding-left:0px !important;}
+body h3.ribbon{font-weight:normal;font-size:.95em;color:#666;padding-left:25px;}
+body p.instruction{padding-left:25px;font-style:italic;}
+body td.time p.instruction{display:inline !important;padding-left:0;}
+body fieldset{border:0;padding:0;margin:0;}
+body textarea{border:0;min-height:auto;}
+body li.add-step{display:none;}
+body div.notes p{padding:0 25px;}
+body table{padding:0 25px;}body table tr td a{color:#000;text-decoration:none;}
+body table tr td label.control img.glass{display:none;}
+body table tr td,body table tr th{width:auto !important;text-align:left;padding:2px 10px;}
+body table tr th{text-decoration:underline;}
+body table tr th.type,body table tr td.type,body table tr th.close,body table tr td.close{width:0 !important;display:none;}
+body div.step.results{page-break-inside:avoid;border-top:1px solid #DDD;padding-top:25px;margin-top:25px;}body div.step.results table{padding:0;}
+body div.step.results .recipe-setting{display:none;}
+body div#builder-buttons,body footer{display:none;}
+body div#actions{display:none;}
+body #tiptip_holder{display:none !important;visibility:hidden !important;}
