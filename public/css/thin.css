@@ -1,5 +1,0 @@
-nav.user,#topnav,#content{width:600px;}
-#topnav input{width:175px;}
-h1{padding:0 1em;text-align:center;}
-#content-inner{padding:0;}
-#content-inner>div{background:#FFF;padding:0;border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px;-webkit-background-clip:padding;-moz-background-clip:padding;background-clip:padding-box;border-top-right-radius:0;border-top-left-radius:0;-moz-border-radius-topright:0;-moz-border-radius-topleft:0;-webkit-border-top-right-radius:0;-webkit-border-top-left-radius:0;}
