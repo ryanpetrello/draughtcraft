@@ -12,9 +12,9 @@
 #content #inventories{display:none;}
 #content h1{padding:0 15px;padding-right:0;display:inline-block;vertical-align:middle;}#content h1>input{background:0;border:0;font-family:inherit;font-size:inherit;line-height:1.6em;margin:.6em 0;padding:0 5px;padding-right:0;margin-right:5px;font-weight:inherit;}#content h1>input:focus{background:#FFF;}
 #content h1 .copied_from{color:#666;display:block;font-size:12px;font-weight:normal;line-height:12px;position:relative;top:-15px;left:7px;}
+#content h1 select{display:none;}
 #content p.author{display:none;}
 #content input.unit{width:35px;vertical-align:baseline;margin:0 5px;}
-#content select{display:none;}
 #content .selectBox.unit{width:12px;}
 #content .selectBox.medium{width:100px;}
 #content .selectBox.gallons .selectBox-arrow,#content .selectBox.unit .selectBox-arrow{background-image:url('/images/edit.gif');}
