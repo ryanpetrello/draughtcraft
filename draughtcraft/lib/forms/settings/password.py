@@ -2,17 +2,14 @@ from pecan import request
 from pecan.ext.wtforms import (SecureForm, fields as f, validators as v,
                                ValidationError)
 from draughtcraft import model
-from sqlalchemy import and_
 
 
 def existing_matches(form, field):
     message = 'The provided password is not correct.'
-    hashed = model.User.__hash_password__(field.data)
-
-    if not model.User.query.filter(and_(
-        model.User.username == request.context['user'].username,
-        model.User.password == hashed
-    )).count():
+    if model.User.validate(
+        request.context['user'].username,
+        field.data
+    ) is None:
         raise ValidationError(message)
 
 

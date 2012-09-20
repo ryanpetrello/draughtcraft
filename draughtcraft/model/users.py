@@ -1,12 +1,16 @@
 from json import loads, dumps
 from datetime import datetime
 from hashlib import sha256, md5
+from base64 import b64encode
+from os import urandom
 
 from elixir import (
     Entity, Field, Unicode, DateTime,
     UnicodeText, OneToMany, ManyToOne
 )
 from pecan import conf
+from pbkdf2 import PBKDF2
+from sqlalchemy import and_
 from sqlalchemy.ext.associationproxy import AssociationProxy
 from sqlalchemy.orm.collections import attribute_mapped_collection
 
@@ -95,13 +99,49 @@ class User(Entity, ShallowCopyMixin):
         )
 
     @classmethod
-    def __hash_password__(self, v):
-        salt = getattr(
-            getattr(conf, 'session', None),
-            'password_salt',
-            'example'
-        )
-        return sha256(v + salt).hexdigest()
+    def __hash_password__(cls, plain, salt=None):
+        if salt is None:
+            salt = b64encode(urandom(6))
+        if ':' not in salt:
+            salt = '%s:' % salt
+        salt = salt.split(':')[0]
+        return '%s:%s' % (salt, b64encode(
+            PBKDF2(plain, salt, iterations=16000).read(32)
+        ))
+
+    @classmethod
+    def validate(cls, username, password):
+        # Lookup the user
+        user = cls.get_by(username=username)
+        if user:
+            salt = user.password.split(':')[0]
+            pbk = cls.__hash_password__(password, salt)
+
+            # If PBKDF2 matches...
+            match = cls.query.filter(and_(
+                cls.username == username,
+                cls.password == pbk
+            )).first()
+            if match is not None:
+                return match
+
+            # Otherwise the user might have a sha256 password
+            salt = getattr(
+                getattr(conf, 'session', None),
+                'password_salt',
+                'example'
+            )
+            sha = sha256(password + salt).hexdigest()
+
+            # If sha256 matches...
+            match = cls.query.filter(and_(
+                cls.username == username,
+                cls.password == sha
+            )).first()
+            if match is not None:
+                # Overwrite to use PBKDF2 in the future
+                user.password = password
+                return match
 
 
 class UserSetting(Entity):
