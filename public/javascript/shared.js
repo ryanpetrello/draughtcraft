@@ -33,7 +33,9 @@ $(function(){
      * Fancybox popup for "About" links
      */
     $("a[href^='#about-box']").fancybox({
-        'autoDimensions'    : false,
+        'autoSize'          : false,
+        'closeBtn'          : true,
+        'closeClick'        : true,
         'width'             : 425,
         'height'            : 415
     });
