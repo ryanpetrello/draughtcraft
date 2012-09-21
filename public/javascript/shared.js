@@ -37,7 +37,14 @@ $(function(){
         'closeBtn'          : true,
         'closeClick'        : true,
         'width'             : 425,
-        'height'            : 415
+        'height'            : 415,
+        'helpers'           : {
+            'overlay' : {
+                'css' : {
+                    'background' : 'rgba(0, 0, 0, 0.60)'
+                }
+            }
+        }
     });
 
     /*

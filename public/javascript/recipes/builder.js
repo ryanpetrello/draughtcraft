@@ -922,7 +922,14 @@ $(function(){
                     'closeClick'    : true,
                     'maxWidth'      : 425,
                     'type'          : 'ajax',
-                    'href'          : accessor().attr.href
+                    'href'          : accessor().attr.href,
+                    'helpers'       : {
+                        'overlay' : {
+                            'css' : {
+                                'background' : 'rgba(0, 0, 0, 0.60)'
+                            }
+                        }
+                    }
                 });
         }
     };
