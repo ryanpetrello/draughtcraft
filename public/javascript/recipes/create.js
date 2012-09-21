@@ -21,6 +21,13 @@ $(document).ready(function(){
     $("a.question").fancybox({
         'autoSize'          : false,
         'width'             : 600,
-        'height'            : 425
+        'height'            : 425,
+        'helpers'           : {
+            'overlay' : {
+                'css' : {
+                    'background' : 'rgba(0, 0, 0, 0.60)'
+                }
+            }
+        }
     });
 });
