@@ -1,3 +1,5 @@
+from hashlib import sha256
+
 from draughtcraft.tests import TestApp
 from draughtcraft import model
 
@@ -47,6 +49,21 @@ class TestLogin(TestApp):
         model.User(
             username='ryanpetrello',
             password='secret'
+        )
+        model.commit()
+
+        response = self.post('/login', params={
+            'username': 'ryanpetrello',
+            'password': 'secret'
+        })
+
+        assert response.request.environ['beaker.session']['user_id'] == 1
+
+    def test_valid_sha256_login(self):
+        salt = 'example'
+        model.User(
+            username='ryanpetrello',
+            _password=sha256('secret' + salt).hexdigest()
         )
         model.commit()
 

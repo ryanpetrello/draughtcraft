@@ -915,13 +915,22 @@ $(function(){
 
     // Apply a "fancybox" popup
     ko.bindingHandlers.popup = {
-        init: function(el){
-            if(el) $(el).fancybox({
-                centerOnScroll: true,
-                onComplete: function(links, index) {
-                    $.fancybox.center(true);
-                }
-            });
+        init: function(el, v, accessor){
+            if(el)
+                $(el).fancybox({
+                    'closeBtn'      : true,
+                    'closeClick'    : true,
+                    'maxWidth'      : 425,
+                    'type'          : 'ajax',
+                    'href'          : accessor().attr.href,
+                    'helpers'       : {
+                        'overlay' : {
+                            'css' : {
+                                'background' : 'rgba(0, 0, 0, 0.60)'
+                            }
+                        }
+                    }
+                });
         }
     };
     ko.bindingHandlers.titleUpdate = {

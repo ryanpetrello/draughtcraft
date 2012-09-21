@@ -23,6 +23,7 @@ setup(
         "webhelpers",
         "python-postmark",
         "BeautifulSoup",
+        "pbkdf2",
         "redis",
         "hiredis",
         "lesspy",

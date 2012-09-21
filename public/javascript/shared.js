@@ -33,9 +33,18 @@ $(function(){
      * Fancybox popup for "About" links
      */
     $("a[href^='#about-box']").fancybox({
-        'autoDimensions'    : false,
+        'autoSize'          : false,
+        'closeBtn'          : true,
+        'closeClick'        : true,
         'width'             : 425,
-        'height'            : 415
+        'height'            : 415,
+        'helpers'           : {
+            'overlay' : {
+                'css' : {
+                    'background' : 'rgba(0, 0, 0, 0.60)'
+                }
+            }
+        }
     });
 
     /*

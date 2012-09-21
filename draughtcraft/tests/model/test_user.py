@@ -1,5 +1,5 @@
 from draughtcraft import model
-from hashlib import sha256, md5
+from hashlib import md5
 
 import unittest
 
@@ -70,13 +70,14 @@ class TestUser(unittest.TestCase):
             email=u'ryan@example.com'
         )
 
-        correct = sha256('testing123' + 'example').hexdigest()
-        assert user.password == correct
+        salt = user.password.split(':')[0]
+        hashed = model.User.__hash_password__('testing123', salt)
+        assert user.password == hashed
 
         user.password = 'tryagain'
-
-        correct = sha256('tryagain' + 'example').hexdigest()
-        assert user.password == correct
+        salt = user.password.split(':')[0]
+        hashed = model.User.__hash_password__('tryagain', salt)
+        assert user.password == hashed
 
     def test_gravatar(self):
         user = model.User(

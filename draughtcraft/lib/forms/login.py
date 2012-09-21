@@ -1,6 +1,5 @@
 from pecan.ext.wtforms import SecureForm, TextField, PasswordField, Required
 from draughtcraft import model
-from sqlalchemy import and_
 
 
 class LoginForm(SecureForm):
@@ -13,13 +12,7 @@ class LoginForm(SecureForm):
         if not super(LoginForm, self).validate():
             return False
 
-        username, password = self.username.data, self.password.data
-        hashed = model.User.__hash_password__(password)
-
-        if not model.User.query.filter(and_(
-            model.User.username == username,
-            model.User.password == hashed
-        )).count():
+        if model.User.validate(self.username.data, self.password.data) is None:
             self.username.errors.append(
                 'The provided username and password are not valid.'
             )

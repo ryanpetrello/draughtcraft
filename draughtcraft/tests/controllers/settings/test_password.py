@@ -28,9 +28,8 @@ class TestChangePassword(TestAuthenticatedApp):
             response = self.post('/settings/password/', params=copy)
             assert len(response.request.pecan['form'].errors)
 
-        assert model.User.get(1).password == model.User.__hash_password__(
-            'secret'
-        )
+        assert model.User.validate('ryanpetrello', 'secret') == \
+            model.User.query.first()
 
     def test_incorrect_old_password(self):
         params = {
@@ -42,9 +41,8 @@ class TestChangePassword(TestAuthenticatedApp):
         response = self.post('/settings/password/', params=params)
         assert len(response.request.pecan['form'].errors)
 
-        assert model.User.get(1).password == model.User.__hash_password__(
-            'secret'
-        )
+        assert model.User.validate('ryanpetrello', 'secret') == \
+            model.User.query.first()
 
     def test_passwords_not_match(self):
         params = {
@@ -56,9 +54,8 @@ class TestChangePassword(TestAuthenticatedApp):
         response = self.post('/settings/password/', params=params)
         assert len(response.request.pecan['form'].errors)
 
-        assert model.User.get(1).password == model.User.__hash_password__(
-            'secret'
-        )
+        assert model.User.validate('ryanpetrello', 'secret') == \
+            model.User.query.first()
 
     def test_new_password_length(self):
         params = {
@@ -70,9 +67,8 @@ class TestChangePassword(TestAuthenticatedApp):
         response = self.post('/settings/password/', params=params)
         assert len(response.request.pecan['form'].errors)
 
-        assert model.User.get(1).password == model.User.__hash_password__(
-            'secret'
-        )
+        assert model.User.validate('ryanpetrello', 'secret') == \
+            model.User.query.first()
 
     def test_success(self):
         params = {
@@ -83,6 +79,5 @@ class TestChangePassword(TestAuthenticatedApp):
 
         self.post('/settings/password/', params=params)
 
-        assert model.User.get(1).password == model.User.__hash_password__(
-            'newpassword'
-        )
+        assert model.User.validate('ryanpetrello', 'newpassword') == \
+            model.User.query.first()
