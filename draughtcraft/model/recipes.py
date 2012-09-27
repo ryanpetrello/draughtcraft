@@ -691,7 +691,7 @@ class RecipeAddition(Entity, DeepCopyMixin):
 
     def __json__(self):
         return {
-            'amount': self.amount,
+            'amount': 1 if self.yeast else self.amount,
             'unit': self.unit,
             'use': self.use,
             'minutes': self.minutes,
