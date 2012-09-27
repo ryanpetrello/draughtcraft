@@ -9,11 +9,9 @@
       <th colspan="2">
         <label>Targets for Style</label>
       </th>
-      % if editable:
-        <th class="notes">
-          <label>Other Notes</label>
-        </th>
-      % endif
+      <th class="notes">
+        <label>Other Notes</label>
+      </th>
     </tr>
 
     <tr>
@@ -34,11 +32,9 @@
         <label data-bind="text: style_range('og')"></label>
       </td>
       <td data-bind="html: style_matches('og')"></td>
-      % if editable:
-        <td rowspan="5" class="notes">
-          <textarea data-bind="value: notes"></textarea>
-        </td>
-      % endif
+      <td rowspan="5" class="notes">
+        <textarea data-bind="value: notes"></textarea>
+      </td>
     </tr>
 
     <tr>
