@@ -142,7 +142,7 @@ class RecipeBuilderController(RestController):
             # Handle boil durations
             if 'use' in a and 'duration' in a:
                 if a['use'] == 'FIRST WORT':
-                    a['duration'] = timedelta(minutes=recipe.boil_minutes)
+                    a['duration'] = timedelta(minutes=int(recipe.boil_minutes))
                 elif a['use'] == 'FLAME OUT':
                     a['duration'] = timedelta(minutes=0)
                 else:
