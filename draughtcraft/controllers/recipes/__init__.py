@@ -28,6 +28,8 @@ class SlugController(object):
         if recipe.state == "DRAFT":
             if recipe.author and recipe.author != request.context['user']:
                 abort(404)
+            if not recipe.author and recipe != request.context['trial_recipe']:
+                abort(404)
 
         # Log a view for the recipe (if the viewer *is not* the author)
         if recipe.author != request.context['user'] and \
