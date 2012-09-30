@@ -345,7 +345,7 @@ class Recipe(Entity, DeepCopyMixin, ShallowCopyMixin):
                 'MASH': 'All Grain',
                 'MINIMASH': 'Partial Mash'
             }.get(self.type, 'Extract'),
-            'brewer': self.author.printed_name,
+            'brewer': self.author.printed_name if self.author else 'Unknown',
             'batch_size': self.liters,
             'boil_size': self.liters * 1.25,
             'boil_time': self.boil_minutes,
