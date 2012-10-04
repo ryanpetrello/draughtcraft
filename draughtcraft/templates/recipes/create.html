@@ -89,7 +89,7 @@
         <dd>
           <% metric = h.request.context['metric'] == True %>
           ${form.volume(tabindex='3', class_='unit')}
-          ${form.unit()}
+          ${form.unit(value='LITER' if metric else 'GALLON')}
           ${'Liter(s)' if metric else 'Gallon(s)'}
           % if not metric and h.request.context['user'] is None:
             <small><a href="#" onclick="$.draughtcraft.toggleUnits('${key}', '${token}');">Want Metric Units?</a></small>
