@@ -43,7 +43,7 @@
         </form>
       % endif
       % if recipe.state == 'DRAFT':
-          ${h.form("%spublish" % recipe.url(public=False))}
+          ${h.form("%s/publish/" % recipe.url(public=False))}
             <li class="publish btn submit" title="Publish this Recipe"></li>
           ${h.end_form()}
       % endif
