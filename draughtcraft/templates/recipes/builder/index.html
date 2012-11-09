@@ -198,7 +198,7 @@
             <li class="print" title="Print this Recipe" onclick="window.print();"></li>
           % endif
           % if h.request.context['user'] is None:
-            ${h.form('')}
+            ${h.form('', onsubmit='return false;')}
               <li class="intl submit ${'last' if editable else ''}" title="Switch US/Metric Units"  onclick="$.draughtcraft.toggleUnits('${key}', '${token}');">
             ${h.end_form()}
           % elif recipe.author and recipe.author == h.request.context['user'] and recipe.state == "PUBLISHED":
