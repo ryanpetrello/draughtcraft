@@ -107,6 +107,11 @@ String.prototype.toTitleCase = function () {
             this.recipe.fermentation.additions.remove(addition);
         }, ns);
 
+        this.cloneAddition = $.proxy(function(addition) {
+            var step = this.recipe[ns.currentStep] || this.recipe.fermentation;
+            step.additions.push($.extend({}, addition));
+        }, ns);
+
         this.mash_percentage = ko.computed({
             read: function(){
                 var sum = 0.0;
@@ -738,6 +743,7 @@ String.prototype.toTitleCase = function () {
         this.activateStep = function(step){
             $('.step').removeClass('active');
             $('.step.'+step).addClass('active');
+            ns.currentStep = step;
             window.location = '#'+step;
         };
 
