@@ -17,6 +17,7 @@ setup(
     install_requires=[
         "pecan >= 0.2.0a",
         "pecan_wtforms",
+        "sqlalchemy == 0.7.8",
         "elixir",
         "beaker",
         "genshi",
