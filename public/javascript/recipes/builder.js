@@ -107,6 +107,11 @@ String.prototype.toTitleCase = function () {
             this.recipe.fermentation.additions.remove(addition);
         }, ns);
 
+        this.cloneAddition = $.proxy(function(addition) {
+            var step = this.recipe[ns.currentStep] || this.recipe.fermentation;
+            step.additions.push($.extend({}, addition));
+        }, ns);
+
         this.mash_percentage = ko.computed({
             read: function(){
                 var sum = 0.0;
@@ -738,6 +743,7 @@ String.prototype.toTitleCase = function () {
         this.activateStep = function(step){
             $('.step').removeClass('active');
             $('.step.'+step).addClass('active');
+            ns.currentStep = step;
             window.location = '#'+step;
         };
 
@@ -956,6 +962,26 @@ $(function(){
         'maxWidth'      : 535,
         'comfortZone'   : 25
     });
+
+    if(/builder$/.test(window.location.pathname)){
+        var beforePrint = function(){
+            var path = window.location.pathname.toString();
+            window.location = path.substring(0, path.lastIndexOf("/")) + '#print';
+        };
+        if(window.matchMedia){
+            var mediaQueryList = window.matchMedia('print');
+            mediaQueryList.addListener(function(mql) {
+                if(mql.matches)
+                    beforePrint();
+            });
+        } else {
+            window.onbeforeprint = beforePrint;
+        }
+    }
+    if(/#print$/.test(window.location)){
+        window.print();
+    }
+
 });
 
 (function($){
