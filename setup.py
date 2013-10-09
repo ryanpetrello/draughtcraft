@@ -28,7 +28,7 @@ setup(
         "redis",
         "hiredis",
         "lesspy",
-        "jsmin",
+        "jsmin == 2.0.2",
         "psycopg2",
         "fudge"
     ],
