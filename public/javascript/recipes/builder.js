@@ -956,6 +956,26 @@ $(function(){
         'maxWidth'      : 535,
         'comfortZone'   : 25
     });
+
+    if(/builder$/.test(window.location.pathname)){
+        var beforePrint = function(){
+            var path = window.location.pathname.toString();
+            window.location = path.substring(0, path.lastIndexOf("/")) + '#print';
+        };
+        if(window.matchMedia){
+            var mediaQueryList = window.matchMedia('print');
+            mediaQueryList.addListener(function(mql) {
+                if(mql.matches)
+                    beforePrint();
+            });
+        } else {
+            window.onbeforeprint = beforePrint;
+        }
+    }
+    if(/#print$/.test(window.location)){
+        window.print();
+    }
+
 });
 
 (function($){
