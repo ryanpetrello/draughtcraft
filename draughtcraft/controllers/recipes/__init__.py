@@ -148,7 +148,7 @@ class RecipesController(object):
         if request.pecan['form'].errors:
             abort(400)
 
-        perpage = 15.0
+        perpage = 25.0
         offset = int(perpage * (kw['page'] - 1))
 
         views = func.count(model.RecipeView.id).label('views')
