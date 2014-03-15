@@ -30,7 +30,8 @@ setup(
         "lesspy",
         "jsmin == 2.0.2",
         "psycopg2",
-        "fudge"
+        "fudge",
+        "boto"
     ],
     zip_safe=False,
     include_package_data=True,
@@ -44,5 +45,6 @@ setup(
     [pecan.command]
     populate=draughtcraft.data.tools.populate:PopulateCommand
     flush=draughtcraft.data.tools.cacheflush:RedisFlushCommand
+    cdn-upload=draughtcraft.data.tools.cdn:CDNUpload
     """
 )
