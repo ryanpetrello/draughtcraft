@@ -21,13 +21,6 @@ def setup_app(config):
 
     model.init_model()
 
-    config.app.errors = {
-        '404': '/error/404',
-        '401': '/error/401',
-        '403': '/error/403',
-        '500': '/error/500'
-    }
-
     # Compile .less resources
     Less(
         os.path.join(config.app.static_root, '_precompile'),
@@ -42,6 +35,12 @@ def setup_app(config):
         logging=config.app.logging,
         debug=getattr(config.app, 'debug', False),
         force_canonical=getattr(config.app, 'force_canonical', True),
+        errors = {
+            404: '/error/404',
+            401: '/error/401',
+            403: '/error/403',
+            500: '/error/500'
+        },
         hooks=[
             TransactionHook(
                 model.start,
