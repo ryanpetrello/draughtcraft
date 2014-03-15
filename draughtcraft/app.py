@@ -36,10 +36,10 @@ def setup_app(config):
         debug=getattr(config.app, 'debug', False),
         force_canonical=getattr(config.app, 'force_canonical', True),
         errors = {
-            '404': '/error/404',
-            '401': '/error/401',
-            '403': '/error/403',
-            '500': '/error/500'
+            404: '/error/404',
+            401: '/error/401',
+            403: '/error/403',
+            500: '/error/500'
         },
         hooks=[
             TransactionHook(
