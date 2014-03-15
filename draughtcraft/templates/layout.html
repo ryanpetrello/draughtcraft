@@ -79,7 +79,7 @@
 
     <nav id="topnav">
       <div class="logo">
-        <a href="/"><img src="/images/logo.png" /></a>
+        <a href="/"><img src="${h.cdn_host()}/images/logo.png" /></a>
       </div>
       <ul>
         % if h.request.context['user']:
@@ -129,7 +129,7 @@
     <div style="display:none;">
       <div id="about-box">
         <div class="logo">
-          <img src="/images/logo.png" width="200" />
+          <img src="${h.cdn_host()}/images/logo.png" width="200" />
         </div>
         <p>
           Brewing isn't complicated.  Making your own recipes doesn't have to
@@ -165,7 +165,7 @@
       <a href="http://draughtcraft.uservoice.com/" target="window">Feedback</a>
       <a href="#" class="email" rel="moc.tfarcthguard@nayr">Contact</a> 
       <a href="http://twitter.com/draughtcraftapp" target="window">
-        <img src="/images/twitter.png" height="22" />
+        <img src="${h.cdn_host()}/images/twitter.png" height="22" />
       </a> 
     </p>
   </footer>

@@ -1,3 +1,5 @@
+import random
+
 from pecan import request
 from draughtcraft import model
 from draughtcraft.lib.notice import notices
@@ -9,6 +11,15 @@ from webhelpers.text import *
 #
 
 
+def cdn_host():
+    from pecan import conf
+    if hasattr(conf.app, 'cdn_host'):
+        return ''.join((
+            'http://',
+            conf.app.cdn_host.replace('cdn', 'cdn%d' % random.randint(1, 4))
+        ))
+
+
 def stamp(uri):
     """
     Used to stamp the URI of a static resource with a revision-specific
@@ -16,7 +27,7 @@ def stamp(uri):
     and users are forced to re-download the latest static resources.
     """
     from pecan import conf
-    return "%s?%s" % (uri, conf.app.stamp)
+    return "%s%s?%s" % (cdn_host(), uri, conf.app.stamp)
 
 
 def css(url):

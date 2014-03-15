@@ -7,11 +7,11 @@
   %>
   % if recipe.metric:
     <span class="srm srm-${min(srm, 30)}" title="${ebc} EBC">
-      <img src="/images/glass-plain.png" width="38" class="glass" />
+      <img src="${h.cdn_host()}/images/glass-plain.png" width="38" class="glass" />
     </span>
   % else:
     <span class="srm srm-${min(srm, 30)}" title="${srm} SRM">
-      <img src="/images/glass-plain.png" width="38" class="glass" />
+      <img src="${h.cdn_host()}/images/glass-plain.png" width="38" class="glass" />
     </span>
   % endif
 
