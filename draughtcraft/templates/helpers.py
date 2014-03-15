@@ -18,6 +18,7 @@ def cdn_host():
             'http://',
             conf.app.cdn_host.replace('cdn', 'cdn%d' % random.randint(1, 4))
         ))
+    return ''
 
 
 def stamp(uri):
