@@ -80,15 +80,15 @@ class SlugController(object):
         if source.author is None:
             abort(401)
 
-        different_user = source.author != request.context['user']
+        diff_user = source.author != request.context['user']
 
+        name = source.name if diff_user else "%s (Duplicate)" % source.name
         copy = source.duplicate({
-            'name': source.name if different_user else
-                                "%s (Duplicate)" % source.name,
+            'name': name,
             'author': request.context['user']
-                                })
+        })
 
-        if different_user:
+        if diff_user:
             copy.copied_from = source
 
         redirect("/")

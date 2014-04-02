@@ -25,7 +25,7 @@ class TestSignup(TestApp):
 
             response = self.post('/signup/', params=copy)
             assert response.status_int == 200
-            assert len(response.request.pecan['form'].errors)
+            assert len(self.get_form(response).errors)
 
         assert model.User.query.count() == 0
 

@@ -43,7 +43,7 @@ class TestRecipeCreation(TestApp):
 
             response = self.post('/recipes/create', params=copy)
             assert response.status_int == 200
-            assert len(response.request.pecan['form'].errors)
+            assert len(self.get_form(response).errors)
 
         assert model.Recipe.query.count() == 0
 

@@ -39,7 +39,7 @@ class TestProfileSettings(TestAuthenticatedApp):
         assert model.User.get(1).email == 'ryan@example.com'
 
         response = self.post('/settings/profile/', params=params)
-        assert len(response.request.pecan['form'].errors)
+        assert len(self.get_form(response).errors)
 
         assert model.User.get(1).email == 'ryan@example.com'
 
@@ -55,7 +55,7 @@ class TestProfileSettings(TestAuthenticatedApp):
         assert model.User.get(1).email == 'ryan@example.com'
 
         response = self.post('/settings/profile/', params=params)
-        assert len(response.request.pecan['form'].errors)
+        assert len(self.get_form(response).errors)
 
         assert model.User.get(1).email == 'ryan@example.com'
 

@@ -35,7 +35,7 @@ def setup_app(config):
         logging=config.app.logging,
         debug=getattr(config.app, 'debug', False),
         force_canonical=getattr(config.app, 'force_canonical', True),
-        errors = {
+        errors={
             404: '/error/404',
             401: '/error/401',
             403: '/error/403',

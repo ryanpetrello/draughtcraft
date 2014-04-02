@@ -152,6 +152,11 @@ class TestApp(TestModel):
         """
         return self._do_request(url, 'DELETE', **kwargs)
 
+    def get_form(self, response):
+        return response.request.environ['webob.adhoc_attrs']['pecan'].get(
+            'form'
+        )
+
 
 class TestAuthenticatedApp(TestApp):
     """

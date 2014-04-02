@@ -26,7 +26,7 @@ class TestChangePassword(TestAuthenticatedApp):
             copy = params.copy()
             del copy[k]
             response = self.post('/settings/password/', params=copy)
-            assert len(response.request.pecan['form'].errors)
+            assert len(self.get_form(response).errors)
 
         assert model.User.validate('ryanpetrello', 'secret') == \
             model.User.query.first()
@@ -39,7 +39,7 @@ class TestChangePassword(TestAuthenticatedApp):
         }
 
         response = self.post('/settings/password/', params=params)
-        assert len(response.request.pecan['form'].errors)
+        assert len(self.get_form(response).errors)
 
         assert model.User.validate('ryanpetrello', 'secret') == \
             model.User.query.first()
@@ -52,7 +52,7 @@ class TestChangePassword(TestAuthenticatedApp):
         }
 
         response = self.post('/settings/password/', params=params)
-        assert len(response.request.pecan['form'].errors)
+        assert len(self.get_form(response).errors)
 
         assert model.User.validate('ryanpetrello', 'secret') == \
             model.User.query.first()
@@ -65,7 +65,7 @@ class TestChangePassword(TestAuthenticatedApp):
         }
 
         response = self.post('/settings/password/', params=params)
-        assert len(response.request.pecan['form'].errors)
+        assert len(self.get_form(response).errors)
 
         assert model.User.validate('ryanpetrello', 'secret') == \
             model.User.query.first()
