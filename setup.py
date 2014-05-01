@@ -25,8 +25,6 @@ setup(
         "python-postmark",
         "BeautifulSoup",
         "pbkdf2",
-        "redis",
-        "hiredis",
         "lesspy",
         "jsmin == 2.0.2",
         "psycopg2",
