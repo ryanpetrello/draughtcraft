@@ -10,7 +10,7 @@
     repo_remote: origin
     repo_version: master
     webapps_dir: /opt/web
-    wsgi_file: wsgi.py
+    wsgi_file: ansible/wsgi.py
     wsgi_callable: app
 
   tasks:
@@ -27,6 +27,9 @@
       action: template src=templates/supervisor.ini dest=/etc/supervisor/${app_name}.ini
       notify:
         - restart app
+
+    - name: restart supervisord service to detect the new app
+      action: service name=supervisord state=restarted
 
     - name: create nginx site config
       action: template src=templates/nginx_site.conf dest=/etc/nginx/sites-available/${app_name}.conf
