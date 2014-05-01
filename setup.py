@@ -15,7 +15,7 @@ setup(
     author='Ryan Petrello',
     author_email='ryan (at) draughtcraft.com',
     install_requires=[
-        "pecan >= 0.2.0a",
+        "pecan >= 0.4",
         "pecan_wtforms",
         "sqlalchemy == 0.7.8",
         "elixir",
@@ -25,8 +25,6 @@ setup(
         "python-postmark",
         "BeautifulSoup",
         "pbkdf2",
-        "redis",
-        "hiredis",
         "lesspy",
         "jsmin == 2.0.2",
         "psycopg2",

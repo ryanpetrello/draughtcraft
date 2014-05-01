@@ -16,7 +16,7 @@ class TestLogin(TestApp):
         })
 
         assert response.status_int == 200
-        assert len(response.request.pecan['form'].errors)
+        assert len(self.get_form(response).errors)
         assert 'user_id' not in response.request.environ['beaker.session']
 
     def test_empty_password(self):
@@ -26,7 +26,7 @@ class TestLogin(TestApp):
         })
 
         assert response.status_int == 200
-        assert len(response.request.pecan['form'].errors)
+        assert len(self.get_form(response).errors)
         assert 'user_id' not in response.request.environ['beaker.session']
 
     def test_invalid_credentials(self):
@@ -42,7 +42,7 @@ class TestLogin(TestApp):
         })
 
         assert response.status_int == 200
-        assert len(response.request.pecan['form'].errors)
+        assert len(self.get_form(response).errors)
         assert 'user_id' not in response.request.environ['beaker.session']
 
     def test_valid_login(self):
