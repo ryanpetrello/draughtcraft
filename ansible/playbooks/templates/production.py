@@ -14,6 +14,7 @@ app = {
     'root': 'draughtcraft.controllers.root.RootController',
     'modules': ['draughtcraft'],
     'static_root': '%(confdir)s/public',
+    #'cdn_host': 'cdn.draughtcraft.com',
     'template_path': '%(confdir)s/draughtcraft/templates',
     'stamp': time.time(),
     'logging': False,
