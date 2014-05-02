@@ -24,12 +24,13 @@ Additionally, you'll need to configure SSH key access for both of them, and
 open up traffic on the PostgreSQL machine for inbound traffic on port (by
 default) 5432.
 
-From here, it's pretty simple:
-$ cd ansible
-$ pip install ansible
+From here, it's pretty simple::
 
-Edit the hosts file to point at the hostname (or IP) of your respective servers:
-$ mv playbooks/hosts.example playbooks/hosts
+    $ cd ansible
+    $ pip install ansible
 
-$ mv playbooks/prod.yml.example playbooks/prod.yml
-$ ansible-playbook -i playbooks/hosts playbooks/setup_server.yml playbooks/deploy.yml --private-key=~/.ssh/your-private-key
+Edit the `hosts` file to point at the hostname (or IP) of your respective servers, then deploy::
+
+    $ mv playbooks/hosts.example playbooks/hosts
+    $ mv playbooks/prod.yml.example playbooks/prod.yml
+    $ ansible-playbook -i playbooks/hosts playbooks/setup_server.yml playbooks/deploy.yml --private-key=~/.ssh/your-private-key
