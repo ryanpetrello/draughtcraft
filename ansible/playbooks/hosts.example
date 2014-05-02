@@ -1,0 +1,5 @@
+[database]
+draughtcraft-pg
+
+[webservers]
+draughtcraft-web

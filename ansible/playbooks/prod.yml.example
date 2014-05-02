@@ -1,0 +1,10 @@
+bcc_address: you@yourdomain.com
+session_key: random
+postmark_api_key: postmark-api-key
+dbhost: 10.10.10.2
+dbname: draughtcraft
+dbuser: draughtcraft
+dbpassword: sample-password
+dho_key: some-key
+dho_secret: some-secret
+dho_bucket: some-bucket
