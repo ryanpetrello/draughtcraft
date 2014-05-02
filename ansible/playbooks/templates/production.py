@@ -14,6 +14,7 @@ app = {
     'root': 'draughtcraft.controllers.root.RootController',
     'modules': ['draughtcraft'],
     'static_root': '%(confdir)s/public',
+    #'cdn_host': 'cdn.draughtcraft.com',
     'template_path': '%(confdir)s/draughtcraft/templates',
     'stamp': time.time(),
     'logging': False,
@@ -25,7 +26,7 @@ app = {
 }
 
 sqlalchemy = {
-    'url': 'postgresql+psycopg2://localhost/draughtcraftdev',
+    'url': 'postgresql+psycopg2://{{dbuser}}:{{dbpassword}}@{{dbhost}}/{{dbname}}',
     'echo': False,
     'echo_pool': False,
     'pool_recycle': 3600,
