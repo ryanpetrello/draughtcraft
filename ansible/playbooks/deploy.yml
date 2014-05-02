@@ -32,6 +32,9 @@
     - name: install the package itself
       action: pip name=${webapps_dir}/${app_name}/src
 
+    - name: configure the app
+      action: template src=templates/production.py dest=${webapps_dir}/${app_name}/src
+
     - name: create supervisor program config
       action: template src=templates/supervisor.ini dest=/etc/supervisor/${app_name}.ini
       notify:
