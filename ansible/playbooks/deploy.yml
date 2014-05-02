@@ -38,6 +38,9 @@
     - name: configure the app
       action: template src=templates/production.py dest=${webapps_dir}/${app_name}/src
 
+    - name: initialize (and migrate) the database
+      command: ${webapps_dir}/${app_name}/venv/bin/pecan populate production.py chdir=${webapps_dir}/${app_name}/src
+
     - name: create supervisor program config
       action: template src=templates/supervisor.ini dest=/etc/supervisor/${app_name}.ini
       notify:
