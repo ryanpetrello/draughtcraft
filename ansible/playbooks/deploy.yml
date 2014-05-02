@@ -33,7 +33,7 @@
       action: pip requirements=${webapps_dir}/${app_name}/src/ansible/requirements.txt virtualenv=${webapps_dir}/${app_name}/venv state=present
 
     - name: install the package itself
-      action: pip name=${webapps_dir}/${app_name}/src
+      action: pip name=${webapps_dir}/${app_name}/src virtualenv=${webapps_dir}/${app_name}/venv state=present
 
     - name: configure the app
       action: template src=templates/production.py dest=${webapps_dir}/${app_name}/src
