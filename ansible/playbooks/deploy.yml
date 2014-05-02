@@ -13,6 +13,9 @@
     wsgi_file: ansible/wsgi.py
     wsgi_callable: app
 
+  vars_files:
+    - prod.yml
+
   tasks:
     - name: ensure log directory
       action: file dest=${webapps_dir}/${app_name}/log state=directory
