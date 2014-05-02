@@ -1,8 +1,11 @@
 ---
 
 - hosts: webservers
-  user: dhc-user
-  remote_user: dhc-user
+
+  vars:
+    user: dhc-user
+
+  user: "{{ user }}"
   sudo: True
 
   tasks:
@@ -51,4 +54,4 @@
       action: service name=supervisord state=started enabled=yes
 
     - name: create clone directory
-      action: file dest=/opt/web state=directory
+      action: file dest=/opt/web state=directory owner={{ user }} group={{ user }}
