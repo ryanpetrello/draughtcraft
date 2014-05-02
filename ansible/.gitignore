@@ -1,3 +1,4 @@
 *.pyc
 *.DS_Store
 hosts
+playbooks/prod.yml
