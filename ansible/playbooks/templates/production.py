@@ -25,7 +25,7 @@ app = {
 }
 
 sqlalchemy = {
-    'url': 'postgresql+psycopg2://localhost/draughtcraftdev',
+    'url': 'postgresql+psycopg2://{{dbuser}}:{{dbpassword}}@{{dbhost}}/{{dbname}}',
     'echo': False,
     'echo_pool': False,
     'pool_recycle': 3600,

@@ -55,3 +55,51 @@
 
     - name: create clone directory
       action: file dest=/opt/web state=directory owner={{ user }} group={{ user }}
+
+- hosts: database
+
+  user: dhc-user
+  sudo: True
+
+  tasks:
+    - name: ensure packages are installed
+      action: apt name={{ item }}
+      with_items:
+          - postgresql
+          - libpq-dev
+          - python-psycopg2
+
+- hosts: database
+
+  user: dhc-user
+  sudo: True
+  sudo_user: postgres
+
+  vars_files:
+    - prod.yml
+
+  tasks:
+    - name: ensure database is created
+      postgresql_db: name={{ dbname }}
+
+    - name: ensure user has access to database
+      postgresql_user: db={{ dbname }} name={{ dbuser }} password={{ dbpassword }} priv=ALL
+
+    - name: ensure user does not have unnecessary privilege
+      postgresql_user: name={{ dbuser }} role_attr_flags=NOSUPERUSER,NOCREATEDB
+
+    - name: update postgres client configuration
+      action: template src=templates/pg_hba.conf dest=/etc/postgresql/9.3/main/pg_hba.conf
+      notify:
+        - restart postgresql
+
+    - name: bind to private address
+      lineinfile:
+          dest=/etc/postgresql/9.3/main/postgresql.conf
+          regexp='^listen_addresses'
+          line="listen_addresses = '${ansible_default_ipv4.address}'"
+          state=present
+
+  handlers:
+    - name: restart postgresql
+      service: name=postgresql state=restarted
