@@ -5,7 +5,7 @@
   vars:
     user: dhc-user
 
-  user: "{{ user }}"
+  user: ${user}
   sudo: True
 
   tasks:
