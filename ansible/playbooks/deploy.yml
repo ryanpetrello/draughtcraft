@@ -20,8 +20,17 @@
     - name: deploy code from repository
       action: git repo=$repo_url dest=${webapps_dir}/${app_name}/src remote=$repo_remote version=$repo_version
 
+    - name: Enforce permissions on cached CSS
+      action: file path=${webapps_dir}/${app_name}/src/css mode=0750
+
+    - name: Enforce permissions on cached JS
+      action: file path=${webapps_dir}/${app_name}/src/js mode=0750
+
     - name: install dependencies into virtualenv
       action: pip requirements=${webapps_dir}/${app_name}/src/ansible/requirements.txt virtualenv=${webapps_dir}/${app_name}/venv state=present
+
+    - name: install the package itself
+      action: pip name=${webapps_dir}/${app_name}/src
 
     - name: create supervisor program config
       action: template src=templates/supervisor.ini dest=/etc/supervisor/${app_name}.ini
