@@ -1,10 +1,12 @@
-bcc_address: you@yourdomain.com
-session_key: random
-postmark_api_key: postmark-api-key
-dbhost: 10.10.10.2
+bcc_address: you@yourdomain.com  # An email which will be BCC'd on all signups
+session_key: random  # User to generate cookies.  Auto-generate and keep secret
+postmark_api_key: postmark-api-key  # An API key for the https://postmarkapp.com service
+dbhost: 10.10.10.2  # The IP address/hostname of the database server
 dbname: draughtcraft
 dbuser: draughtcraft
 dbpassword: sample-password
+
+# Used to upload CDN assets to DreamHost DreamObjects
 dho_key: some-key
 dho_secret: some-secret
 dho_bucket: some-bucket

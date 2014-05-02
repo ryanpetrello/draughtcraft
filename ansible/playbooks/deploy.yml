@@ -47,8 +47,8 @@
     - name: delete file-system-cached static js
       command: rm -f ${webapps_dir}/${app_name}/src/public/js/*COMBINED*
 
-    - name: upload CDN resources to DHO
-      command: ${webapps_dir}/${app_name}/venv/bin/pecan cdn-upload ${dho_key} ${dho_secret} ${dho_bucket} chdir=${webapps_dir}/${app_name}/src
+    #- name: upload CDN resources to DHO (optional)
+    #  command: ${webapps_dir}/${app_name}/venv/bin/pecan cdn-upload ${dho_key} ${dho_secret} ${dho_bucket} chdir=${webapps_dir}/${app_name}/src
 
     - name: create supervisor program config
       action: template src=templates/supervisor.ini dest=/etc/supervisor/${app_name}.ini
