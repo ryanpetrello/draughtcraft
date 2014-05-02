@@ -18,18 +18,18 @@ Running the Tests
 Deploying Remotely
 =================
 
-To start, you'll need at least two physical (or virtual) servers, one to
+To start, you'll need at least two physical (or virtual) servers: one to
 serve the Python application, and another to serve as a PostgreSQL database.
 Additionally, you'll need to configure SSH key access for both of them, and
 open up traffic on the PostgreSQL machine for inbound traffic on port (by
-default) 5432.
+default) `5432`.
 
-From here, it's pretty simple::
+From here, it's pretty simple:
 
     $ cd ansible
     $ pip install ansible
 
-Edit the `hosts` file to point at the hostname (or IP) of your respective servers, then deploy::
+Edit the `hosts` file to point at the hostname (or IP) of your respective servers, then deploy:
 
     $ mv playbooks/hosts.example playbooks/hosts
     $ mv playbooks/prod.yml.example playbooks/prod.yml
