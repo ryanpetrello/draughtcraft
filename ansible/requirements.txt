@@ -4,6 +4,7 @@ Elixir==0.7.1
 Genshi==0.7
 Mako==0.9.1
 MarkupSafe==0.21
+Paste==1.7.5.1
 SQLAlchemy==0.7.8
 WTForms==1.0.5
 WebHelpers==1.3

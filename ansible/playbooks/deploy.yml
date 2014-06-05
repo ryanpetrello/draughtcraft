@@ -18,40 +18,40 @@
 
   tasks:
     - name: ensure log directory
-      action: file dest=${webapps_dir}/${app_name}/log state=directory
+      action: file dest="{{webapps_dir}}/{{app_name}}/log" state=directory
 
     - name: deploy code from repository
-      action: git repo=$repo_url dest=${webapps_dir}/${app_name}/src remote=$repo_remote version=$repo_version
+      action: git repo="{{repo_url}}" dest="{{webapps_dir}}/{{app_name}}/src" remote="{{repo_remote}}" version="{{repo_version}}"
 
     - name: Enforce permissions on cached CSS
-      action: file path=${webapps_dir}/${app_name}/src/css mode=0750
+      action: file path="{{webapps_dir}}/{{app_name}}/src/public/css" mode=0755
 
     - name: Enforce permissions on cached JS
-      action: file path=${webapps_dir}/${app_name}/src/js mode=0750
+      action: file path="{{webapps_dir}}/{{app_name}}/src/public/javascript" mode=0755
 
     - name: install dependencies into virtualenv
-      action: pip requirements=${webapps_dir}/${app_name}/src/ansible/requirements.txt virtualenv=${webapps_dir}/${app_name}/venv state=present
+      action: pip requirements="{{webapps_dir}}/{{app_name}}/src/ansible/requirements.txt" virtualenv="{{webapps_dir}}/{{app_name}}/venv" state=present
 
     - name: install the package itself
-      action: pip name=${webapps_dir}/${app_name}/src virtualenv=${webapps_dir}/${app_name}/venv state=present
+      action: pip name="{{webapps_dir}}/{{app_name}}/src" virtualenv="{{webapps_dir}}/{{app_name}}/venv" state=present
 
     - name: configure the app
-      action: template src=templates/production.py dest=${webapps_dir}/${app_name}/src
+      action: template src=templates/production.py dest="{{webapps_dir}}/{{app_name}}/src"
 
     - name: initialize (and migrate) the database
-      command: ${webapps_dir}/${app_name}/venv/bin/pecan populate production.py chdir=${webapps_dir}/${app_name}/src
+      command: "{{webapps_dir}}/{{app_name}}/venv/bin/pecan populate {{webapps_dir}}/{{app_name}}/src/production.py"
 
     - name: delete file-system-cached static css
-      command: rm -f ${webapps_dir}/${app_name}/src/public/css/*COMBINED*
+      command: rm -f "{{webapps_dir}}/{{app_name}}/src/public/css/*COMBINED*"
 
     - name: delete file-system-cached static js
-      command: rm -f ${webapps_dir}/${app_name}/src/public/js/*COMBINED*
+      command: rm -f "{{webapps_dir}}/{{app_name}}/src/public/js/*COMBINED*"
 
     #- name: upload CDN resources to DHO (optional)
-    #  command: ${webapps_dir}/${app_name}/venv/bin/pecan cdn-upload ${dho_key} ${dho_secret} ${dho_bucket} chdir=${webapps_dir}/${app_name}/src
+    #  command: "{{webapps_dir}}/{{app_name}}/venv/bin/pecan cdn-upload {{dho_key}} {{dho_secret}} {{dho_bucket}}" chdir="{{webapps_dir}}/{{app_name}}/src"
 
     - name: create supervisor program config
-      action: template src=templates/supervisor.ini dest=/etc/supervisor/${app_name}.ini
+      action: template src=templates/supervisor.ini dest="/etc/supervisor/{{app_name}}.ini"
       notify:
         - restart app
 
@@ -59,19 +59,19 @@
       action: service name=supervisord state=restarted
 
     - name: create nginx site config
-      action: template src=templates/nginx_site.conf dest=/etc/nginx/sites-available/${app_name}.conf
+      action: template src=templates/nginx_site.conf dest="/etc/nginx/sites-available/{{app_name}}.conf"
       notify:
         - restart nginx
 
     - name: link nginx config
-      action: file src=/etc/nginx/sites-available/${app_name}.conf dest=/etc/nginx/sites-enabled/${app_name}.conf state=link
+      action: file src="/etc/nginx/sites-available/{{app_name}}.conf" dest="/etc/nginx/sites-enabled/{{app_name}}.conf" state=link
 
     - name: start app
-      action: supervisorctl name=${app_name} state=started
+      action: supervisorctl name="{{app_name}}" state=started
 
   handlers:
     - name: restart app
-      action: supervisorctl name=${app_name} state=restarted
+      action: supervisorctl name="{{app_name}}" state=restarted
 
     - name: restart nginx
       action: service name=nginx state=restarted

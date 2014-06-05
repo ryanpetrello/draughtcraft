@@ -10,3 +10,8 @@ dbpassword: sample-password
 dho_key: some-key
 dho_secret: some-secret
 dho_bucket: some-bucket
+
+# SMTP credentials for sending error emails
+error_email: errors@draughtcraft.com
+error_smtp_server: smtp.draughtcraft.com
+error_password: password
