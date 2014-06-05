@@ -6,10 +6,11 @@ dbname: draughtcraft
 dbuser: draughtcraft
 dbpassword: sample-password
 
-# Used to upload CDN assets to DreamHost DreamObjects
+# Used to upload CDN and SQL backup assets to DreamHost DreamObjects
 dho_key: some-key
 dho_secret: some-secret
 dho_bucket: some-bucket
+backup_bucket: some-bucket
 
 # SMTP credentials for sending error emails
 error_email: errors@draughtcraft.com

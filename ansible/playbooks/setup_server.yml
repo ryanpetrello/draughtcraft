@@ -61,6 +61,9 @@
   user: dhc-user
   sudo: True
 
+  vars_files:
+    - prod.yml
+
   tasks:
     - name: ensure packages are installed
       action: apt name="{{ item }}"
@@ -68,6 +71,17 @@
           - postgresql
           - libpq-dev
           - python-psycopg2
+          - python-pip
+
+    - name: install boto
+      action: pip name="boto" state=present
+
+    - name: create a backup script
+      action: template src=templates/pg_backup.py dest="/etc/backup.py"
+
+    - name: setup a cron to run the backup script
+      cron: name="backup SQL to DHO" hour="0/12" job="python /etc/backup.py" user="postgres"
+
 
 - hosts: database
 
