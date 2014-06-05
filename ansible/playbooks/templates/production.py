@@ -53,3 +53,7 @@ cache = {
 postmark = {
     'api_key': '{{ postmark_api_key }}'
 }
+
+error_email = '{{ error_email }}'
+error_smtp_server = '{{ error_smtp_server }}'
+error_password = '{{ error_password }}'
