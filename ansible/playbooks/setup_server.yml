@@ -80,7 +80,7 @@
       action: template src=templates/pg_backup.py dest="/etc/backup.py"
 
     - name: setup a cron to run the backup script
-      cron: name="backup SQL to DHO" hour="0/12" job="python /etc/backup.py" user="postgres"
+      cron: name="backup SQL to DHO" minute="0" hour="0/12" job="python /etc/backup.py" user="postgres"
 
 
 - hosts: database
