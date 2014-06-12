@@ -33,42 +33,36 @@
     </tr>
     % for i, r in enumerate(recipes):
       <tr class="${'' if i % 2 == 0 else 'odd'}">
-        % if r.metric:
-          <td class="srm srm-${min(30, int(r.calculations.srm))}">
-            <span class="block" title="${int(round(r.calculations.ebc))} EBC"></a>
-          </td>
-        % else:
-          <td class="srm srm-${min(30, int(r.calculations.srm))}">
-            <span class="block" title="${int(round(r.calculations.srm))} SRM"></a>
-          </td>
-        % endif
+        <td class="srm srm-${min(30, int(r.color))}">
+          <span class="block" title="${int(round(r.color))} ${r.metric_unit}"></a>
+        </td>
         <td>${r.printable_type}</td>
         <td class="name">
-          <a href="${r.url()}">
+          <a href="${r.url}">
             ${r.name}
           </a>
         </td>
         <td class="author">
-          <a href="/profile/${r.author.username}">
+          <a href="/profile/${r.username}">
             <img 
-              src="${r.author.gravatar}&s=16" 
+              src="${r.gravatar}&s=16" 
               class="gravatar"
-              title="${r.author.username}"
+              title="${r.username}"
             />
-            ${r.author.username}
+            ${r.username}
           </a>
         </td>
         <td>
-          % if r.style:
-            <a href="${r.style.url}" target="window">
-              ${r.style.name}
+          % if r.style_name:
+            <a href="${r.style_url}" target="window">
+              ${r.style_name}
             </a>
           % else:
             No Style Chosen
           % endif
         </td>
         <td class="last_updated">${h.format_age(r.last_updated)}</td>
-        <td class="views">${len(r.views)}</td>
+        <td class="views">${r.views}</td>
       </tr>
     % endfor
   </table>
