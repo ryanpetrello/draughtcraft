@@ -1,4 +1,5 @@
 from math import ceil
+from hashlib import md5
 
 from pecan import expose, request, abort, response, redirect
 from pecan.secure import secure
@@ -18,6 +19,9 @@ class SlugController(object):
         self.slug = slug
 
         # Make sure the provided slug is valid
+        if not slug:
+            redirect(request.context['recipe'].slugs[0].slug)
+
         if slug not in [slug.slug for slug in request.context['recipe'].slugs]:
             abort(404)
 
@@ -225,9 +229,21 @@ class RecipesController(object):
             onclause=model.Recipe.author_id == model.User.id
         )
 
+        username_full = model.User.username.label('username')
+        email = model.User.email.label('email')
+        style_name = model.Style.name.label('style_name')
+        style_url = model.Style.url.label('style_url')
         query = select(
             [
                 model.Recipe.id,
+                model.Recipe.name,
+                model.Recipe._srm,
+                username_full,
+                email,
+                sortable_type,
+                style_name,
+                style_url,
+                model.Recipe.last_updated,
                 views
             ],
             and_(*where),
@@ -242,13 +258,43 @@ class RecipesController(object):
         if views not in order_column:
             query = query.group_by(*order_column)
 
-        recipes = model.Recipe.query.from_statement(query.order_by(
+        query = query.group_by(username_full)
+        query = query.group_by(email)
+        query = query.group_by(style_name)
+        query = query.group_by(style_url)
+
+        recipes = query.order_by(
             *[order_direction(column) for column in order_column]
         ).offset(
             offset
         ).limit(
             perpage
-        )).all()
+        ).execute().fetchall()
+
+        class RecipeProxy(object):
+
+            def __init__(self, recipe):
+                self.id, self.name, self._srm, self.username, self.email, self.printable_type, self.style_name, self.style_url, self.last_updated, self.views = recipe
+
+            @property
+            def metric_unit(self):
+                return 'EBC' if request.context['metric'] is True else 'SRM'
+
+            @property
+            def color(self):
+                if self.metric_unit is 'SRM':
+                    return self._srm
+                round(self._srm * 1.97, 1)
+
+            @property
+            def gravatar(self):
+                return 'http://www.gravatar.com/avatar/%s?d=404' % (
+                    md5(self.email.strip().lower()).hexdigest()
+                )
+
+            @property
+            def url(self):
+                return '/recipes/%s/' % (('%x' % self.id).lower())
 
         return dict(
             pages=max(1, int(ceil(total / perpage))),
@@ -258,7 +304,7 @@ class RecipesController(object):
             total=total,
             order_by=kw['order_by'],
             direction=kw['direction'],
-            recipes=recipes
+            recipes=map(RecipeProxy, recipes)
         )
 
     create = RecipeCreationController()
