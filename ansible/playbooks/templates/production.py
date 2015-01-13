@@ -15,6 +15,7 @@ app = {
     'modules': ['draughtcraft'],
     'static_root': '%(confdir)s/public',
     #'cdn_host': 'cdn.draughtcraft.com',
+    'debug': False,
     'template_path': '%(confdir)s/draughtcraft/templates',
     'stamp': time.time(),
     'logging': False,

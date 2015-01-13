@@ -32,7 +32,10 @@ class RootController(object):
         'auto_insert_errors': True,
         'handler': lambda: request.path
     })
-    def _post_login(self, username, password):
+    def _post_login(self, **kw):
+        username = kw.get('username')
+        password = kw.get('password')
+
         user = model.User.get_by(username=username)
         save_user_session(user)
 
