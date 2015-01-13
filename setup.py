@@ -1,10 +1,4 @@
-# -*- coding: utf-8 -*-
-try:
-    from setuptools import setup, find_packages
-except ImportError:
-    from ez_setup import use_setuptools
-    use_setuptools()
-    from setuptools import setup, find_packages  # noqa
+from setuptools import setup, find_packages
 
 from draughtcraft import __version__
 
@@ -25,7 +19,7 @@ setup(
         "python-postmark",
         "BeautifulSoup",
         "pbkdf2",
-        "lesspy",
+        "lesscpy==0.9j",
         "jsmin == 2.0.2",
         "psycopg2",
         "fudge",

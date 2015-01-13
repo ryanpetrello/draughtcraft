@@ -1,14 +1,15 @@
+from collections import namedtuple
+import os
+
+from beaker.middleware import SessionMiddleware, CacheMiddleware
+from lesscpy.scripts.compiler import ldirectory
 from pecan import make_app
 from pecan.hooks import TransactionHook
+
 from draughtcraft import model
 from draughtcraft.lib.auth import AuthenticationHook
 from draughtcraft.lib.minify import ResourceLookupMiddleware
 from draughtcraft.templates import helpers
-from lesspy import Less
-from beaker.middleware import SessionMiddleware, CacheMiddleware
-
-import os
-
 
 def setup_app(config):
 
@@ -22,10 +23,27 @@ def setup_app(config):
     model.init_model()
 
     # Compile .less resources
-    Less(
+    LessConfig = namedtuple(
+        'LessConfig',
+        ['min_ending', 'minify', 'xminify', 'debug', 'force', 'verbose',
+         'recurse', 'dry_run']
+    )
+
+    ldirectory(
         os.path.join(config.app.static_root, '_precompile'),
-        os.path.join(config.app.static_root, 'css')
-    ).compile()
+        os.path.join(config.app.static_root, 'css'),
+        LessConfig(
+            min_ending=False,
+            minify=True,
+            xminify=False,
+            debug=config.app.debug,
+            force=False,
+            verbose=False,
+            recurse=True,
+            dry_run=False
+        ),
+        None
+    )
 
     return make_app(
         config.app.root,
