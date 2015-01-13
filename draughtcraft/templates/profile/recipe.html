@@ -78,7 +78,7 @@
   </h4>
   <h4>
     <b>${recipe.printable_type}</b>,
-    ${recipe.style.name if recipe.style else 'No Target Style Chosen'},
+    ${'%s (%s%s)' % (recipe.style.name, recipe.style.category_number, recipe.style.style_letter) if recipe.style else 'No Target Style Chosen'},
     % if recipe.metric:
       ${h.format_volume(recipe.liters)} ${h.plural(recipe.liters, 'Liter', 'Liters', False)} 
     % else:

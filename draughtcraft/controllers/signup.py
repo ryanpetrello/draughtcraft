@@ -34,7 +34,10 @@ class SignupController(object):
         'auto_insert_errors': True,
         'handler': lambda: request.path
     })
-    def _post(self, username, password, password_confirm, email):
+    def _post(self, **kw):
+        username = kw['username']
+        password = kw['password']
+        email = kw['email']
 
         user = model.User(
             username=username,
