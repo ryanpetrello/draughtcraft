@@ -37,7 +37,7 @@ class SignupController(object):
     def _post(self, **kw):
         username = kw['username']
         password = kw['password']
-        email = kw['email']
+        email = kw['email'].replace(' ', '')
 
         user = model.User(
             username=username,
