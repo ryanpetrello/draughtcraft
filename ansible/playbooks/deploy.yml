@@ -50,6 +50,23 @@
     #- name: upload CDN resources to DHO (optional)
     #  command: "{{webapps_dir}}/{{app_name}}/venv/bin/pecan cdn-upload {{dho_key}} {{dho_secret}} {{dho_bucket}}" chdir="{{webapps_dir}}/{{app_name}}/src"
 
+    - name: install letsencrypt
+      action: git repo="https://github.com/letsencrypt/letsencrypt.git" dest="{{webapps_dir}}/{{app_name}}/letsencrypt" remote="origin" version="master"
+
+    - name: generate a DHE prime
+      command: "openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048"
+      args:
+        creates: /etc/ssl/certs/dhparam.pem
+
+    - name: temporarily stop nginx (so we can verify the SSL cert registration w/ letsencrypt)
+      action: service name=nginx state=stopped
+
+    - name: create/renew the SSL certification
+      command: "{{webapps_dir}}/{{app_name}}/letsencrypt/letsencrypt-auto certonly --standalone --standalone-supported-challenges tls-sni-01 -d draughtcraft.com --email {{bcc_address}} --agree-tos --renew-by-default"
+
+    - name: start nginx again
+      action: service name=nginx state=started
+
     - name: create supervisor program config
       action: template src=templates/supervisor.ini dest="/etc/supervisor/{{app_name}}.ini"
       notify:
