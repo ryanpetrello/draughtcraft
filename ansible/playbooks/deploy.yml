@@ -12,6 +12,8 @@
     webapps_dir: /opt/web
     wsgi_file: ansible/wsgi.py
     wsgi_callable: app
+    letsencrypt_command: "{{webapps_dir}}/{{app_name}}/letsencrypt/letsencrypt-auto certonly --standalone --standalone-supported-challenges tls-sni-01 -d draughtcraft.com --email {{bcc_address}} --agree-tos --renew-by-default"
+
 
   vars_files:
     - prod.yml
@@ -61,8 +63,11 @@
     - name: temporarily stop nginx (so we can verify the SSL cert registration w/ letsencrypt)
       action: service name=nginx state=stopped
 
-    - name: create/renew the SSL certification
-      command: "{{webapps_dir}}/{{app_name}}/letsencrypt/letsencrypt-auto certonly --standalone --standalone-supported-challenges tls-sni-01 -d draughtcraft.com --email {{bcc_address}} --agree-tos --renew-by-default"
+    - name: create/renew the SSL cert
+      command: "{{letsencrypt_command}}"
+
+    - name: setup a cron to renew the SSL cert (15th of each month)
+      cron: name="renew ssl cert" minute="0" hour="12" day="15" job="{{letsencrypt_command}}"
 
     - name: start nginx again
       action: service name=nginx state=started
