@@ -11,23 +11,6 @@ if($.draughtcraft == undefined){
     $.draughtcraft.recipes.viewer = {};
 }
 
-$.draughtcraft.apply_gravatar = function(){
-    /*
-     * Replace 404'd gravatars with a default image
-     */
-    $('img.gravatar').each(function(){
-      var orig = $(this);
-      var img = new Image();
-      img.onerror = function(){
-        var width = orig.attr('src').split('&s=')[1];
-        orig.attr('src', '/images/glass-square.png');
-        orig.attr('height', width);
-      }
-      img.src = orig.attr('src'); 
-    });
-};
-$($.draughtcraft.apply_gravatar);
-
 $(function(){
     /*
      * Fancybox popup for "About" links

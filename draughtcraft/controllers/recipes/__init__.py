@@ -288,7 +288,7 @@ class RecipesController(object):
 
             @property
             def gravatar(self):
-                return 'http://www.gravatar.com/avatar/%s?d=404' % (
+                return 'http://www.gravatar.com/avatar/%s?d=https://iad2.draughtcraft.com/images/glass-square.png' % (
                     md5(self.email.strip().lower()).hexdigest()
                 )
 
