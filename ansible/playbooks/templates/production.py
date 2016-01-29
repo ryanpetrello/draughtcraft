@@ -27,7 +27,7 @@ app = {
 }
 
 sqlalchemy = {
-    'url': 'postgresql+psycopg2://{{dbuser}}:{{dbpassword}}@{{dbhost}}/{{dbname}}',
+    'url': 'postgresql+psycopg2://{{dbuser}}:{{dbpassword}}@{{dbhost}}/{{dbname}}?client_encoding=utf8',
     'echo': False,
     'echo_pool': False,
     'pool_recycle': 3600,

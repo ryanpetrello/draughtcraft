@@ -72,6 +72,9 @@
     - name: start nginx again
       action: service name=nginx state=started
 
+    - name: create uwsgi config
+      action: template src=templates/uwsgi.ini dest="/etc/uwsgi/{{app_name}}.ini"
+
     - name: create supervisor program config
       action: template src=templates/supervisor.ini dest="/etc/supervisor/{{app_name}}.ini"
       notify:

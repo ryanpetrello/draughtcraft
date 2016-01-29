@@ -41,6 +41,9 @@
     - name: write nginx.conf
       action: template src=templates/nginx.conf dest=/etc/nginx/nginx.conf
 
+    - name: create uwsgi config folder
+      action: file dest=/etc/uwsgi state=directory owner=root
+
     - name: create supervisord config folder
       action: file dest=/etc/supervisor state=directory owner=root
 
@@ -72,6 +75,8 @@
           - libpq-dev
           - python-psycopg2
           - python-pip
+          - libpcre3
+          - libpcre3-dev
 
     - name: install boto
       action: pip name="boto" state=present
