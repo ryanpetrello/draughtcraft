@@ -11,6 +11,22 @@ if($.draughtcraft == undefined){
     $.draughtcraft.recipes.viewer = {};
 }
 
+$.draughtcraft.apply_gravatar = function(){
+    /*
+     * Enforce gravatar size for default fallbacks
+     */
+    $('img.gravatar').each(function(){
+      var orig = $(this);
+      var img = new Image();
+      var width = orig.attr('src').split('&s=')[1];
+      orig.attr('src', '/images/glass-square.png');
+      orig.attr('height', width);
+      img.src = orig.attr('src');
+    });
+};
+$($.draughtcraft.apply_gravatar);
+
+
 $(function(){
     /*
      * Fancybox popup for "About" links
