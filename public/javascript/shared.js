@@ -19,9 +19,7 @@ $.draughtcraft.apply_gravatar = function(){
       var orig = $(this);
       var img = new Image();
       var width = orig.attr('src').split('&s=')[1];
-      orig.attr('src', '/images/glass-square.png');
       orig.attr('height', width);
-      img.src = orig.attr('src');
     });
 };
 $($.draughtcraft.apply_gravatar);
