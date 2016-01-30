@@ -9,8 +9,8 @@ setup(
     author='Ryan Petrello',
     author_email='ryan (at) draughtcraft.com',
     install_requires=[
-        "pecan >= 0.4",
-        "pecan_wtforms",
+        "pecan <= 0.5",
+        "pecan_wtforms == 0.1.1",
         "sqlalchemy == 0.7.8",
         "elixir",
         "beaker",
