@@ -85,7 +85,7 @@ class TestUser(unittest.TestCase):
             password=u'testing123',
             email=u'  RYAN@example.COM  '
         )
-        assert user.gravatar == "http://www.gravatar.com/avatar/%s?d=404" % (
+        assert user.gravatar == "https://www.gravatar.com/avatar/%s?d=404" % (
             md5('ryan@example.com').hexdigest()
         )
 
