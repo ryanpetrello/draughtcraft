@@ -9,7 +9,7 @@ from boto.s3.connection import OrdinaryCallingFormat
 conn = boto.connect_s3(
     aws_access_key_id = '{{ dho_key }}',
     aws_secret_access_key = '{{ dho_secret }}',
-    host = 'objects.dreamhost.com',
+    host = 'objects-us-west-1.dream.io',
     calling_format = OrdinaryCallingFormat()
 )
 

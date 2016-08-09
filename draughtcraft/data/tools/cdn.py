@@ -42,7 +42,7 @@ class CDNUpload(BaseCommand):
         conn = boto.connect_s3(
             aws_access_key_id=args.access_key,
             aws_secret_access_key=args.secret_key,
-            host='objects.dreamhost.com',
+            host='objects-us-west-1.dream.io',
             calling_format=OrdinaryCallingFormat()
         )
         bucket = conn.get_bucket(args.bucket_name)
